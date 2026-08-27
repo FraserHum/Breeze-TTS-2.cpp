@@ -110,4 +110,9 @@ std::vector<std::string> split_text(const std::string & text, int budget, int fi
     return out;
 }
 
+double estimate_seconds(const std::string & text) {
+    // measured between 16.7 and 18.1 weighted characters per second across english and mixed passages
+    return weigh(text) / 17.0;
+}
+
 }

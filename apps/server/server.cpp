@@ -7,6 +7,10 @@
 #include "httplib.h"
 #include "breeze_webui_assets.h"
 
+#ifdef _WIN32
+#include <windows.h> // after httplib, it pulls in winsock2 first
+#endif
+
 #include <chrono>
 #include <cstdio>
 #include <memory>
@@ -22,7 +26,32 @@ static std::string field(const httplib::Request & req, const char * name, const 
     return def;
 }
 
+static std::string mmss(double s) {
+    if (!(s >= 0) || s > 86399) s = 0;
+    char buf[16];
+    snprintf(buf, sizeof buf, "%02d:%02d", (int) s / 60, (int) s % 60);
+    return buf;
+}
+
+static std::string bar(double frac, int width) {
+    static const char * part[] = { " ", "\u258f", "\u258e", "\u258d", "\u258c", "\u258b", "\u258a", "\u2589" };
+    if (!(frac > 0)) frac = 0;
+    if (frac > 1) frac = 1;
+    const double filled = frac * width;
+    const int full = (int) filled;
+    std::string s;
+    for (int i = 0; i < full; i++) s += "\u2588";
+    if (full < width) {
+        s += part[(int) ((filled - full) * 8)];
+        for (int i = full + 1; i < width; i++) s += " ";
+    }
+    return s;
+}
+
 int run_server(const ServerOptions & opts) {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8); // otherwise the bar glyphs and any chinese text come out as mojibake
+#endif
     BreezeModel model;
     printf("loading %s ...\n", opts.model.c_str());
     if (!model.load(opts.model, opts.use_gpu)) {
@@ -86,6 +115,8 @@ int run_server(const ServerOptions & opts) {
                 const auto elapsed = [&] {
                     return std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
                 };
+                // the model decides when to stop, so the total is only ever an estimate
+                const double est = estimate_seconds(g.text);
                 size_t total = 0;
                 try {
                     generate(model, codec, g, [&](const float * s, int n) {
@@ -93,8 +124,12 @@ int run_server(const ServerOptions & opts) {
                         if (!sink.write((const char *) pcm.data(), pcm.size())) return false;
                         total += (size_t) n;
                         const double secs = (double) total / sr, wall = elapsed();
-                        printf("\r     %6.2f s audio  %5.1f fps  %.2fx rt   ", secs,
-                               secs * 12.5 / wall, secs / wall);
+                        const double rate = wall > 0 ? secs / wall : 0;
+                        const double frac = est > 0 ? secs / est : 0;
+                        const double eta = rate > 0 ? (est > secs ? (est - secs) / rate : 0) : 0;
+                        printf("\r%3.0f%%|%s| %.1f/%.1fs [%s<%s, %.1f fps, %.2fx]  ",
+                               (frac < 1 ? frac : 1) * 100, bar(frac, 24).c_str(), secs, est,
+                               mmss(wall).c_str(), mmss(eta).c_str(), secs * 12.5 / wall, rate);
                         fflush(stdout);
                         return true;
                     }, &tm);
@@ -102,8 +137,11 @@ int run_server(const ServerOptions & opts) {
                     fprintf(stderr, "\ngeneration error: %s\n", e.what());
                 }
                 const double secs = (double) total / sr, wall = elapsed();
-                printf("\r     %.2f s audio in %.2f s, %.2fx rt, first audio %.0f ms over %d flushes\n",
-                       secs, wall, wall > 0 ? secs / wall : 0.0, tm.first_audio, tm.flushes);
+                printf("\r%3.0f%%|%s| %.1f/%.1fs [%s, %.1f fps, %.2fx]        \n",
+                       100.0, bar(1, 24).c_str(), secs, secs, mmss(wall).c_str(),
+                       wall > 0 ? secs * 12.5 / wall : 0.0, wall > 0 ? secs / wall : 0.0);
+                printf("     %d frames in %d flushes, first audio %.0f ms\n",
+                       tm.frames, tm.flushes, tm.first_audio);
                 if (verbose && tm.frames > 0) {
                     printf("     ref %.0f  prompt %.0f  prefill %.0f ms | per frame: backbone %.2f"
                            "  depth %.2f  vocoder %.2f ms\n",

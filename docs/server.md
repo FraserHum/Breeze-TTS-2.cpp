@@ -8,7 +8,7 @@ rather than waiting for the whole clip.
 
 ```
 breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
-                           [--chunk-first N] [--chunk-max N]
+                           [--chunk-first N] [--chunk-max N] [--verbose]
 ```
 
 | Flag | Default | Meaning |
@@ -19,10 +19,29 @@ breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
 | `--cpu` | off | Force the CPU backend instead of Vulkan. |
 | `--chunk-first` | `4` | Frames in the first streamed chunk. |
 | `--chunk-max` | `25` | Frames the chunk ramps up to. |
+| `--verbose` | off | Add a per stage timing breakdown after each request. |
 
 ```
 breeze-server breeze-tts-2-q4_k.gguf --port 8137 --webui
 ```
+
+## Console output
+
+Each request prints a progress bar that fills as audio is streamed, then a
+summary.
+
+```
+gen  design, 291 chars, cfg 1.0, seed 7
+ 87%|████████████████████▉   | 15.1/17.4s [00:11<00:01, 16.2 fps, 1.30x]
+100%|████████████████████████| 19.4/19.4s [00:15, 16.1 fps, 1.29x]
+     242 frames in 11 flushes, first audio 588 ms
+```
+
+The total is estimated from the text, since the model decides for itself when to
+stop, so the bar can reach 100% early or run past its estimate. The last line
+rewrites it with the real figure. `fps` is frames generated per second against
+12.5 frames of audio per second, so the trailing number is the real time factor
+and anything above `1.00x` is faster than playback.
 
 There is no authentication and no rate limiting. Do not expose it directly to
 the internet; put it behind a reverse proxy that handles both.

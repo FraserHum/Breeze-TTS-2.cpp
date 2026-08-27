@@ -31,6 +31,9 @@ struct GenRequest {
 // first_budget sizes the opening piece only, 0 to treat it like the rest
 std::vector<std::string> split_text(const std::string & text, int budget, int first_budget = 0);
 
+// rough spoken length in seconds, only good enough to drive a progress bar
+double estimate_seconds(const std::string & text);
+
 // called with each decoded audio chunk; return false to stop generation early
 using AudioCallback = std::function<bool(const float * samples, int n)>;
 
