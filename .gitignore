@@ -30,3 +30,26 @@
 *.exe
 *.out
 *.app
+
+# Build output
+/build/
+/build-*/
+/out/
+/cmake-build-*/
+
+# Model weights and audio
+*.gguf
+*.safetensors
+/models/
+/outputs/
+*.wav
+*.pcm
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
+.idea/
