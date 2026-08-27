@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>breeze-tts-2.cpp</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <h1>BREEZE-TTS-2.CPP</h1>
+  <p>open-weight bilingual text to speech, running on ggml. voice design, cloning, direction.</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="design">VOICE DESIGN</button>
+  <button class="tab" data-tab="clone">VOICE CLONE</button>
+  <button class="tab" data-tab="direction">VOICE DIRECTION</button>
+</nav>
+
+<main>
+  <section class="panel active" id="design">
+    <label>TEXT TO SPEAK
+      <textarea data-f="text" rows="3" placeholder="Welcome aboard. Your journey begins now."></textarea>
+    </label>
+    <label>VOICE DESCRIPTION
+      <textarea data-f="instruction" rows="2" placeholder="A warm, thoughtful young woman with a clear, calm delivery."></textarea>
+    </label>
+    <div class="row">
+      <label>CFG SCALE <input data-f="cfg" type="number" value="1" min="1" max="10" step="0.5" /></label>
+      <label>SEED <input data-f="seed" type="number" value="42" /></label>
+    </div>
+    <button class="go">GENERATE</button>
+  </section>
+
+  <section class="panel" id="clone">
+    <label>TEXT TO SPEAK
+      <textarea data-f="text" rows="3" placeholder="It is good to hear your voice again after all this time."></textarea>
+    </label>
+    <label>REFERENCE AUDIO (WAV)
+      <input data-f="ref_audio" type="file" accept="audio/*" />
+    </label>
+    <label>REFERENCE TRANSCRIPT (EXACT)
+      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
+    </label>
+    <div class="row">
+      <label>SEED <input data-f="seed" type="number" value="42" /></label>
+    </div>
+    <button class="go">GENERATE</button>
+  </section>
+
+  <section class="panel" id="direction">
+    <label>TEXT TO SPEAK
+      <textarea data-f="text" rows="3" placeholder="We need to discuss what happened last night."></textarea>
+    </label>
+    <label>DIRECTION
+      <textarea data-f="instruction" rows="2" placeholder="Speak slowly with a restrained, serious tone."></textarea>
+    </label>
+    <label>REFERENCE AUDIO (WAV)
+      <input data-f="ref_audio" type="file" accept="audio/*" />
+    </label>
+    <label>REFERENCE TRANSCRIPT (EXACT)
+      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
+    </label>
+    <div class="row">
+      <label>CFG SCALE <input data-f="cfg" type="number" value="1" min="1" max="10" step="0.5" /></label>
+      <label>SEED <input data-f="seed" type="number" value="42" /></label>
+    </div>
+    <button class="go">GENERATE</button>
+  </section>
+
+  <section class="output">
+    <div class="status" id="status">IDLE</div>
+    <audio id="player" controls></audio>
+    <a id="download" class="dl" download="breeze.wav">DOWNLOAD WAV</a>
+  </section>
+</main>
+
+<footer>vocal events: (laugh) (sigh) (cough) (clears throat) in english, [笑] [叹气] in chinese</footer>
+<script src="/app.js"></script>
+</body>
+</html>
