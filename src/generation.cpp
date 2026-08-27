@@ -222,7 +222,12 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
         tm.encode_ref = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
     }
 
-    const std::vector<std::string> parts = split_text(req.text, req.split_chars);
+    // with no clip to clone, the opening piece becomes the reference for the rest, so keep it down to
+    // the length references are normally given at. a half minute of it makes the model skip whole
+    // sentences of whatever comes next
+    const int anchor_chars = 200;
+    const std::vector<std::string> parts =
+        split_text(req.text, req.split_chars, user_ref.codes.empty() ? anchor_chars : 0);
 
     // every piece leans on the same reference. chaining each one off the piece before it sounds
     // fine for a sentence or two and then compounds, the voice loses body at every hop

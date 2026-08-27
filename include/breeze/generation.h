@@ -27,8 +27,9 @@ struct GenRequest {
     int split_chars = 600;
 };
 
-// break text on sentence boundaries into pieces worth roughly budget characters, cjk counted heavier
-std::vector<std::string> split_text(const std::string & text, int budget);
+// break text on sentence boundaries into pieces worth roughly budget characters, cjk counted heavier.
+// first_budget sizes the opening piece only, 0 to treat it like the rest
+std::vector<std::string> split_text(const std::string & text, int budget, int first_budget = 0);
 
 // called with each decoded audio chunk; return false to stop generation early
 using AudioCallback = std::function<bool(const float * samples, int n)>;

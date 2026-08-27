@@ -86,15 +86,21 @@ static std::vector<std::string> split_clauses(const std::string & s, int budget)
     return out;
 }
 
-std::vector<std::string> split_text(const std::string & text, int budget) {
+std::vector<std::string> split_text(const std::string & text, int budget, int first_budget) {
     if (budget <= 0 || weigh(text) <= budget) return { text };
     std::vector<std::string> out;
     std::string cur;
     int cw = 0;
+    int limit = first_budget > 0 ? first_budget : budget;
     for (const std::string & s : split_sentences(text)) {
         for (const std::string & p : split_clauses(s, budget)) {
             const int w = weigh(p);
-            if (cw > 0 && cw + w > budget) { out.push_back(cur); cur.clear(); cw = 0; }
+            if (cw > 0 && cw + w > limit) {
+                out.push_back(cur);
+                cur.clear();
+                cw = 0;
+                limit = budget;
+            }
             cur += p;
             cw += w;
         }
