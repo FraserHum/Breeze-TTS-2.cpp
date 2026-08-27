@@ -54,6 +54,7 @@ class BreezeRequest(ctypes.Structure):
         ("cfg_scale", ctypes.c_float),
         ("seed", ctypes.c_int),
         ("max_new_tokens", ctypes.c_int),
+        ("split_chars", ctypes.c_int),
     ]
 
 
@@ -109,7 +110,7 @@ class Breeze:
     def __exit__(self, *exc):
         self.close()
 
-    def _request(self, text, instruction, ref_audio, ref_text, cfg_scale, seed, max_new):
+    def _request(self, text, instruction, ref_audio, ref_text, cfg_scale, seed, max_new, split_chars):
         req = BreezeRequest()
         req.text = text.encode()
         req.instruction = (instruction or "Speak clearly and naturally.").encode()
@@ -117,6 +118,7 @@ class Breeze:
         req.cfg_scale = float(cfg_scale)
         req.seed = int(seed)
         req.max_new_tokens = int(max_new)
+        req.split_chars = int(split_chars)
         keep = None
         if ref_audio is not None:
             keep = np.ascontiguousarray(ref_audio, dtype=np.float32)
@@ -125,9 +127,9 @@ class Breeze:
         return req, keep
 
     def generate(self, text, instruction=None, ref_audio=None, ref_text=None,
-                 cfg_scale=1.0, seed=42, max_new=0, on_chunk=None):
+                 cfg_scale=1.0, seed=42, max_new=0, split_chars=0, on_chunk=None):
         req, keep = self._request(text, instruction, ref_audio, ref_text,
-                                  cfg_scale, seed, max_new)
+                                  cfg_scale, seed, max_new, split_chars)
         out = []
 
         def cb(samples, n, _user):

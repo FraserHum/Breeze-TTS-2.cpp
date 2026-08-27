@@ -31,6 +31,7 @@ typedef struct {
     float cfg_scale;
     int seed;
     int max_new_tokens;         // 0 uses the model default
+    int split_chars;            // 0 uses the default, negative keeps long text in a single pass
 } breeze_request;
 
 BREEZE_API breeze_context * breeze_init(const char * gguf_path, int use_gpu);

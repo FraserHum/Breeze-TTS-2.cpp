@@ -25,6 +25,7 @@ static GenRequest to_req(const breeze_request * r) {
     g.cfg_scale = r->cfg_scale > 0 ? r->cfg_scale : 1.0f;
     g.seed = r->seed;
     g.max_new_tokens = r->max_new_tokens;
+    if (r->split_chars != 0) g.split_chars = r->split_chars < 0 ? 0 : r->split_chars;
     return g;
 }
 

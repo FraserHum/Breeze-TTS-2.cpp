@@ -55,6 +55,7 @@ typedef struct {
     float cfg_scale;
     int   seed;
     int   max_new_tokens;
+    int   split_chars;
 } breeze_request;
 ```
 
@@ -67,7 +68,8 @@ typedef struct {
 | `ref_audio_len` | Number of floats in `ref_audio`. |
 | `cfg_scale` | Classifier free guidance. `1.0` disables it and skips the second pass. |
 | `seed` | RNG seed. The same seed and inputs reproduce the same audio. |
-| `max_new_tokens` | Frame cap. `0` uses the model default of 750 frames, about 60 seconds. |
+| `max_new_tokens` | Frame cap per piece. `0` uses the model default of 750 frames, about 60 seconds. |
+| `split_chars` | Size of the pieces long text is broken into. `0` uses the default of 600. Negative generates in one pass, which caps you at `max_new_tokens` and degrades past a minute or so. |
 
 Zero initialise the struct before filling it so future fields default sanely:
 
