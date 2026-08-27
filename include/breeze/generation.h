@@ -19,6 +19,9 @@ struct GenRequest {
     float cfg_scale = 1.0f;
     int seed = 42;
     int max_new_tokens = 0; // 0 uses the model default
+    // frames per streamed chunk, ramping from first to max. set both the same for a fixed size
+    int chunk_first = 4;
+    int chunk_max = 25;
 };
 
 // called with each decoded audio chunk; return false to stop generation early

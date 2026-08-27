@@ -52,6 +52,8 @@ int run_server(const ServerOptions & opts) {
         g.ref_text = field(req, "ref_text", "");
         g.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
         g.seed = atoi(field(req, "seed", "42").c_str());
+        g.chunk_first = opts.chunk_first;
+        g.chunk_max = opts.chunk_max;
         if (req.has_file("ref_audio")) {
             const auto & f = req.get_file_value("ref_audio");
             if (!f.content.empty())

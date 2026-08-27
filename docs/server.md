@@ -8,6 +8,7 @@ rather than waiting for the whole clip.
 
 ```
 breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
+                           [--chunk-first N] [--chunk-max N]
 ```
 
 | Flag | Default | Meaning |
@@ -16,10 +17,30 @@ breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
 | `--port` | `8080` | TCP port. |
 | `--webui` | off | Also serve the browser UI at `/`. |
 | `--cpu` | off | Force the CPU backend instead of Vulkan. |
+| `--chunk-first` | `4` | Frames in the first streamed chunk. |
+| `--chunk-max` | `25` | Frames the chunk ramps up to. |
 
 ```
 breeze-server breeze-tts-2-q4_k.gguf --port 8137 --webui
 ```
+
+### Tuning the chunk ramp
+
+Audio is vocoded in chunks of whole frames, 12.5 frames per second. The first
+chunk sets how long the client waits for sound, and every flush pays a fixed
+overhead, so the chunk grows by a third each time until it reaches `--chunk-max`.
+
+Lower `--chunk-first` for a faster start. Four frames is about 320 ms of audio
+and lands near 350 ms on an RTX 3060; one frame gets there in roughly 220 ms but
+flushes far more often.
+
+Raise `--chunk-max` if playback stutters. Larger chunks cut the per flush
+overhead and buy the client a deeper queue, at the cost of a coarser stream.
+Setting both flags to the same value disables the ramp and streams a fixed size.
+
+The margin you are tuning against is the real time factor. Generating a clip
+1.2x faster than it plays leaves very little slack, so a slower quantisation or a
+busy GPU will stutter where a faster one does not.
 
 There is no authentication and no rate limiting. Do not expose it directly to
 the internet; put it behind a reverse proxy that handles both.

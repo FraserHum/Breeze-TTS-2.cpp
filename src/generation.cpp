@@ -131,8 +131,8 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     std::vector<int> frames;
     int emitted = 0;
     // the first flush is small so audio starts early, then it grows to keep the vocoder efficient
-    const int chunk_max = 25;
-    int chunk = 4;
+    const int chunk_max = std::max(1, req.chunk_max);
+    int chunk = std::min(std::max(1, req.chunk_first), chunk_max);
     // the transformer window plus the slack the vocoder convolutions reach back over
     const int ctx = m.cfg.voc.sliding_window + 16;
     auto flush = [&](bool final_flush) {
