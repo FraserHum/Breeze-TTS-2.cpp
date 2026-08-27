@@ -13,7 +13,7 @@ static ggml_type pick_type(const std::string & name, const ggml_tensor * t, ggml
     const int64_t k = t->ne[0];
     const bool is_embed = name == "te.token_embd.weight" || name == "audio_embd.weight";
     if (is_embed) return (k % 32 == 0) ? GGML_TYPE_Q8_0 : GGML_TYPE_F16;
-    if (req == GGML_TYPE_Q4_K || req == GGML_TYPE_Q6_K) {
+    if (req == GGML_TYPE_Q2_K || req == GGML_TYPE_Q3_K || req == GGML_TYPE_Q4_K || req == GGML_TYPE_Q6_K) {
         if (k % 256 == 0) return req;
         if (k % 32 == 0) return GGML_TYPE_Q8_0;
         return GGML_TYPE_F16;
@@ -22,17 +22,34 @@ static ggml_type pick_type(const std::string & name, const ggml_tensor * t, ggml
     return GGML_TYPE_F16;
 }
 
+static bool parse_type(const std::string & q, ggml_type & out) {
+    if (q == "q8_0") out = GGML_TYPE_Q8_0;
+    else if (q == "q6_k") out = GGML_TYPE_Q6_K;
+    else if (q == "q4_k") out = GGML_TYPE_Q4_K;
+    else if (q == "q3_k") out = GGML_TYPE_Q3_K;
+    else if (q == "q2_k") out = GGML_TYPE_Q2_K;
+    else if (q == "f16") out = GGML_TYPE_F16;
+    else return false;
+    return true;
+}
+
 int main(int argc, char ** argv) {
     if (argc < 4) {
-        printf("usage: breeze-quantize <in-f16.gguf> <out.gguf> <q8_0|q6_k|q4_k>\n");
+        printf("usage: breeze-quantize <in-f16.gguf> <out.gguf> <type> [--depth <type>]\n");
+        printf("  type: f16 | q8_0 | q6_k | q4_k | q3_k | q2_k\n");
+        printf("  --depth  quantize the depth decoder separately from the rest\n");
         return 1;
     }
     std::string inp = argv[1], outp = argv[2], q = argv[3];
     ggml_type req;
-    if (q == "q8_0" || q == "Q8_0") req = GGML_TYPE_Q8_0;
-    else if (q == "q6_k" || q == "Q6_K") req = GGML_TYPE_Q6_K;
-    else if (q == "q4_k" || q == "Q4_K") req = GGML_TYPE_Q4_K;
-    else { fprintf(stderr, "unknown quant type: %s\n", q.c_str()); return 1; }
+    if (!parse_type(q, req)) { fprintf(stderr, "unknown quant type: %s\n", q.c_str()); return 1; }
+
+    ggml_type depth_req = req;
+    for (int i = 4; i < argc; i++) {
+        if (!strcmp(argv[i], "--depth") && i + 1 < argc) {
+            if (!parse_type(argv[++i], depth_req)) { fprintf(stderr, "unknown quant type: %s\n", argv[i]); return 1; }
+        } else { fprintf(stderr, "unknown arg: %s\n", argv[i]); return 1; }
+    }
 
     ggml_context * ctx = nullptr;
     gguf_init_params p{ false, &ctx };
@@ -45,7 +62,8 @@ int main(int argc, char ** argv) {
     for (int64_t i = 0; i < nt; i++) {
         const char * name = gguf_get_tensor_name(in, i);
         ggml_tensor * t = ggml_get_tensor(ctx, name);
-        types[i] = pick_type(name, t, req);
+        const bool is_depth = !strncmp(name, "dd.", 3);
+        types[i] = pick_type(name, t, is_depth ? depth_req : req);
         total += ggml_row_size(types[i], t->ne[0]) * ggml_nrows(t);
     }
 
