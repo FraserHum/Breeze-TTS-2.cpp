@@ -49,9 +49,43 @@ cmake --build build-cpu -j
 | Option | Default | Effect |
 | --- | --- | --- |
 | `BREEZE_VULKAN` | `ON` | Build ggml with the Vulkan backend. |
+| `BREEZE_CUDA` | `OFF` | Build ggml with the CUDA backend. Needs the CUDA toolkit, and MSVC on Windows. |
 | `BREEZE_BUILD_CLI` | `ON` | Build `breeze-cli`. |
 | `BREEZE_BUILD_SERVER` | `ON` | Build `breeze-server`. |
 | `BREEZE_BUILD_SHARED` | `ON` | Build the shared C library. |
+
+### CUDA is slower here, and it is worth knowing why
+
+CUDA looks like the obvious win, because the depth decoder is bound by dispatch
+overhead and CUDA graphs exist to fix exactly that. Measured on an RTX 3060 it is
+not, by a wide margin:
+
+| Backend | Backbone | Depth | Vocoder | Total per frame | Real time factor |
+| --- | --- | --- | --- | --- | --- |
+| Vulkan | 7.69 ms | 34.03 ms | 10.44 ms | 52.16 ms | 1.53x |
+| CUDA | 10.32 ms | 69.64 ms | 57.45 ms | 137.41 ms | 0.58x |
+| CUDA, `GGML_CUDA_DISABLE_GRAPHS=1` | 11.45 ms | 77.23 ms | 60.27 ms | 148.95 ms | 0.54x |
+
+The split shows what is happening. Timing one large graph against the small per
+step ones:
+
+| Stage | Vulkan | CUDA |
+| --- | --- | --- |
+| Backbone prefill, one large graph | 118.0 ms | **31.7 ms** |
+| First vocoder, small graph | **58.1 ms** | 141.3 ms |
+
+CUDA is nearly four times faster on the big graph and roughly half the speed on
+the small ones. Generation is thousands of small graphs, so Vulkan wins overall.
+
+The cause is on our side, not CUDA's. Every step builds a brand new `ggml_cgraph`
+in a fresh context, so ggml cannot recognise it as the same graph and CUDA graph
+capture never pays off; disabling capture entirely only makes it slightly worse,
+which confirms it is doing very little. On top of that `ggml_backend_tensor_set`
+is a synchronous copy on CUDA, and we do several per graph.
+
+So CUDA is left off by default. If the runtime is ever reworked to reuse graphs
+across steps, this is the first thing worth re measuring, because the prefill
+number says the headroom is real.
 
 ## Outputs
 
@@ -59,7 +93,7 @@ cmake --build build-cpu -j
 | --- | --- |
 | `breeze-cli` | One shot synthesis to WAV |
 | `breeze-server` | HTTP server with optional web UI |
-| `breeze-quantize` | Converts an F16 GGUF to Q8_0, Q6_K or Q4_K |
+| `breeze-quantize` | Converts an F16 GGUF to Q8_0, Q6_K, Q4_K, Q3_K or Q2_K |
 | `libbreeze` | Shared C library, see [c-api.md](c-api.md) |
 | `libbreeze_core` | Static library if you would rather link directly |
 
@@ -69,12 +103,12 @@ generated header. Edit the sources and rebuild to pick up changes.
 
 ## Backend selection at runtime
 
-Both apps try Vulkan first and fall back to CPU if no usable device is found.
-Pass `--cpu` to skip the GPU entirely. The startup line tells you which one you
-got:
+Both apps ask ggml for any GPU backend it was built with and fall back to CPU if
+there is none. Pass `--cpu` to skip the GPU entirely. The startup line names the
+backend that was picked:
 
 ```
-backend: GPU, sample rate: 24000
+backend: Vulkan0, sample rate: 24000
 ```
 
 ## mingw specifics

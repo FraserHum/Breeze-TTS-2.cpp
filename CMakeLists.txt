@@ -11,6 +11,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(BREEZE_VULKAN "Build ggml with the Vulkan backend" ON)
+option(BREEZE_CUDA "Build ggml with the CUDA backend" OFF)
 option(BREEZE_BUILD_CLI "Build the command line app" ON)
 option(BREEZE_BUILD_SERVER "Build the HTTP server" ON)
 option(BREEZE_BUILD_SHARED "Build the shared C library" ON)
@@ -20,6 +21,7 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/ggml/CMakeLists.txt")
 endif()
 
 set(GGML_VULKAN ${BREEZE_VULKAN} CACHE BOOL "" FORCE)
+set(GGML_CUDA ${BREEZE_CUDA} CACHE BOOL "" FORCE)
 set(GGML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GGML_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 if(MINGW)
@@ -49,9 +51,6 @@ set(BREEZE_SOURCES
 add_library(breeze_core STATIC ${BREEZE_SOURCES})
 target_include_directories(breeze_core PUBLIC include)
 target_link_libraries(breeze_core PUBLIC ggml)
-if(BREEZE_VULKAN)
-    target_compile_definitions(breeze_core PUBLIC BREEZE_HAS_VULKAN)
-endif()
 
 # make mingw binaries self contained so they do not pick up stray runtime DLLs
 if(MINGW)

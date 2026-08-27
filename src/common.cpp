@@ -1,8 +1,5 @@
 #include "breeze/common.h"
 #include "ggml-cpu.h"
-#ifdef BREEZE_HAS_VULKAN
-#include "ggml-vulkan.h"
-#endif
 
 #include <cmath>
 #include <cstring>
@@ -10,19 +7,19 @@
 namespace breeze {
 
 void Backend::init(bool prefer_gpu) {
-#ifdef BREEZE_HAS_VULKAN
     if (prefer_gpu) {
-        backend = ggml_backend_vk_init(0);
+        backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr);
         is_gpu = backend != nullptr;
     }
-#else
-    (void) prefer_gpu;
-#endif
     if (!backend) {
         backend = ggml_backend_cpu_init();
         is_gpu = false;
     }
     alloc = ggml_gallocr_new(ggml_backend_get_default_buffer_type(backend));
+}
+
+const char * Backend::name() const {
+    return backend ? ggml_backend_name(backend) : "none";
 }
 
 void Backend::free() {

@@ -11,7 +11,7 @@
 
 namespace breeze {
 
-// one compute backend (Vulkan when available, else CPU) shared by all graphs
+// one compute backend (any GPU ggml was built with, else CPU) shared by all graphs
 struct Backend {
     ggml_backend_t backend = nullptr;
     ggml_gallocr_t alloc = nullptr;
@@ -19,6 +19,7 @@ struct Backend {
 
     void init(bool prefer_gpu);
     void free();
+    const char * name() const;
 };
 
 // persistent per-layer key/value cache living in its own backend buffer

@@ -27,7 +27,7 @@ int run_server(const ServerOptions & opts) {
         fprintf(stderr, "failed to load model\n");
         return 1;
     }
-    printf("backend: %s, sample rate: %d\n", model.backend.is_gpu ? "GPU" : "CPU", model.cfg.sample_rate);
+    printf("backend: %s, sample rate: %d\n", model.backend.name(), model.cfg.sample_rate);
     MimiCodec codec;
     codec.init(model);
 

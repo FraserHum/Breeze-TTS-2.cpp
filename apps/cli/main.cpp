@@ -63,7 +63,7 @@ int main(int argc, char ** argv) {
     BreezeModel model;
     printf("loading %s ...\n", model_path.c_str());
     if (!model.load(model_path, use_gpu)) { fprintf(stderr, "failed to load model\n"); return 1; }
-    printf("backend: %s, sample rate: %d\n", model.backend.is_gpu ? "GPU" : "CPU", model.cfg.sample_rate);
+    printf("backend: %s, sample rate: %d\n", model.backend.name(), model.cfg.sample_rate);
 
     if (!ref_audio_path.empty()) {
         if (!read_wav(ref_audio_path, model.cfg.sample_rate, req.ref_audio)) {
