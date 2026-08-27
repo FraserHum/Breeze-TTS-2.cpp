@@ -7,10 +7,12 @@
 #include "httplib.h"
 #include "breeze_webui_assets.h"
 
+#include <chrono>
 #include <cstdio>
 #include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 namespace breeze {
 
@@ -70,17 +72,45 @@ int run_server(const ServerOptions & opts) {
         res.set_header("X-Sample-Rate", std::to_string(sr));
         res.set_header("X-Sample-Format", "s16le");
         res.set_header("Cache-Control", "no-store");
+
+        const bool sent_ins = req.has_file("instruction") || req.has_param("instruction");
+        const char * mode = !g.ref_audio.empty() ? (sent_ins ? "direction" : "clone") : "design";
+        printf("gen  %s, %d chars, cfg %.1f, seed %d\n", mode, (int) g.text.size(), g.cfg_scale, g.seed);
+        fflush(stdout);
+
         res.set_chunked_content_provider(
             "audio/pcm",
-            [&model, &codec, g, lock](size_t, httplib::DataSink & sink) {
+            [&model, &codec, g, lock, sr, verbose = opts.verbose](size_t, httplib::DataSink & sink) {
+                GenTimings tm;
+                const auto t0 = std::chrono::steady_clock::now();
+                const auto elapsed = [&] {
+                    return std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+                };
+                size_t total = 0;
                 try {
                     generate(model, codec, g, [&](const float * s, int n) {
                         std::vector<uint8_t> pcm = to_pcm16(s, n);
-                        return sink.write((const char *) pcm.data(), pcm.size());
-                    });
+                        if (!sink.write((const char *) pcm.data(), pcm.size())) return false;
+                        total += (size_t) n;
+                        const double secs = (double) total / sr, wall = elapsed();
+                        printf("\r     %6.2f s audio  %5.1f fps  %.2fx rt   ", secs,
+                               secs * 12.5 / wall, secs / wall);
+                        fflush(stdout);
+                        return true;
+                    }, &tm);
                 } catch (const std::exception & e) {
-                    fprintf(stderr, "generation error: %s\n", e.what());
+                    fprintf(stderr, "\ngeneration error: %s\n", e.what());
                 }
+                const double secs = (double) total / sr, wall = elapsed();
+                printf("\r     %.2f s audio in %.2f s, %.2fx rt, first audio %.0f ms over %d flushes\n",
+                       secs, wall, wall > 0 ? secs / wall : 0.0, tm.first_audio, tm.flushes);
+                if (verbose && tm.frames > 0) {
+                    printf("     ref %.0f  prompt %.0f  prefill %.0f ms | per frame: backbone %.2f"
+                           "  depth %.2f  vocoder %.2f ms\n",
+                           tm.encode_ref, tm.prompt, tm.prefill, tm.backbone / tm.frames,
+                           tm.depth / tm.frames, tm.vocoder / tm.frames);
+                }
+                fflush(stdout);
                 sink.done();
                 return true;
             });

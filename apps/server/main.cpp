@@ -9,11 +9,12 @@ using namespace breeze;
 int main(int argc, char ** argv) {
     if (argc < 2 || !strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
         printf("usage: breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]\n");
-        printf("                     [--chunk-first N] [--chunk-max N]\n");
+        printf("                     [--chunk-first N] [--chunk-max N] [--verbose]\n");
         printf("\n");
         printf("  --chunk-first  frames in the first streamed chunk, lower starts sooner (default 4)\n");
         printf("  --chunk-max    frames the chunk ramps up to, higher is more efficient (default 25)\n");
         printf("                 set both the same to stream a fixed chunk size\n");
+        printf("  --verbose      add a per stage timing breakdown to each request\n");
         return argc < 2 ? 1 : 0;
     }
     ServerOptions opts;
@@ -23,6 +24,7 @@ int main(int argc, char ** argv) {
         if (a == "--host" && i + 1 < argc) opts.host = argv[++i];
         else if (a == "--port" && i + 1 < argc) opts.port = atoi(argv[++i]);
         else if (a == "--webui") opts.webui = true;
+        else if (a == "--verbose" || a == "-v") opts.verbose = true;
         else if (a == "--cpu") opts.use_gpu = false;
         else if (a == "--chunk-first" && i + 1 < argc) opts.chunk_first = atoi(argv[++i]);
         else if (a == "--chunk-max" && i + 1 < argc) opts.chunk_max = atoi(argv[++i]);

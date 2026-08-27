@@ -10,6 +10,7 @@ struct ServerOptions {
     int port = 8080;
     bool use_gpu = true;
     bool webui = false;
+    bool verbose = false;
     int chunk_first = 4;
     int chunk_max = 25;
 };
