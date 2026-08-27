@@ -29,18 +29,19 @@ void Backend::free() {
     backend = nullptr;
 }
 
-void KVCache::init(Backend & be, int n_layer, int hd, int nkv, int ms) {
+void KVCache::init(Backend & be, int n_layer, int hd, int nkv, int ms, int nb) {
     head_dim = hd;
     n_kv_head = nkv;
     max_seq = ms;
+    n_branch = nb;
     len = 0;
     ggml_init_params p{ ggml_tensor_overhead() * n_layer * 2 + 4096, nullptr, true };
     ctx = ggml_init(p);
     k.resize(n_layer);
     v.resize(n_layer);
     for (int i = 0; i < n_layer; i++) {
-        k[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms);
-        v[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms);
+        k[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms * nb);
+        v[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms * nb);
     }
     buffer = ggml_backend_alloc_ctx_tensors(ctx, be.backend);
 }
@@ -143,6 +144,19 @@ std::vector<float> build_causal_mask(int n_q, int n_kv, int q_offset, int slidin
         for (int kk = 0; kk < n_kv; kk++) {
             bool ok = kk <= qpos;
             if (ok && sliding_window > 0 && qpos - kk >= sliding_window) ok = false;
+            mask[(size_t) q * n_kv + kk] = ok ? 0.0f : -INFINITY;
+        }
+    }
+    return mask;
+}
+
+std::vector<float> build_branch_causal_mask(int n_q, int n_kv, int q_offset, int n_branch) {
+    std::vector<float> mask((size_t) n_q * n_kv, 0.0f);
+    for (int q = 0; q < n_q; q++) {
+        const int qb = q % n_branch;
+        const int qpos = q_offset + q / n_branch;
+        for (int kk = 0; kk < n_kv; kk++) {
+            const bool ok = kk % n_branch == qb && kk / n_branch <= qpos;
             mask[(size_t) q * n_kv + kk] = ok ? 0.0f : -INFINITY;
         }
     }

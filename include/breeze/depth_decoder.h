@@ -9,7 +9,8 @@ namespace breeze {
 
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
 struct DepthRunner {
-    std::vector<KVCache> kv; // one per CFG branch
+    KVCache kv; // CFG branches share one cache, interleaved per position
+    int n_branch = 1;
     std::vector<float> freq_factors;
 
     void init(BreezeModel & m, int n_branches);

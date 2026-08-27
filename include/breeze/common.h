@@ -23,13 +23,14 @@ struct Backend {
 };
 
 // persistent per-layer key/value cache living in its own backend buffer
+// several CFG branches can share one cache, interleaved as slot = pos * n_branch + branch
 struct KVCache {
     ggml_context * ctx = nullptr;
     ggml_backend_buffer_t buffer = nullptr;
     std::vector<ggml_tensor *> k, v;
-    int head_dim = 0, n_kv_head = 0, max_seq = 0, len = 0;
+    int head_dim = 0, n_kv_head = 0, max_seq = 0, len = 0, n_branch = 1;
 
-    void init(Backend & be, int n_layer, int head_dim, int n_kv_head, int max_seq);
+    void init(Backend & be, int n_layer, int head_dim, int n_kv_head, int max_seq, int n_branch = 1);
     void reset() { len = 0; }
     void free();
 };
@@ -65,6 +66,9 @@ ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, gg
                         ggml_tensor * mask, float scale, int n_head, int n_kv_head);
 
 std::vector<float> build_causal_mask(int n_q, int n_kv, int q_offset, int sliding_window);
+
+// causal within a branch, blind across branches, for interleaved multi branch caches
+std::vector<float> build_branch_causal_mask(int n_q, int n_kv, int q_offset, int n_branch);
 
 // encoder style mask: everything visible, optionally limited to a window on both sides
 std::vector<float> build_bidirectional_mask(int n_q, int n_kv, int sliding_window);

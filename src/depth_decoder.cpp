@@ -28,13 +28,14 @@ static std::vector<float> llama3_freq_factors(const DepthConfig & c) {
 }
 
 void DepthRunner::init(BreezeModel & m, int n_branches) {
-    kv.resize(n_branches);
-    for (auto & c : kv) c.init(m.backend, m.cfg.dd.n_layer, m.cfg.dd.head_dim, m.cfg.dd.n_kv_head, m.cfg.num_codebooks + 1);
+    n_branch = n_branches;
+    kv.init(m.backend, m.cfg.dd.n_layer, m.cfg.dd.head_dim, m.cfg.dd.n_kv_head,
+            m.cfg.num_codebooks + 1, n_branches);
     freq_factors = llama3_freq_factors(m.cfg.dd);
 }
 
 void DepthRunner::free() {
-    for (auto & c : kv) c.free();
+    kv.free();
 }
 
 static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, Graph & g, KVCache & kv,
@@ -64,49 +65,55 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, Graph & g, KV
     return ggml_add(ctx, res, h);
 }
 
-// runs n depth tokens for one branch and returns logits over the codebook vocab for the last token
-static std::vector<float> depth_step(BreezeModel & m, DepthRunner & r, int branch, int start,
-                                     const std::vector<float> * hidden0, const std::vector<int> & audio_idx,
-                                     int head_idx) {
+// runs one depth position for every CFG branch at once and returns the per branch logits,
+// laid out branch major so branch b starts at b * vocab
+static std::vector<float> depth_step(BreezeModel & m, DepthRunner & r, int start,
+                                     const std::vector<std::vector<float>> * hiddens,
+                                     int audio_code, int head_idx) {
     const DepthConfig & c = m.cfg.dd;
-    const int n_audio = (int) audio_idx.size();
-    const int n = n_audio + (hidden0 ? 1 : 0);
-    const int total = start + n;
+    const int nb = r.n_branch;
+    const int n_pos = hiddens ? 2 : 1;
+    const int n_tok = n_pos * nb;
+    const int total = (start + n_pos) * nb;
     Graph g(2048);
 
-    std::vector<int32_t> idx(audio_idx.begin(), audio_idx.end());
-    ggml_tensor * aud = g.input_i32(idx, n_audio);
-    ggml_tensor * embed = ggml_get_rows(g.ctx, m.w("audio_embd.weight"), aud); // [2048, n_audio]
-    if (hidden0) {
-        ggml_tensor * h0 = g.input_f32(*hidden0, m.cfg.hidden_size, 1);
-        embed = ggml_concat(g.ctx, h0, embed, 1); // [2048, n]
+    std::vector<int32_t> idx(nb, audio_code);
+    ggml_tensor * aud = g.input_i32(idx, nb);
+    ggml_tensor * embed = ggml_get_rows(g.ctx, m.w("audio_embd.weight"), aud); // [2048, nb]
+    if (hiddens) {
+        std::vector<float> flat;
+        flat.reserve((size_t) nb * m.cfg.hidden_size);
+        for (const auto & h : *hiddens) flat.insert(flat.end(), h.begin(), h.end());
+        ggml_tensor * h0 = g.input_f32(flat, m.cfg.hidden_size, nb);
+        embed = ggml_concat(g.ctx, h0, embed, 1); // [2048, 2*nb], position major
     }
-    ggml_tensor * x = linear(g.ctx, m.w("dd.in_proj.weight"), embed); // [1024, n]
+    ggml_tensor * x = linear(g.ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
 
-    std::vector<int32_t> pos_i(n);
-    for (int i = 0; i < n; i++) pos_i[i] = start + i;
-    ggml_tensor * pos = g.input_i32(pos_i, n);
+    std::vector<int32_t> pos_i(n_tok);
+    for (int i = 0; i < n_tok; i++) pos_i[i] = start + i / nb;
+    ggml_tensor * pos = g.input_i32(pos_i, n_tok);
     ggml_tensor * ff = g.input_f32(r.freq_factors, (int) r.freq_factors.size());
-    std::vector<float> mask_v = build_causal_mask(n, total, start, 0);
-    ggml_tensor * mask = g.input_f32(mask_v, total, n);
+    std::vector<float> mask_v = build_branch_causal_mask(n_tok, total, start, nb);
+    ggml_tensor * mask = g.input_f32(mask_v, total, n_tok);
 
-    for (int il = 0; il < c.n_layer; il++) x = dd_layer(g.ctx, m, g, r.kv[branch], x, il, pos, ff, mask, start, n);
+    for (int il = 0; il < c.n_layer; il++)
+        x = dd_layer(g.ctx, m, g, r.kv, x, il, pos, ff, mask, start * nb, n_tok);
     x = rms_norm(g.ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
 
-    ggml_tensor * last = ggml_cont(g.ctx, ggml_view_2d(g.ctx, x, c.hidden, 1, x->nb[1], (size_t) (n - 1) * x->nb[1]));
+    ggml_tensor * last = ggml_cont(g.ctx, ggml_view_2d(g.ctx, x, c.hidden, nb, x->nb[1],
+                                                       (size_t) (n_tok - nb) * x->nb[1]));
     ggml_tensor * head = m.w("dd.codebooks_head.weight");
     ggml_tensor * hw = ggml_view_2d(g.ctx, head, head->ne[0], head->ne[1], head->nb[1], (size_t) head_idx * head->nb[2]);
-    ggml_tensor * logits = ggml_mul_mat(g.ctx, hw, last); // [vocab, 1]
+    ggml_tensor * logits = ggml_mul_mat(g.ctx, hw, last); // [vocab, nb]
     g.compute(m.backend, logits);
     return tensor_to_f32(logits);
 }
 
 std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector<float>> & hiddens,
                                   int cb0, float cfg_scale, std::mt19937 & rng) {
-    const int nb = (int) hiddens.size();
     const int nc = m.cfg.num_codebooks;
     const int vs = m.cfg.audio_vocab_size;
-    for (auto & c : kv) c.reset();
+    kv.reset();
 
     SampleParams sp;
     sp.temperature = m.cfg.depth_temperature;
@@ -114,27 +121,18 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     sp.top_p = m.cfg.depth_top_p;
 
     std::vector<int> codes = { cb0 };
-    auto combine = [&](std::vector<std::vector<float>> & per_branch) {
-        if (nb == 1) return per_branch[0];
-        std::vector<float> out(per_branch[0].size());
-        for (size_t i = 0; i < out.size(); i++)
-            out[i] = per_branch[1][i] + cfg_scale * (per_branch[0][i] - per_branch[1][i]);
-        return out;
-    };
-
     for (int j = 1; j < nc; j++) {
         const int head_idx = j - 1;
-        std::vector<std::vector<float>> br(nb);
-        for (int b = 0; b < nb; b++) {
-            if (j == 1) {
-                std::vector<int> aidx = { cb0 }; // codebook 0 offset is 0
-                br[b] = depth_step(m, *this, b, 0, &hiddens[b], aidx, head_idx);
-            } else {
-                std::vector<int> aidx = { codes[head_idx] + head_idx * vs };
-                br[b] = depth_step(m, *this, b, j, nullptr, aidx, head_idx);
-            }
+        std::vector<float> out = j == 1
+            ? depth_step(m, *this, 0, &hiddens, cb0, head_idx)
+            : depth_step(m, *this, j, nullptr, codes[head_idx] + head_idx * vs, head_idx);
+
+        const int vocab = (int) out.size() / n_branch;
+        std::vector<float> logits(out.begin(), out.begin() + vocab);
+        if (n_branch > 1) {
+            for (int i = 0; i < vocab; i++)
+                logits[i] = out[vocab + i] + cfg_scale * (out[i] - out[vocab + i]);
         }
-        std::vector<float> logits = combine(br);
         codes.push_back(sample_token(logits, sp, rng));
     }
     return std::vector<int>(codes.begin() + 1, codes.end());
