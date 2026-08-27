@@ -4,6 +4,18 @@ const statusEl = document.getElementById("status");
 const player = document.getElementById("player");
 const download = document.getElementById("download");
 const streamToggle = document.getElementById("stream");
+const bufferInput = document.getElementById("buffer");
+const bufferOut = document.getElementById("bufval");
+
+function syncBuffer() {
+  bufferOut.textContent = Number(bufferInput.value).toFixed(2) + "s";
+  bufferInput.disabled = !streamToggle.checked;
+  bufferInput.parentElement.classList.toggle("off", !streamToggle.checked);
+}
+
+bufferInput.addEventListener("input", syncBuffer);
+streamToggle.addEventListener("change", syncBuffer);
+syncBuffer();
 
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
@@ -58,7 +70,7 @@ function openContext(sampleRate) {
 }
 
 // plays each chunk as it lands, scheduled after whatever is already queued
-async function readStreaming(res, sr, onProgress) {
+async function readStreaming(res, sr, lead, onProgress) {
   const ac = openContext(sr);
   const reader = res.body.getReader();
   const parts = [];
@@ -90,7 +102,8 @@ async function readStreaming(res, sr, onProgress) {
     const src = ac.createBufferSource();
     src.buffer = buf;
     src.connect(ac.destination);
-    const at = Math.max(ac.currentTime + 0.1, playhead);
+    // falling back to the lead time also re-buffers after an underrun
+    const at = Math.max(ac.currentTime + lead, playhead);
     src.start(at);
     playhead = at + buf.duration;
 
@@ -146,7 +159,8 @@ async function generate(panel, tabName) {
     const sr = parseInt(res.headers.get("X-Sample-Rate") || "24000", 10);
 
     const pcm = streaming
-      ? await readStreaming(res, sr, s => { statusEl.textContent = "STREAMING - " + s.toFixed(2) + "s"; })
+      ? await readStreaming(res, sr, Number(bufferInput.value),
+                            s => { statusEl.textContent = "STREAMING - " + s.toFixed(2) + "s"; })
       : await readBuffered(res, b => { statusEl.textContent = "GENERATING - " + (b / 2 / sr).toFixed(2) + "s"; });
 
     const url = URL.createObjectURL(makeWav(pcm.buffer, sr));

@@ -70,7 +70,12 @@
   </section>
 
   <section class="output">
-    <label class="toggle"><input id="stream" type="checkbox" checked /> STREAM WHILE GENERATING</label>
+    <div class="row">
+      <label class="toggle"><input id="stream" type="checkbox" checked /> STREAM WHILE GENERATING</label>
+      <label class="slider">BUFFER <output id="bufval">0.50s</output>
+        <input id="buffer" type="range" min="0" max="4" step="0.25" value="0.5" />
+      </label>
+    </div>
     <div class="status" id="status">IDLE</div>
     <audio id="player" controls></audio>
     <a id="download" class="dl" download="breeze.wav">DOWNLOAD WAV</a>

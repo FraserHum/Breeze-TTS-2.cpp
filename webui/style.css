@@ -107,6 +107,53 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 .toggle input:checked { background: var(--accent); border-color: var(--accent); }
 .toggle input:focus { outline: none; border-color: var(--accent); }
 
+.slider { color: var(--dim); }
+.slider output { color: var(--accent); }
+.slider.off { opacity: 0.35; }
+
+.slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  margin-top: 8px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #000;
+  border: 2px solid var(--line);
+}
+
+.slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 18px;
+  margin-top: -8px;
+  background: var(--accent);
+  border: none;
+}
+
+.slider input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: #000;
+  border: 2px solid var(--line);
+}
+
+.slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 18px;
+  border: none;
+  border-radius: 0;
+  background: var(--accent);
+}
+
+.slider input[type="range"]:disabled { cursor: not-allowed; }
+
 .status {
   font-size: 12px;
   letter-spacing: 1px;
