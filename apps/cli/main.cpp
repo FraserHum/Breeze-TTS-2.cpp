@@ -1,0 +1,86 @@
+#include "breeze/audio.h"
+#include "breeze/generation.h"
+#include "breeze/model.h"
+
+#include <cstdio>
+#include <cstring>
+#include <string>
+
+using namespace breeze;
+
+static const char * arg(int argc, char ** argv, int & i, const char * name) {
+    if (i + 1 >= argc) {
+        fprintf(stderr, "missing value for %s\n", name);
+        return nullptr;
+    }
+    return argv[++i];
+}
+
+static void usage() {
+    printf("usage: breeze-cli <model.gguf> --text <text> [options]\n"
+           "  --instruction <s>   voice description or direction\n"
+           "  --ref-audio <wav>   reference audio for voice clone/direction\n"
+           "  --ref-text <s>      exact transcript of the reference audio\n"
+           "  --cfg-scale <f>     classifier free guidance scale (default 1.0)\n"
+           "  --seed <n>          random seed (default 42)\n"
+           "  --max-new <n>       max frames to generate\n"
+           "  --output <wav>      output path (default output.wav)\n"
+           "  --cpu               force CPU backend\n");
+}
+
+int main(int argc, char ** argv) {
+    if (argc < 2) { usage(); return 1; }
+    std::string model_path = argv[1];
+    GenRequest req;
+    req.instruction = "Speak clearly and naturally.";
+    std::string ref_audio_path, output = "output.wav";
+    bool use_gpu = true;
+
+    for (int i = 2; i < argc; i++) {
+        std::string a = argv[i];
+        if (a == "--text") req.text = arg(argc, argv, i, "--text");
+        else if (a == "--instruction") req.instruction = arg(argc, argv, i, "--instruction");
+        else if (a == "--ref-audio") ref_audio_path = arg(argc, argv, i, "--ref-audio");
+        else if (a == "--ref-text") req.ref_text = arg(argc, argv, i, "--ref-text");
+        else if (a == "--cfg-scale") req.cfg_scale = (float) atof(arg(argc, argv, i, "--cfg-scale"));
+        else if (a == "--seed") req.seed = atoi(arg(argc, argv, i, "--seed"));
+        else if (a == "--max-new") req.max_new_tokens = atoi(arg(argc, argv, i, "--max-new"));
+        else if (a == "--output") output = arg(argc, argv, i, "--output");
+        else if (a == "--cpu") use_gpu = false;
+        else if (a == "-h" || a == "--help") { usage(); return 0; }
+        else { fprintf(stderr, "unknown arg: %s\n", a.c_str()); return 1; }
+    }
+
+    if (req.text.empty()) { fprintf(stderr, "--text is required\n"); return 1; }
+
+    BreezeModel model;
+    printf("loading %s ...\n", model_path.c_str());
+    if (!model.load(model_path, use_gpu)) { fprintf(stderr, "failed to load model\n"); return 1; }
+    printf("backend: %s, sample rate: %d\n", model.backend.is_gpu ? "GPU" : "CPU", model.cfg.sample_rate);
+
+    if (!ref_audio_path.empty()) {
+        if (!read_wav(ref_audio_path, model.cfg.sample_rate, req.ref_audio)) {
+            fprintf(stderr, "failed to read reference audio\n");
+            return 1;
+        }
+    }
+
+    MimiCodec codec;
+    codec.init(model);
+
+    std::vector<float> audio;
+    int frames = 0;
+    generate(model, codec, req, [&](const float * s, int n) {
+        audio.insert(audio.end(), s, s + n);
+        frames += n;
+        printf("\rgenerated %.2f s", (float) frames / model.cfg.sample_rate);
+        fflush(stdout);
+        return true;
+    });
+    printf("\n");
+
+    if (!write_wav(output, audio, model.cfg.sample_rate)) { fprintf(stderr, "failed to write %s\n", output.c_str()); return 1; }
+    printf("wrote %s (%.2f s)\n", output.c_str(), (float) audio.size() / model.cfg.sample_rate);
+    model.free();
+    return 0;
+}
