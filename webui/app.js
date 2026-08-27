@@ -69,7 +69,7 @@ function openContext(sampleRate) {
   return audioCtx;
 }
 
-// plays each chunk as it lands, scheduled after whatever is already queued
+// holds chunks back until there is a real cushion of audio, then plays them gapless
 async function readStreaming(res, sr, lead, onProgress) {
   const ac = openContext(sr);
   const reader = res.body.getReader();
@@ -78,6 +78,25 @@ async function readStreaming(res, sr, lead, onProgress) {
   let playhead = 0;
   let samples = 0;
   let underruns = 0;
+  let queued = [];
+  let queuedSecs = 0;
+  let started = false;
+
+  const play = buf => {
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    src.connect(ac.destination);
+    let at = playhead;
+    if (playhead <= ac.currentTime) {
+      at = ac.currentTime + 0.02;
+      // ran dry, so rebuild a deeper cushion before letting it happen again
+      if (started) { underruns++; lead = Math.min(lead * 1.5 + 0.25, 5); }
+    }
+    src.start(at);
+    started = true;
+    playhead = at + buf.duration;
+  };
+
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -99,22 +118,22 @@ async function readStreaming(res, sr, lead, onProgress) {
     const ch = buf.getChannelData(0);
     for (let i = 0; i < n; i++) ch[i] = view.getInt16(i * 2, true) / 32768;
 
-    const src = ac.createBufferSource();
-    src.buffer = buf;
-    src.connect(ac.destination);
-    // butt onto the queued audio, and only pay the lead again once it has actually run dry
-    let at = playhead;
-    if (playhead <= ac.currentTime) {
-      at = ac.currentTime + lead;
-      // one stumble means the cushion was too thin, so widen it rather than stumble again
-      if (samples) { underruns++; lead = Math.min(lead * 1.5 + 0.15, 4); }
+    if (queued) {
+      queued.push(buf);
+      queuedSecs += buf.duration;
+      // generation outruns playback, so once the cushion exists it only ever grows
+      if (queuedSecs >= lead) {
+        queued.forEach(play);
+        queued = null;
+      }
+    } else {
+      play(buf);
     }
-    src.start(at);
-    playhead = at + buf.duration;
 
     samples += n;
     onProgress(samples / sr, underruns);
   }
+  if (queued) queued.forEach(play);
   return join(parts);
 }
 

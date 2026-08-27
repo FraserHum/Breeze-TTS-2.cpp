@@ -25,6 +25,8 @@ static void usage() {
            "  --seed <n>          random seed (default 42)\n"
            "  --max-new <n>       max frames to generate\n"
            "  --output <wav>      output path (default output.wav)\n"
+           "  --chunk-first <n>   frames in the first streamed chunk (default 4)\n"
+           "  --chunk-max <n>     frames the chunk ramps up to (default 25)\n"
            "  --timings           print a stage by stage latency breakdown\n"
            "  --cpu               force CPU backend\n");
 }
@@ -47,6 +49,8 @@ int main(int argc, char ** argv) {
         else if (a == "--cfg-scale") req.cfg_scale = (float) atof(arg(argc, argv, i, "--cfg-scale"));
         else if (a == "--seed") req.seed = atoi(arg(argc, argv, i, "--seed"));
         else if (a == "--max-new") req.max_new_tokens = atoi(arg(argc, argv, i, "--max-new"));
+        else if (a == "--chunk-first") req.chunk_first = atoi(arg(argc, argv, i, "--chunk-first"));
+        else if (a == "--chunk-max") req.chunk_max = atoi(arg(argc, argv, i, "--chunk-max"));
         else if (a == "--output") output = arg(argc, argv, i, "--output");
         else if (a == "--timings") show_timings = true;
         else if (a == "--cpu") use_gpu = false;
