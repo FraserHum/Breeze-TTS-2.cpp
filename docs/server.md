@@ -50,8 +50,16 @@ Audio seconds are `bytes / 2 / 24000`, so the factor is that divided by
 `time_total`. On an RTX 3060 a long clip measures about 1.29x at Q4_K and 1.18x
 at Q8_0 with the defaults. Those are thin margins. A busy GPU eats them.
 
+Guidance costs less than it looks like it should. `cfg_scale` above 1 adds a
+second forward pass, but the depth decoder batches both branches into one graph,
+so voice direction with a cloned reference measures 1.49x at `cfg_scale` 1 and
+1.20x at 4, still comfortably above realtime. Cloning also adds a one off
+reference encode of roughly 650 ms, which shows up in time to first audio rather
+than in the rate.
+
 If you land near or below 1.0, no client setting will fix it. Drop to a smaller
-quantisation, raise `--chunk-max`, or use a faster device.
+quantisation, raise `--chunk-max`, quantise the depth decoder harder (see
+[models.md](models.md)), or use a faster device.
 
 ### Queue depth
 

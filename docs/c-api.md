@@ -65,7 +65,7 @@ typedef struct {
 | `ref_text` | Exact transcript of `ref_audio`. Required when cloning, otherwise `NULL`. |
 | `ref_audio` | Mono reference samples at the model sample rate, or `NULL`. |
 | `ref_audio_len` | Number of floats in `ref_audio`. |
-| `cfg_scale` | Classifier free guidance. `1.0` disables it and halves the compute. |
+| `cfg_scale` | Classifier free guidance. `1.0` disables it and skips the second pass. |
 | `seed` | RNG seed. The same seed and inputs reproduce the same audio. |
 | `max_new_tokens` | Frame cap. `0` uses the model default of 750 frames, about 60 seconds. |
 

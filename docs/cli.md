@@ -101,13 +101,14 @@ breeze-cli breeze-tts-2-f16.gguf \
 
 ## Notes on the options
 
-**`--cfg-scale`** runs the whole pipeline twice, once conditioned and once
+**`--cfg-scale`** runs the pipeline twice, once conditioned and once
 unconditioned, then combines the logits as
-`uncond + scale * (cond - uncond)`. That roughly doubles generation time. The
-reference implementation defaults to `1.0`, which skips the second pass
-entirely. Higher values push harder toward the instruction; past about 2 the
-output picks up an audible harshness, so raise it only when the voice is
-ignoring the description.
+`uncond + scale * (cond - uncond)`. The depth decoder batches both branches into
+one graph, so the real cost is about 23% rather than the doubling you would
+expect, and generation still outruns playback. The reference implementation
+defaults to `1.0`, which skips the second pass entirely. Higher values push
+harder toward the instruction; past about 2 the output picks up an audible
+harshness, so raise it only when the voice is ignoring the description.
 
 **`--seed`** fully determines the output for a given model and input. Sampling
 uses temperature 0.9 and top-k 50, so different seeds give genuinely different

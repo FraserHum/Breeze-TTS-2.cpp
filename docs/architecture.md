@@ -113,7 +113,30 @@ instruction. Logits combine as:
 
 $$\text{logits} = \text{uncond} + s \cdot (\text{cond} - \text{uncond})$$
 
-This doubles generation cost, which is why the reference defaults to 1.0.
+The depth decoder runs both branches in **one graph**, not two. Its cost is
+dominated by dispatch overhead rather than arithmetic, so a second branch that
+rides along in the same dispatches is close to free: 33.73 ms per frame at
+`cfg_scale` 1 against 40.76 ms at 4, a 21% increase rather than a doubling.
+
+The two branches share one KV cache, interleaved as
+`slot = pos * n_branch + branch`. That keeps the tokens written each step
+contiguous, so the cache append is a single copy, and
+`build_branch_causal_mask` makes each query causal within its own branch and
+blind to the other.
+
+The backbone still runs its branches separately, because the conditioned and
+unconditioned prompts have different lengths and do not interleave cleanly. That
+is the remaining cost of guidance, worth about 6 ms per frame.
+
+Measured end to end for voice direction with a cloned reference on an RTX 3060:
+
+| `cfg_scale` | Backbone | Depth | Vocoder | Total per frame | Real time factor |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 8.26 ms | 33.73 ms | 11.79 ms | 53.78 ms | 1.49x |
+| 4 | 14.58 ms | 40.76 ms | 11.06 ms | 66.40 ms | 1.20x |
+
+Cloning adds a one off reference encode of roughly 650 ms, which lands on time to
+first audio and not on throughput.
 
 ## Streaming
 
