@@ -16,10 +16,36 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--seed <n>` | `42` | RNG seed. |
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
 | `--output <wav>` | `output.wav` | Output path. |
+| `--timings` | off | Print a stage by stage latency breakdown. |
 | `--cpu` | off | Force the CPU backend. |
 | `-h`, `--help` | | Print usage. |
 
 Progress prints as `generated N.NN s` while the audio streams in.
+
+## Latency
+
+`--timings` reports where the time goes:
+
+```
+time to first audio 364 ms over 7 flushes
+  reference encode       0.0 ms
+  prompt build          28.3 ms
+  backbone prefill     109.8 ms
+  first vocoder         51.8 ms  (4 frames)
+  backbone decode      941.8 ms  (8.12 ms/frame)
+  depth decode        4710.5 ms  (40.61 ms/frame)
+  vocoder             1316.7 ms  (11.35 ms/frame)
+  116 frames, 9.28 s audio
+```
+
+The depth decoder dominates because it runs 15 sequential single token passes
+per frame, each needing its own GPU round trip. Everything else is small by
+comparison.
+
+Audio is flushed in growing chunks, starting at 4 frames so playback can begin
+early and growing to 25 frames so the vocoder stays efficient. That keeps time
+to first audio near 350 ms while generation as a whole runs comfortably faster
+than realtime.
 
 ## Recipes
 

@@ -117,13 +117,16 @@ This doubles generation cost, which is why the reference defaults to 1.0.
 
 ## Streaming
 
-Audio is flushed every 25 frames, or 2 seconds.
+Audio is flushed in growing chunks. The first is 4 frames (320 ms) so playback
+can start early, and each flush grows by half again up to 25 frames (2 s), which
+keeps the vocoder running on batches big enough to amortise its fixed cost. On
+an RTX 3060 at Q4_K that puts time to first audio around 350 ms against roughly
+1.35 s for a fixed 25 frame chunk.
 
-Each flush decodes with 72 frames of left context and discards the audio
-belonging to that context. 72 matches the vocoder transformer's sliding window,
-so a chunk decodes identically to how it would inside a full pass and there is
-no seam. The reference does the same thing with a 300 frame chunk and 25 frames
-of context, trading latency for throughput.
+Each flush decodes with `sliding_window + 16` frames of left context and
+discards the audio belonging to that context. The transformer window alone is
+not enough: the convolutions either side of it reach back about another 16
+frames, and truncating there costs about 8 dB against a single pass decode.
 
 ## ggml notes
 

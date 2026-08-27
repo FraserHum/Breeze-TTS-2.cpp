@@ -25,6 +25,7 @@ static void usage() {
            "  --seed <n>          random seed (default 42)\n"
            "  --max-new <n>       max frames to generate\n"
            "  --output <wav>      output path (default output.wav)\n"
+           "  --timings           print a stage by stage latency breakdown\n"
            "  --cpu               force CPU backend\n");
 }
 
@@ -35,6 +36,7 @@ int main(int argc, char ** argv) {
     req.instruction = "Speak clearly and naturally.";
     std::string ref_audio_path, output = "output.wav";
     bool use_gpu = true;
+    bool show_timings = false;
 
     for (int i = 2; i < argc; i++) {
         std::string a = argv[i];
@@ -46,6 +48,7 @@ int main(int argc, char ** argv) {
         else if (a == "--seed") req.seed = atoi(arg(argc, argv, i, "--seed"));
         else if (a == "--max-new") req.max_new_tokens = atoi(arg(argc, argv, i, "--max-new"));
         else if (a == "--output") output = arg(argc, argv, i, "--output");
+        else if (a == "--timings") show_timings = true;
         else if (a == "--cpu") use_gpu = false;
         else if (a == "-h" || a == "--help") { usage(); return 0; }
         else { fprintf(stderr, "unknown arg: %s\n", a.c_str()); return 1; }
@@ -70,14 +73,28 @@ int main(int argc, char ** argv) {
 
     std::vector<float> audio;
     int frames = 0;
+    GenTimings tm;
     generate(model, codec, req, [&](const float * s, int n) {
         audio.insert(audio.end(), s, s + n);
         frames += n;
         printf("\rgenerated %.2f s", (float) frames / model.cfg.sample_rate);
         fflush(stdout);
         return true;
-    });
+    }, &tm);
     printf("\n");
+
+    if (show_timings) {
+        const double secs = (double) audio.size() / model.cfg.sample_rate;
+        printf("time to first audio %.0f ms over %d flushes\n", tm.first_audio, tm.flushes);
+        printf("  reference encode  %8.1f ms\n", tm.encode_ref);
+        printf("  prompt build      %8.1f ms\n", tm.prompt);
+        printf("  backbone prefill  %8.1f ms\n", tm.prefill);
+        printf("  first vocoder     %8.1f ms  (%d frames)\n", tm.first_vocoder, tm.first_frames);
+        printf("  backbone decode   %8.1f ms  (%.2f ms/frame)\n", tm.backbone, tm.backbone / tm.frames);
+        printf("  depth decode      %8.1f ms  (%.2f ms/frame)\n", tm.depth, tm.depth / tm.frames);
+        printf("  vocoder           %8.1f ms  (%.2f ms/frame)\n", tm.vocoder, tm.vocoder / tm.frames);
+        printf("  %d frames, %.2f s audio\n", tm.frames, secs);
+    }
 
     if (!write_wav(output, audio, model.cfg.sample_rate)) { fprintf(stderr, "failed to write %s\n", output.c_str()); return 1; }
     printf("wrote %s (%.2f s)\n", output.c_str(), (float) audio.size() / model.cfg.sample_rate);

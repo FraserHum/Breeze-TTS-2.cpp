@@ -2,6 +2,8 @@
 #include "breeze/sampling.h"
 #include "breeze/text_encoder.h"
 
+#include <algorithm>
+#include <chrono>
 #include <random>
 
 namespace breeze {
@@ -70,7 +72,16 @@ static std::vector<float> combine_logits(const std::vector<float> & cond, const 
     return out;
 }
 
-void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb) {
+void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
+              GenTimings * timings) {
+    GenTimings sink;
+    GenTimings & tm = timings ? *timings : sink;
+    const auto clock_now = [] { return std::chrono::steady_clock::now(); };
+    const auto since = [](std::chrono::steady_clock::time_point t) {
+        return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t).count();
+    };
+    const auto t_start = clock_now();
+
     std::mt19937 rng((uint32_t) req.seed);
     const int nc = m.cfg.num_codebooks;
     const int spf = m.cfg.samples_per_frame;
@@ -79,12 +90,16 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
 
     std::vector<int> ref_codes;
     int ref_T = 0;
+    auto t0 = clock_now();
     if (has_ref) ref_codes = codec.encode(req.ref_audio, ref_T);
+    tm.encode_ref = since(t0);
 
+    t0 = clock_now();
     int total_c = 0, total_u = 0;
     std::vector<float> emb_c = assemble(m, build_segments(m, req, has_ref, ref_codes, ref_T, true), total_c);
     std::vector<float> emb_u;
     if (use_cfg) emb_u = assemble(m, build_segments(m, req, has_ref, ref_codes, ref_T, false), total_u);
+    tm.prompt = since(t0);
 
     const int max_new = req.max_new_tokens > 0 ? req.max_new_tokens : m.cfg.max_new_tokens;
 
@@ -92,9 +107,11 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     st_c.init(m, total_c + max_new + 8);
     if (use_cfg) st_u.init(m, total_u + max_new + 8);
 
+    t0 = clock_now();
     StepOut o_c = backbone_run(m, st_c, emb_c, total_c);
     StepOut o_u;
     if (use_cfg) o_u = backbone_run(m, st_u, emb_u, total_u);
+    tm.prefill = since(t0);
 
     DepthRunner depth;
     depth.init(m, use_cfg ? 2 : 1);
@@ -113,8 +130,11 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
 
     std::vector<int> frames;
     int emitted = 0;
-    const int chunk = 25;
-    const int ctx = m.cfg.voc.sliding_window;
+    // the first flush is small so audio starts early, then it grows to keep the vocoder efficient
+    const int chunk_max = 25;
+    int chunk = 4;
+    // the transformer window plus the slack the vocoder convolutions reach back over
+    const int ctx = m.cfg.voc.sliding_window + 16;
     auto flush = [&](bool final_flush) {
         const int have = (int) frames.size() / nc;
         while (have - emitted >= chunk || (final_flush && have > emitted)) {
@@ -123,10 +143,20 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
             const int ctx_start = start > ctx ? start - ctx : 0;
             const int sub_T = start + count - ctx_start;
             std::vector<int> sub(frames.begin() + (size_t) ctx_start * nc, frames.begin() + (size_t) (start + count) * nc);
+            const auto tv = clock_now();
             std::vector<float> audio = codec.decode(sub, sub_T);
+            const double vtime = since(tv);
+            tm.vocoder += vtime;
+            tm.flushes++;
             const int skip = (start - ctx_start) * spf;
+            if (!tm.first_audio) {
+                tm.first_vocoder = vtime;
+                tm.first_frames = sub_T;
+                tm.first_audio = since(t_start);
+            }
             if (!cb(audio.data() + skip, count * spf)) return false;
             emitted += count;
+            chunk = std::min(chunk + chunk / 2 + 1, chunk_max);
             if (!final_flush && have - emitted < chunk) break;
         }
         return true;
@@ -136,7 +166,9 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
         if (cb0 == m.cfg.backbone_eos_token_id) break;
         std::vector<std::vector<float>> hiddens = { o_c.hidden };
         if (use_cfg) hiddens.push_back(o_u.hidden);
+        auto td = clock_now();
         std::vector<int> depth_codes = depth.run(m, hiddens, cb0, req.cfg_scale, rng);
+        tm.depth += since(td);
         std::vector<int> frame = { cb0 };
         frame.insert(frame.end(), depth_codes.begin(), depth_codes.end());
 
@@ -144,13 +176,16 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
         for (int c : frame) if (c != m.cfg.codebook_pad_token_id) { pad = false; break; }
         if (!pad) {
             frames.insert(frames.end(), frame.begin(), frame.end());
+            tm.frames++;
             if (!flush(false)) return;
         }
         hist.push_back(cb0);
 
+        auto tb = clock_now();
         std::vector<float> ae = audio_embed_forward(m, frame, 1);
         o_c = backbone_run(m, st_c, ae, 1);
         if (use_cfg) o_u = backbone_run(m, st_u, ae, 1);
+        tm.backbone += since(tb);
         comb = combine_logits(o_c.logits, o_u.logits, use_cfg, req.cfg_scale);
         cb0 = sample_token(comb, bp, rng, &hist, &suppress);
     }
