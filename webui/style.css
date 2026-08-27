@@ -84,6 +84,29 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 
 .output { border: 2px solid var(--line); border-top: none; padding: 20px; }
 
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  background: #000;
+  border: 2px solid var(--line);
+  cursor: pointer;
+}
+
+.toggle input:checked { background: var(--accent); border-color: var(--accent); }
+.toggle input:focus { outline: none; border-color: var(--accent); }
+
 .status {
   font-size: 12px;
   letter-spacing: 1px;

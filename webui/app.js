@@ -3,6 +3,7 @@ const panels = document.querySelectorAll(".panel");
 const statusEl = document.getElementById("status");
 const player = document.getElementById("player");
 const download = document.getElementById("download");
+const streamToggle = document.getElementById("stream");
 
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
@@ -33,6 +34,86 @@ function makeWav(pcm, sampleRate) {
   return new Blob([buf], { type: "audio/wav" });
 }
 
+function join(parts) {
+  let n = 0;
+  for (const p of parts) n += p.length;
+  const out = new Uint8Array(n);
+  let off = 0;
+  for (const p of parts) { out.set(p, off); off += p.length; }
+  return out;
+}
+
+let audioCtx = null;
+
+function openContext(sampleRate) {
+  const Ctor = window.AudioContext || window.webkitAudioContext;
+  if (audioCtx) audioCtx.close().catch(() => {});
+  try {
+    audioCtx = new Ctor({ sampleRate });
+  } catch (e) {
+    audioCtx = new Ctor();
+  }
+  audioCtx.resume().catch(() => {});
+  return audioCtx;
+}
+
+// plays each chunk as it lands, scheduled after whatever is already queued
+async function readStreaming(res, sr, onProgress) {
+  const ac = openContext(sr);
+  const reader = res.body.getReader();
+  const parts = [];
+  let leftover = new Uint8Array(0);
+  let playhead = 0;
+  let samples = 0;
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    parts.push(value);
+
+    let bytes = value;
+    if (leftover.length) {
+      bytes = new Uint8Array(leftover.length + value.length);
+      bytes.set(leftover, 0);
+      bytes.set(value, leftover.length);
+    }
+    const n = bytes.length >> 1;
+    // a chunk boundary can split a sample, so carry the odd byte over
+    leftover = bytes.slice(n * 2);
+    if (!n) continue;
+
+    const view = new DataView(bytes.buffer, bytes.byteOffset, n * 2);
+    const buf = ac.createBuffer(1, n, sr);
+    const ch = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) ch[i] = view.getInt16(i * 2, true) / 32768;
+
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    src.connect(ac.destination);
+    const at = Math.max(ac.currentTime + 0.1, playhead);
+    src.start(at);
+    playhead = at + buf.duration;
+
+    samples += n;
+    onProgress(samples / sr);
+  }
+  return join(parts);
+}
+
+async function readBuffered(res, onProgress) {
+  const reader = res.body.getReader();
+  const parts = [];
+  let bytes = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    parts.push(value);
+    bytes += value.length;
+    onProgress(bytes);
+  }
+  return join(parts);
+}
+
 async function generate(panel, tabName) {
   const f = fields(panel);
   const text = (f.text.value || "").trim();
@@ -41,30 +122,39 @@ async function generate(panel, tabName) {
   const form = new FormData();
   form.append("text", text);
   form.append("seed", f.seed ? f.seed.value : "42");
-  form.append("cfg_scale", f.cfg ? f.cfg.value : (tabName === "clone" ? "1.0" : "4.0"));
-  if (f.instruction) form.append("instruction", f.instruction.value || "Speak clearly and naturally.");
-  else form.append("instruction", "Speak clearly and naturally.");
+  form.append("cfg_scale", f.cfg ? f.cfg.value : "1.0");
+  form.append("instruction", f.instruction ? (f.instruction.value || "Speak clearly and naturally.")
+                                           : "Speak clearly and naturally.");
   if (f.ref_text) form.append("ref_text", f.ref_text.value || "");
   if (f.ref_audio && f.ref_audio.files.length) form.append("ref_audio", f.ref_audio.files[0]);
 
+  const streaming = streamToggle.checked;
   const btn = panel.querySelector(".go");
   btn.disabled = true;
-  statusEl.textContent = "GENERATING ...";
+  statusEl.textContent = streaming ? "STREAMING ..." : "GENERATING ...";
   download.classList.remove("ready");
+  player.pause();
+  player.removeAttribute("src");
 
   try {
     const res = await fetch("/v1/audio/speech", { method: "POST", body: form });
-    if (!res.ok) { statusEl.textContent = "ERROR " + res.status; btn.disabled = false; return; }
+    if (!res.ok) {
+      statusEl.textContent = res.status === 409 ? "BUSY - ONE REQUEST AT A TIME" : "ERROR " + res.status;
+      btn.disabled = false;
+      return;
+    }
     const sr = parseInt(res.headers.get("X-Sample-Rate") || "24000", 10);
-    const pcm = await res.arrayBuffer();
-    const blob = makeWav(pcm, sr);
-    const url = URL.createObjectURL(blob);
+
+    const pcm = streaming
+      ? await readStreaming(res, sr, s => { statusEl.textContent = "STREAMING - " + s.toFixed(2) + "s"; })
+      : await readBuffered(res, b => { statusEl.textContent = "GENERATING - " + (b / 2 / sr).toFixed(2) + "s"; });
+
+    const url = URL.createObjectURL(makeWav(pcm.buffer, sr));
     player.src = url;
     download.href = url;
     download.classList.add("ready");
-    const seconds = (pcm.byteLength / 2 / sr).toFixed(2);
-    statusEl.textContent = "DONE - " + seconds + "s @ " + sr + "Hz";
-    player.play().catch(() => {});
+    statusEl.textContent = "DONE - " + (pcm.length / 2 / sr).toFixed(2) + "s @ " + sr + "Hz";
+    if (!streaming) player.play().catch(() => {});
   } catch (e) {
     statusEl.textContent = "ERROR: " + e.message;
   }

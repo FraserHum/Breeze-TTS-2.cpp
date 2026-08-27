@@ -180,8 +180,18 @@ Gradio demo.
 | `GET /app.js` | client script |
 
 It has three tabs matching the three generation modes, and it posts to the same
-`/v1/audio/speech` endpoint, wraps the returned PCM into a WAV blob in the
-browser, then plays it and offers a download.
+`/v1/audio/speech` endpoint.
+
+**Stream while generating** is on by default. The UI reads the response body
+incrementally and schedules each PCM chunk through the Web Audio API as it
+arrives, so playback starts roughly 2 seconds in rather than after the whole
+clip is rendered. A running counter shows how much audio has been produced.
+When generation finishes the same PCM is wrapped into a WAV blob for the player
+and the download link.
+
+Turn the toggle off to buffer the whole response first and play it back from the
+`<audio>` element, which is the better choice if you want to scrub the result
+rather than hear it as early as possible.
 
 The assets are compiled into the binary at build time from the
 [webui](../webui) folder by `cmake/embed_webui.cmake`, so there is no static
