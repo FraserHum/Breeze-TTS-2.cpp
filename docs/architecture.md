@@ -118,15 +118,49 @@ This doubles generation cost, which is why the reference defaults to 1.0.
 ## Streaming
 
 Audio is flushed in growing chunks. The first is 4 frames (320 ms) so playback
-can start early, and each flush grows by half again up to 25 frames (2 s), which
-keeps the vocoder running on batches big enough to amortise its fixed cost. On
-an RTX 3060 at Q4_K that puts time to first audio around 350 ms against roughly
-1.35 s for a fixed 25 frame chunk.
+can start early, and each flush grows by a third up to 25 frames (2 s) by
+default, which keeps the vocoder running on batches big enough to amortise its
+fixed cost. On an RTX 3060 at Q4_K that puts time to first audio around 350 ms
+against roughly 1.35 s for a fixed 25 frame chunk. Both ends of the ramp are
+configurable, see [server.md](server.md).
 
 Each flush decodes with `sliding_window + 16` frames of left context and
 discards the audio belonging to that context. The transformer window alone is
 not enough: the convolutions either side of it reach back about another 16
 frames, and truncating there costs about 8 dB against a single pass decode.
+
+That context is re-decoded every flush, so the chunk size sets how much vocoder
+work is thrown away. A 25 frame chunk decodes 113 frames to emit 25. Going to 40
+frames takes the vocoder from 13.15 to 10.87 ms per emitted frame, which is worth
+about 7% off total generation time. Past 40 there is nothing left to reclaim.
+
+Chunking also shapes what the client has to do. The queue drains continuously but
+refills once per chunk, so a client needs to hold more audio than a chunk takes
+to produce, not merely delay its first chunk. Producing 40 frames takes about
+2.5 s, so a client sitting on 0.5 s runs dry even when the average rate is well
+ahead of playback.
+
+## Where the time goes
+
+Measured on an RTX 3060 at Q8_0, per frame of audio (80 ms):
+
+| Stage | Per frame | Share |
+| --- | --- | --- |
+| Backbone decode | 9.9 ms | 15% |
+| Depth decode | 42.1 ms | 63% |
+| Vocoder | 13.2 ms | 20% |
+
+The depth decoder dominates because it runs 15 sequential steps per frame, one
+per codebook, and each step is a full 12 layer forward pass over a single token.
+
+It is bound by dispatch count, not arithmetic. Splitting `Graph::compute` over a
+whole clip attributes 4.5% to graph allocation, 7.1% to input uploads and 80% to
+`ggml_backend_graph_compute`, while the GPU reports 63% mean utilisation. The
+work per dispatch is tiny and there are roughly 180 of them per step, so the
+device spends much of its time between kernels rather than inside them. The
+reference implementation reaches for CUDA graphs on exactly this module; ggml's
+Vulkan backend has no equivalent, and the single shared backend and allocator
+rule out overlapping stages across threads.
 
 ## ggml notes
 

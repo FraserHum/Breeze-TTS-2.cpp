@@ -16,6 +16,8 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--seed <n>` | `42` | RNG seed. |
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
 | `--output <wav>` | `output.wav` | Output path. |
+| `--chunk-first <n>` | `4` | Frames in the first streamed chunk. |
+| `--chunk-max <n>` | `25` | Frames the chunk ramps up to. |
 | `--timings` | off | Print a stage by stage latency breakdown. |
 | `--cpu` | off | Force the CPU backend. |
 | `-h`, `--help` | | Print usage. |
@@ -46,6 +48,13 @@ Audio is flushed in growing chunks, starting at 4 frames so playback can begin
 early and growing to 25 frames so the vocoder stays efficient. That keeps time
 to first audio near 350 ms while generation as a whole runs comfortably faster
 than realtime.
+
+`--chunk-first` and `--chunk-max` tune that ramp, and pairing them with
+`--timings` is the easiest way to find good values for a given device before
+passing the same numbers to `breeze-server`. Raising `--chunk-max` mostly buys
+back vocoder time, since every flush re-decodes a fixed window of left context
+that gets discarded. See [server.md](server.md) for the measurements and for
+what the client has to do with the result.
 
 ## Recipes
 

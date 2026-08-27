@@ -24,26 +24,88 @@ breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
 breeze-server breeze-tts-2-q4_k.gguf --port 8137 --webui
 ```
 
-### Tuning the chunk ramp
-
-Audio is vocoded in chunks of whole frames, 12.5 frames per second. The first
-chunk sets how long the client waits for sound, and every flush pays a fixed
-overhead, so the chunk grows by a third each time until it reaches `--chunk-max`.
-
-Lower `--chunk-first` for a faster start. Four frames is about 320 ms of audio
-and lands near 350 ms on an RTX 3060; one frame gets there in roughly 220 ms but
-flushes far more often.
-
-Raise `--chunk-max` if playback stutters. Larger chunks cut the per flush
-overhead and buy the client a deeper queue, at the cost of a coarser stream.
-Setting both flags to the same value disables the ramp and streams a fixed size.
-
-The margin you are tuning against is the real time factor. Generating a clip
-1.2x faster than it plays leaves very little slack, so a slower quantisation or a
-busy GPU will stutter where a faster one does not.
-
 There is no authentication and no rate limiting. Do not expose it directly to
 the internet; put it behind a reverse proxy that handles both.
+
+## Streaming without stutter
+
+Two numbers decide whether a stream plays cleanly, and they fail in different
+ways. Getting one right does not save you from the other.
+
+### Real time factor
+
+The real time factor is seconds of audio produced per second of wall clock. Above
+1.0 the model outruns playback, below it no amount of buffering will help because
+the client drains faster than the server fills.
+
+Measure it against your own hardware rather than assuming:
+
+```
+curl -s -o out.pcm -w "%{time_total}\n" \
+  --form-string "text=<a sentence long enough to take several seconds>" \
+  http://127.0.0.1:8137/v1/audio/speech
+```
+
+Audio seconds are `bytes / 2 / 24000`, so the factor is that divided by
+`time_total`. On an RTX 3060 a long clip measures about 1.29x at Q4_K and 1.18x
+at Q8_0 with the defaults. Those are thin margins. A busy GPU eats them.
+
+If you land near or below 1.0, no client setting will fix it. Drop to a smaller
+quantisation, raise `--chunk-max`, or use a faster device.
+
+### Queue depth
+
+This is the one that actually causes stutter on a machine whose real time factor
+looks fine.
+
+The client's queue drains continuously but refills in one lump per chunk, so the
+queue has to be deeper than the time it takes to produce a whole chunk. At
+`--chunk-max 40` a chunk is 3.2 s of audio that takes roughly 2.5 s to generate,
+so a client holding only 0.5 s of audio runs dry waiting for it, even though the
+average rate is comfortably ahead.
+
+The rule: **buffer more audio than the slowest chunk takes to produce.** For the
+defaults that means at least 1 s, and the bundled UI prebuffers 1.25 s.
+
+Note the difference between prebuffering and delaying. Starting the first chunk
+half a second late does not create a cushion, it only shifts the start; the queue
+still holds one chunk. Accumulate chunks until you are actually holding N seconds
+of audio, then play them back to back. The bundled UI does this and exposes N as
+the buffer slider.
+
+### Tuning the chunk ramp
+
+Audio is vocoded in chunks of whole frames at 12.5 frames per second. The first
+chunk sets how long the client waits for sound, so the chunk starts small and
+grows by a third each flush until it reaches `--chunk-max`.
+
+Every flush also re-decodes `sliding_window + 16` frames of left context and
+throws that audio away, so small chunks are expensive. At 25 frames the vocoder
+decodes 113 frames to emit 25. Raising the ceiling reclaims most of it, measured
+on an RTX 3060 at Q8_0:
+
+| `--chunk-max` | Vocoder per frame | Total per frame | Real time factor |
+| --- | --- | --- | --- |
+| 25 | 13.15 ms | 66.11 ms | 1.21x |
+| 40 | 10.87 ms | 62.10 ms | 1.29x |
+| 60 | 10.89 ms | 62.25 ms | 1.29x |
+
+Past about 40 the context is amortised and there is nothing left to win, while
+chunks keep getting slower to produce and demand a deeper client queue.
+
+Lower `--chunk-first` for a faster start. Four frames is about 320 ms of audio
+and lands near 400 ms on an RTX 3060; one frame gets there in roughly 220 ms but
+flushes far more often. It only affects the first chunk, so it costs nothing in
+throughput.
+
+Setting both flags to the same value disables the ramp and streams a fixed size.
+
+### Summary
+
+- Aim for `--chunk-max 40` unless you are on a fast device and want a finer stream.
+- Buffer at least 1 s on the client, more if you raised `--chunk-max`.
+- Prebuffer by fill level, not by delay.
+- Check the real time factor first if it stutters no matter what you buffer.
 
 ## `GET /health`
 
@@ -209,10 +271,17 @@ It has three tabs matching the three generation modes, and it posts to the same
 
 **Stream while generating** is on by default. The UI reads the response body
 incrementally and schedules each PCM chunk through the Web Audio API as it
-arrives, so playback starts roughly 2 seconds in rather than after the whole
-clip is rendered. A running counter shows how much audio has been produced.
-When generation finishes the same PCM is wrapped into a WAV blob for the player
-and the download link.
+arrives, so playback starts about a second in rather than after the whole clip is
+rendered. A running counter shows how much audio has been produced, and appends a
+rebuffer count if the queue ever ran dry. When generation finishes the same PCM
+is wrapped into a WAV blob for the player and the download link.
+
+**Buffer** is how much audio the UI holds before it starts playing, not how long
+it waits. Chunks accumulate until that much is queued, then play back to back.
+The default of 1.25 s covers the defaults here; raise it if you raised
+`--chunk-max` or see rebuffers, lower it if you want a faster start and your real
+time factor has room. If the queue does run dry the UI widens its own buffer for
+the rest of that clip rather than stuttering repeatedly.
 
 Turn the toggle off to buffer the whole response first and play it back from the
 `<audio>` element, which is the better choice if you want to scrub the result

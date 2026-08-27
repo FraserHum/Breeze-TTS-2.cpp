@@ -152,6 +152,26 @@ for it, since each holds its own copy of the weights.
 `breeze_init` and `breeze_free` are safe to call concurrently for different
 contexts. `breeze_last_error` is thread local.
 
+## Streaming to a live output
+
+`breeze_generate` calls back with chunks as they are vocoded, so it can drive a
+sound device directly. Two things matter if you do that.
+
+The callback runs on the calling thread and generation is blocked until it
+returns, so do not do anything slow in it. Copy into a ring buffer and let the
+audio device drain that on its own thread.
+
+Size that ring buffer by production time, not by chunk count. Chunks arrive in
+growing sizes, and the queue drains continuously while the next one is being
+generated, so it needs to hold more audio than one chunk takes to produce. On an
+RTX 3060 at Q8_0 that is upwards of a second. The reasoning and the measurements
+are in [server.md](server.md#streaming-without-stutter), and they apply to any
+client, not just the browser one.
+
+Chunk sizes are the library defaults here. `breeze_request` has no field for
+them, so a C consumer cannot tune the ramp the way `breeze-cli` and
+`breeze-server` can; compensate on the client buffer instead.
+
 ## Complete example
 
 ```c
