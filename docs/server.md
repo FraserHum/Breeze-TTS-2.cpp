@@ -58,8 +58,10 @@ reference encode of roughly 650 ms, which shows up in time to first audio rather
 than in the rate.
 
 If you land near or below 1.0, no client setting will fix it. Drop to a smaller
-quantisation, raise `--chunk-max`, quantise the depth decoder harder (see
-[models.md](models.md)), or use a faster device.
+quantisation, raise `--chunk-max`, or use a faster device. Quantising the depth
+decoder with `--depth` also helps, but it damages the high end and the damage
+grows over a long passage, so weigh it against the numbers in
+[models.md](models.md).
 
 ### Queue depth
 
@@ -148,6 +150,14 @@ Accepts `multipart/form-data` (needed for the reference audio upload) or
 | `ref_text` | string | empty | Exact transcript of `ref_audio`. Required whenever `ref_audio` is present. |
 | `cfg_scale` | float | `1.0` | Classifier free guidance. `1.0` disables it. |
 | `seed` | int | `42` | RNG seed. |
+| `split_chars` | int | `600` | Long text is split on sentence boundaries into pieces of about this size and generated one at a time. `0` generates in one pass. |
+| `max_new_tokens` | int | model default | Frame cap per piece, 12.5 frames per second. `0` uses the model default of 750. |
+
+There is no length limit on `text`. Anything past the budget is split and
+generated piece by piece, each conditioned on the first so the voice does not
+change partway. Generating minutes in a single pass is what `split_chars 0`
+does, and the model loses track of the text well before it runs out of frames,
+so leave splitting on unless you have a reason not to.
 
 ### Response
 

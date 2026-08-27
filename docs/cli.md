@@ -15,6 +15,7 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--cfg-scale <f>` | `1.0` | Classifier free guidance. `1.0` disables it. |
 | `--seed <n>` | `42` | RNG seed. |
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
+| `--split-chars <n>` | `600` | Split long text into pieces of about this many characters. `0` generates in one pass. |
 | `--output <wav>` | `output.wav` | Output path. |
 | `--chunk-first <n>` | `4` | Frames in the first streamed chunk. |
 | `--chunk-max <n>` | `25` | Frames the chunk ramps up to. |
@@ -117,7 +118,17 @@ takes. Generating a few and picking the best one is normal.
 **`--max-new`** caps frames, not characters. At 12.5 frames per second the
 default 750 is 60 seconds. The model stops on its own at an end of speech
 token, so this is a safety net for runaway generation rather than a length
-control.
+control. It applies per piece, not to the whole request.
+
+**`--split-chars`** is the real length control. Text longer than the budget is
+broken on sentence boundaries and generated a piece at a time, with every piece
+conditioned on the first one so the voice stays put. Chinese characters count
+heavier than latin ones because they take longer to say.
+
+Splitting is not cosmetic. Asked for several minutes in one pass the model holds
+its voice but loses the text, drifting into garbled words somewhere past a
+minute and a half. Raise the budget if pieces sound disconnected, lower it if
+sentences go missing, and set `0` to turn splitting off.
 
 **`--ref-audio`** accepts any WAV the reader understands and converts it to
 mono at the model sample rate. Five to fifteen seconds of clean speech works

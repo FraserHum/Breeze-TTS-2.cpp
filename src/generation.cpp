@@ -23,12 +23,13 @@ static Seg text_seg(BreezeModel & m, const std::string & s) {
     return seg;
 }
 
-static std::vector<Seg> build_segments(BreezeModel & m, const GenRequest & r, bool has_ref,
+static std::vector<Seg> build_segments(BreezeModel & m, const GenRequest & r, const std::string & text,
+                                       bool has_ref, const std::string & ref_text,
                                        const std::vector<int> & ref_codes, int ref_T, bool cond) {
     std::vector<Seg> segs;
     const std::string spk = "[S0]";
     if (has_ref) {
-        segs.push_back(text_seg(m, spk + r.ref_text));
+        segs.push_back(text_seg(m, spk + ref_text));
         Seg a;
         a.is_text = false;
         a.codes = ref_codes;
@@ -36,7 +37,7 @@ static std::vector<Seg> build_segments(BreezeModel & m, const GenRequest & r, bo
         a.eos = true;
         segs.push_back(a);
     }
-    std::string tail = cond ? spk + "<ins_bos>" + r.instruction + "<ins_eos>" + r.text : spk + r.text;
+    std::string tail = cond ? spk + "<ins_bos>" + r.instruction + "<ins_eos>" + text : spk + text;
     segs.push_back(text_seg(m, tail));
     return segs;
 }
@@ -72,34 +73,37 @@ static std::vector<float> combine_logits(const std::vector<float> & cond, const 
     return out;
 }
 
-void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
-              GenTimings * timings) {
-    GenTimings sink;
-    GenTimings & tm = timings ? *timings : sink;
+// what a finished piece leaves behind so the next one can keep the same voice
+struct ChunkRef {
+    std::vector<int> codes;
+    int n_frames = 0;
+    std::string text;
+};
+
+static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest & req,
+                           const std::string & text, const ChunkRef & ref, uint32_t seed,
+                           const AudioCallback & cb, GenTimings & tm,
+                           std::chrono::steady_clock::time_point t_start, ChunkRef & out) {
     const auto clock_now = [] { return std::chrono::steady_clock::now(); };
     const auto since = [](std::chrono::steady_clock::time_point t) {
         return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t).count();
     };
-    const auto t_start = clock_now();
 
-    std::mt19937 rng((uint32_t) req.seed);
+    std::mt19937 rng(seed);
     const int nc = m.cfg.num_codebooks;
     const int spf = m.cfg.samples_per_frame;
-    const bool has_ref = !req.ref_audio.empty() && !req.ref_text.empty();
+    const bool has_ref = !ref.codes.empty() && !ref.text.empty();
     const bool use_cfg = req.cfg_scale != 1.0f;
 
-    std::vector<int> ref_codes;
-    int ref_T = 0;
-    auto t0 = clock_now();
-    if (has_ref) ref_codes = codec.encode(req.ref_audio, ref_T);
-    tm.encode_ref = since(t0);
+    const std::vector<int> & ref_codes = ref.codes;
+    const int ref_T = ref.n_frames;
 
-    t0 = clock_now();
+    auto t0 = clock_now();
     int total_c = 0, total_u = 0;
-    std::vector<float> emb_c = assemble(m, build_segments(m, req, has_ref, ref_codes, ref_T, true), total_c);
+    std::vector<float> emb_c = assemble(m, build_segments(m, req, text, has_ref, ref.text, ref_codes, ref_T, true), total_c);
     std::vector<float> emb_u;
-    if (use_cfg) emb_u = assemble(m, build_segments(m, req, has_ref, ref_codes, ref_T, false), total_u);
-    tm.prompt = since(t0);
+    if (use_cfg) emb_u = assemble(m, build_segments(m, req, text, has_ref, ref.text, ref_codes, ref_T, false), total_u);
+    tm.prompt += since(t0);
 
     const int max_new = req.max_new_tokens > 0 ? req.max_new_tokens : m.cfg.max_new_tokens;
 
@@ -111,7 +115,7 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     StepOut o_c = backbone_run(m, st_c, emb_c, total_c);
     StepOut o_u;
     if (use_cfg) o_u = backbone_run(m, st_u, emb_u, total_u);
-    tm.prefill = since(t0);
+    tm.prefill += since(t0);
 
     DepthRunner depth;
     depth.init(m, use_cfg ? 2 : 1);
@@ -130,6 +134,7 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
 
     std::vector<int> frames;
     int emitted = 0;
+    bool stopped = false;
     // the first flush is small so audio starts early, then it grows to keep the vocoder efficient
     const int chunk_max = std::max(1, req.chunk_max);
     int chunk = std::min(std::max(1, req.chunk_first), chunk_max);
@@ -177,7 +182,7 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
         if (!pad) {
             frames.insert(frames.end(), frame.begin(), frame.end());
             tm.frames++;
-            if (!flush(false)) return;
+            if (!flush(false)) { stopped = true; break; }
         }
         hist.push_back(cb0);
 
@@ -189,11 +194,45 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
         comb = combine_logits(o_c.logits, o_u.logits, use_cfg, req.cfg_scale);
         cb0 = sample_token(comb, bp, rng, &hist, &suppress);
     }
-    flush(true);
+    if (!stopped) stopped = !flush(true);
 
     st_c.free();
     if (use_cfg) st_u.free();
     depth.free();
+
+    out.codes = std::move(frames);
+    out.n_frames = (int) out.codes.size() / nc;
+    out.text = text;
+    return !stopped;
+}
+
+// long text is generated piece by piece, each one carrying the last as its reference so the
+// voice does not change at the seams
+void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
+              GenTimings * timings) {
+    GenTimings sink;
+    GenTimings & tm = timings ? *timings : sink;
+    const auto t_start = std::chrono::steady_clock::now();
+
+    ChunkRef user_ref;
+    if (!req.ref_audio.empty() && !req.ref_text.empty()) {
+        const auto t0 = std::chrono::steady_clock::now();
+        user_ref.codes = codec.encode(req.ref_audio, user_ref.n_frames);
+        user_ref.text = req.ref_text;
+        tm.encode_ref = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    }
+
+    const std::vector<std::string> parts = split_text(req.text, req.split_chars);
+
+    // every piece leans on the same reference. chaining each one off the piece before it sounds
+    // fine for a sentence or two and then compounds, the voice loses body at every hop
+    ChunkRef anchor = user_ref;
+    for (size_t i = 0; i < parts.size(); i++) {
+        ChunkRef made;
+        if (!generate_chunk(m, codec, req, parts[i], anchor, (uint32_t) req.seed + (uint32_t) i,
+                            cb, tm, t_start, made)) return;
+        if (anchor.codes.empty() && made.n_frames > 0) anchor = std::move(made);
+    }
 }
 
 }

@@ -52,6 +52,8 @@ int run_server(const ServerOptions & opts) {
         g.ref_text = field(req, "ref_text", "");
         g.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
         g.seed = atoi(field(req, "seed", "42").c_str());
+        g.max_new_tokens = atoi(field(req, "max_new_tokens", "0").c_str());
+        g.split_chars = atoi(field(req, "split_chars", "600").c_str());
         g.chunk_first = opts.chunk_first;
         g.chunk_max = opts.chunk_max;
         if (req.has_file("ref_audio")) {

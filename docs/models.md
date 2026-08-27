@@ -99,10 +99,10 @@ encoder, which affects phrasing more than timbre.
 breeze-quantize breeze-tts-2-f16.gguf breeze-tts-2-q4_k-dd2.gguf q4_k --depth q2_k
 ```
 
-This is worth doing. The depth decoder runs 15 sequential single token passes
-per frame and is the largest single cost in generation, but almost all of that
-is fixed dispatch overhead rather than weight reading, so shrinking it buys
-throughput cheaply. Measured on an RTX 3060 over five runs, median:
+This buys throughput cheaply. The depth decoder runs 15 sequential single token
+passes per frame and is the largest single cost in generation, but almost all of
+that is fixed dispatch overhead rather than weight reading, so shrinking it costs
+little time. Measured on an RTX 3060 over five runs, median:
 
 | Model | Depth type | Size | Depth per frame | Total per frame | Real time factor |
 | --- | --- | --- | --- | --- | --- |
@@ -113,19 +113,37 @@ throughput cheaply. Measured on an RTX 3060 over five runs, median:
 | Q4_K | Q2_K | 2.3 GB | 36.89 ms | 55.71 ms | 1.44x |
 
 Dropping the depth decoder to Q2_K is worth about 15% throughput for roughly
-70 MB. Note that `Q4_K` with a `Q2_K` depth decoder beats a uniform `Q4_K` model
-while being smaller, and matches a `Q8_0` base that is 800 MB larger.
+70 MB.
 
-The reason it survives such aggressive quantization is what the module does. It
-predicts codebooks 1 to 15, the residual detail on top of the coarse codebook
-the backbone already chose. Word identity and phrasing come from the backbone,
-so errors here move timbre rather than content. Spectral measurements do show
-high frequency energy falling as the depth decoder is squeezed, so if you are
-chasing maximum fidelity rather than speed, leave it at the base type.
+### It costs more than it first appears
+
+Short clips hide the damage. A Q2_K depth decoder sounds fine for a sentence and
+then falls apart over half a minute of continuous speech, going muffled and then
+tinny. Measured mean energy above 6 kHz on the same passage and seed, where the
+only difference between the middle two rows is the depth decoder:
+
+| Model | Depth type | Energy above 6 kHz |
+| --- | --- | --- |
+| F16 | F16 | 2.2% |
+| Q8_0 | Q8_0 | 13% |
+| Q8_0 | Q2_K | 0.5% |
+| Q4_K | Q2_K | 1.9% |
+
+Two things are going on. The depth decoder predicts codebooks 1 to 15, the
+residual detail on top of the coarse codebook the backbone chose, so quantizing
+it strips the top of the spectrum directly. Worse, every frame it emits is fed
+back into the backbone as the next input, so the error is inside the feedback
+loop and accumulates the longer a passage runs. That is why it degrades with
+time rather than uniformly, and why it recovers at the start of each piece of
+split text, where the context restarts.
+
+Use `--depth` when you want throughput on short utterances. For anything long or
+anything where fidelity matters, leave the depth decoder at the base type. `Q8_0`
+throughout is the safe choice.
 
 `q3_k` and `q2_k` are accepted for the whole model too, but there is little
-reason to use them outside the depth decoder. The backbone is bandwidth bound
-and degrades in ways you can hear.
+reason to use them. The backbone is bandwidth bound and degrades in ways you can
+hear.
 
 ## Tensor naming
 

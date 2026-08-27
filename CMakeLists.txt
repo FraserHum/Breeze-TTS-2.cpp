@@ -45,6 +45,7 @@ set(BREEZE_SOURCES
     src/codec_transformer.cpp
     src/sampling.cpp
     src/generation.cpp
+    src/text_split.cpp
     src/model.cpp
 )
 

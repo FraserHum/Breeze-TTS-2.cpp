@@ -49,6 +49,7 @@ int main(int argc, char ** argv) {
         else if (a == "--cfg-scale") req.cfg_scale = (float) atof(arg(argc, argv, i, "--cfg-scale"));
         else if (a == "--seed") req.seed = atoi(arg(argc, argv, i, "--seed"));
         else if (a == "--max-new") req.max_new_tokens = atoi(arg(argc, argv, i, "--max-new"));
+        else if (a == "--split-chars") req.split_chars = atoi(arg(argc, argv, i, "--split-chars"));
         else if (a == "--chunk-first") req.chunk_first = atoi(arg(argc, argv, i, "--chunk-first"));
         else if (a == "--chunk-max") req.chunk_max = atoi(arg(argc, argv, i, "--chunk-max"));
         else if (a == "--output") output = arg(argc, argv, i, "--output");

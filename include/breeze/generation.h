@@ -22,7 +22,13 @@ struct GenRequest {
     // frames per streamed chunk, ramping from first to max. set both the same for a fixed size
     int chunk_first = 4;
     int chunk_max = 25;
+    // long text is generated in pieces of about this many characters, 0 keeps it in one pass.
+    // the model loses track of the text somewhere past a minute of audio, so pieces stay under that
+    int split_chars = 600;
 };
+
+// break text on sentence boundaries into pieces worth roughly budget characters, cjk counted heavier
+std::vector<std::string> split_text(const std::string & text, int budget);
 
 // called with each decoded audio chunk; return false to stop generation early
 using AudioCallback = std::function<bool(const float * samples, int n)>;
