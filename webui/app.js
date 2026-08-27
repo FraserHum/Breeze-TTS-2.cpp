@@ -77,7 +77,7 @@ async function readStreaming(res, sr, lead, onProgress) {
   let leftover = new Uint8Array(0);
   let playhead = 0;
   let samples = 0;
-
+  let underruns = 0;
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -102,13 +102,18 @@ async function readStreaming(res, sr, lead, onProgress) {
     const src = ac.createBufferSource();
     src.buffer = buf;
     src.connect(ac.destination);
-    // falling back to the lead time also re-buffers after an underrun
-    const at = Math.max(ac.currentTime + lead, playhead);
+    // butt onto the queued audio, and only pay the lead again once it has actually run dry
+    let at = playhead;
+    if (playhead <= ac.currentTime) {
+      at = ac.currentTime + lead;
+      // one stumble means the cushion was too thin, so widen it rather than stumble again
+      if (samples) { underruns++; lead = Math.min(lead * 1.5 + 0.15, 4); }
+    }
     src.start(at);
     playhead = at + buf.duration;
 
     samples += n;
-    onProgress(samples / sr);
+    onProgress(samples / sr, underruns);
   }
   return join(parts);
 }
@@ -160,7 +165,10 @@ async function generate(panel, tabName) {
 
     const pcm = streaming
       ? await readStreaming(res, sr, Number(bufferInput.value),
-                            s => { statusEl.textContent = "STREAMING - " + s.toFixed(2) + "s"; })
+                            (s, under) => {
+                              statusEl.textContent = "STREAMING - " + s.toFixed(2) + "s"
+                                + (under ? "  (" + under + " REBUFFER" + (under > 1 ? "S" : "") + ")" : "");
+                            })
       : await readBuffered(res, b => { statusEl.textContent = "GENERATING - " + (b / 2 / sr).toFixed(2) + "s"; });
 
     const url = URL.createObjectURL(makeWav(pcm.buffer, sr));

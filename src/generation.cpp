@@ -156,7 +156,7 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
             }
             if (!cb(audio.data() + skip, count * spf)) return false;
             emitted += count;
-            chunk = std::min(chunk + chunk / 2 + 1, chunk_max);
+            chunk = std::min(chunk + chunk / 3 + 1, chunk_max);
             if (!final_flush && have - emitted < chunk) break;
         }
         return true;
