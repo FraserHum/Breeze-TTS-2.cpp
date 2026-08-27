@@ -95,14 +95,18 @@ treat a truncated body as an error.
 
 ### Examples
 
+Send text fields with `--form-string`, not `-F`. `curl` reads a value that starts
+with `(` as the opening of a multipart group, so `-F "text=(sigh) ..."` posts an
+empty field and the model ends up reading the multipart boundary out loud.
+
 Voice design:
 
 ```
 curl -X POST http://127.0.0.1:8137/v1/audio/speech \
-  -F "text=Welcome aboard. Your journey begins now." \
-  -F "instruction=A warm, thoughtful young woman with a clear, calm delivery." \
-  -F "cfg_scale=1" \
-  -F "seed=42" \
+  --form-string "text=Welcome aboard. Your journey begins now." \
+  --form-string "instruction=A warm, thoughtful young woman with a clear, calm delivery." \
+  --form-string "cfg_scale=1" \
+  --form-string "seed=42" \
   -o speech.pcm
 ```
 
@@ -110,9 +114,9 @@ Voice clone:
 
 ```
 curl -X POST http://127.0.0.1:8137/v1/audio/speech \
-  -F "text=It is good to hear your voice again." \
+  --form-string "text=It is good to hear your voice again." \
   -F "ref_audio=@reference.wav" \
-  -F "ref_text=This is the exact transcript of the reference audio." \
+  --form-string "ref_text=This is the exact transcript of the reference audio." \
   -o clone.pcm
 ```
 
@@ -120,18 +124,18 @@ Voice direction, which is a clone plus an instruction:
 
 ```
 curl -X POST http://127.0.0.1:8137/v1/audio/speech \
-  -F "text=We need to discuss what happened last night." \
-  -F "instruction=Speak slowly with a restrained, serious tone." \
+  --form-string "text=We need to discuss what happened last night." \
+  --form-string "instruction=Speak slowly with a restrained, serious tone." \
   -F "ref_audio=@reference.wav" \
-  -F "ref_text=This is the exact transcript of the reference audio." \
-  -F "cfg_scale=1" \
+  --form-string "ref_text=This is the exact transcript of the reference audio." \
+  --form-string "cfg_scale=1" \
   -o direction.pcm
 ```
 
 Play the raw stream straight out of `curl`:
 
 ```
-curl -sN -X POST http://127.0.0.1:8137/v1/audio/speech -F "text=Hello there." \
+curl -sN -X POST http://127.0.0.1:8137/v1/audio/speech --form-string "text=Hello there." \
   | ffplay -f s16le -ar 24000 -ac 1 -nodisp -autoexit -
 ```
 

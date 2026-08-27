@@ -86,12 +86,15 @@ Open http://localhost:8080/ for the web UI, or call the API directly. The respon
 
 ```
 curl -X POST http://127.0.0.1:8080/v1/audio/speech \
-  -F "text=(clears throat) We need to talk." \
-  -F "instruction=Speak slowly with a restrained, serious tone." \
+  --form-string "text=(clears throat) We need to talk." \
+  --form-string "instruction=Speak slowly with a restrained, serious tone." \
   -F "ref_audio=@reference.wav" \
-  -F "ref_text=Exact transcript of the reference." \
+  --form-string "ref_text=Exact transcript of the reference." \
   --output out.pcm
 ```
+
+Use `--form-string` for text fields, not `-F`. A value starting with `(` makes `curl` build a
+multipart group instead of sending the text, which matters the moment you use a vocal event tag.
 
 ## Bindings
 
