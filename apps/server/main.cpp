@@ -10,7 +10,7 @@ int main(int argc, char ** argv) {
     if (argc < 2 || !strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
         printf("usage: breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]\n");
         printf("                     [--chunk-first N] [--chunk-max N] [--verbose]\n");
-        printf("                     [--voices-dir PATH]\n");
+        printf("                     [--voices-dir PATH] [--ws-port P]\n");
         printf("\n");
         printf("  --chunk-first  frames in the first streamed chunk, lower starts sooner (default 4)\n");
         printf("  --chunk-max    frames the chunk ramps up to, higher is more efficient (default 25)\n");

@@ -6,6 +6,9 @@
 | [models.md](models.md) | Downloading weights, GGUF conversion, quantization, tensor layout |
 | [cli.md](cli.md) | `breeze-cli` flags and usage recipes |
 | [server.md](server.md) | HTTP endpoints, request and response formats, streaming, WebUI |
+| [websocket.md](websocket.md) | Streaming sessions, incremental text, live direction changes, interruption |
+| [voices.md](voices.md) | Caching and saving reference voices, the `.breeze` format |
+| [voice-conversion.md](voice-conversion.md) | Respeaking a recording in another voice, `breeze-convert` |
 | [c-api.md](c-api.md) | The `breeze.h` C API, lifecycle, callbacks, thread safety |
 | [ctypes.md](ctypes.md) | Binding the shared library from Python with `ctypes` |
 | [architecture.md](architecture.md) | The four model stages and how the C++ mirrors the reference |
@@ -32,3 +35,8 @@ Each frame is 1920 samples, so one frame of codes becomes 80 ms of audio.
 
 The mode is picked automatically from whether reference audio was supplied,
 so there is no mode flag anywhere in the API.
+
+There is also **voice conversion**, which is a different operation rather than a
+fourth mode. It takes a recording you already have instead of text, keeps its
+words and timing, and replaces the speaker. See
+[voice-conversion.md](voice-conversion.md).

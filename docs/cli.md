@@ -12,8 +12,16 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--instruction <s>` | `Speak clearly and naturally.` | Voice description or delivery direction. |
 | `--ref-audio <wav>` | none | Reference audio for cloning. Resampled to mono at the model rate. |
 | `--ref-text <s>` | none | Exact transcript of the reference audio. Required with `--ref-audio`. |
+| `--voice <name>` | none | Use a saved voice instead of `--ref-audio`. See [voices.md](voices.md). |
+| `--save-voice <name>` | none | Encode `--ref-audio` into a reusable voice file and exit. |
+| `--list-voices` | | List the saved voices and exit, without loading the model. |
+| `--voices-dir <path>` | `voices` | Where saved voices live. |
 | `--cfg-scale <f>` | `1.0` | Classifier free guidance. `1.0` disables it. |
 | `--seed <n>` | `42` | RNG seed. |
+| `--temp <f>` | model default | Sampling temperature. `0` keeps the GGUF's own value. |
+| `--top-k <n>` | model default | Sampling top-k. `0` keeps the model default. |
+| `--top-p <f>` | model default | Sampling top-p. `0` keeps the model default. |
+| `--rep-penalty <f>` | model default | Repetition penalty. `0` keeps the model default. |
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
 | `--split-chars <n>` | `600` | Split long text into pieces of about this many characters. `0` generates in one pass. |
 | `--output <wav>` | `output.wav` | Output path. |

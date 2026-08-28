@@ -4,11 +4,24 @@
 one model, serves it over HTTP, and streams raw PCM as the audio is generated
 rather than waiting for the whole clip.
 
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /health` | Liveness, sample rate, websocket port |
+| `POST /v1/audio/speech` | Generate speech, streamed |
+| `POST /v1/audio/convert` | Respeak a recording in another voice, see [voice-conversion.md](voice-conversion.md) |
+| `POST /v1/voices` | Register or save a reference voice, see [voices.md](voices.md) |
+| `GET /v1/voices` | List cached and saved voices |
+| `DELETE /v1/voices/<id>` | Drop a voice from memory |
+
+A separate WebSocket listener handles incremental text, mid stream direction
+changes and interruption. It is documented in [websocket.md](websocket.md).
+
 ## Starting the server
 
 ```
 breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
                            [--chunk-first N] [--chunk-max N] [--verbose]
+                           [--voices-dir PATH] [--ws-port P]
 ```
 
 | Flag | Default | Meaning |
@@ -20,6 +33,8 @@ breeze-server <model.gguf> [--host H] [--port P] [--webui] [--cpu]
 | `--chunk-first` | `4` | Frames in the first streamed chunk. |
 | `--chunk-max` | `25` | Frames the chunk ramps up to. |
 | `--verbose` | off | Add a per stage timing breakdown after each request. |
+| `--voices-dir` | `voices` | Folder of saved `.breeze` voices to load at startup. See [voices.md](voices.md). |
+| `--ws-port` | HTTP port + 1 | Port for streaming sessions. `-1` disables it. See [websocket.md](websocket.md). |
 
 ```
 breeze-server breeze-tts-2-q4_k.gguf --port 8137 --webui
@@ -43,8 +58,9 @@ rewrites it with the real figure. `fps` is frames generated per second against
 12.5 frames of audio per second, so the trailing number is the real time factor
 and anything above `1.00x` is faster than playback.
 
-There is no authentication and no rate limiting. Do not expose it directly to
-the internet; put it behind a reverse proxy that handles both.
+There is no authentication and no rate limiting, on either the HTTP port or the
+WebSocket one. Do not expose them directly to the internet; put them behind a
+reverse proxy that handles both.
 
 ## Streaming without stutter
 
@@ -145,12 +161,15 @@ curl http://127.0.0.1:8137/health
 ```
 
 ```json
-{"status":"ok","sample_rate":24000}
+{"status":"ok","sample_rate":24000,"ws_port":8081}
 ```
 
 The server does not accept connections until loading finishes, so a successful
 response also means the model is warm. Poll this after startup instead of
 guessing at a delay.
+
+`ws_port` is where the streaming socket ended up, or `0` when it is disabled, so
+clients can discover it rather than being configured with it.
 
 ## `POST /v1/audio/speech`
 
@@ -167,10 +186,18 @@ Accepts `multipart/form-data` (needed for the reference audio upload) or
 | `instruction` | string | `Speak clearly and naturally.` | Voice description or delivery direction. |
 | `ref_audio` | file | none | Reference WAV for cloning. Any sample rate or channel count; resampled to mono at the model rate. |
 | `ref_text` | string | empty | Exact transcript of `ref_audio`. Required whenever `ref_audio` is present. |
+| `voice_id` | string | none | A saved or cached voice to clone instead of uploading a clip. Skips the reference encode. See [voices.md](voices.md). |
 | `cfg_scale` | float | `1.0` | Classifier free guidance. `1.0` disables it. |
 | `seed` | int | `42` | RNG seed. |
+| `temperature` | float | model default | Sampling temperature. `0` keeps whatever the GGUF was built with. |
+| `top_k` | int | model default | Sampling top-k. `0` keeps the model default. |
+| `top_p` | float | model default | Sampling top-p. `0` keeps the model default. |
+| `repetition_penalty` | float | model default | Repetition penalty. `0` keeps the model default. |
 | `split_chars` | int | `600` | Long text is split on sentence boundaries into pieces of about this size and generated one at a time. `0` generates in one pass. |
 | `max_new_tokens` | int | model default | Frame cap per piece, 12.5 frames per second. `0` uses the model default of 750. |
+
+Every sampling field treats `0` as "use the model default", so leaving them out
+behaves exactly as before rather than forcing a zero.
 
 There is no length limit on `text`. Anything past the budget is split and
 generated piece by piece, each conditioned on the first so the voice does not
@@ -202,12 +229,14 @@ long before generation finishes.
 | Status | Body | Cause |
 | --- | --- | --- |
 | `400` | `{"error":"text is required"}` | `text` missing or empty. |
+| `404` | `{"error":"unknown voice_id"}` | No cached or saved voice by that name. |
 | `409` | `{"error":"busy"}` | Another generation is already running. |
 
 The server holds one model and serves one request at a time. A second
 concurrent request is rejected immediately with `409` rather than queued, so
 clients should retry with backoff or run several servers behind a load
-balancer.
+balancer. The WebSocket endpoint queues instead of refusing, which is one reason
+to prefer it for anything conversational.
 
 Because the response is streamed, a failure that happens **after** the first
 chunk cannot change the status code. The connection is closed early instead, so

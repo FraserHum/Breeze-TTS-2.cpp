@@ -23,6 +23,7 @@ static void usage() {
            "  --top-k <n>         depth top-k, 1 is greedy (default 1). opening this up lets the\n"
            "                      source voice bleed back through\n"
            "  --cfg-scale <f>     guidance toward the target voice (default 1.0, off)\n"
+           "  --seed <n>          random seed (default 42)\n"
            "  --keep-acoustic <n> acoustic codebooks kept from the source, 0 to 15. pitch lives in\n"
            "                      the low ones, so raising this keeps the source melody and\n"
            "                      intonation but lets its voice back in (default 0)\n"

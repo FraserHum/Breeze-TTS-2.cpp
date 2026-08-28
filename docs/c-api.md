@@ -56,6 +56,10 @@ typedef struct {
     int   seed;
     int   max_new_tokens;
     int   split_chars;
+    float temperature;
+    int   top_k;
+    float top_p;
+    float repetition_penalty;
 } breeze_request;
 ```
 
@@ -70,6 +74,10 @@ typedef struct {
 | `seed` | RNG seed. The same seed and inputs reproduce the same audio. |
 | `max_new_tokens` | Frame cap per piece. `0` uses the model default of 750 frames, about 60 seconds. |
 | `split_chars` | Size of the pieces long text is broken into. `0` uses the default of 600. Negative generates in one pass, which caps you at `max_new_tokens` and degrades past a minute or so. |
+| `temperature` | Sampling temperature. `0` keeps whatever the GGUF was built with. |
+| `top_k` | Sampling top-k. `0` keeps the model default. |
+| `top_p` | Sampling top-p. `0` keeps the model default. |
+| `repetition_penalty` | Repetition penalty. `0` keeps the model default. |
 
 Zero initialise the struct before filling it so future fields default sanely:
 

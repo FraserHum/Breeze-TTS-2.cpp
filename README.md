@@ -18,6 +18,9 @@ voice direction (clone a voice and steer tone or pace). It supports inline vocal
 | [docs/models.md](docs/models.md) | Weights, GGUF conversion, quantization |
 | [docs/cli.md](docs/cli.md) | `breeze-cli` reference |
 | [docs/server.md](docs/server.md) | HTTP endpoints and streaming |
+| [docs/websocket.md](docs/websocket.md) | Streaming sessions, incremental text, interruption |
+| [docs/voices.md](docs/voices.md) | Caching and saving reference voices |
+| [docs/voice-conversion.md](docs/voice-conversion.md) | Respeaking a recording in another voice |
 | [docs/c-api.md](docs/c-api.md) | The C API in `breeze.h` |
 | [docs/ctypes.md](docs/ctypes.md) | Binding the library from Python |
 | [docs/architecture.md](docs/architecture.md) | How the four stages work |
