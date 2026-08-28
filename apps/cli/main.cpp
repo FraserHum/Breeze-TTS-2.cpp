@@ -23,6 +23,10 @@ static void usage() {
            "  --ref-text <s>      exact transcript of the reference audio\n"
            "  --cfg-scale <f>     classifier free guidance scale (default 1.0)\n"
            "  --seed <n>          random seed (default 42)\n"
+           "  --temp <f>          sampling temperature, 0 keeps the model default\n"
+           "  --top-k <n>         sampling top-k, 0 keeps the model default\n"
+           "  --top-p <f>         sampling top-p, 0 keeps the model default\n"
+           "  --rep-penalty <f>   repetition penalty, 0 keeps the model default\n"
            "  --max-new <n>       max frames to generate\n"
            "  --output <wav>      output path (default output.wav)\n"
            "  --chunk-first <n>   frames in the first streamed chunk (default 4)\n"
@@ -48,6 +52,10 @@ int main(int argc, char ** argv) {
         else if (a == "--ref-text") req.ref_text = arg(argc, argv, i, "--ref-text");
         else if (a == "--cfg-scale") req.cfg_scale = (float) atof(arg(argc, argv, i, "--cfg-scale"));
         else if (a == "--seed") req.seed = atoi(arg(argc, argv, i, "--seed"));
+        else if (a == "--temp") req.temperature = (float) atof(arg(argc, argv, i, "--temp"));
+        else if (a == "--top-k") req.top_k = atoi(arg(argc, argv, i, "--top-k"));
+        else if (a == "--top-p") req.top_p = (float) atof(arg(argc, argv, i, "--top-p"));
+        else if (a == "--rep-penalty") req.repetition_penalty = (float) atof(arg(argc, argv, i, "--rep-penalty"));
         else if (a == "--max-new") req.max_new_tokens = atoi(arg(argc, argv, i, "--max-new"));
         else if (a == "--split-chars") req.split_chars = atoi(arg(argc, argv, i, "--split-chars"));
         else if (a == "--chunk-first") req.chunk_first = atoi(arg(argc, argv, i, "--chunk-first"));

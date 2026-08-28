@@ -18,6 +18,11 @@ struct GenRequest {
     std::vector<float> ref_audio; // mono 24 kHz, empty for voice design
     float cfg_scale = 1.0f;
     int seed = 42;
+    // sampling. zero on any of these keeps whatever the gguf was built with
+    float temperature = 0.0f;
+    int top_k = 0;
+    float top_p = 0.0f;
+    float repetition_penalty = 0.0f;
     int max_new_tokens = 0; // 0 uses the model default
     // frames per streamed chunk, ramping from first to max. set both the same for a fixed size
     int chunk_first = 4;
@@ -38,8 +43,8 @@ double estimate_seconds(const std::string & text);
 // unstable on random sampling, so conversion leans much harder on the likeliest codes than tts does
 struct ConvertOptions {
     std::string src_text;   // transcript of the source, empty generates filler
-    float temperature = 0.9f;
-    int top_k = 50;
+    float temperature = 0.3f;
+    int top_k = 1;
     float cfg_scale = 1.0f;
     // acoustic codebooks taken straight from the source instead of being regenerated. pitch lives in
     // the low ones, so this trades voice identity back for the source's melody and intonation

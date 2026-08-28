@@ -32,6 +32,11 @@ typedef struct {
     int seed;
     int max_new_tokens;         // 0 uses the model default
     int split_chars;            // 0 uses the default, negative keeps long text in a single pass
+    // sampling. zero on any of these keeps whatever the gguf was built with
+    float temperature;
+    int top_k;
+    float top_p;
+    float repetition_penalty;
 } breeze_request;
 
 BREEZE_API breeze_context * breeze_init(const char * gguf_path, int use_gpu);

@@ -121,10 +121,10 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     depth.init(m, use_cfg ? 2 : 1);
 
     SampleParams bp;
-    bp.temperature = m.cfg.temperature;
-    bp.top_k = m.cfg.top_k;
-    bp.top_p = m.cfg.top_p;
-    bp.repetition_penalty = m.cfg.repetition_penalty;
+    bp.temperature = req.temperature > 0.0f ? req.temperature : m.cfg.temperature;
+    bp.top_k = req.top_k > 0 ? req.top_k : m.cfg.top_k;
+    bp.top_p = req.top_p > 0.0f ? req.top_p : m.cfg.top_p;
+    bp.repetition_penalty = req.repetition_penalty > 0.0f ? req.repetition_penalty : m.cfg.repetition_penalty;
     std::vector<int> suppress;
     for (int t = m.cfg.codec_codebook_size; t < m.cfg.audio_vocab_size; t++) suppress.push_back(t);
 

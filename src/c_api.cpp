@@ -26,6 +26,10 @@ static GenRequest to_req(const breeze_request * r) {
     g.seed = r->seed;
     g.max_new_tokens = r->max_new_tokens;
     if (r->split_chars != 0) g.split_chars = r->split_chars < 0 ? 0 : r->split_chars;
+    g.temperature = r->temperature;
+    g.top_k = r->top_k;
+    g.top_p = r->top_p;
+    g.repetition_penalty = r->repetition_penalty;
     return g;
 }
 
