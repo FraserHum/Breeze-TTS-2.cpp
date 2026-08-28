@@ -6,6 +6,8 @@ const download = document.getElementById("download");
 const streamToggle = document.getElementById("stream");
 const bufferInput = document.getElementById("buffer");
 const bufferOut = document.getElementById("bufval");
+const stopBtn = document.getElementById("stop");
+let wsPort = 0;
 
 function syncBuffer() {
   bufferOut.textContent = Number(bufferInput.value).toFixed(2) + "s";
@@ -137,9 +139,8 @@ function openContext(sampleRate) {
 }
 
 // holds chunks back until there is a real cushion of audio, then plays them gapless
-async function readStreaming(res, sr, lead, onProgress) {
+function makePlayer(sr, lead) {
   const ac = openContext(sr);
-  const reader = res.body.getReader();
   const parts = [];
   let leftover = new Uint8Array(0);
   let playhead = 0;
@@ -164,44 +165,56 @@ async function readStreaming(res, sr, lead, onProgress) {
     playhead = at + buf.duration;
   };
 
+  return {
+    push(value) {
+      parts.push(value);
+      let bytes = value;
+      if (leftover.length) {
+        bytes = new Uint8Array(leftover.length + value.length);
+        bytes.set(leftover, 0);
+        bytes.set(value, leftover.length);
+      }
+      const n = bytes.length >> 1;
+      // a chunk boundary can split a sample, so carry the odd byte over
+      leftover = bytes.slice(n * 2);
+      if (!n) return;
+
+      const view = new DataView(bytes.buffer, bytes.byteOffset, n * 2);
+      const buf = ac.createBuffer(1, n, sr);
+      const ch = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) ch[i] = view.getInt16(i * 2, true) / 32768;
+
+      if (queued) {
+        queued.push(buf);
+        queuedSecs += buf.duration;
+        // generation outruns playback, so once the cushion exists it only ever grows
+        if (queuedSecs >= lead) { queued.forEach(play); queued = null; }
+      } else {
+        play(buf);
+      }
+      samples += n;
+    },
+    finish() {
+      if (queued) queued.forEach(play);
+      queued = null;
+      return join(parts);
+    },
+    stop() { try { ac.close(); } catch (e) {} return join(parts); },
+    get samples() { return samples; },
+    get underruns() { return underruns; }
+  };
+}
+
+async function readStreaming(res, sr, lead, onProgress) {
+  const p = makePlayer(sr, lead);
+  const reader = res.body.getReader();
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    parts.push(value);
-
-    let bytes = value;
-    if (leftover.length) {
-      bytes = new Uint8Array(leftover.length + value.length);
-      bytes.set(leftover, 0);
-      bytes.set(value, leftover.length);
-    }
-    const n = bytes.length >> 1;
-    // a chunk boundary can split a sample, so carry the odd byte over
-    leftover = bytes.slice(n * 2);
-    if (!n) continue;
-
-    const view = new DataView(bytes.buffer, bytes.byteOffset, n * 2);
-    const buf = ac.createBuffer(1, n, sr);
-    const ch = buf.getChannelData(0);
-    for (let i = 0; i < n; i++) ch[i] = view.getInt16(i * 2, true) / 32768;
-
-    if (queued) {
-      queued.push(buf);
-      queuedSecs += buf.duration;
-      // generation outruns playback, so once the cushion exists it only ever grows
-      if (queuedSecs >= lead) {
-        queued.forEach(play);
-        queued = null;
-      }
-    } else {
-      play(buf);
-    }
-
-    samples += n;
-    onProgress(samples / sr, underruns);
+    p.push(value);
+    onProgress(p.samples / sr, p.underruns);
   }
-  if (queued) queued.forEach(play);
-  return join(parts);
+  return p.finish();
 }
 
 async function readBuffered(res, onProgress) {
@@ -216,6 +229,108 @@ async function readBuffered(res, onProgress) {
     onProgress(bytes);
   }
   return join(parts);
+}
+
+// the socket protocol takes a voice id, so an uploaded clip is registered first. that caches it
+// too, so picking the same file again skips the encode
+async function resolveVoice(f) {
+  if (f.voice_id && f.voice_id.value) return f.voice_id.value;
+  if (!f.ref_audio || !f.ref_audio.files.length) return "";
+  statusEl.textContent = "ENCODING REFERENCE ...";
+  const form = new FormData();
+  form.append("ref_audio", f.ref_audio.files[0]);
+  form.append("ref_text", f.ref_text ? f.ref_text.value || "" : "");
+  const r = await fetch("/v1/voices", { method: "POST", body: form });
+  if (!r.ok) throw new Error("could not encode the reference");
+  return (await r.json()).id;
+}
+
+let liveSocket = null;
+
+function wsGenerate(panel, tabName) {
+  const f = fields(panel);
+  const text = (f.text.value || "").trim();
+  if (!text) { statusEl.textContent = "TEXT IS REQUIRED"; return Promise.resolve(); }
+
+  const btn = panel.querySelector(".go");
+  const lead = Number(bufferInput.value);
+  const streaming = streamToggle.checked;
+
+  return resolveVoice(f).then(voice => new Promise(resolve => {
+    const url = (location.protocol === "https:" ? "wss://" : "ws://") +
+                location.hostname + ":" + wsPort;
+    const sock = new WebSocket(url);
+    sock.binaryType = "arraybuffer";
+    liveSocket = sock;
+    btn.disabled = true;
+    stopBtn.classList.add("live");
+    download.classList.remove("ready");
+    player.pause();
+    player.removeAttribute("src");
+    statusEl.textContent = "CONNECTING ...";
+
+    let sr = 24000;
+    let p = null;
+    const done = () => {
+      const pcm = p ? p.finish() : new Uint8Array(0);
+      if (pcm.length) {
+        const url2 = URL.createObjectURL(makeWav(pcm.buffer, sr));
+        player.src = url2;
+        download.href = url2;
+        download.classList.add("ready");
+      }
+      btn.disabled = false;
+      stopBtn.classList.remove("live");
+      liveSocket = null;
+      try { sock.close(); } catch (e) {}
+      resolve(pcm);
+    };
+
+    sock.onmessage = ev => {
+      if (ev.data instanceof ArrayBuffer) {
+        if (!p) p = makePlayer(sr, streaming ? lead : 1e9);
+        p.push(new Uint8Array(ev.data));
+        statusEl.textContent = (streaming ? "STREAMING - " : "GENERATING - ") +
+                               (p.samples / sr).toFixed(2) + "s" +
+                               (p.underruns ? "  (" + p.underruns + " REBUFFER)" : "");
+        return;
+      }
+      const m = JSON.parse(ev.data);
+      if (m.type === "ready") {
+        sr = m.sample_rate || 24000;
+        sock.send(JSON.stringify({
+          type: "start",
+          voice_id: voice,
+          instruction: f.instruction ? (f.instruction.value || "Speak clearly and naturally.")
+                                     : "Speak clearly and naturally.",
+          ref_text: f.ref_text ? f.ref_text.value || "" : "",
+          cfg_scale: Number(f.cfg ? f.cfg.value : 1),
+          seed: Number(f.seed ? f.seed.value : 42)
+        }));
+        sock.send(JSON.stringify({ type: "end", text }));
+        statusEl.textContent = "GENERATING ...";
+      } else if (m.type === "queued") {
+        statusEl.textContent = "QUEUED, WAITING FOR THE GPU ...";
+      } else if (m.type === "cancelled") {
+        statusEl.textContent = "STOPPED" + (p ? " - " + (p.samples / sr).toFixed(2) + "s" : "");
+        done();
+      } else if (m.type === "done") {
+        const secs = p ? p.samples / sr : 0;
+        done();
+        statusEl.textContent = "DONE - " + secs.toFixed(2) + "s @ " + sr + "Hz";
+        if (!streaming) player.play().catch(() => {});
+      } else if (m.type === "error") {
+        statusEl.textContent = "ERROR: " + (m.message || "unknown");
+        done();
+      }
+    };
+    sock.onerror = () => { statusEl.textContent = "WEBSOCKET ERROR"; done(); };
+    sock.onclose = () => { if (liveSocket === sock) done(); };
+  })).catch(e => {
+    statusEl.textContent = "ERROR: " + e.message;
+    btn.disabled = false;
+    stopBtn.classList.remove("live");
+  });
 }
 
 async function generate(panel, tabName) {
@@ -328,11 +443,27 @@ async function convert(panel) {
 
 document.querySelectorAll(".panel").forEach(panel => {
   const btn = panel.querySelector(".go");
-  btn.addEventListener("click", () => panel.id === "changer" ? convert(panel) : generate(panel, panel.id));
+  btn.addEventListener("click", () => {
+    if (panel.id === "changer") return convert(panel);
+    // conversion has no socket path, everything else prefers it when the server opened one
+    return wsPort ? wsGenerate(panel, panel.id) : generate(panel, panel.id);
+  });
   const save = panel.querySelector(".save-voice");
   if (save) save.addEventListener("click", () => saveVoice(panel));
   const sel = panel.querySelector("select[data-f=voice_id]");
   if (sel) sel.addEventListener("change", () => syncVoice(panel));
 });
 
+stopBtn.addEventListener("click", () => {
+  if (liveSocket) liveSocket.send(JSON.stringify({ type: "cancel" }));
+});
+
+async function loadHealth() {
+  try {
+    const r = await fetch("/health");
+    if (r.ok) wsPort = (await r.json()).ws_port || 0;
+  } catch (e) { wsPort = 0; }
+}
+
+loadHealth();
 loadVoices();
