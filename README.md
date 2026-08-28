@@ -20,6 +20,13 @@ a web UI, and a plain C shared library for bindings.
 
 English and Mandarin, 24 kHz, roughly 1.2x realtime at Q8_0 on an RTX 3060.
 
+## Demo
+
+Voice design, cloning, direction, vocal event tags, and voice conversion on a sung recording. Every
+clip was generated on one RTX 3060, faster than realtime, and nothing was cherry picked.
+
+https://github.com/user-attachments/assets/b63e4664-497f-4bac-b9e2-50bf571df30a
+
 ## Documentation
 
 <div align="center">
