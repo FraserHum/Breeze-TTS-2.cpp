@@ -154,6 +154,56 @@ int run_server(const ServerOptions & opts) {
             });
     });
 
+    svr.Post("/v1/audio/convert", [&, mutex](const httplib::Request & req, httplib::Response & res) {
+        std::unique_lock<std::mutex> lock(*mutex, std::try_to_lock);
+        if (!lock) {
+            res.status = 409;
+            res.set_content("{\"error\":\"busy\"}", "application/json");
+            return;
+        }
+        std::vector<float> src, ref;
+        const auto load = [&](const char * name, std::vector<float> & out) {
+            if (!req.has_file(name)) return false;
+            const auto & f = req.get_file_value(name);
+            return !f.content.empty() &&
+                   read_wav_buffer((const uint8_t *) f.content.data(), f.content.size(), sr, out);
+        };
+        if (!load("source", src) || !load("ref_audio", ref)) {
+            res.status = 400;
+            res.set_content("{\"error\":\"source and ref_audio wav files are required\"}", "application/json");
+            return;
+        }
+        const std::string ref_text = field(req, "ref_text", "");
+        if (ref_text.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"ref_text is required\"}", "application/json");
+            return;
+        }
+
+        printf("conv %.2f s source, %.2f s reference\n", (double) src.size() / sr, (double) ref.size() / sr);
+        fflush(stdout);
+        try {
+            int T = 0;
+            std::vector<int> codes = codec.encode(src, T);
+            const auto t0 = std::chrono::steady_clock::now();
+            std::vector<float> audio =
+                convert_voice(model, codec, codes, T, ref, ref_text, field(req, "text", ""),
+                              false, atoi(field(req, "seed", "42").c_str()));
+            const double wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+            const double secs = (double) audio.size() / sr;
+            printf("     %.2f s in %.2f s, %.2fx rt\n", secs, wall, wall > 0 ? secs / wall : 0.0);
+            fflush(stdout);
+            std::vector<uint8_t> pcm = to_pcm16(audio.data(), (int) audio.size());
+            res.set_header("X-Sample-Rate", std::to_string(sr));
+            res.set_header("X-Sample-Format", "s16le");
+            res.set_content((const char *) pcm.data(), pcm.size(), "audio/pcm");
+        } catch (const std::exception & e) {
+            fprintf(stderr, "conversion error: %s\n", e.what());
+            res.status = 500;
+            res.set_content("{\"error\":\"conversion failed\"}", "application/json");
+        }
+    });
+
     if (opts.webui) {
         svr.Get("/", [](const httplib::Request &, httplib::Response & res) {
             res.set_content(breeze_webui::index_html, "text/html");

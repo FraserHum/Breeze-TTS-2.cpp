@@ -68,6 +68,9 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 .row { display: flex; gap: 16px; }
 .row label { flex: 1; }
 
+.note { color: var(--dim); margin: 0 0 4px; }
+.output .row.hide { display: none; }
+
 .go {
   width: 100%;
   background: var(--accent);

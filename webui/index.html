@@ -9,13 +9,14 @@
 <body>
 <header>
   <h1>BREEZE-TTS-2.CPP</h1>
-  <p>open-weight bilingual text to speech, running on ggml. voice design, cloning, direction.</p>
+  <p>open-weight bilingual text to speech, running on ggml. voice design, cloning, direction, conversion.</p>
 </header>
 
 <nav class="tabs">
   <button class="tab active" data-tab="design">VOICE DESIGN</button>
   <button class="tab" data-tab="clone">VOICE CLONE</button>
   <button class="tab" data-tab="direction">VOICE DIRECTION</button>
+  <button class="tab" data-tab="changer">VOICE CHANGER</button>
 </nav>
 
 <main>
@@ -67,6 +68,26 @@
       <label>SEED <input data-f="seed" type="number" value="42" /></label>
     </div>
     <button class="go">GENERATE</button>
+  </section>
+
+  <section class="panel" id="changer">
+    <p class="note">respeaks an existing recording in another voice, keeping its words, rhythm and delivery. no text needed.</p>
+    <label>SOURCE AUDIO (WAV)
+      <input data-f="source" type="file" accept="audio/*" />
+    </label>
+    <label>TARGET VOICE (WAV)
+      <input data-f="ref_audio" type="file" accept="audio/*" />
+    </label>
+    <label>TARGET VOICE TRANSCRIPT (EXACT)
+      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the target voice clip."></textarea>
+    </label>
+    <label>SOURCE TRANSCRIPT (OPTIONAL, SHARPENS THE WORDS)
+      <textarea data-f="text" rows="2" placeholder="Leave empty unless you have the exact words of the source."></textarea>
+    </label>
+    <div class="row">
+      <label>SEED <input data-f="seed" type="number" value="42" /></label>
+    </div>
+    <button class="go">CONVERT</button>
   </section>
 
   <section class="output">

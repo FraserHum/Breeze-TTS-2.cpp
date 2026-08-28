@@ -23,6 +23,8 @@ tabs.forEach(tab => {
     panels.forEach(p => p.classList.remove("active"));
     tab.classList.add("active");
     document.getElementById(tab.dataset.tab).classList.add("active");
+    // conversion hands back the whole clip at once, so the streaming controls do nothing there
+    document.querySelector(".output .row").classList.toggle("hide", tab.dataset.tab === "changer");
   });
 });
 
@@ -202,7 +204,54 @@ async function generate(panel, tabName) {
   btn.disabled = false;
 }
 
+async function convert(panel) {
+  const f = fields(panel);
+  if (!f.source.files.length || !f.ref_audio.files.length) {
+    statusEl.textContent = "SOURCE AND TARGET VOICE WAVS ARE REQUIRED";
+    return;
+  }
+  if (!(f.ref_text.value || "").trim()) {
+    statusEl.textContent = "TARGET VOICE TRANSCRIPT IS REQUIRED";
+    return;
+  }
+  const form = new FormData();
+  form.append("source", f.source.files[0]);
+  form.append("ref_audio", f.ref_audio.files[0]);
+  form.append("ref_text", f.ref_text.value);
+  form.append("text", (f.text.value || "").trim());
+  form.append("seed", f.seed.value);
+
+  const btn = panel.querySelector(".go");
+  btn.disabled = true;
+  statusEl.textContent = "CONVERTING ...";
+  download.classList.remove("ready");
+  player.pause();
+  player.removeAttribute("src");
+
+  try {
+    const res = await fetch("/v1/audio/convert", { method: "POST", body: form });
+    if (!res.ok) {
+      statusEl.textContent = res.status === 409 ? "BUSY - ONE REQUEST AT A TIME" : "ERROR " + res.status;
+      btn.disabled = false;
+      return;
+    }
+    const sr = parseInt(res.headers.get("X-Sample-Rate") || "24000", 10);
+    const pcm = await readBuffered(res, b => {
+      statusEl.textContent = "RECEIVING - " + (b / 2 / sr).toFixed(2) + "s";
+    });
+    const url = URL.createObjectURL(makeWav(pcm.buffer, sr));
+    player.src = url;
+    download.href = url;
+    download.classList.add("ready");
+    statusEl.textContent = "DONE - " + (pcm.length / 2 / sr).toFixed(2) + "s @ " + sr + "Hz";
+    player.play().catch(() => {});
+  } catch (e) {
+    statusEl.textContent = "ERROR: " + e.message;
+  }
+  btn.disabled = false;
+}
+
 document.querySelectorAll(".panel").forEach(panel => {
   const btn = panel.querySelector(".go");
-  btn.addEventListener("click", () => generate(panel, panel.id));
+  btn.addEventListener("click", () => panel.id === "changer" ? convert(panel) : generate(panel, panel.id));
 });
