@@ -19,8 +19,8 @@ static void usage() {
            "  --ref-text <text>   exact transcript of the reference\n"
            "  --text <text>       transcript of the source, lines the backbone up with the\n"
            "                      forced codes. leave it out to run textless\n"
-           "  --temp <f>          depth sampling temperature (default 0.3, lower is more faithful)\n"
-           "  --top-k <n>         depth top-k, 1 is greedy (default 1)\n"
+           "  --temp <f>          depth sampling temperature (default 0.9)\n"
+           "  --top-k <n>         depth top-k (default 50). greedy drops words and buzzes\n"
            "  --cfg-scale <f>     guidance toward the target voice (default 1.0, off)\n"
            "  --keep-acoustic <n> acoustic codebooks kept from the source, 0 to 15. pitch lives in\n"
            "                      the low ones, so raising this keeps the source melody and\n"
@@ -43,8 +43,8 @@ int main(int argc, char ** argv) {
     }
     std::string model_path = argv[1], source, output = "convert.wav", ref_audio, ref_text;
     ConvertOptions opt;
-    opt.temperature = 0.3f;
-    opt.top_k = 1;
+    opt.temperature = 0.9f;
+    opt.top_k = 50;
     int keep = 0;
     bool use_gpu = true;
     for (int i = 2; i < argc; i++) {

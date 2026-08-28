@@ -187,8 +187,8 @@ int run_server(const ServerOptions & opts) {
             std::vector<int> codes = codec.encode(src, T);
             ConvertOptions copt;
             copt.src_text = field(req, "text", "");
-            copt.temperature = (float) atof(field(req, "temperature", "0.3").c_str());
-            copt.top_k = atoi(field(req, "top_k", "1").c_str());
+            copt.temperature = (float) atof(field(req, "temperature", "0.9").c_str());
+            copt.top_k = atoi(field(req, "top_k", "50").c_str());
             copt.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
             copt.keep_acoustic = atoi(field(req, "keep_acoustic", "0").c_str());
             copt.seed = atoi(field(req, "seed", "42").c_str());
