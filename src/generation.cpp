@@ -259,48 +259,63 @@ static std::string filler_text(double secs) {
 
 std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::vector<int> & src_codes,
                                  int src_T, const std::vector<float> & ref_audio,
-                                 const std::string & ref_text, const std::string & src_text,
-                                 bool feed_source, int seed) {
+                                 const std::string & ref_text, const ConvertOptions & opt) {
     const int nc = m.cfg.num_codebooks;
-    std::mt19937 rng((uint32_t) seed);
+    const bool use_cfg = opt.cfg_scale != 1.0f;
+    std::mt19937 rng((uint32_t) opt.seed);
+
+    SampleParams sp;
+    sp.temperature = opt.temperature;
+    sp.top_k = opt.top_k;
 
     int ref_T = 0;
     std::vector<int> ref_codes = codec.encode(ref_audio, ref_T);
 
     const std::string text =
-        src_text.empty() ? filler_text(src_T * (double) m.cfg.samples_per_frame / m.cfg.sample_rate)
-                         : src_text;
+        opt.src_text.empty()
+            ? filler_text(src_T * (double) m.cfg.samples_per_frame / m.cfg.sample_rate)
+            : opt.src_text;
     GenRequest req;
-    int total = 0;
-    std::vector<float> emb =
-        assemble(m, build_segments(m, req, text, true, ref_text, ref_codes, ref_T, false), total);
+    int total_c = 0, total_u = 0;
+    std::vector<float> emb_c =
+        assemble(m, build_segments(m, req, text, true, ref_text, ref_codes, ref_T, false), total_c);
+    // the negative branch drops the reference, so guidance pushes toward the target voice
+    std::vector<float> emb_u;
+    if (use_cfg) emb_u = assemble(m, build_segments(m, req, text, false, "", {}, 0, false), total_u);
 
-    BackboneState st;
-    st.init(m, total + src_T + 8);
-    StepOut o = backbone_run(m, st, emb, total);
+    BackboneState st_c, st_u;
+    st_c.init(m, total_c + src_T + 8);
+    if (use_cfg) st_u.init(m, total_u + src_T + 8);
+    StepOut o_c = backbone_run(m, st_c, emb_c, total_c);
+    StepOut o_u;
+    if (use_cfg) o_u = backbone_run(m, st_u, emb_u, total_u);
 
     DepthRunner depth;
-    depth.init(m, 1);
+    depth.init(m, use_cfg ? 2 : 1);
 
     std::vector<int> out((size_t) src_T * nc);
+    const int keep = opt.keep_acoustic < nc - 1 ? opt.keep_acoustic : nc - 1;
     for (int t = 0; t < src_T; t++) {
         const int cb0 = src_codes[(size_t) t * nc];
-        std::vector<std::vector<float>> hiddens = { o.hidden };
-        std::vector<int> rest = depth.run(m, hiddens, cb0, 1.0f, rng);
+        std::vector<std::vector<float>> hiddens = { o_c.hidden };
+        if (use_cfg) hiddens.push_back(o_u.hidden);
+        std::vector<int> rest =
+            depth.run(m, hiddens, cb0, opt.cfg_scale, rng, &sp,
+                      keep > 0 ? &src_codes[(size_t) t * nc + 1] : nullptr, keep);
         out[(size_t) t * nc] = cb0;
         for (int c = 1; c < nc; c++) out[(size_t) t * nc + c] = rest[c - 1];
 
-        std::vector<int> frame(feed_source ? std::vector<int>(src_codes.begin() + (size_t) t * nc,
-                                                              src_codes.begin() + (size_t) (t + 1) * nc)
-                                            : std::vector<int>(out.begin() + (size_t) t * nc,
-                                                               out.begin() + (size_t) (t + 1) * nc));
+        const int * from = opt.feed_source ? &src_codes[(size_t) t * nc] : &out[(size_t) t * nc];
+        std::vector<int> frame(from, from + nc);
         std::vector<float> ae = audio_embed_forward(m, frame, 1);
-        o = backbone_run(m, st, ae, 1);
+        o_c = backbone_run(m, st_c, ae, 1);
+        if (use_cfg) o_u = backbone_run(m, st_u, ae, 1);
         if (t % 25 == 0) { printf("\rconverting %d/%d frames", t, src_T); fflush(stdout); }
     }
     printf("\rconverted %d frames        \n", src_T);
 
-    st.free();
+    st_c.free();
+    if (use_cfg) st_u.free();
     depth.free();
     return codec.decode(out, src_T);
 }

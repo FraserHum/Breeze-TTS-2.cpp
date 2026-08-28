@@ -185,10 +185,15 @@ int run_server(const ServerOptions & opts) {
         try {
             int T = 0;
             std::vector<int> codes = codec.encode(src, T);
+            ConvertOptions copt;
+            copt.src_text = field(req, "text", "");
+            copt.temperature = (float) atof(field(req, "temperature", "0.3").c_str());
+            copt.top_k = atoi(field(req, "top_k", "1").c_str());
+            copt.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
+            copt.keep_acoustic = atoi(field(req, "keep_acoustic", "0").c_str());
+            copt.seed = atoi(field(req, "seed", "42").c_str());
             const auto t0 = std::chrono::steady_clock::now();
-            std::vector<float> audio =
-                convert_voice(model, codec, codes, T, ref, ref_text, field(req, "text", ""),
-                              false, atoi(field(req, "seed", "42").c_str()));
+            std::vector<float> audio = convert_voice(model, codec, codes, T, ref, ref_text, copt);
             const double wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
             const double secs = (double) audio.size() / sr;
             printf("     %.2f s in %.2f s, %.2fx rt\n", secs, wall, wall > 0 ? secs / wall : 0.0);

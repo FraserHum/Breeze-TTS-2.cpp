@@ -71,7 +71,7 @@
   </section>
 
   <section class="panel" id="changer">
-    <p class="note">respeaks an existing recording in another voice, keeping its words and timing. no text needed. intonation comes from the target voice, not the source, so pitch and expression do not carry over.</p>
+    <p class="note">respeaks an existing recording in another voice, keeping its words and timing. no text needed. pitch normally comes from the target voice, so raise KEEP MELODY if the source is sung or strongly intonated.</p>
     <label>SOURCE AUDIO (WAV)
       <input data-f="source" type="file" accept="audio/*" />
     </label>
@@ -85,6 +85,7 @@
       <textarea data-f="text" rows="2" placeholder="Leave empty unless you have the exact words of the source."></textarea>
     </label>
     <div class="row">
+      <label>KEEP MELODY <input data-f="keep_acoustic" type="number" value="0" min="0" max="6" step="1" /></label>
       <label>SEED <input data-f="seed" type="number" value="42" /></label>
     </div>
     <button class="go">CONVERT</button>

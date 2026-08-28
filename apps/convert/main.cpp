@@ -19,6 +19,12 @@ static void usage() {
            "  --ref-text <text>   exact transcript of the reference\n"
            "  --text <text>       transcript of the source, lines the backbone up with the\n"
            "                      forced codes. leave it out to run textless\n"
+           "  --temp <f>          depth sampling temperature (default 0.3, lower is more faithful)\n"
+           "  --top-k <n>         depth top-k, 1 is greedy (default 1)\n"
+           "  --cfg-scale <f>     guidance toward the target voice (default 1.0, off)\n"
+           "  --keep-acoustic <n> acoustic codebooks kept from the source, 0 to 15. pitch lives in\n"
+           "                      the low ones, so raising this keeps the source melody and\n"
+           "                      intonation but lets its voice back in (default 0)\n"
            "  --feed-source       feed the original frames back instead of the converted ones\n"
            "  --keep <n>          rebuild from the first n codebooks only, no voice change.\n"
            "                      1 is the semantic stage on its own\n"
@@ -35,17 +41,25 @@ int main(int argc, char ** argv) {
         usage();
         return argc < 2 ? 1 : 0;
     }
-    std::string model_path = argv[1], source, output = "convert.wav", ref_audio, ref_text, src_text;
+    std::string model_path = argv[1], source, output = "convert.wav", ref_audio, ref_text;
+    ConvertOptions opt;
+    opt.temperature = 0.3f;
+    opt.top_k = 1;
     int keep = 0;
-    bool use_gpu = true, feed_source = false;
+    bool use_gpu = true;
     for (int i = 2; i < argc; i++) {
         std::string a = argv[i];
         if (a == "--source") source = arg(argc, argv, i, "--source");
         else if (a == "--output") output = arg(argc, argv, i, "--output");
         else if (a == "--ref-audio") ref_audio = arg(argc, argv, i, "--ref-audio");
         else if (a == "--ref-text") ref_text = arg(argc, argv, i, "--ref-text");
-        else if (a == "--text") src_text = arg(argc, argv, i, "--text");
-        else if (a == "--feed-source") feed_source = true;
+        else if (a == "--text") opt.src_text = arg(argc, argv, i, "--text");
+        else if (a == "--temp") opt.temperature = (float) atof(arg(argc, argv, i, "--temp"));
+        else if (a == "--top-k") opt.top_k = atoi(arg(argc, argv, i, "--top-k"));
+        else if (a == "--cfg-scale") opt.cfg_scale = (float) atof(arg(argc, argv, i, "--cfg-scale"));
+        else if (a == "--keep-acoustic") opt.keep_acoustic = atoi(arg(argc, argv, i, "--keep-acoustic"));
+        else if (a == "--seed") opt.seed = atoi(arg(argc, argv, i, "--seed"));
+        else if (a == "--feed-source") opt.feed_source = true;
         else if (a == "--keep") keep = atoi(arg(argc, argv, i, "--keep"));
         else if (a == "--cpu") use_gpu = false;
         else { fprintf(stderr, "unknown arg: %s\n", a.c_str()); return 1; }
@@ -88,7 +102,7 @@ int main(int argc, char ** argv) {
             fprintf(stderr, "failed to read %s\n", ref_audio.c_str());
             return 1;
         }
-        audio = convert_voice(model, codec, codes, T, ref, ref_text, src_text, feed_source);
+        audio = convert_voice(model, codec, codes, T, ref, ref_text, opt);
     }
 
     if (!write_wav(output, audio, model.cfg.sample_rate)) {

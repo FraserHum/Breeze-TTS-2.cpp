@@ -110,7 +110,8 @@ static std::vector<float> depth_step(BreezeModel & m, DepthRunner & r, int start
 }
 
 std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector<float>> & hiddens,
-                                  int cb0, float cfg_scale, std::mt19937 & rng) {
+                                  int cb0, float cfg_scale, std::mt19937 & rng,
+                                  const SampleParams * sp_in, const int * force, int n_force) {
     const int nc = m.cfg.num_codebooks;
     const int vs = m.cfg.audio_vocab_size;
     kv.reset();
@@ -119,6 +120,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     sp.temperature = m.cfg.depth_temperature;
     sp.top_k = m.cfg.depth_top_k;
     sp.top_p = m.cfg.depth_top_p;
+    if (sp_in) sp = *sp_in;
 
     std::vector<int> codes = { cb0 };
     for (int j = 1; j < nc; j++) {
@@ -133,7 +135,8 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
             for (int i = 0; i < vocab; i++)
                 logits[i] = out[vocab + i] + cfg_scale * (out[i] - out[vocab + i]);
         }
-        codes.push_back(sample_token(logits, sp, rng));
+        // forced steps still run the graph, later codebooks are conditioned on this one
+        codes.push_back(j <= n_force ? force[j - 1] : sample_token(logits, sp, rng));
     }
     return std::vector<int>(codes.begin() + 1, codes.end());
 }

@@ -219,6 +219,7 @@ async function convert(panel) {
   form.append("ref_audio", f.ref_audio.files[0]);
   form.append("ref_text", f.ref_text.value);
   form.append("text", (f.text.value || "").trim());
+  form.append("keep_acoustic", f.keep_acoustic.value);
   form.append("seed", f.seed.value);
 
   const btn = panel.querySelector(".go");

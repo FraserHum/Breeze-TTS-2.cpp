@@ -34,14 +34,25 @@ std::vector<std::string> split_text(const std::string & text, int budget, int fi
 // rough spoken length in seconds, only good enough to drive a progress bar
 double estimate_seconds(const std::string & text);
 
+// how faithfully the acoustic codes are resynthesised. codec language models are known to go
+// unstable on random sampling, so conversion leans much harder on the likeliest codes than tts does
+struct ConvertOptions {
+    std::string src_text;   // transcript of the source, empty generates filler
+    float temperature = 0.9f;
+    int top_k = 50;
+    float cfg_scale = 1.0f;
+    // acoustic codebooks taken straight from the source instead of being regenerated. pitch lives in
+    // the low ones, so this trades voice identity back for the source's melody and intonation
+    int keep_acoustic = 0;
+    bool feed_source = false;
+    int seed = 42;
+};
+
 // respeak already encoded audio in the reference voice. words and frame timing come from the source,
 // pitch and timbre from the reference, so intonation is not carried over.
-// src_text aligns the backbone with the forced codes when you have a transcript, empty is textless.
-// feed_source puts the original frames back into the backbone instead of the converted ones
 std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::vector<int> & src_codes,
                                  int src_T, const std::vector<float> & ref_audio,
-                                 const std::string & ref_text, const std::string & src_text = "",
-                                 bool feed_source = false, int seed = 42);
+                                 const std::string & ref_text, const ConvertOptions & opt = {});
 
 // called with each decoded audio chunk; return false to stop generation early
 using AudioCallback = std::function<bool(const float * samples, int n)>;
