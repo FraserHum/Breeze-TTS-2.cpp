@@ -17,6 +17,8 @@ int main(int argc, char ** argv) {
         printf("                 set both the same to stream a fixed chunk size\n");
         printf("  --verbose      add a per stage timing breakdown to each request\n");
         printf("  --voices-dir   folder of saved .breeze voices to load at startup (default voices)\n");
+        printf("  --ws-port      websocket port for streaming sessions, default is the http port + 1,\n");
+        printf("                 -1 turns it off\n");
         return argc < 2 ? 1 : 0;
     }
     ServerOptions opts;
@@ -28,6 +30,7 @@ int main(int argc, char ** argv) {
         else if (a == "--webui") opts.webui = true;
         else if (a == "--verbose" || a == "-v") opts.verbose = true;
         else if (a == "--voices-dir" && i + 1 < argc) opts.voices_dir = argv[++i];
+        else if (a == "--ws-port" && i + 1 < argc) opts.ws_port = atoi(argv[++i]);
         else if (a == "--cpu") opts.use_gpu = false;
         else if (a == "--chunk-first" && i + 1 < argc) opts.chunk_first = atoi(argv[++i]);
         else if (a == "--chunk-max" && i + 1 < argc) opts.chunk_max = atoi(argv[++i]);

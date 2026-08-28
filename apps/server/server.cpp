@@ -1,5 +1,7 @@
 #include "server.h"
 #include "voices.h"
+#include "ws.h"
+#include "ws_api.h"
 
 #include "breeze/audio.h"
 #include "breeze/generation.h"
@@ -65,8 +67,20 @@ int run_server(const ServerOptions & opts) {
     store.load_dir(opts.voices_dir, model.cfg.num_codebooks);
     store.add_routes(svr, model, codec, *mutex, opts.voices_dir);
 
+    WsServer ws;
+    const int ws_port = opts.ws_port == 0 ? opts.port + 1 : opts.ws_port;
+    if (ws_port > 0) {
+        const bool up = ws.start(opts.host, ws_port, [&](WsConn & c) {
+            ws_connection(c, model, codec, store, *mutex, opts.chunk_first, opts.chunk_max);
+        });
+        if (up) printf("websocket on ws://%s:%d\n", opts.host.c_str(), ws_port);
+        else fprintf(stderr, "could not open the websocket port %d\n", ws_port);
+    }
+
     svr.Get("/health", [&](const httplib::Request &, httplib::Response & res) {
-        res.set_content("{\"status\":\"ok\",\"sample_rate\":" + std::to_string(sr) + "}", "application/json");
+        res.set_content("{\"status\":\"ok\",\"sample_rate\":" + std::to_string(sr) +
+                        ",\"ws_port\":" + std::to_string(ws_port > 0 ? ws_port : 0) + "}",
+                        "application/json");
     });
 
     svr.Post("/v1/audio/speech", [&, mutex](const httplib::Request & req, httplib::Response & res) {

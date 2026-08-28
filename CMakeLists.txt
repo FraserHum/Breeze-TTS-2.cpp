@@ -95,7 +95,8 @@ add_executable(breeze-quantize apps/quantize/main.cpp)
 target_link_libraries(breeze-quantize PRIVATE breeze_core)
 
 if(BREEZE_BUILD_SERVER)
-    add_executable(breeze-server apps/server/main.cpp apps/server/server.cpp apps/server/voices.cpp)
+    add_executable(breeze-server apps/server/main.cpp apps/server/server.cpp apps/server/voices.cpp
+                                 apps/server/ws.cpp apps/server/ws_api.cpp)
     add_dependencies(breeze-server breeze_webui)
     target_include_directories(breeze-server PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated third_party)
     target_link_libraries(breeze-server PRIVATE breeze_core)

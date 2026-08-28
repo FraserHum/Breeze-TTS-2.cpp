@@ -12,6 +12,7 @@ struct ServerOptions {
     bool webui = false;
     bool verbose = false;
     std::string voices_dir = "voices";
+    int ws_port = 0; // 0 puts it on port + 1, negative turns it off
     int chunk_first = 4;
     int chunk_max = 25;
 };
