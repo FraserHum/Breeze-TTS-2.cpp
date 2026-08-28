@@ -16,6 +16,10 @@ struct GenRequest {
     std::string instruction = "Speak clearly and naturally.";
     std::string ref_text;
     std::vector<float> ref_audio; // mono 24 kHz, empty for voice design
+    // already encoded reference. takes priority over ref_audio so a repeated voice skips the codec,
+    // which is most of the wait before the first audio comes out
+    std::vector<int> ref_codes;
+    int ref_frames = 0;
     float cfg_scale = 1.0f;
     int seed = 42;
     // sampling. zero on any of these keeps whatever the gguf was built with
@@ -51,6 +55,9 @@ struct ConvertOptions {
     int keep_acoustic = 0;
     bool feed_source = false;
     int seed = 42;
+    // already encoded reference, used instead of the ref_audio argument when set
+    std::vector<int> ref_codes;
+    int ref_frames = 0;
 };
 
 // respeak already encoded audio in the reference voice. words and frame timing come from the source,

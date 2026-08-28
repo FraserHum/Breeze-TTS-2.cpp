@@ -11,8 +11,10 @@
 #include <windows.h> // after httplib, it pulls in winsock2 first
 #endif
 
+#include <algorithm>
 #include <chrono>
 #include <cstdio>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -24,6 +26,52 @@ static std::string field(const httplib::Request & req, const char * name, const 
     if (req.has_file(name)) return req.get_file_value(name).content;
     if (req.has_param(name)) return req.get_param_value(name);
     return def;
+}
+
+struct CachedVoice {
+    std::vector<int> codes;
+    int frames = 0;
+    std::string text;
+    double encode_ms = 0;
+};
+
+// keyed off the clip and its transcript, so sending the same voice twice lands on the same entry
+static std::string voice_key(const std::string & wav, const std::string & text) {
+    uint64_t h = 1469598103934665603ull;
+    for (unsigned char c : wav) { h ^= c; h *= 1099511628211ull; }
+    for (unsigned char c : text) { h ^= c; h *= 1099511628211ull; }
+    char buf[32];
+    snprintf(buf, sizeof buf, "v_%016llx", (unsigned long long) h);
+    return buf;
+}
+
+static std::string json_escape(const std::string & s) {
+    std::string o;
+    for (char c : s) {
+        switch (c) {
+            case '"':  o += "\\\""; break;
+            case '\\': o += "\\\\"; break;
+            case '\n': o += "\\n";  break;
+            case '\r': o += "\\r";  break;
+            case '\t': o += "\\t";  break;
+            default:
+                if ((unsigned char) c < 0x20) {
+                    char b[8];
+                    snprintf(b, sizeof b, "\\u%04x", (unsigned) (unsigned char) c);
+                    o += b;
+                } else {
+                    o += c;
+                }
+        }
+    }
+    return o;
+}
+
+static std::string voice_json(const std::string & id, const CachedVoice & v, int sr, int spf) {
+    char buf[256];
+    snprintf(buf, sizeof buf, "{\"id\":\"%s\",\"frames\":%d,\"seconds\":%.2f,\"encode_ms\":%.0f,\"ref_text\":\"",
+             id.c_str(), v.frames, (double) v.frames * spf / sr, v.encode_ms);
+    return std::string(buf) + json_escape(v.text) + "\"}";
 }
 
 static std::string mmss(double s) {
@@ -65,9 +113,99 @@ int run_server(const ServerOptions & opts) {
     httplib::Server svr;
     auto mutex = std::make_shared<std::mutex>();
     const int sr = model.cfg.sample_rate;
+    const int spf = model.cfg.samples_per_frame;
+
+    std::map<std::string, CachedVoice> voices;
+    std::vector<std::string> voice_order;
+    std::mutex voice_mutex;
+    const size_t max_voices = 64;
+
+    // fills in a cached reference, returns false only when the id is unknown
+    auto take_voice = [&](const std::string & id, std::vector<int> & codes, int & frames,
+                          std::string & text) {
+        std::lock_guard<std::mutex> vg(voice_mutex);
+        auto it = voices.find(id);
+        if (it == voices.end()) return false;
+        codes = it->second.codes;
+        frames = it->second.frames;
+        if (text.empty()) text = it->second.text;
+        return true;
+    };
 
     svr.Get("/health", [&](const httplib::Request &, httplib::Response & res) {
         res.set_content("{\"status\":\"ok\",\"sample_rate\":" + std::to_string(sr) + "}", "application/json");
+    });
+
+    svr.Post("/v1/voices", [&](const httplib::Request & req, httplib::Response & res) {
+        const std::string text = field(req, "ref_text", "");
+        if (!req.has_file("ref_audio") || text.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"ref_audio and ref_text are required\"}", "application/json");
+            return;
+        }
+        const auto & f = req.get_file_value("ref_audio");
+        const std::string id = voice_key(f.content, text);
+        {
+            std::lock_guard<std::mutex> vg(voice_mutex);
+            auto it = voices.find(id);
+            if (it != voices.end()) {
+                res.set_content(voice_json(id, it->second, sr, spf), "application/json");
+                return;
+            }
+        }
+        std::vector<float> pcm;
+        read_wav_buffer((const uint8_t *) f.content.data(), f.content.size(), sr, pcm);
+        if (pcm.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"could not read ref_audio\"}", "application/json");
+            return;
+        }
+        // encoding runs on the same device generation does, so it waits its turn
+        std::unique_lock<std::mutex> lock(*mutex, std::try_to_lock);
+        if (!lock) {
+            res.status = 409;
+            res.set_content("{\"error\":\"busy\"}", "application/json");
+            return;
+        }
+        CachedVoice v;
+        v.text = text;
+        const auto t0 = std::chrono::steady_clock::now();
+        v.codes = codec.encode(pcm, v.frames);
+        v.encode_ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+        {
+            std::lock_guard<std::mutex> vg(voice_mutex);
+            if (voice_order.size() >= max_voices) {
+                voices.erase(voice_order.front());
+                voice_order.erase(voice_order.begin());
+            }
+            voices[id] = v;
+            voice_order.push_back(id);
+        }
+        printf("voice %s cached, %d frames in %.0f ms\n", id.c_str(), v.frames, v.encode_ms);
+        fflush(stdout);
+        res.set_content(voice_json(id, v, sr, spf), "application/json");
+    });
+
+    svr.Get("/v1/voices", [&](const httplib::Request &, httplib::Response & res) {
+        std::lock_guard<std::mutex> vg(voice_mutex);
+        std::string out = "[";
+        for (size_t i = 0; i < voice_order.size(); i++) {
+            if (i) out += ",";
+            out += voice_json(voice_order[i], voices[voice_order[i]], sr, spf);
+        }
+        res.set_content(out + "]", "application/json");
+    });
+
+    svr.Delete(R"(/v1/voices/(.+))", [&](const httplib::Request & req, httplib::Response & res) {
+        const std::string id = req.matches[1];
+        std::lock_guard<std::mutex> vg(voice_mutex);
+        if (!voices.erase(id)) {
+            res.status = 404;
+            res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
+            return;
+        }
+        voice_order.erase(std::remove(voice_order.begin(), voice_order.end(), id), voice_order.end());
+        res.set_content("{\"deleted\":\"" + id + "\"}", "application/json");
     });
 
     svr.Post("/v1/audio/speech", [&, mutex](const httplib::Request & req, httplib::Response & res) {
@@ -95,6 +233,12 @@ int run_server(const ServerOptions & opts) {
             const auto & f = req.get_file_value("ref_audio");
             if (!f.content.empty())
                 read_wav_buffer((const uint8_t *) f.content.data(), f.content.size(), sr, g.ref_audio);
+        }
+        const std::string vid = field(req, "voice_id", "");
+        if (!vid.empty() && !take_voice(vid, g.ref_codes, g.ref_frames, g.ref_text)) {
+            res.status = 404;
+            res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
+            return;
         }
         if (g.text.empty()) {
             res.status = 400;
@@ -172,19 +316,34 @@ int run_server(const ServerOptions & opts) {
             return !f.content.empty() &&
                    read_wav_buffer((const uint8_t *) f.content.data(), f.content.size(), sr, out);
         };
-        if (!load("source", src) || !load("ref_audio", ref)) {
+        if (!load("source", src)) {
             res.status = 400;
-            res.set_content("{\"error\":\"source and ref_audio wav files are required\"}", "application/json");
+            res.set_content("{\"error\":\"a source wav file is required\"}", "application/json");
             return;
         }
-        const std::string ref_text = field(req, "ref_text", "");
+        std::string ref_text = field(req, "ref_text", "");
+        std::vector<int> vcodes;
+        int vframes = 0;
+        const std::string vid = field(req, "voice_id", "");
+        if (!vid.empty()) {
+            if (!take_voice(vid, vcodes, vframes, ref_text)) {
+                res.status = 404;
+                res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
+                return;
+            }
+        } else if (!load("ref_audio", ref)) {
+            res.status = 400;
+            res.set_content("{\"error\":\"ref_audio or voice_id is required\"}", "application/json");
+            return;
+        }
         if (ref_text.empty()) {
             res.status = 400;
             res.set_content("{\"error\":\"ref_text is required\"}", "application/json");
             return;
         }
 
-        printf("conv %.2f s source, %.2f s reference\n", (double) src.size() / sr, (double) ref.size() / sr);
+        printf("conv %.2f s source, %s\n", (double) src.size() / sr,
+               vframes > 0 ? "cached reference" : "uploaded reference");
         fflush(stdout);
         try {
             int T = 0;
@@ -196,6 +355,8 @@ int run_server(const ServerOptions & opts) {
             copt.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
             copt.keep_acoustic = atoi(field(req, "keep_acoustic", "0").c_str());
             copt.seed = atoi(field(req, "seed", "42").c_str());
+            copt.ref_codes = vcodes;
+            copt.ref_frames = vframes;
             const auto t0 = std::chrono::steady_clock::now();
             std::vector<float> audio = convert_voice(model, codec, codes, T, ref, ref_text, copt);
             const double wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();

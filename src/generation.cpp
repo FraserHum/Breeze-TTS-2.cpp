@@ -215,7 +215,11 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     const auto t_start = std::chrono::steady_clock::now();
 
     ChunkRef user_ref;
-    if (!req.ref_audio.empty() && !req.ref_text.empty()) {
+    if (!req.ref_codes.empty() && req.ref_frames > 0 && !req.ref_text.empty()) {
+        user_ref.codes = req.ref_codes;
+        user_ref.n_frames = req.ref_frames;
+        user_ref.text = req.ref_text;
+    } else if (!req.ref_audio.empty() && !req.ref_text.empty()) {
         const auto t0 = std::chrono::steady_clock::now();
         user_ref.codes = codec.encode(req.ref_audio, user_ref.n_frames);
         user_ref.text = req.ref_text;
@@ -269,7 +273,13 @@ std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::
     sp.top_k = opt.top_k;
 
     int ref_T = 0;
-    std::vector<int> ref_codes = codec.encode(ref_audio, ref_T);
+    std::vector<int> ref_codes;
+    if (!opt.ref_codes.empty() && opt.ref_frames > 0) {
+        ref_codes = opt.ref_codes;
+        ref_T = opt.ref_frames;
+    } else {
+        ref_codes = codec.encode(ref_audio, ref_T);
+    }
 
     const std::string text =
         opt.src_text.empty()
