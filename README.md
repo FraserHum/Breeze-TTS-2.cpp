@@ -61,6 +61,12 @@ Add `-DBREEZE_VULKAN=OFF` for a CPU only build. Outputs are `breeze-cli`, `breez
 
 ## Weights
 
+<div align="center">
+
+<a href="https://huggingface.co/HoppouAI/Breeze-TTS-2.cpp"><img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-lg.svg" alt="Model on Hugging Face"></a>
+
+</div>
+
 Prebuilt GGUFs are on the Hub at
 [HoppouAI/Breeze-TTS-2.cpp](https://huggingface.co/HoppouAI/Breeze-TTS-2.cpp), or convert them
 yourself. The download must include the `audio_tokenizer/` directory, which holds the vocoder.
