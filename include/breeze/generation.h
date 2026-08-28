@@ -34,7 +34,8 @@ std::vector<std::string> split_text(const std::string & text, int budget, int fi
 // rough spoken length in seconds, only good enough to drive a progress bar
 double estimate_seconds(const std::string & text);
 
-// respeak already encoded audio in the reference voice, keeping its words, rhythm and timing.
+// respeak already encoded audio in the reference voice. words and frame timing come from the source,
+// pitch and timbre from the reference, so intonation is not carried over.
 // src_text aligns the backbone with the forced codes when you have a transcript, empty is textless.
 // feed_source puts the original frames back into the backbone instead of the converted ones
 std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::vector<int> & src_codes,

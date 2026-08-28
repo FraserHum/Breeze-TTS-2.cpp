@@ -240,8 +240,8 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     }
 }
 
-// keeps the source's semantic codes and rebuilds the acoustic ones in the reference voice, so the
-// words and timing are the source's and only the timbre changes
+// keeps the source's semantic codes and rebuilds the acoustic ones in the reference voice. the words
+// and their timing survive, the pitch contour does not, it gets replaced by the reference's own
 // the backbone goes degenerate with nothing to read, and forcing codes against that state comes out
 // mumbled. what the filler says does not matter, only that there is roughly a clip's worth of it
 static std::string filler_text(double secs) {
