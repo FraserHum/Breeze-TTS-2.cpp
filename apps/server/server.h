@@ -11,6 +11,7 @@ struct ServerOptions {
     bool use_gpu = true;
     bool webui = false;
     bool verbose = false;
+    std::string voices_dir = "voices";
     int chunk_first = 4;
     int chunk_max = 25;
 };

@@ -54,3 +54,6 @@ __pycache__/
 .vscode/
 .idea/
 build-cuda/
+
+# saved reference voices are local data
+voices/

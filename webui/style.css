@@ -52,7 +52,7 @@ nav.tabs { display: flex; gap: 0; margin-bottom: 0; }
 
 label { display: block; margin-bottom: 16px; font-size: 12px; letter-spacing: 1px; color: var(--dim); }
 
-textarea, input[type="number"], input[type="file"] {
+textarea, input[type="number"], input[type="file"], input[type="text"], select {
   display: block;
   width: 100%;
   margin-top: 6px;
@@ -70,6 +70,21 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 
 .note { color: var(--dim); margin: 0 0 4px; }
 .output .row.hide { display: none; }
+.refblock.hide { display: none; }
+
+.saverow { align-items: flex-end; margin-bottom: 16px; }
+.saverow button {
+  background: #000;
+  color: var(--dim);
+  border: 2px solid var(--line);
+  padding: 10px 16px;
+  font: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.saverow button:hover { color: var(--fg); border-color: var(--accent); }
+.saverow button:disabled { opacity: 0.4; cursor: default; }
+.saverow label { margin-bottom: 0; }
 
 .go {
   width: 100%;

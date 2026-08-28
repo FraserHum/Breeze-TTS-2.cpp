@@ -38,12 +38,21 @@
     <label>TEXT TO SPEAK
       <textarea data-f="text" rows="3" placeholder="It is good to hear your voice again after all this time."></textarea>
     </label>
-    <label>REFERENCE AUDIO (WAV)
-      <input data-f="ref_audio" type="file" accept="audio/*" />
+    <label>SAVED VOICE
+      <select data-f="voice_id"><option value="">upload a clip instead</option></select>
     </label>
-    <label>REFERENCE TRANSCRIPT (EXACT)
-      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
-    </label>
+    <div class="refblock">
+      <label>REFERENCE AUDIO (WAV)
+        <input data-f="ref_audio" type="file" accept="audio/*" />
+      </label>
+      <label>REFERENCE TRANSCRIPT (EXACT)
+        <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
+      </label>
+      <div class="row saverow">
+        <label>SAVE AS <input data-f="save_name" type="text" placeholder="my_voice" /></label>
+        <button class="save-voice">SAVE VOICE</button>
+      </div>
+    </div>
     <div class="row">
       <label>SEED <input data-f="seed" type="number" value="42" /></label>
     </div>
@@ -57,12 +66,21 @@
     <label>DIRECTION
       <textarea data-f="instruction" rows="2" placeholder="Speak slowly with a restrained, serious tone."></textarea>
     </label>
-    <label>REFERENCE AUDIO (WAV)
-      <input data-f="ref_audio" type="file" accept="audio/*" />
+    <label>SAVED VOICE
+      <select data-f="voice_id"><option value="">upload a clip instead</option></select>
     </label>
-    <label>REFERENCE TRANSCRIPT (EXACT)
-      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
-    </label>
+    <div class="refblock">
+      <label>REFERENCE AUDIO (WAV)
+        <input data-f="ref_audio" type="file" accept="audio/*" />
+      </label>
+      <label>REFERENCE TRANSCRIPT (EXACT)
+        <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the reference audio."></textarea>
+      </label>
+      <div class="row saverow">
+        <label>SAVE AS <input data-f="save_name" type="text" placeholder="my_voice" /></label>
+        <button class="save-voice">SAVE VOICE</button>
+      </div>
+    </div>
     <div class="row">
       <label>CFG SCALE <input data-f="cfg" type="number" value="1" min="1" max="10" step="0.5" /></label>
       <label>SEED <input data-f="seed" type="number" value="42" /></label>
@@ -75,12 +93,21 @@
     <label>SOURCE AUDIO (WAV)
       <input data-f="source" type="file" accept="audio/*" />
     </label>
-    <label>TARGET VOICE (WAV)
-      <input data-f="ref_audio" type="file" accept="audio/*" />
+    <label>SAVED VOICE
+      <select data-f="voice_id"><option value="">upload a clip instead</option></select>
     </label>
-    <label>TARGET VOICE TRANSCRIPT (EXACT)
-      <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the target voice clip."></textarea>
-    </label>
+    <div class="refblock">
+      <label>TARGET VOICE (WAV)
+        <input data-f="ref_audio" type="file" accept="audio/*" />
+      </label>
+      <label>TARGET VOICE TRANSCRIPT (EXACT)
+        <textarea data-f="ref_text" rows="2" placeholder="This is the exact transcript of the target voice clip."></textarea>
+      </label>
+      <div class="row saverow">
+        <label>SAVE AS <input data-f="save_name" type="text" placeholder="my_voice" /></label>
+        <button class="save-voice">SAVE VOICE</button>
+      </div>
+    </div>
     <label>SOURCE TRANSCRIPT (OPTIONAL, SHARPENS THE WORDS)
       <textarea data-f="text" rows="2" placeholder="Leave empty unless you have the exact words of the source."></textarea>
     </label>

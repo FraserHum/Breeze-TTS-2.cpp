@@ -34,6 +34,71 @@ function fields(panel) {
   return out;
 }
 
+// picking a saved voice replaces the upload, so the clip fields get out of the way
+function syncVoice(panel) {
+  const f = fields(panel);
+  if (!f.voice_id) return;
+  const block = panel.querySelector(".refblock");
+  if (block) block.classList.toggle("hide", !!f.voice_id.value);
+}
+
+async function loadVoices() {
+  let list = [];
+  try {
+    const res = await fetch("/v1/voices");
+    if (res.ok) list = await res.json();
+  } catch (e) { return; }
+  document.querySelectorAll("select[data-f=voice_id]").forEach(sel => {
+    const keep = sel.value;
+    sel.innerHTML = "<option value=\"\">upload a clip instead</option>";
+    for (const v of list) {
+      const o = document.createElement("option");
+      o.value = v.id;
+      o.textContent = v.id + "  (" + v.seconds.toFixed(1) + "s)" + (v.saved ? "" : "  temporary");
+      sel.appendChild(o);
+    }
+    sel.value = list.some(v => v.id === keep) ? keep : "";
+    syncVoice(sel.closest(".panel"));
+  });
+}
+
+async function saveVoice(panel) {
+  const f = fields(panel);
+  const name = (f.save_name.value || "").trim();
+  if (!name) { statusEl.textContent = "NAME THE VOICE FIRST"; return; }
+  if (!/^[A-Za-z0-9_-]+$/.test(name)) {
+    statusEl.textContent = "NAME CAN ONLY USE LETTERS, DIGITS, DASH AND UNDERSCORE";
+    return;
+  }
+  if (!f.ref_audio.files.length || !(f.ref_text.value || "").trim()) {
+    statusEl.textContent = "A CLIP AND ITS TRANSCRIPT ARE REQUIRED TO SAVE A VOICE";
+    return;
+  }
+  const btn = panel.querySelector(".save-voice");
+  btn.disabled = true;
+  statusEl.textContent = "SAVING VOICE ...";
+  try {
+    const form = new FormData();
+    form.append("name", name);
+    form.append("ref_audio", f.ref_audio.files[0]);
+    form.append("ref_text", f.ref_text.value);
+    const res = await fetch("/v1/voices", { method: "POST", body: form });
+    const body = await res.json();
+    if (!res.ok) {
+      statusEl.textContent = res.status === 409 ? "BUSY - ONE REQUEST AT A TIME"
+                                               : "ERROR: " + (body.error || res.status);
+    } else {
+      await loadVoices();
+      document.querySelectorAll("select[data-f=voice_id]").forEach(sel => { sel.value = body.id; });
+      document.querySelectorAll(".panel").forEach(syncVoice);
+      statusEl.textContent = "SAVED " + body.id + " - " + body.seconds.toFixed(2) + "s";
+    }
+  } catch (e) {
+    statusEl.textContent = "ERROR: " + e.message;
+  }
+  btn.disabled = false;
+}
+
 function makeWav(pcm, sampleRate) {
   const dataLen = pcm.byteLength;
   const buf = new ArrayBuffer(44 + dataLen);
@@ -165,7 +230,8 @@ async function generate(panel, tabName) {
   form.append("instruction", f.instruction ? (f.instruction.value || "Speak clearly and naturally.")
                                            : "Speak clearly and naturally.");
   if (f.ref_text) form.append("ref_text", f.ref_text.value || "");
-  if (f.ref_audio && f.ref_audio.files.length) form.append("ref_audio", f.ref_audio.files[0]);
+  if (f.voice_id && f.voice_id.value) form.append("voice_id", f.voice_id.value);
+  else if (f.ref_audio && f.ref_audio.files.length) form.append("ref_audio", f.ref_audio.files[0]);
 
   const streaming = streamToggle.checked;
   const btn = panel.querySelector(".go");
@@ -206,18 +272,26 @@ async function generate(panel, tabName) {
 
 async function convert(panel) {
   const f = fields(panel);
-  if (!f.source.files.length || !f.ref_audio.files.length) {
-    statusEl.textContent = "SOURCE AND TARGET VOICE WAVS ARE REQUIRED";
+  const voice = f.voice_id ? f.voice_id.value : "";
+  if (!f.source.files.length) {
+    statusEl.textContent = "A SOURCE WAV IS REQUIRED";
     return;
   }
-  if (!(f.ref_text.value || "").trim()) {
+  if (!voice && !f.ref_audio.files.length) {
+    statusEl.textContent = "PICK A SAVED VOICE OR UPLOAD A TARGET VOICE WAV";
+    return;
+  }
+  if (!voice && !(f.ref_text.value || "").trim()) {
     statusEl.textContent = "TARGET VOICE TRANSCRIPT IS REQUIRED";
     return;
   }
   const form = new FormData();
   form.append("source", f.source.files[0]);
-  form.append("ref_audio", f.ref_audio.files[0]);
-  form.append("ref_text", f.ref_text.value);
+  if (voice) form.append("voice_id", voice);
+  else {
+    form.append("ref_audio", f.ref_audio.files[0]);
+    form.append("ref_text", f.ref_text.value);
+  }
   form.append("text", (f.text.value || "").trim());
   form.append("keep_acoustic", f.keep_acoustic.value);
   form.append("seed", f.seed.value);
@@ -255,4 +329,10 @@ async function convert(panel) {
 document.querySelectorAll(".panel").forEach(panel => {
   const btn = panel.querySelector(".go");
   btn.addEventListener("click", () => panel.id === "changer" ? convert(panel) : generate(panel, panel.id));
+  const save = panel.querySelector(".save-voice");
+  if (save) save.addEventListener("click", () => saveVoice(panel));
+  const sel = panel.querySelector("select[data-f=voice_id]");
+  if (sel) sel.addEventListener("change", () => syncVoice(panel));
 });
+
+loadVoices();
