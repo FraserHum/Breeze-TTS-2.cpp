@@ -317,7 +317,25 @@ std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::
     st_c.free();
     if (use_cfg) st_u.free();
     depth.free();
-    return codec.decode(out, src_T);
+
+    // the vocoder upsamples 1920x, so decoding a long clip in one graph asks for gigabytes at once.
+    // walk it in windows with enough left context for the convolutions to reach back over
+    const int spf = m.cfg.samples_per_frame;
+    const int ctx = m.cfg.voc.sliding_window + 16;
+    const int step = 40;
+    std::vector<float> audio;
+    audio.reserve((size_t) src_T * spf);
+    for (int start = 0; start < src_T; start += step) {
+        const int count = std::min(step, src_T - start);
+        const int cs = start > ctx ? start - ctx : 0;
+        std::vector<int> sub(out.begin() + (size_t) cs * nc, out.begin() + (size_t) (start + count) * nc);
+        std::vector<float> part = codec.decode(sub, start + count - cs);
+        const size_t skip = (size_t) (start - cs) * spf;
+        const size_t want = (size_t) count * spf;
+        if (part.size() < skip + want) break;
+        audio.insert(audio.end(), part.begin() + skip, part.begin() + skip + want);
+    }
+    return audio;
 }
 
 }
