@@ -85,6 +85,9 @@ endif()
 if(BREEZE_BUILD_CLI)
     add_executable(breeze-cli apps/cli/main.cpp)
     target_link_libraries(breeze-cli PRIVATE breeze_core)
+
+    add_executable(breeze-convert apps/convert/main.cpp)
+    target_link_libraries(breeze-convert PRIVATE breeze_core)
 endif()
 
 add_executable(breeze-quantize apps/quantize/main.cpp)

@@ -240,4 +240,69 @@ void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const 
     }
 }
 
+// keeps the source's semantic codes and rebuilds the acoustic ones in the reference voice, so the
+// words and timing are the source's and only the timbre changes
+// the backbone goes degenerate with nothing to read, and forcing codes against that state comes out
+// mumbled. what the filler says does not matter, only that there is roughly a clip's worth of it
+static std::string filler_text(double secs) {
+    static const char * lines[] = {
+        "This is a recording of ordinary speech made in a quiet room. ",
+        "The words themselves do not matter very much at all here. ",
+        "It simply carries on for a little while longer than that. ",
+        "Nothing in particular is being described at this point. ",
+    };
+    const size_t want = (size_t) (secs * 17.0) + 16;
+    std::string s;
+    for (int i = 0; s.size() < want; i++) s += lines[i % 4];
+    return s;
+}
+
+std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::vector<int> & src_codes,
+                                 int src_T, const std::vector<float> & ref_audio,
+                                 const std::string & ref_text, const std::string & src_text,
+                                 bool feed_source, int seed) {
+    const int nc = m.cfg.num_codebooks;
+    std::mt19937 rng((uint32_t) seed);
+
+    int ref_T = 0;
+    std::vector<int> ref_codes = codec.encode(ref_audio, ref_T);
+
+    const std::string text =
+        src_text.empty() ? filler_text(src_T * (double) m.cfg.samples_per_frame / m.cfg.sample_rate)
+                         : src_text;
+    GenRequest req;
+    int total = 0;
+    std::vector<float> emb =
+        assemble(m, build_segments(m, req, text, true, ref_text, ref_codes, ref_T, false), total);
+
+    BackboneState st;
+    st.init(m, total + src_T + 8);
+    StepOut o = backbone_run(m, st, emb, total);
+
+    DepthRunner depth;
+    depth.init(m, 1);
+
+    std::vector<int> out((size_t) src_T * nc);
+    for (int t = 0; t < src_T; t++) {
+        const int cb0 = src_codes[(size_t) t * nc];
+        std::vector<std::vector<float>> hiddens = { o.hidden };
+        std::vector<int> rest = depth.run(m, hiddens, cb0, 1.0f, rng);
+        out[(size_t) t * nc] = cb0;
+        for (int c = 1; c < nc; c++) out[(size_t) t * nc + c] = rest[c - 1];
+
+        std::vector<int> frame(feed_source ? std::vector<int>(src_codes.begin() + (size_t) t * nc,
+                                                              src_codes.begin() + (size_t) (t + 1) * nc)
+                                            : std::vector<int>(out.begin() + (size_t) t * nc,
+                                                               out.begin() + (size_t) (t + 1) * nc));
+        std::vector<float> ae = audio_embed_forward(m, frame, 1);
+        o = backbone_run(m, st, ae, 1);
+        if (t % 25 == 0) { printf("\rconverting %d/%d frames", t, src_T); fflush(stdout); }
+    }
+    printf("\rconverted %d frames        \n", src_T);
+
+    st.free();
+    depth.free();
+    return codec.decode(out, src_T);
+}
+
 }

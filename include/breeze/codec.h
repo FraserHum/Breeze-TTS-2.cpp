@@ -11,8 +11,9 @@ struct MimiCodec {
     BreezeModel * m = nullptr;
     void init(BreezeModel & model) { m = &model; }
 
-    // codes frame-major [f * num_codebooks + cb]; returns waveform samples
-    std::vector<float> decode(const std::vector<int> & codes, int n_frames);
+    // codes frame-major [f * n_cb + cb]; n_cb 0 means the full set. fewer codebooks drops detail,
+    // 1 leaves only the semantic stage
+    std::vector<float> decode(const std::vector<int> & codes, int n_frames, int n_cb = 0);
     // audio waveform in, returns codes frame-major, sets n_frames
     std::vector<int> encode(const std::vector<float> & audio, int & n_frames);
 };
