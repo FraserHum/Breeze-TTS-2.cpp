@@ -206,42 +206,70 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     return !stopped;
 }
 
-// long text is generated piece by piece, each one carrying the last as its reference so the
-// voice does not change at the seams
+void GenSession::begin(BreezeModel & m, MimiCodec & codec, const GenRequest & req, GenTimings * tm) {
+    m_model = &m;
+    m_codec = &codec;
+    m_req = req;
+    m_piece = 0;
+    m_start = std::chrono::steady_clock::now();
+    m_codes.clear();
+    m_frames = 0;
+    m_text.clear();
+
+    if (!req.ref_codes.empty() && req.ref_frames > 0 && !req.ref_text.empty()) {
+        m_codes = req.ref_codes;
+        m_frames = req.ref_frames;
+        m_text = req.ref_text;
+    } else if (!req.ref_audio.empty() && !req.ref_text.empty()) {
+        const auto t0 = std::chrono::steady_clock::now();
+        m_codes = codec.encode(req.ref_audio, m_frames);
+        m_text = req.ref_text;
+        if (tm) tm->encode_ref =
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    }
+}
+
+bool GenSession::speak(const std::string & text, const AudioCallback & cb, GenTimings * tm) {
+    if (!m_model || !m_codec) return false;
+    GenTimings sink;
+    GenTimings & t = tm ? *tm : sink;
+
+    ChunkRef anchor;
+    anchor.codes = m_codes;
+    anchor.n_frames = m_frames;
+    anchor.text = m_text;
+
+    ChunkRef made;
+    const bool ok = generate_chunk(*m_model, *m_codec, m_req, text, anchor,
+                                   (uint32_t) m_req.seed + m_piece, cb, t, m_start, made);
+    m_piece++;
+    // the opening piece stands in as the reference when there was no clip to clone
+    if (ok && m_codes.empty() && made.n_frames > 0) {
+        m_codes = std::move(made.codes);
+        m_frames = made.n_frames;
+        m_text = made.text;
+    }
+    return ok;
+}
+
+// long text is generated piece by piece, each one carrying the same reference so the voice does
+// not change at the seams
 void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
               GenTimings * timings) {
     GenTimings sink;
     GenTimings & tm = timings ? *timings : sink;
-    const auto t_start = std::chrono::steady_clock::now();
 
-    ChunkRef user_ref;
-    if (!req.ref_codes.empty() && req.ref_frames > 0 && !req.ref_text.empty()) {
-        user_ref.codes = req.ref_codes;
-        user_ref.n_frames = req.ref_frames;
-        user_ref.text = req.ref_text;
-    } else if (!req.ref_audio.empty() && !req.ref_text.empty()) {
-        const auto t0 = std::chrono::steady_clock::now();
-        user_ref.codes = codec.encode(req.ref_audio, user_ref.n_frames);
-        user_ref.text = req.ref_text;
-        tm.encode_ref = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
-    }
+    GenSession s;
+    s.begin(m, codec, req, &tm);
 
-    // with no clip to clone, the opening piece becomes the reference for the rest, so keep it down to
-    // the length references are normally given at. a half minute of it makes the model skip whole
-    // sentences of whatever comes next
+    // a half minute of reference makes the model skip whole sentences of whatever comes next, so
+    // when the first piece has to double as the reference it stays near the usual clip length
     const int anchor_chars = 200;
     const std::vector<std::string> parts =
-        split_text(req.text, req.split_chars, user_ref.codes.empty() ? anchor_chars : 0);
+        split_text(req.text, req.split_chars, s.needs_anchor() ? anchor_chars : 0);
 
-    // every piece leans on the same reference. chaining each one off the piece before it sounds
-    // fine for a sentence or two and then compounds, the voice loses body at every hop
-    ChunkRef anchor = user_ref;
-    for (size_t i = 0; i < parts.size(); i++) {
-        ChunkRef made;
-        if (!generate_chunk(m, codec, req, parts[i], anchor, (uint32_t) req.seed + (uint32_t) i,
-                            cb, tm, t_start, made)) return;
-        if (anchor.codes.empty() && made.n_frames > 0) anchor = std::move(made);
-    }
+    for (const std::string & part : parts)
+        if (!s.speak(part, cb, &tm)) return;
 }
 
 // keeps the source's semantic codes and rebuilds the acoustic ones in the reference voice. the words

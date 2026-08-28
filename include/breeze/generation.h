@@ -5,6 +5,7 @@
 #include "breeze/depth_decoder.h"
 #include "breeze/model.h"
 
+#include <chrono>
 #include <functional>
 #include <string>
 #include <vector>
@@ -78,5 +79,30 @@ struct GenTimings {
 
 void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
               GenTimings * timings = nullptr);
+
+// generation spread over several calls, for text that arrives a bit at a time. it holds the
+// reference so the voice does not drift between pieces, and the instruction can change as it goes
+class GenSession {
+public:
+    void begin(BreezeModel & m, MimiCodec & codec, const GenRequest & req, GenTimings * tm = nullptr);
+
+    // speaks one piece. false means the callback asked to stop
+    bool speak(const std::string & text, const AudioCallback & cb, GenTimings * tm = nullptr);
+
+    void set_instruction(const std::string & s) { m_req.instruction = s; }
+
+    // with no clip to clone the first piece becomes the reference, so it wants to stay short
+    bool needs_anchor() const { return m_codes.empty(); }
+
+private:
+    BreezeModel * m_model = nullptr;
+    MimiCodec * m_codec = nullptr;
+    GenRequest m_req;
+    std::vector<int> m_codes;
+    std::string m_text;
+    int m_frames = 0;
+    uint32_t m_piece = 0;
+    std::chrono::steady_clock::time_point m_start;
+};
 
 }
