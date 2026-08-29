@@ -32,10 +32,16 @@ void DepthRunner::init(BreezeModel & m, int n_branches) {
     kv.init(m.backend, m.cfg.dd.n_layer, m.cfg.dd.head_dim, m.cfg.dd.n_kv_head,
             m.cfg.num_codebooks + 1, n_branches);
     freq_factors = llama3_freq_factors(m.cfg.dd);
+    logits_buf.resize((size_t) m.cfg.audio_vocab_size * n_branches);
+    combined_logits.resize(m.cfg.audio_vocab_size);
+    flat_hiddens.resize((size_t) n_branches * m.cfg.hidden_size);
 }
 
 void DepthRunner::free() {
     kv.free();
+    logits_buf.clear();
+    combined_logits.clear();
+    flat_hiddens.clear();
 }
 
 static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, Graph & g, KVCache & kv,
@@ -65,26 +71,27 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, Graph & g, KV
     return ggml_add(ctx, res, h);
 }
 
-// runs one depth position for every CFG branch at once and returns the per branch logits,
-// laid out branch major so branch b starts at b * vocab
-static std::vector<float> depth_step(BreezeModel & m, DepthRunner & r, int start,
-                                     const std::vector<std::vector<float>> * hiddens,
-                                     int audio_code, int head_idx) {
+// runs one depth position for every CFG branch at once and writes directly into pre-allocated logits_buf
+static void depth_step(BreezeModel & m, DepthRunner & r, int start,
+                       const std::vector<std::vector<float>> * hiddens,
+                       int audio_code, int head_idx) {
     const DepthConfig & c = m.cfg.dd;
     const int nb = r.n_branch;
     const int n_pos = hiddens ? 2 : 1;
     const int n_tok = n_pos * nb;
     const int total = (start + n_pos) * nb;
-    Graph g(2048);
+    Graph g((size_t) c.n_layer * 16 + 64);
 
     std::vector<int32_t> idx(nb, audio_code);
     ggml_tensor * aud = g.input_i32(idx, nb);
     ggml_tensor * embed = ggml_get_rows(g.ctx, m.w("audio_embd.weight"), aud); // [2048, nb]
     if (hiddens) {
-        std::vector<float> flat;
-        flat.reserve((size_t) nb * m.cfg.hidden_size);
-        for (const auto & h : *hiddens) flat.insert(flat.end(), h.begin(), h.end());
-        ggml_tensor * h0 = g.input_f32(flat, m.cfg.hidden_size, nb);
+        size_t off = 0;
+        for (const auto & h : *hiddens) {
+            std::memcpy(r.flat_hiddens.data() + off, h.data(), h.size() * sizeof(float));
+            off += h.size();
+        }
+        ggml_tensor * h0 = g.input_f32(r.flat_hiddens, m.cfg.hidden_size, nb);
         embed = ggml_concat(g.ctx, h0, embed, 1); // [2048, 2*nb], position major
     }
     ggml_tensor * x = linear(g.ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
@@ -106,7 +113,7 @@ static std::vector<float> depth_step(BreezeModel & m, DepthRunner & r, int start
     ggml_tensor * hw = ggml_view_2d(g.ctx, head, head->ne[0], head->ne[1], head->nb[1], (size_t) head_idx * head->nb[2]);
     ggml_tensor * logits = ggml_mul_mat(g.ctx, hw, last); // [vocab, nb]
     g.compute(m.backend, logits);
-    return tensor_to_f32(logits);
+    ggml_backend_tensor_get(logits, r.logits_buf.data(), 0, r.logits_buf.size() * sizeof(float));
 }
 
 std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector<float>> & hiddens,
@@ -123,20 +130,24 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     if (sp_in) sp = *sp_in;
 
     std::vector<int> codes = { cb0 };
+    codes.reserve(nc);
     for (int j = 1; j < nc; j++) {
         const int head_idx = j - 1;
-        std::vector<float> out = j == 1
-            ? depth_step(m, *this, 0, &hiddens, cb0, head_idx)
-            : depth_step(m, *this, j, nullptr, codes[head_idx] + head_idx * vs, head_idx);
+        if (j == 1) {
+            depth_step(m, *this, 0, &hiddens, cb0, head_idx);
+        } else {
+            depth_step(m, *this, j, nullptr, codes[head_idx] + head_idx * vs, head_idx);
+        }
 
-        const int vocab = (int) out.size() / n_branch;
-        std::vector<float> logits(out.begin(), out.begin() + vocab);
+        const int vocab = (int) logits_buf.size() / n_branch;
         if (n_branch > 1) {
             for (int i = 0; i < vocab; i++)
-                logits[i] = out[vocab + i] + cfg_scale * (out[i] - out[vocab + i]);
+                combined_logits[i] = logits_buf[vocab + i] + cfg_scale * (logits_buf[i] - logits_buf[vocab + i]);
+        } else {
+            std::memcpy(combined_logits.data(), logits_buf.data(), vocab * sizeof(float));
         }
         // forced steps still run the graph, later codebooks are conditioned on this one
-        codes.push_back(j <= n_force ? force[j - 1] : sample_token(logits, sp, rng));
+        codes.push_back(j <= n_force ? force[j - 1] : sample_token(combined_logits, sp, rng));
     }
     return std::vector<int>(codes.begin() + 1, codes.end());
 }
