@@ -88,7 +88,9 @@ void DepthRunner::init(BreezeModel & m, int n_branches) {
     // that disagrees with cfg must fail here, not overflow a buffer mid generation
     dd_require(m.w("dd.codebooks_head.weight"), "dd.codebooks_head.weight", c.hidden, vs, nc - 1);
     dd_require(m.w("audio_embd.weight"), "audio_embd.weight", hidden, (int64_t) nc * vs, -1);
-    dd_require(m.w("dd.in_proj.weight"), "dd.in_proj.weight", c.hidden, hidden, -1);
+    // in_proj maps hidden -> c.hidden: linear() is ggml_mul_mat(w, x), so the weight is
+    // stored [in, out] = [hidden, c.hidden] (contract dim is ne[0], result takes ne[1])
+    dd_require(m.w("dd.in_proj.weight"), "dd.in_proj.weight", hidden, c.hidden, -1);
 
     // deterministic node budget (see dd_step_n_nodes), doubled as margin for backend side
     // node expansion (SYCL/oneDNN) and model growth; the 1024 floor is llama.cpp's own
