@@ -80,7 +80,7 @@ static void depth_step(BreezeModel & m, DepthRunner & r, int start,
     const int n_pos = hiddens ? 2 : 1;
     const int n_tok = n_pos * nb;
     const int total = (start + n_pos) * nb;
-    Graph g((size_t) c.n_layer * 16 + 64);
+    Graph g(1024);
 
     std::vector<int32_t> idx(nb, audio_code);
     ggml_tensor * aud = g.input_i32(idx, nb);
