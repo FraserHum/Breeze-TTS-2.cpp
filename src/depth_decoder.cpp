@@ -2,6 +2,7 @@
 #include "breeze/sampling.h"
 
 #include <cmath>
+#include <cstring>
 #include <string>
 
 namespace breeze {
