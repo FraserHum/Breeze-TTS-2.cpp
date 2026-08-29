@@ -143,7 +143,7 @@ int run_server(const ServerOptions & opts) {
         }
 
         const std::string fmt = field(req, "response_format", field(req, "format", "wav"));
-        const bool stream = field(req, "stream", "true") != "false";
+        const bool stream = field(req, "stream", "false") == "true";
 
         res.set_header("X-Sample-Rate", std::to_string(sr));
         res.set_header("X-Sample-Format", "s16le");
@@ -155,6 +155,7 @@ int run_server(const ServerOptions & opts) {
         fflush(stdout);
 
         if (!stream) {
+            g.chunk_first = 0;
             std::vector<float> all_samples;
             GenTimings tm;
             const auto t0 = std::chrono::steady_clock::now();
