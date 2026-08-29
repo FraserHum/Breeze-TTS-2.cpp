@@ -33,6 +33,11 @@ struct KVCache {
     void init(Backend & be, int n_layer, int head_dim, int n_kv_head, int max_seq, int n_branch = 1);
     void reset() { len = 0; }
     void free();
+
+    // copy the prefix region [0, pos) of every k/v tensor out, and back in again. parts that share
+    // the same reference prefix restore the snapshot instead of re-encoding and re-prefilling it
+    std::vector<std::vector<float>> snapshot(int pos) const;
+    void restore(const std::vector<std::vector<float>> & snap);
 };
 
 // a single throwaway forward graph; input host data is stashed and uploaded after allocation
