@@ -9,6 +9,22 @@
 
 namespace breeze {
 
+// one static compute graph for one depth step: built once in init with that step's
+// shapes (KV length, append offset, head slice, and the step 1 CFG concat) baked in,
+// re-executed per step by updating only the input leaves' data
+struct DepthStepGraph {
+    std::vector<uint8_t> arena;     // no-alloc ggml context memory
+    ggml_context * ctx = nullptr;
+    ggml_cgraph * graph = nullptr;
+    std::vector<ggml_tensor *> cpy_roots;
+    ggml_tensor * aud = nullptr;    // [nb] i32 audio code, same for every branch
+    ggml_tensor * h0 = nullptr;     // [hidden, nb] f32, step 1 only (cond then uncond)
+    ggml_tensor * pos = nullptr;    // [n_tok] i32 positions
+    ggml_tensor * ff = nullptr;     // rope freq factors, constant
+    ggml_tensor * mask = nullptr;   // [total, n_tok] f32 branch-causal
+    ggml_tensor * logits = nullptr; // [vs, nb] f32 output, branch major
+};
+
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
 struct DepthRunner {
     KVCache kv; // CFG branches share one cache, interleaved per position
@@ -19,15 +35,13 @@ struct DepthRunner {
     std::vector<float> combined_logits;
     std::vector<float> flat_hiddens;
 
-    std::vector<uint8_t> graph_meta;
-    ggml_context * gctx = nullptr;
-    ggml_cgraph * ggraph = nullptr;
+    std::vector<DepthStepGraph> graphs; // one per step, graphs[j-1] is step j
+    ggml_gallocr_t depth_alloc = nullptr; // dedicated: backbone/codec churn on m.backend.alloc would dangle these pointers
     size_t graph_cap = 0;
 
     std::vector<int32_t> idx_staging;
     std::vector<int32_t> pos_staging;
     std::vector<float> mask_staging;
-    std::vector<ggml_tensor *> cpy_roots;
 
     void init(BreezeModel & m, int n_branches);
     void free();
