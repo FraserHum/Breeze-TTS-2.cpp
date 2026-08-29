@@ -53,6 +53,35 @@ void KVCache::free() {
     ctx = nullptr;
 }
 
+std::vector<std::vector<float>> KVCache::snapshot(int pos) const {
+    // the sequence dim is the last one, so [0, pos) is the contiguous head of every tensor
+    GGML_ASSERT(head_dim > 0 && n_kv_head > 0 && pos >= 0 && pos <= max_seq * n_branch);
+    const size_t n = (size_t) head_dim * (size_t) n_kv_head * (size_t) pos;
+    std::vector<std::vector<float>> out;
+    out.reserve(k.size() * 2);
+    for (size_t i = 0; i < k.size(); i++) {
+        std::vector<float> buf(n);
+        ggml_backend_tensor_get(k[i], buf.data(), 0, n * sizeof(float));
+        out.push_back(std::move(buf));
+        std::vector<float> bufv(n);
+        ggml_backend_tensor_get(v[i], bufv.data(), 0, n * sizeof(float));
+        out.push_back(std::move(bufv));
+    }
+    return out;
+}
+
+void KVCache::restore(const std::vector<std::vector<float>> & snap) {
+    const int n_layer = (int) k.size();
+    GGML_ASSERT(n_layer > 0 && snap.size() == (size_t) n_layer * 2);
+    const size_t stride = (size_t) head_dim * (size_t) n_kv_head;
+    for (size_t i = 0; i < snap.size(); i++) {
+        const size_t n = snap[i].size();
+        GGML_ASSERT(stride > 0 && n % stride == 0 && n / stride <= (size_t) max_seq * (size_t) n_branch);
+        ggml_tensor * t = i < (size_t) n_layer ? k[i] : v[i - (size_t) n_layer];
+        ggml_backend_tensor_set(t, snap[i].data(), 0, n * sizeof(float));
+    }
+}
+
 Graph::Graph(size_t n_nodes) {
     size_t mem = ggml_tensor_overhead() * n_nodes * 2 + ggml_graph_overhead_custom(n_nodes, false) + 8192;
     ggml_init_params p{ mem, nullptr, true };

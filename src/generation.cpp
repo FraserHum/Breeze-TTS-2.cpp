@@ -23,22 +23,37 @@ static Seg text_seg(BreezeModel & m, const std::string & s) {
     return seg;
 }
 
+// the reference segments every part carries. they are identical across parts, so the first part
+// prefills them once and the rest restore the snapshot instead of re-encoding them
+static std::vector<Seg> ref_segments(BreezeModel & m, const std::string & ref_text,
+                                     const std::vector<int> & ref_codes, int ref_T) {
+    std::vector<Seg> segs;
+    const std::string spk = "[S0]";
+    segs.push_back(text_seg(m, spk + ref_text));
+    Seg a;
+    a.is_text = false;
+    a.codes = ref_codes;
+    a.n_frames = ref_T;
+    a.eos = true;
+    segs.push_back(a);
+    return segs;
+}
+
+// the part's own text segment; cond carries the instruction
+static Seg tail_seg(BreezeModel & m, const GenRequest & r, const std::string & text, bool cond) {
+    const std::string spk = "[S0]";
+    return text_seg(m, cond ? spk + "<ins_bos>" + r.instruction + "<ins_eos>" + text : spk + text);
+}
+
 static std::vector<Seg> build_segments(BreezeModel & m, const GenRequest & r, const std::string & text,
                                        bool has_ref, const std::string & ref_text,
                                        const std::vector<int> & ref_codes, int ref_T, bool cond) {
     std::vector<Seg> segs;
-    const std::string spk = "[S0]";
     if (has_ref) {
-        segs.push_back(text_seg(m, spk + ref_text));
-        Seg a;
-        a.is_text = false;
-        a.codes = ref_codes;
-        a.n_frames = ref_T;
-        a.eos = true;
-        segs.push_back(a);
+        std::vector<Seg> ref = ref_segments(m, ref_text, ref_codes, ref_T);
+        segs.insert(segs.end(), ref.begin(), ref.end());
     }
-    std::string tail = cond ? spk + "<ins_bos>" + r.instruction + "<ins_eos>" + text : spk + text;
-    segs.push_back(text_seg(m, tail));
+    segs.push_back(tail_seg(m, r, text, cond));
     return segs;
 }
 
@@ -83,7 +98,8 @@ struct ChunkRef {
 static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest & req,
                            const std::string & text, const ChunkRef & ref, uint32_t seed,
                            const AudioCallback & cb, GenTimings & tm,
-                           std::chrono::steady_clock::time_point t_start, ChunkRef & out) {
+                           std::chrono::steady_clock::time_point t_start, ChunkRef & out,
+                           const std::vector<std::vector<float>> * prefix = nullptr, int prefix_len = 0) {
     const auto clock_now = [] { return std::chrono::steady_clock::now(); };
     const auto since = [](std::chrono::steady_clock::time_point t) {
         return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t).count();
@@ -94,13 +110,22 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     const int spf = m.cfg.samples_per_frame;
     const bool has_ref = !ref.codes.empty() && !ref.text.empty();
     const bool use_cfg = req.cfg_scale != 1.0f;
+    // the reference prefix is prefilled once in begin and restored per part. it is only valid for
+    // the single branch path, so a cfg run falls back to the old full prefill
+    const bool use_prefix = has_ref && !use_cfg && prefix && prefix_len > 0;
 
     const std::vector<int> & ref_codes = ref.codes;
     const int ref_T = ref.n_frames;
 
     auto t0 = clock_now();
     int total_c = 0, total_u = 0;
-    std::vector<float> emb_c = assemble(m, build_segments(m, req, text, has_ref, ref.text, ref_codes, ref_T, true), total_c);
+    std::vector<float> emb_c;
+    if (use_prefix) {
+        // only the part's own tail; the reference prefix comes back from the snapshot below
+        emb_c = assemble(m, { tail_seg(m, req, text, true) }, total_c);
+    } else {
+        emb_c = assemble(m, build_segments(m, req, text, has_ref, ref.text, ref_codes, ref_T, true), total_c);
+    }
     std::vector<float> emb_u;
     if (use_cfg) emb_u = assemble(m, build_segments(m, req, text, has_ref, ref.text, ref_codes, ref_T, false), total_u);
     tm.prompt += since(t0);
@@ -108,10 +133,17 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     const int max_new = req.max_new_tokens > 0 ? req.max_new_tokens : m.cfg.max_new_tokens;
 
     BackboneState st_c, st_u;
-    st_c.init(m, total_c + max_new + 8);
+    // the restored prefix counts against the sequence budget too
+    st_c.init(m, (use_prefix ? prefix_len : 0) + total_c + max_new + 8);
     if (use_cfg) st_u.init(m, total_u + max_new + 8);
 
     t0 = clock_now();
+    if (use_prefix) {
+        // put the prefix k/v back into a fresh cache, then the tail prefills at the offset; the
+        // causal mask already lets the tail queries attend to every prefix key
+        st_c.kv.restore(*prefix);
+        st_c.pos = prefix_len;
+    }
     StepOut o_c = backbone_run(m, st_c, emb_c, total_c);
     StepOut o_u;
     if (use_cfg) o_u = backbone_run(m, st_u, emb_u, total_u);
@@ -215,6 +247,8 @@ void GenSession::begin(BreezeModel & m, MimiCodec & codec, const GenRequest & re
     m_codes.clear();
     m_frames = 0;
     m_text.clear();
+    m_prefix.clear();
+    m_prefix_len = 0;
 
     if (!req.ref_codes.empty() && req.ref_frames > 0 && !req.ref_text.empty()) {
         m_codes = req.ref_codes;
@@ -226,6 +260,26 @@ void GenSession::begin(BreezeModel & m, MimiCodec & codec, const GenRequest & re
         m_text = req.ref_text;
         if (tm) tm->encode_ref =
             std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    }
+
+    // every part carries the same reference, so prefill it once here into a scratch cache and keep
+    // a snapshot of its k/v; the parts restore it instead of re-encoding and re-prefilling it. the
+    // snapshot is only valid for the single branch path, so a cfg run keeps the old full prefill
+    if (!m_codes.empty() && !m_text.empty() && m_req.cfg_scale == 1.0f) {
+        const auto t0 = std::chrono::steady_clock::now();
+        int pre = 0;
+        std::vector<float> emb = assemble(m, ref_segments(m, m_text, m_codes, m_frames), pre);
+        if (tm) tm->prompt +=
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+        BackboneState st;
+        st.init(m, pre + 8);
+        const auto t1 = std::chrono::steady_clock::now();
+        backbone_run(m, st, emb, pre);
+        m_prefix_len = pre;
+        m_prefix = st.kv.snapshot(pre);
+        st.free();
+        if (tm) tm->prefill +=
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t1).count();
     }
 }
 
@@ -241,7 +295,8 @@ bool GenSession::speak(const std::string & text, const AudioCallback & cb, GenTi
 
     ChunkRef made;
     const bool ok = generate_chunk(*m_model, *m_codec, m_req, text, anchor,
-                                   (uint32_t) m_req.seed + m_piece, cb, t, m_start, made);
+                                   (uint32_t) m_req.seed + m_piece, cb, t, m_start, made,
+                                   m_prefix.empty() ? nullptr : &m_prefix, m_prefix_len);
     m_piece++;
     // the opening piece stands in as the reference when there was no clip to clone
     if (ok && m_codes.empty() && made.n_frames > 0) {

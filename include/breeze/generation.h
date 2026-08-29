@@ -103,6 +103,10 @@ private:
     int m_frames = 0;
     uint32_t m_piece = 0;
     std::chrono::steady_clock::time_point m_start;
+    // reference prefix k/v built once in begin(); each part restores it instead of re-encoding and
+    // re-prefilling the reference. empty when there is no reference to clone
+    std::vector<std::vector<float>> m_prefix;
+    int m_prefix_len = 0;
 };
 
 }
