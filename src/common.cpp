@@ -77,7 +77,8 @@ void KVCache::restore(const std::vector<std::vector<float>> & snap) {
     for (size_t i = 0; i < snap.size(); i++) {
         const size_t n = snap[i].size();
         GGML_ASSERT(stride > 0 && n % stride == 0 && n / stride <= (size_t) max_seq * (size_t) n_branch);
-        ggml_tensor * t = i < (size_t) n_layer ? k[i] : v[i - (size_t) n_layer];
+        // snapshot() emits interleaved (k0, v0, k1, v1, ...) per layer
+        ggml_tensor * t = (i & 1) ? v[i / 2] : k[i / 2];
         ggml_backend_tensor_set(t, snap[i].data(), 0, n * sizeof(float));
     }
 }
