@@ -6,6 +6,7 @@
 #include "breeze/audio.h"
 #include "breeze/generation.h"
 #include "breeze/model.h"
+#include "breeze/voice.h"
 
 #include "httplib.h"
 #include "breeze_webui_assets.h"
@@ -65,6 +66,24 @@ int run_server(const ServerOptions & opts) {
 
     VoiceStore store;
     store.load_dir(opts.voices_dir, model.cfg.num_codebooks);
+
+    // saved voices are fixed for the pod's lifetime, so build each one's reference prefix once here.
+    // requests for a known voice then restore the stored snapshot and pay only their own tail; a
+    // voice that fails to build logs a warning and keeps the per-generate prefill
+    for (const Voice & v : load_voice_dir(opts.voices_dir)) {
+        if (v.n_codebooks != model.cfg.num_codebooks) continue;
+        const auto t0 = std::chrono::steady_clock::now();
+        const size_t bytes = build_voice_prefix(model, v.name, v.codes, v.text, v.frames);
+        const double ms =
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+        if (bytes)
+            printf("prefix precompute: voice '%s' %zu bytes in %.0f ms\n", v.name.c_str(), bytes, ms);
+        else
+            fprintf(stderr, "prefix precompute: voice '%s' failed, keeping the per-generate prefill\n",
+                    v.name.c_str());
+    }
+    fflush(stdout);
+
     store.add_routes(svr, model, codec, *mutex, opts.voices_dir);
 
     WsServer ws;
@@ -115,6 +134,7 @@ int run_server(const ServerOptions & opts) {
             res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
             return;
         }
+        if (!vid.empty()) g.voice = vid;
         if (g.text.empty()) {
             res.status = 400;
             res.set_content("{\"error\":\"text is required\"}", "application/json");

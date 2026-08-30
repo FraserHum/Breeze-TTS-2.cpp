@@ -4,6 +4,9 @@
 
 #include <algorithm>
 #include <chrono>
+#include <map>
+#include <memory>
+#include <mutex>
 #include <random>
 
 namespace breeze {
@@ -86,6 +89,60 @@ static std::vector<float> combine_logits(const std::vector<float> & cond, const 
     std::vector<float> out(cond.size());
     for (size_t i = 0; i < out.size(); i++) out[i] = unc[i] + scale * (cond[i] - unc[i]);
     return out;
+}
+
+// prefill the reference into a scratch cache and snapshot its k/v. begin() runs this per generate,
+// and build_voice_prefix runs the very same sequence at startup, so a held prefix and a freshly
+// built one come out bit-identical. prompt and prefill time the same stages as before
+static bool build_ref_prefix(BreezeModel & m, const std::string & ref_text,
+                             const std::vector<int> & ref_codes, int ref_frames,
+                             std::vector<std::vector<float>> & snap, int & len, GenTimings * tm) {
+    const auto t0 = std::chrono::steady_clock::now();
+    int pre = 0;
+    std::vector<float> emb = assemble(m, ref_segments(m, ref_text, ref_codes, ref_frames), pre);
+    if (pre <= 0) return false;
+    if (tm) tm->prompt +=
+        std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    BackboneState st;
+    st.init(m, pre + 8);
+    const auto t1 = std::chrono::steady_clock::now();
+    backbone_run(m, st, emb, pre);
+    len = pre;
+    snap = st.kv.snapshot(pre);
+    st.free();
+    if (tm) tm->prefill +=
+        std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t1).count();
+    return true;
+}
+
+// held reference prefixes, one per saved voice, keyed by voice name. the snapshot uses the same
+// tensor layout as the per-generate snapshot, so restoring one is the same ops each part already
+// runs. text keeps the transcript the snapshot was built from, so a request carrying a different
+// reference transcript falls back to the per-generate build
+struct VoicePrefix {
+    std::shared_ptr<const std::vector<std::vector<float>>> snapshot;
+    std::string text;
+    int len = 0;
+};
+static std::map<std::string, VoicePrefix> g_voice_prefixes;
+static std::mutex g_voice_mutex;
+
+// prefill the reference with the exact op sequence begin() runs and hold the snapshot under the
+// voice name. returns the snapshot bytes, or 0 when the voice could not be built (a failed build
+// leaves any earlier entry in place, and the voice keeps the per-generate prefill)
+size_t build_voice_prefix(BreezeModel & m, const std::string & name,
+                          const std::vector<int> & ref_codes, const std::string & ref_text,
+                          int ref_frames) {
+    if (name.empty() || ref_codes.empty() || ref_frames <= 0 || ref_text.empty()) return 0;
+    std::vector<std::vector<float>> snap;
+    int len = 0;
+    if (!build_ref_prefix(m, ref_text, ref_codes, ref_frames, snap, len, nullptr)) return 0;
+    size_t bytes = 0;
+    for (const auto & t : snap) bytes += t.size() * sizeof(float);
+    std::lock_guard<std::mutex> lock(g_voice_mutex);
+    g_voice_prefixes[name] = { std::make_shared<const std::vector<std::vector<float>>>(snap),
+                               ref_text, len };
+    return bytes;
 }
 
 // what a finished piece leaves behind so the next one can keep the same voice
@@ -262,24 +319,32 @@ void GenSession::begin(BreezeModel & m, MimiCodec & codec, const GenRequest & re
             std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
     }
 
-    // every part carries the same reference, so prefill it once here into a scratch cache and keep
-    // a snapshot of its k/v; the parts restore it instead of re-encoding and re-prefilling it. the
+    // every part carries the same reference, so prefill it once into a scratch cache and keep a
+    // snapshot of its k/v; the parts restore it instead of re-encoding and re-prefilling it. the
     // snapshot is only valid for the single branch path, so a cfg run keeps the old full prefill
-    if (!m_codes.empty() && !m_text.empty() && m_req.cfg_scale == 1.0f) {
+    std::shared_ptr<const std::vector<std::vector<float>>> held;
+    int held_len = 0;
+    if (!m_req.voice.empty() && !m_codes.empty() && !m_text.empty() && m_req.cfg_scale == 1.0f) {
+        std::lock_guard<std::mutex> lock(g_voice_mutex);
+        auto it = g_voice_prefixes.find(m_req.voice);
+        // the transcript must match what the snapshot was built from; a different reference
+        // transcript means a different prefix, so the per-generate build below stays
+        if (it != g_voice_prefixes.end() && it->second.text == m_text) {
+            held = it->second.snapshot;
+            held_len = it->second.len;
+        }
+    }
+    if (held && held_len > 0) {
+        // the held snapshot came from the very same op sequence as the build below, so restoring it
+        // is numerically identical to building it here, and the reference work stays out of the
+        // request
         const auto t0 = std::chrono::steady_clock::now();
-        int pre = 0;
-        std::vector<float> emb = assemble(m, ref_segments(m, m_text, m_codes, m_frames), pre);
-        if (tm) tm->prompt +=
-            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
-        BackboneState st;
-        st.init(m, pre + 8);
-        const auto t1 = std::chrono::steady_clock::now();
-        backbone_run(m, st, emb, pre);
-        m_prefix_len = pre;
-        m_prefix = st.kv.snapshot(pre);
-        st.free();
+        m_prefix = *held;
+        m_prefix_len = held_len;
         if (tm) tm->prefill +=
-            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t1).count();
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+    } else if (!m_codes.empty() && !m_text.empty() && m_req.cfg_scale == 1.0f) {
+        build_ref_prefix(m, m_text, m_codes, m_frames, m_prefix, m_prefix_len, tm);
     }
 }
 
