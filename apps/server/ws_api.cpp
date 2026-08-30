@@ -189,6 +189,7 @@ static void handle_start(WsConn & conn, Session & s, const std::string & msg, Br
         event(conn, "error", "\"message\":\"unknown voice_id\"");
         return;
     }
+    if (!vid.empty()) g.voice = vid;
 
     std::lock_guard<std::mutex> lock(s.mu);
     s.instruction = g.instruction;

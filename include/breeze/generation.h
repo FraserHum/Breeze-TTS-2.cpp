@@ -6,7 +6,9 @@
 #include "breeze/model.h"
 
 #include <chrono>
+#include <cstddef>
 #include <functional>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -21,6 +23,9 @@ struct GenRequest {
     // which is most of the wait before the first audio comes out
     std::vector<int> ref_codes;
     int ref_frames = 0;
+    // saved voice name. when its prefix is held in the store, begin() restores that snapshot
+    // instead of prefilling the reference; empty for no-reference and inline-reference requests
+    std::string voice;
     float cfg_scale = 1.0f;
     int seed = 42;
     // sampling. zero on any of these keeps whatever the gguf was built with
@@ -79,6 +84,15 @@ struct GenTimings {
 
 void generate(BreezeModel & m, MimiCodec & codec, const GenRequest & req, const AudioCallback & cb,
               GenTimings * timings = nullptr);
+
+// prefill the reference with the exact op sequence begin() runs per generate and hold a snapshot of
+// its k/v under the voice name, so requests for that voice restore the snapshot and pay only their
+// own tail prefill. returns the snapshot bytes, or 0 when the voice could not be built (it then
+// keeps the per-generate prefill). the cli calls this once after loading a saved voice and the
+// server for every voice at startup
+size_t build_voice_prefix(BreezeModel & m, const std::string & name,
+                          const std::vector<int> & ref_codes, const std::string & ref_text,
+                          int ref_frames);
 
 // generation spread over several calls, for text that arrives a bit at a time. it holds the
 // reference so the voice does not drift between pieces, and the instruction can change as it goes

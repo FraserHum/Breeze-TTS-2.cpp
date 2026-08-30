@@ -96,6 +96,7 @@ int main(int argc, char ** argv) {
         req.ref_codes = loaded.codes;
         req.ref_frames = loaded.frames;
         if (req.ref_text.empty()) req.ref_text = loaded.text;
+        req.voice = voice_name;
     }
 
     if (req.text.empty() && save_voice_name.empty()) { fprintf(stderr, "--text is required\n"); return 1; }
@@ -139,6 +140,11 @@ int main(int argc, char ** argv) {
         model.free();
         return 0;
     }
+
+    // a saved voice is fixed for this process, so build its prefix here with the exact op sequence
+    // begin() runs per generate; begin() then restores it and the utterance pays only its own tail
+    if (!voice_name.empty())
+        build_voice_prefix(model, voice_name, req.ref_codes, req.ref_text, req.ref_frames);
 
     std::vector<float> audio;
     int frames = 0;
