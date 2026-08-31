@@ -275,6 +275,12 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
         auto td = clock_now();
         std::vector<int> depth_codes = depth.run(m, hiddens, cb0, req.cfg_scale, rng);
         tm.depth += since(td);
+        if (rt_depth_timing_enabled()) {
+            const RtDepthTiming & d = rt_depth_last();
+            printf("RTD frame=%d stage_ms=%.3f set_ms=%.3f comp_ms=%.3f d2h_ms=%.3f sample_ms=%.3f total_ms=%.3f\n",
+                   tm.frames, d.stage_ms, d.set_ms, d.comp_ms, d.d2h_ms, d.sample_ms,
+                   d.stage_ms + d.set_ms + d.comp_ms + d.d2h_ms + d.sample_ms);
+        }
         std::vector<int> frame = { cb0 };
         frame.insert(frame.end(), depth_codes.begin(), depth_codes.end());
 

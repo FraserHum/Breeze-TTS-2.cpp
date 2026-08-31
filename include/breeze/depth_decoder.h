@@ -58,4 +58,12 @@ struct DepthRunner {
                          const int * force = nullptr, int n_force = 0);
 };
 
+// opt-in per-phase timing of the last DepthRunner::run() call, armed by BREEZE_DEPTH_STEP_TIMING=1.
+// numerically inert: steady_clock reads and storage only, no graph ops, no RNG draws
+struct RtDepthTiming {
+    double stage_ms = 0.0, set_ms = 0.0, comp_ms = 0.0, d2h_ms = 0.0, sample_ms = 0.0;
+};
+bool rt_depth_timing_enabled();
+const RtDepthTiming & rt_depth_last();
+
 }
