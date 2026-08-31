@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdio>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -244,6 +245,15 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
             const double vtime = since(tv);
             tm.vocoder += vtime;
             tm.flushes++;
+            if (rt_timing_enabled()) {
+                static int rtt_i = 0;
+                const RtTiming & rt = rt_last_decode();
+                // ctx_frames = left-context frames re-decoded and skipped; new_frames = frames
+                // kept in this flush; emitted = frames written out (== new_frames here)
+                printf("RTT flush=%d graph_ms=%.3f decode_ms=%.3f ctx_frames=%d new_frames=%d emitted=%d\n",
+                       ++rtt_i, rt.graph_ms, rt.decode_ms, sub_T - count, count, count);
+                fflush(stdout);
+            }
             const int skip = (start - ctx_start) * spf;
             if (!tm.first_audio) {
                 tm.first_vocoder = vtime;

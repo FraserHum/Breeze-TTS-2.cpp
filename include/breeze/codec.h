@@ -18,6 +18,13 @@ struct MimiCodec {
     std::vector<int> encode(const std::vector<float> & audio, int & n_frames);
 };
 
+// opt-in streaming-vocoder timing probe, armed by BREEZE_RT_TIMING=1. numerically inert: it adds
+// steady_clock reads and an opt-in print only, never a graph op or an RNG draw
+struct RtTiming { double graph_ms = 0.0, decode_ms = 0.0; };
+bool rt_timing_enabled();
+// phase split of the most recent MimiCodec::decode call; valid after every decode
+const RtTiming & rt_last_decode();
+
 namespace codec_detail {
 
 ggml_tensor * conv1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b,

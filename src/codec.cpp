@@ -1,12 +1,27 @@
 #include "breeze/codec.h"
 
+#include <chrono>
 #include <cfloat>
 #include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <string>
 
 namespace breeze {
 
 using namespace codec_detail;
+
+bool rt_timing_enabled() {
+    static const int en = [] {
+        const char * e = std::getenv("BREEZE_RT_TIMING");
+        return e && std::strcmp(e, "1") == 0 ? 1 : 0;
+    }();
+    return en != 0;
+}
+
+static thread_local RtTiming g_rt_last;
+
+const RtTiming & rt_last_decode() { return g_rt_last; }
 
 static ggml_tensor * transpose_cont(ggml_context * ctx, ggml_tensor * x) {
     return ggml_cont(ctx, ggml_transpose(ctx, x));
@@ -14,11 +29,21 @@ static ggml_tensor * transpose_cont(ggml_context * ctx, ggml_tensor * x) {
 
 std::vector<float> MimiCodec::decode(const std::vector<int> & codes, int T, int n_cb) {
     if (n_cb <= 0) n_cb = m->cfg.num_codebooks;
+    const auto tg0 = std::chrono::steady_clock::now();
     Graph g(32768);
     ggml_tensor * x = vocoder_decode(g.ctx, *m, g, codes, n_cb, T);
     ggml_tensor * audio = ggml_cont(g.ctx, ggml_reshape_1d(g.ctx, x, x->ne[0]));
+    const auto td0 = std::chrono::steady_clock::now();
     g.compute(m->backend, audio);
-    return tensor_to_f32(audio);
+    std::vector<float> out = tensor_to_f32(audio);
+    if (rt_timing_enabled()) {
+        const auto td1 = std::chrono::steady_clock::now();
+        // graph_ms: fresh ggml context + every op/mask built per call. decode_ms: topo-sort,
+        // graph alloc, input upload, backend compute, waveform readback
+        g_rt_last.graph_ms = std::chrono::duration<double, std::milli>(td0 - tg0).count();
+        g_rt_last.decode_ms = std::chrono::duration<double, std::milli>(td1 - td0).count();
+    }
+    return out;
 }
 
 static int nearest(const std::vector<float> & book, const float * v, int dim, int n) {
