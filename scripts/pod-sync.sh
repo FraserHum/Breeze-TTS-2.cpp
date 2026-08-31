@@ -51,11 +51,19 @@ git -C "$WORKTREE" submodule update --init -q   # pinned ggml, pristine
 # 2. sync the tree into /src: rsync if the pod has it, else tar + file manifest
 EXCLUDES="--exclude .git --exclude build"
 if kubectl exec -n "$NS" "$POD" -- sh -c 'command -v rsync >/dev/null 2>&1'; then
-    # empty host part: with -e, rsync runs "<cmd> <host> rsync --server ...";
-    # a non-empty host here would be exec'd inside the container by kubectl
-    rsync -ac --delete $EXCLUDES \
-        -e "kubectl exec -i -n $NS $POD --" \
-        "$WORKTREE"/ :/src/
+    # rsync -e transport over kubectl exec: rsync builds argv directly
+    # ([<host> rsync --server ...], no shell), so a small wrapper drops the
+    # host argument and execs the rest inside the pod
+    KEXEC=$(mktemp "${TMPDIR:-/tmp}/pod-rsync-kexec.XXXXXX") || exit 1
+    trap 'rmdir "$LOCK"; rm -f "$KEXEC"' EXIT
+    cat > "$KEXEC" <<EOF
+#!/bin/sh
+shift
+exec kubectl exec -i -n $NS $POD -- "\$@"
+EOF
+    chmod +x "$KEXEC"
+    rsync -ac --delete $EXCLUDES -e "$KEXEC" "$WORKTREE"/ pod:/src/
+    rm -f "$KEXEC"
     SYNC_MODE=rsync
 else
     (cd "$WORKTREE" && find . \( -name .git -o -name build \) -prune -o -type f -print | sort) \
