@@ -23,6 +23,12 @@ struct DepthStepGraph {
     ggml_tensor * ff = nullptr;     // rope freq factors, constant
     ggml_tensor * mask = nullptr;   // [total, n_tok] f32 branch-causal
     ggml_tensor * logits = nullptr; // [vs, nb] f32 output, branch major
+    // fused graph only (BREEZE_DD_FUSED=1): all steps in one graph, codes sampled in-graph
+    ggml_tensor * codes = nullptr;  // [1, n_step] i32 sampled codes, one d2h read per frame
+    ggml_tensor * scale = nullptr;  // [1] f32 cfg scale, 2-branch in-graph merge only
+    std::vector<ggml_tensor *> pos_leaves;   // per-step position leaves, set once after vbuffer reserve
+    std::vector<ggml_tensor *> mask_leaves;  // per-step mask leaves, set once after vbuffer reserve
+    std::vector<ggml_tensor *> off_leaves;   // per-transition codebook offset j*vs, set once
 };
 
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
@@ -41,6 +47,10 @@ struct DepthRunner {
     std::vector<DepthStepGraph> graphs; // one per step, graphs[j-1] is step j
     ggml_gallocr_t depth_alloc = nullptr; // dedicated: backbone/codec churn on m.backend.alloc would dangle these pointers
     size_t graph_cap = 0;
+
+    int n_step = 0;     // depth steps (num_codebooks - 1)
+    bool fused = false; // BREEZE_DD_FUSED=1: one chained graph, greedy in-graph sampling
+    DepthStepGraph fused_graph; // used only when fused
 
     std::vector<int32_t> idx_staging;
     std::vector<int32_t> pos_staging;

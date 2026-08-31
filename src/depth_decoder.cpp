@@ -60,6 +60,7 @@ static thread_local RtDepthTiming g_rtd_last;
 const RtDepthTiming & rt_depth_last() { return g_rtd_last; }
 
 static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap);
+static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step);
 
 void DepthRunner::init(BreezeModel & m, int n_branches) {
     n_branch = n_branches;
@@ -92,21 +93,64 @@ void DepthRunner::init(BreezeModel & m, int n_branches) {
     // computes on m.backend.alloc, and a vbuffer growth there frees and dangles the
     // tensor addresses of any graph allocated on the shared one
     depth_alloc = ggml_gallocr_new(ggml_backend_get_default_buffer_type(m.backend.backend));
-    const int n_step = nc - 1;
-    graphs.resize(n_step);
-    for (int j = 1; j <= n_step; j++)
-        graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap);
+    n_step = nc - 1;
 
-    // reserve the vbuffer exactly once: the largest graph (step 1) first, then assert
-    // no later graph grows it, since growth frees and reallocates the vbuffer and
-    // dangles every address recorded for the graphs already allocated
-    ggml_gallocr_alloc_graph(depth_alloc, graphs[0].graph);
-    const size_t vbuf = ggml_gallocr_get_buffer_size(depth_alloc, 0);
-    for (int j = 1; j < n_step; j++) {
-        ggml_gallocr_alloc_graph(depth_alloc, graphs[j].graph);
-        GGML_ASSERT(ggml_gallocr_get_buffer_size(depth_alloc, 0) == vbuf);
+    const char * fused_env = std::getenv("BREEZE_DD_FUSED");
+    fused = fused_env != nullptr && fused_env[0] == '1';
+
+    if (fused) {
+        // one chained graph for all steps; the vbuffer is reserved once with it, and the
+        // baked leaves (positions, masks, codebook offsets) are set after the reserve
+        fused_graph = build_fused(m, kv, n_branch, n_step);
+        ggml_gallocr_alloc_graph(depth_alloc, fused_graph.graph);
+        const size_t vbuf = ggml_gallocr_get_buffer_size(depth_alloc, 0);
+        ggml_backend_tensor_set(fused_graph.ff, freq_factors.data(), 0,
+                                freq_factors.size() * sizeof(float));
+        for (int j = 1; j <= n_step; j++) {
+            const int start = j == 1 ? 0 : j;
+            const int n_tok = (j == 1 ? 2 : 1) * n_branch;
+            const int total = (start + (j == 1 ? 2 : 1)) * n_branch;
+            for (int i = 0; i < n_tok; i++) pos_staging[i] = start + i / n_branch;
+            ggml_backend_tensor_set(fused_graph.pos_leaves[j - 1], pos_staging.data(), 0,
+                                    (size_t) n_tok * sizeof(int32_t));
+            const size_t mask_n = (size_t) total * n_tok;
+            GGML_ASSERT(mask_n <= mask_staging.size());
+            for (int q = 0; q < n_tok; q++) {
+                const int qb = q % n_branch;
+                const int qpos = start + q / n_branch;
+                for (int k = 0; k < total; k++)
+                    mask_staging[(size_t) q * total + k] =
+                        (k % n_branch == qb && k / n_branch <= qpos) ? 0.0f : -INFINITY;
+            }
+            ggml_backend_tensor_set(fused_graph.mask_leaves[j - 1], mask_staging.data(), 0,
+                                    mask_n * sizeof(float));
+        }
+        for (int j = 1; j < n_step; j++) {
+            const int32_t off = j * vs;
+            ggml_backend_tensor_set(fused_graph.off_leaves[j - 1], &off, 0, sizeof(int32_t));
+        }
+        fprintf(stderr, "depth decoder: 1 fused graph (%d steps), compute buffer %zu bytes\n",
+                n_step, vbuf);
+    } else {
+        // each step has its own baked shapes, so every step gets a static graph; the
+        // graphs share one dedicated allocator because generate() interleaves backbone
+        // and codec computes on m.backend.alloc, and a vbuffer growth there frees and
+        // dangles the tensor addresses of any graph allocated on the shared one
+        graphs.resize(n_step);
+        for (int j = 1; j <= n_step; j++)
+            graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap);
+
+        // reserve the vbuffer exactly once: the largest graph (step 1) first, then assert
+        // no later graph grows it, since growth frees and reallocates the vbuffer and
+        // dangles every address recorded for the graphs already allocated
+        ggml_gallocr_alloc_graph(depth_alloc, graphs[0].graph);
+        const size_t vbuf = ggml_gallocr_get_buffer_size(depth_alloc, 0);
+        for (int j = 1; j < n_step; j++) {
+            ggml_gallocr_alloc_graph(depth_alloc, graphs[j].graph);
+            GGML_ASSERT(ggml_gallocr_get_buffer_size(depth_alloc, 0) == vbuf);
+        }
+        fprintf(stderr, "depth decoder: %d static graphs, compute buffer %zu bytes\n", n_step, vbuf);
     }
-    fprintf(stderr, "depth decoder: %d static graphs, compute buffer %zu bytes\n", n_step, vbuf);
 }
 
 void DepthRunner::free() {
@@ -122,6 +166,18 @@ void DepthRunner::free() {
         g.aud = g.h0 = g.pos = g.ff = g.mask = g.logits = nullptr;
     }
     std::vector<DepthStepGraph>().swap(graphs);
+    if (fused_graph.ctx) ggml_free(fused_graph.ctx); // no-alloc: frees the context struct only
+    fused_graph.ctx = nullptr;
+    fused_graph.graph = nullptr;
+    std::vector<uint8_t>().swap(fused_graph.arena);
+    std::vector<ggml_tensor *>().swap(fused_graph.cpy_roots);
+    std::vector<ggml_tensor *>().swap(fused_graph.pos_leaves);
+    std::vector<ggml_tensor *>().swap(fused_graph.mask_leaves);
+    std::vector<ggml_tensor *>().swap(fused_graph.off_leaves);
+    fused_graph.aud = fused_graph.h0 = fused_graph.pos = fused_graph.ff = fused_graph.mask =
+        fused_graph.logits = fused_graph.codes = fused_graph.scale = nullptr;
+    fused = false;
+    n_step = 0;
     std::vector<float>().swap(logits_buf);
     std::vector<float>().swap(combined_logits);
     std::vector<float>().swap(flat_hiddens);
@@ -173,6 +229,38 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
     return ggml_add(ctx, res, h);
 }
 
+// one depth step's body into an existing ctx; the caller supplies the input leaves and
+// collects the KV-append roots; returns step j's [vs, nb] logits. shared by build_step
+// (one graph per step) and build_fused (all steps in one graph)
+static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVCache & kv,
+                                  int nb, int j, ggml_tensor * aud, ggml_tensor * h0,
+                                  ggml_tensor * pos, ggml_tensor * ff, ggml_tensor * mask,
+                                  std::vector<ggml_tensor *> & cpy_roots) {
+    const DepthConfig & c = m.cfg.dd;
+    const bool has_hidden = j == 1;
+    const int start = has_hidden ? 0 : j;
+    const int n_pos = has_hidden ? 2 : 1;
+    const int n_tok = n_pos * nb;
+    const int head_idx = j - 1;
+    cpy_roots.clear();
+
+    ggml_tensor * embed = ggml_get_rows(ctx, m.w("audio_embd.weight"), aud); // [2048, nb]
+    if (has_hidden)
+        embed = ggml_concat(ctx, h0, embed, 1); // [2048, 2*nb], position major
+    ggml_tensor * x = linear(ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
+
+    for (int il = 0; il < c.n_layer; il++)
+        x = dd_layer(ctx, m, x, il, pos, ff, mask, start * nb, n_tok, kv.k, kv.v, cpy_roots);
+    x = rms_norm(ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
+
+    ggml_tensor * last = ggml_cont(ctx, ggml_view_2d(ctx, x, c.hidden, nb, x->nb[1],
+                                                     (size_t) (n_tok - nb) * x->nb[1]));
+    ggml_tensor * head = m.w("dd.codebooks_head.weight");
+    ggml_tensor * hw = ggml_view_2d(ctx, head, head->ne[0], head->ne[1], head->nb[1],
+                                    (size_t) head_idx * head->nb[2]);
+    return ggml_mul_mat(ctx, hw, last); // [vs, nb]
+}
+
 // builds the static compute graph for depth step j (1..num_codebooks-1) the way v2's
 // depth_step built it per step, with the step j shapes baked in: the KV length and
 // append offset, the head-weight slice, and the CFG concat (present only for j=1)
@@ -184,7 +272,6 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     const int n_pos = has_hidden ? 2 : 1;
     const int n_tok = n_pos * nb;
     const int total = (start + n_pos) * nb;
-    const int head_idx = j - 1;
 
     // per-step node budget: 35/layer + 9 fixed (j=1, with the CFG concat) / 8 (j>=2)
     const size_t n_nodes = 35ull * c.n_layer + (has_hidden ? 9 : 8);
@@ -197,14 +284,10 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     // persistent input leaves, updated per step with ggml_backend_tensor_set
     g.aud = ggml_new_tensor_2d(g.ctx, GGML_TYPE_I32, nb, 1);
     ggml_set_input(g.aud);
-    ggml_tensor * embed = ggml_get_rows(g.ctx, m.w("audio_embd.weight"), g.aud); // [2048, nb]
     if (has_hidden) {
         g.h0 = ggml_new_tensor_3d(g.ctx, GGML_TYPE_F32, m.cfg.hidden_size, nb, 1);
         ggml_set_input(g.h0);
-        embed = ggml_concat(g.ctx, g.h0, embed, 1); // [2048, 2*nb], position major
     }
-    ggml_tensor * x = linear(g.ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
-
     g.pos = ggml_new_tensor_2d(g.ctx, GGML_TYPE_I32, n_tok, 1);
     ggml_set_input(g.pos);
     g.ff = ggml_new_tensor_2d(g.ctx, GGML_TYPE_F32, c.head_dim / 2, 1);
@@ -212,16 +295,7 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     g.mask = ggml_new_tensor_3d(g.ctx, GGML_TYPE_F32, total, n_tok, 1);
     ggml_set_input(g.mask);
 
-    for (int il = 0; il < c.n_layer; il++)
-        x = dd_layer(g.ctx, m, x, il, g.pos, g.ff, g.mask, start * nb, n_tok, kv.k, kv.v, g.cpy_roots);
-    x = rms_norm(g.ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
-
-    ggml_tensor * last = ggml_cont(g.ctx, ggml_view_2d(g.ctx, x, c.hidden, nb, x->nb[1],
-                                                       (size_t) (n_tok - nb) * x->nb[1]));
-    ggml_tensor * head = m.w("dd.codebooks_head.weight");
-    ggml_tensor * hw = ggml_view_2d(g.ctx, head, head->ne[0], head->ne[1], head->nb[1],
-                                    (size_t) head_idx * head->nb[2]);
-    g.logits = ggml_mul_mat(g.ctx, hw, last); // [vocab, nb]
+    g.logits = dd_step_body(g.ctx, m, kv, nb, j, g.aud, g.h0, g.pos, g.ff, g.mask, g.cpy_roots);
 
     ggml_set_output(g.logits);
     g.graph = ggml_new_graph_custom(g.ctx, graph_cap, false);
@@ -231,6 +305,105 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     GGML_ASSERT(ggml_graph_n_nodes(g.graph) < (int) graph_cap);
     // no-alloc arena: the tensors and the cgraph are the only objects, so usage must
     // fit the derived budget above; overflow would abort inside ggml_init's allocator
+    GGML_ASSERT(ggml_used_mem(g.ctx) <= mem);
+    return g;
+}
+
+// ponytail: opt-in (BREEZE_DD_FUSED=1) single-graph depth decoder. chains all steps into
+// one graph and replaces the host sampling loop with in-graph argmax + embedding gather,
+// so a frame costs one graph submit instead of 15 (RADV pays ~55us launch/translate per
+// submit for ~1us ops, so the submits are the tax). in-graph sampling is greedy:
+// temperature/top-k/top-p are not applied, so fused output is not byte-identical to
+// the step path. positions/masks/offsets are baked at build; only aud/h0 move per frame.
+static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step) {
+    const DepthConfig & c = m.cfg.dd;
+    const int vs = m.cfg.audio_vocab_size;
+
+    // node budget: per step the body (35/layer + 9) plus argmax and the codebook offset
+    // add (or the 6-op 2-branch cfg merge for nb>1), plus the code-concat chain; the 64
+    // slack covers the one-time input leaves
+    const size_t per_step = 35ull * c.n_layer + 9 + 2 + (nb > 1 ? 6 : 0);
+    const size_t n_nodes = per_step * n_step + (n_step - 1) + 64;
+    const size_t cap = 2 * n_nodes;
+    const size_t mem = ggml_tensor_overhead() * (n_nodes + 5) + ggml_graph_overhead_custom(cap, false);
+
+    DepthStepGraph g;
+    g.arena.assign(mem, 0);
+    ggml_init_params p{ mem, g.arena.data(), true };
+    g.ctx = ggml_init(p);
+
+    // per-frame input leaves
+    g.aud = ggml_new_tensor_2d(g.ctx, GGML_TYPE_I32, nb, 1); // cb0, set per frame
+    ggml_set_input(g.aud);
+    g.h0 = ggml_new_tensor_3d(g.ctx, GGML_TYPE_F32, m.cfg.hidden_size, nb, 1); // set per frame
+    ggml_set_input(g.h0);
+    g.ff = ggml_new_tensor_2d(g.ctx, GGML_TYPE_F32, c.head_dim / 2, 1); // constant
+    ggml_set_input(g.ff);
+    if (nb > 1) {
+        g.scale = ggml_new_tensor_1d(g.ctx, GGML_TYPE_F32, 1); // set per frame
+        ggml_set_input(g.scale);
+    }
+
+    // one-time input leaves, set in init after the vbuffer is reserved
+    g.pos_leaves.resize(n_step);
+    g.mask_leaves.resize(n_step);
+    g.off_leaves.resize(n_step - 1);
+
+    ggml_tensor * aud = g.aud;
+    ggml_tensor * codes = nullptr;
+    std::vector<ggml_tensor *> amax_nodes(n_step);
+    std::vector<std::vector<ggml_tensor *>> step_roots(n_step);
+    for (int j = 1; j <= n_step; j++) {
+        const bool has_hidden = j == 1;
+        const int start = has_hidden ? 0 : j;
+        const int n_pos = has_hidden ? 2 : 1;
+        const int n_tok = n_pos * nb;
+        const int total = (start + n_pos) * nb;
+        g.pos_leaves[j - 1] = ggml_new_tensor_2d(g.ctx, GGML_TYPE_I32, n_tok, 1);
+        ggml_set_input(g.pos_leaves[j - 1]);
+        g.mask_leaves[j - 1] = ggml_new_tensor_3d(g.ctx, GGML_TYPE_F32, total, n_tok, 1);
+        ggml_set_input(g.mask_leaves[j - 1]);
+        if (j < n_step) {
+            // offset into the audio embedding table for codebook j; rank matches amax
+            g.off_leaves[j - 1] = (nb == 1) ? ggml_new_tensor_3d(g.ctx, GGML_TYPE_I32, 1, 1, 1)
+                                            : ggml_new_tensor_2d(g.ctx, GGML_TYPE_I32, 1, 1);
+            ggml_set_input(g.off_leaves[j - 1]);
+        }
+
+        ggml_tensor * logits = dd_step_body(g.ctx, m, kv, nb, j, aud, g.h0,
+                                            g.pos_leaves[j - 1], g.ff, g.mask_leaves[j - 1],
+                                            step_roots[j - 1]);
+        // in-graph greedy sampling: argmax replaces the host sample_token
+        ggml_tensor * L = logits;
+        if (nb > 1) {
+            ggml_tensor * Lc = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], 0);
+            ggml_tensor * Lu = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], (size_t) vs * sizeof(float));
+            L = ggml_add(g.ctx, Lu, ggml_mul(g.ctx, ggml_sub(g.ctx, Lc, Lu), g.scale));
+        }
+        ggml_tensor * amax = ggml_argmax(g.ctx, L);
+        amax_nodes[j - 1] = amax;
+        codes = codes ? ggml_concat(g.ctx, codes, amax, 1) : amax;
+        if (j < n_step) {
+            ggml_tensor * idx = ggml_add(g.ctx, amax, g.off_leaves[j - 1]);
+            aud = (nb == 1) ? idx : ggml_reshape_2d(g.ctx, idx, nb, 1);
+        }
+    }
+
+    g.codes = codes;
+    ggml_set_output(g.codes);
+    g.graph = ggml_new_graph_custom(g.ctx, cap, false);
+    // per step: KV-append roots first, then the step's argmax. the post-order expand
+    // pulls each layer's attention in only when the next layer's append is expanded,
+    // so every append runs before the attention that reads its slot (same mechanism as
+    // the per-step graphs); step j+1's attention is reachable only from step j+1's
+    // roots, so it runs after all of step j's appends
+    for (int j = 0; j < n_step; j++) {
+        for (ggml_tensor * root : step_roots[j]) ggml_build_forward_expand(g.graph, root);
+        ggml_build_forward_expand(g.graph, amax_nodes[j]);
+    }
+    ggml_build_forward_expand(g.graph, codes);
+
+    GGML_ASSERT(ggml_graph_n_nodes(g.graph) < (int) cap);
     GGML_ASSERT(ggml_used_mem(g.ctx) <= mem);
     return g;
 }
@@ -258,6 +431,35 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         return std::chrono::duration<double, std::milli>(b - a).count();
     };
     RtDepthTiming rtd_acc;
+
+    // ponytail: fused path — one graph submit per frame, in-graph greedy sampling (no
+    // temperature/top-k/top-p, so not byte-identical to the step path). forced codebooks
+    // need the step path, which has no graphs when fused
+    if (fused && n_force == 0) {
+        GGML_ASSERT(hiddens.size() == (size_t) n_branch);
+        for (int b = 0; b < n_branch; b++) {
+            GGML_ASSERT(hiddens[b].size() == (size_t) m.cfg.hidden_size);
+            std::memcpy(flat_hiddens.data() + (size_t) b * m.cfg.hidden_size,
+                        hiddens[b].data(), (size_t) m.cfg.hidden_size * sizeof(float));
+        }
+        int32_t aud_data[2] = { cb0, cb0 };
+        const std::chrono::steady_clock::time_point fa = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
+        ggml_backend_tensor_set(fused_graph.aud, aud_data, 0, (size_t) n_branch * sizeof(int32_t));
+        ggml_backend_tensor_set(fused_graph.h0, flat_hiddens.data(), 0,
+                                (size_t) n_branch * m.cfg.hidden_size * sizeof(float));
+        if (n_branch > 1)
+            ggml_backend_tensor_set(fused_graph.scale, &cfg_scale, 0, sizeof(float));
+        const std::chrono::steady_clock::time_point fb = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
+        ggml_backend_graph_compute(m.backend.backend, fused_graph.graph);
+        const std::chrono::steady_clock::time_point fc = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
+        std::vector<int32_t> fused_codes(n_step);
+        ggml_backend_tensor_get(fused_graph.codes, fused_codes.data(), 0,
+                                (size_t) n_step * sizeof(int32_t));
+        const std::chrono::steady_clock::time_point fd = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
+        if (rtd)
+            g_rtd_last = { 0.0, rtd_ms(fa, fb), rtd_ms(fb, fc), rtd_ms(fc, fd), 0.0 };
+        return std::vector<int>(fused_codes.begin(), fused_codes.end());
+    }
 
     for (int j = 1; j < nc; j++) {
         const int head_idx = j - 1;
