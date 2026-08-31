@@ -28,7 +28,6 @@ struct DepthStepGraph {
     ggml_tensor * scale = nullptr;  // [1] f32 cfg scale, 2-branch in-graph merge only
     std::vector<ggml_tensor *> pos_leaves;   // per-step position leaves, set once after vbuffer reserve
     std::vector<ggml_tensor *> mask_leaves;  // per-step mask leaves, set once after vbuffer reserve
-    std::vector<ggml_tensor *> off_leaves;   // per-transition codebook offset j*vs, set once
 };
 
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
