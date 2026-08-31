@@ -259,6 +259,8 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
                 tm.first_vocoder = vtime;
                 tm.first_frames = sub_T;
                 tm.first_audio = since(t_start);
+                tm.bb_first = tm.backbone; // backbone time already spent when audio first came out
+                tm.depth_first = tm.depth; // depth time already spent when audio first came out
             }
             if (!cb(audio.data() + skip, count * spf)) return false;
             emitted += count;

@@ -4,6 +4,7 @@
 #include "breeze/voice.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -161,6 +162,13 @@ int main(int argc, char ** argv) {
     if (show_timings) {
         const double secs = (double) audio.size() / model.cfg.sample_rate;
         printf("time to first audio %.0f ms over %d flushes\n", tm.first_audio, tm.flushes);
+        const char * tta_breakdown = std::getenv("BREEZE_TTA_BREAKDOWN");
+        if (tta_breakdown && std::strcmp(tta_breakdown, "1") == 0 && tm.first_audio > 0.0) {
+            const double glue = tm.first_audio - tm.encode_ref - tm.prompt - tm.prefill -
+                                tm.bb_first - tm.depth_first - tm.first_vocoder;
+            printf("  tta breakdown     ref_encode=%8.1f prompt=%8.1f prefill=%8.1f bb_first_chunk=%8.1f depth_first_chunk=%8.1f first_vocoder=%8.1f glue=%8.1f ms\n",
+                   tm.encode_ref, tm.prompt, tm.prefill, tm.bb_first, tm.depth_first, tm.first_vocoder, glue);
+        }
         printf("  reference encode  %8.1f ms\n", tm.encode_ref);
         printf("  prompt build      %8.1f ms\n", tm.prompt);
         printf("  backbone prefill  %8.1f ms\n", tm.prefill);

@@ -79,6 +79,9 @@ using AudioCallback = std::function<bool(const float * samples, int n)>;
 struct GenTimings {
     double encode_ref = 0, prompt = 0, prefill = 0, backbone = 0, depth = 0, vocoder = 0;
     double first_audio = 0, first_vocoder = 0;
+    // backbone/depth wall time accumulated at the moment of the first flush. with encode_ref,
+    // prompt, prefill and first_vocoder they add up to time-to-first-audio (BREEZE_TTA_BREAKDOWN)
+    double bb_first = 0, depth_first = 0;
     int frames = 0, flushes = 0, first_frames = 0;
 };
 
