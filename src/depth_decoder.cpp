@@ -69,7 +69,7 @@ const RtDepthTiming & rt_depth_last() { return g_rtd_last; }
 static bool dd_debug_enabled() {
     static const int en = [] {
         const char * e = std::getenv("BREEZE_DEBUG_DEPTH_CODES");
-        return e && e[0] ? 1 : 0;
+        return e && std::strcmp(e, "1") == 0 ? 1 : 0;
     }();
     return en != 0;
 }
@@ -85,9 +85,10 @@ static bool dd_fused_gumbel_off() {
 
 static thread_local int g_dd_debug_frame = 0;
 
-// one machine-comparable line per frame: cb0 (backbone) then cb1..cb_{n-1} (depth steps)
-static void dd_dump_codes(const char * path, int cb0, const std::vector<int> & codes) {
-    fprintf(stderr, "DEPTH_CODES path=%s frame=%d cb0=%d", path, g_dd_debug_frame++, cb0);
+// one machine-comparable line per frame: the frame index (0-based) then cb0 (backbone)
+// first, then the n_step depth codes - 16 space-separated integers total
+static void dd_dump_codes(int cb0, const std::vector<int> & codes) {
+    fprintf(stderr, "DEPTH_CODES frame=%d %d", g_dd_debug_frame++, cb0);
     for (int c : codes) fprintf(stderr, " %d", c);
     fprintf(stderr, "\n");
     fflush(stderr);
@@ -548,7 +549,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         if (rtd)
             g_rtd_last = { 0.0, rtd_ms(fa, fb), rtd_ms(fb, fc), rtd_ms(fc, fd), 0.0 };
         const std::vector<int> result(fused_codes.begin(), fused_codes.end());
-        if (dd_debug_enabled()) dd_dump_codes("fused", cb0, result);
+        if (dd_debug_enabled()) dd_dump_codes(cb0, result);
         return result;
     }
 
@@ -615,7 +616,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     }
     if (rtd) g_rtd_last = rtd_acc;
     const std::vector<int> result(codes.begin() + 1, codes.end());
-    if (dd_debug_enabled()) dd_dump_codes("step", cb0, result);
+    if (dd_debug_enabled()) dd_dump_codes(cb0, result);
     return result;
 }
 
