@@ -60,6 +60,39 @@ static thread_local RtDepthTiming g_rtd_last;
 
 const RtDepthTiming & rt_depth_last() { return g_rtd_last; }
 
+// ponytail: default-off parity knobs for the cross-path greedy parity (T2) and the
+// top-k A/B. unset = byte-identical default behavior; env reads are cached once
+//   BREEZE_DEPTH_TOP_K=<k>     step-path top-k override; k=1 keeps a single index so
+//                              sample_token draws no rng and is a pure greedy argmax
+//   BREEZE_DD_FUSED_GUMBEL=0   zeroed fused gumbel noise leaves -> in-graph pure greedy
+//   BREEZE_DEBUG_DEPTH_CODES   per-frame stderr dump of the sampled depth codes
+static bool dd_debug_enabled() {
+    static const int en = [] {
+        const char * e = std::getenv("BREEZE_DEBUG_DEPTH_CODES");
+        return e && e[0] ? 1 : 0;
+    }();
+    return en != 0;
+}
+
+// only an explicit 0 turns gumbel off; unset or any other value keeps gumbel-max sampling
+static bool dd_fused_gumbel_off() {
+    static const int off = [] {
+        const char * e = std::getenv("BREEZE_DD_FUSED_GUMBEL");
+        return e && e[0] == '0' ? 1 : 0;
+    }();
+    return off != 0;
+}
+
+static thread_local int g_dd_debug_frame = 0;
+
+// one machine-comparable line per frame: cb0 (backbone) then cb1..cb_{n-1} (depth steps)
+static void dd_dump_codes(const char * path, int cb0, const std::vector<int> & codes) {
+    fprintf(stderr, "DEPTH_CODES path=%s frame=%d cb0=%d", path, g_dd_debug_frame++, cb0);
+    for (int c : codes) fprintf(stderr, " %d", c);
+    fprintf(stderr, "\n");
+    fflush(stderr);
+}
+
 static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap);
 static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step);
 
@@ -448,6 +481,14 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     sp.top_k = m.cfg.depth_top_k;
     sp.top_p = m.cfg.depth_top_p;
     if (sp_in) sp = *sp_in;
+    // BREEZE_DEPTH_TOP_K=<k> (k>0): env override of the step-path top-k. parity knob:
+    // k=1 makes sample_token keep one index, draw no rng, and be a pure greedy argmax;
+    // inert on the fused path (no in-graph top-k yet)
+    const char * tk_env = std::getenv("BREEZE_DEPTH_TOP_K");
+    if (tk_env) {
+        const int v = std::atoi(tk_env);
+        if (v > 0) sp.top_k = v;
+    }
 
     std::vector<int> codes = { cb0 };
     codes.reserve(nc);
@@ -472,14 +513,20 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
                         hiddens[b].data(), (size_t) m.cfg.hidden_size * sizeof(float));
         }
         int32_t aud_data[2] = { cb0, cb0 };
-        // gumbel-max noise for this frame: g = -log(-log(U)), U uniform in
-        // [1e-7, 1-1e-7], drawn from the dedicated fused stream (same seed as the
-        // step path's rng, separate stream - not a byte-identical cross-path match)
         const float temp = sp.temperature > 0 ? sp.temperature : 1.0f;
         const float inv_t = 1.0f / temp;
-        std::uniform_real_distribution<float> dist(1e-7f, 1.0f - 1e-7f);
-        for (size_t i = 0; i < noise_staging.size(); i++)
-            noise_staging[i] = -std::log(-std::log(dist(fused_rng)));
+        if (dd_fused_gumbel_off()) {
+            // parity knob: zeroed noise leaves -> argmax(L * inv_t) is the pure greedy
+            // argmax (monotone scaling) and draws no rng
+            std::fill(noise_staging.begin(), noise_staging.end(), 0.0f);
+        } else {
+            // gumbel-max noise for this frame: g = -log(-log(U)), U uniform in
+            // [1e-7, 1-1e-7], drawn from the dedicated fused stream (same seed as the
+            // step path's rng, separate stream - not a byte-identical cross-path match)
+            std::uniform_real_distribution<float> dist(1e-7f, 1.0f - 1e-7f);
+            for (size_t i = 0; i < noise_staging.size(); i++)
+                noise_staging[i] = -std::log(-std::log(dist(fused_rng)));
+        }
         for (int j = 0; j < n_step; j++)
             ggml_backend_tensor_set(fused_graph.noise_leaves[j],
                                     noise_staging.data() + (size_t) j * vs, 0,
@@ -500,7 +547,9 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         const std::chrono::steady_clock::time_point fd = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
         if (rtd)
             g_rtd_last = { 0.0, rtd_ms(fa, fb), rtd_ms(fb, fc), rtd_ms(fc, fd), 0.0 };
-        return std::vector<int>(fused_codes.begin(), fused_codes.end());
+        const std::vector<int> result(fused_codes.begin(), fused_codes.end());
+        if (dd_debug_enabled()) dd_dump_codes("fused", cb0, result);
+        return result;
     }
 
     for (int j = 1; j < nc; j++) {
@@ -565,7 +614,9 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         }
     }
     if (rtd) g_rtd_last = rtd_acc;
-    return std::vector<int>(codes.begin() + 1, codes.end());
+    const std::vector<int> result(codes.begin() + 1, codes.end());
+    if (dd_debug_enabled()) dd_dump_codes("step", cb0, result);
+    return result;
 }
 
 }
