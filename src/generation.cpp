@@ -208,7 +208,7 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     tm.prefill += since(t0);
 
     DepthRunner depth;
-    depth.init(m, use_cfg ? 2 : 1);
+    depth.init(m, use_cfg ? 2 : 1, seed);
 
     SampleParams bp;
     bp.temperature = req.temperature > 0.0f ? req.temperature : m.cfg.temperature;
@@ -469,7 +469,7 @@ std::vector<float> convert_voice(BreezeModel & m, MimiCodec & codec, const std::
     if (use_cfg) o_u = backbone_run(m, st_u, emb_u, total_u);
 
     DepthRunner depth;
-    depth.init(m, use_cfg ? 2 : 1);
+    depth.init(m, use_cfg ? 2 : 1, (uint32_t) opt.seed);
 
     std::vector<int> out((size_t) src_T * nc);
     const int keep = opt.keep_acoustic < nc - 1 ? opt.keep_acoustic : nc - 1;

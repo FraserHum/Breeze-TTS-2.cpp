@@ -26,6 +26,8 @@ struct DepthStepGraph {
     // fused graph only (BREEZE_DD_FUSED=1): all steps in one graph, codes sampled in-graph
     ggml_tensor * codes = nullptr;  // [1, n_step] i32 sampled codes, one d2h read per frame
     ggml_tensor * scale = nullptr;  // [1] f32 cfg scale, 2-branch in-graph merge only
+    ggml_tensor * inv_t = nullptr;      // [1] f32 inverse temperature, set per frame (fused gumbel)
+    std::vector<ggml_tensor *> noise_leaves;  // per-step [vs] f32 gumbel noise, set per frame
     std::vector<ggml_tensor *> pos_leaves;   // per-step position leaves, set once after vbuffer reserve
     std::vector<ggml_tensor *> mask_leaves;  // per-step mask leaves, set once after vbuffer reserve
 };
@@ -48,14 +50,20 @@ struct DepthRunner {
     size_t graph_cap = 0;
 
     int n_step = 0;     // depth steps (num_codebooks - 1)
-    bool fused = false; // BREEZE_DD_FUSED=1: one chained graph, greedy in-graph sampling
+    bool fused = false; // BREEZE_DD_FUSED=1: one chained graph, seeded gumbel-max in-graph sampling
     DepthStepGraph fused_graph; // used only when fused
+    std::mt19937 fused_rng; // dedicated fused-path gumbel stream: seeded from the CLI --seed
+                             // (the same integer the step path's rng gets) but a separate stream,
+                             // so the same seed does NOT produce byte-identical wavs across paths
+    std::vector<float> noise_staging; // fused only: n_step * vs floats of gumbel noise per frame
 
     std::vector<int32_t> idx_staging;
     std::vector<int32_t> pos_staging;
     std::vector<float> mask_staging;
 
-    void init(BreezeModel & m, int n_branches);
+    // seed is the CLI --seed integer (the same value the step path's rng gets); it seeds
+    // the dedicated fused-path gumbel stream
+    void init(BreezeModel & m, int n_branches, uint32_t seed);
     void free();
 
     // hiddens holds the backbone last hidden per branch (cond first, then uncond); returns cb1..cb_{n-1}.

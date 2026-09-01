@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <random>
 #include <string>
 
 namespace breeze {
@@ -62,7 +63,7 @@ const RtDepthTiming & rt_depth_last() { return g_rtd_last; }
 static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap);
 static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step);
 
-void DepthRunner::init(BreezeModel & m, int n_branches) {
+void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
     n_branch = n_branches;
     const int nc = m.cfg.num_codebooks;
     const int vs = m.cfg.audio_vocab_size;
@@ -98,9 +99,15 @@ void DepthRunner::init(BreezeModel & m, int n_branches) {
     const char * fused_env = std::getenv("BREEZE_DD_FUSED");
     fused = fused_env != nullptr && fused_env[0] == '1';
 
+    // dedicated fused-path gumbel stream: the same seed as the step path's rng, but a
+    // separate stream (different draw sequence), so same-seed runs are not
+    // byte-identical across paths
+    fused_rng.seed(seed);
+
     if (fused) {
         // one chained graph for all steps; the vbuffer is reserved once with it, and the
         // baked leaves (positions, masks) are set after the reserve
+        noise_staging.assign((size_t) vs * n_step, 0.0f);
         fused_graph = build_fused(m, kv, n_branch, n_step);
         ggml_gallocr_alloc_graph(depth_alloc, fused_graph.graph);
         const size_t vbuf = ggml_gallocr_get_buffer_size(depth_alloc, 0);
@@ -169,8 +176,9 @@ void DepthRunner::free() {
     std::vector<ggml_tensor *>().swap(fused_graph.cpy_roots);
     std::vector<ggml_tensor *>().swap(fused_graph.pos_leaves);
     std::vector<ggml_tensor *>().swap(fused_graph.mask_leaves);
+    std::vector<ggml_tensor *>().swap(fused_graph.noise_leaves);
     fused_graph.aud = fused_graph.h0 = fused_graph.pos = fused_graph.ff = fused_graph.mask =
-        fused_graph.logits = fused_graph.codes = fused_graph.scale = nullptr;
+        fused_graph.logits = fused_graph.codes = fused_graph.scale = fused_graph.inv_t = nullptr;
     fused = false;
     n_step = 0;
     std::vector<float>().swap(logits_buf);
@@ -180,6 +188,7 @@ void DepthRunner::free() {
     std::vector<int32_t>().swap(idx_staging);
     std::vector<int32_t>().swap(pos_staging);
     std::vector<float>().swap(mask_staging);
+    std::vector<float>().swap(noise_staging);
     graph_cap = 0;
 }
 
@@ -306,22 +315,32 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
 }
 
 // ponytail: opt-in (BREEZE_DD_FUSED=1) single-graph depth decoder. chains all steps into
-// one graph and replaces the host sampling loop with in-graph argmax + embedding gather,
-// so a frame costs one graph submit instead of 15 (RADV pays ~55us launch/translate per
-// submit for ~1us ops, so the submits are the tax). in-graph sampling is greedy:
-// temperature/top-k/top-p are not applied, so fused output is not byte-identical to
-// the step path. positions/masks/offsets are baked at build; only aud/h0 move per frame.
+// one graph and replaces the host sampling loop with in-graph gumbel-max sampling +
+// embedding gather, so a frame costs one graph submit instead of 15 (RADV pays ~55us
+// launch/translate per submit for ~1us ops, so the submits are the tax). in-graph
+// sampling is seeded gumbel-max: per-step [vs] f32 noise leaves (host-drawn from
+// DepthRunner::fused_rng) are added to the temperature-scaled logits, then argmax.
+// gumbel-max over temperature-scaled raw logits is the exact categorical sample at
+// temperature T - the log-softmax normalizer is additive-constant in i, so the argmax
+// is invariant and no log ops are needed (MUL/ADD/ARGMAX only, all already in the
+// graph). no top-k/top-p (full-distribution approximation, documented): fused output
+// is not byte-identical to the step path even at the same seed (separate rng streams).
+// positions/masks/offsets are baked at build; aud/h0/noise/inv_t move per frame.
 static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step) {
     const DepthConfig & c = m.cfg.dd;
     const int vs = m.cfg.audio_vocab_size;
 
-    // node budget: per step the body (35/layer + 9) plus argmax (or the 6-op 2-branch
-    // cfg merge for nb>1), plus the code-concat chain; the 64 slack covers the one-time
-    // input leaves
-    const size_t per_step = 35ull * c.n_layer + 9 + 2 + (nb > 1 ? 6 : 0);
-    const size_t n_nodes = per_step * n_step + (n_step - 1) + 64;
+    // node budget: per step the body (35/layer + 9), the gumbel scale+add (2), plus
+    // argmax (or the 6-op 2-branch cfg merge for nb>1), plus the code-concat chain,
+    // plus one repeat per inter-step code broadcast for nb>1; the 64 slack covers the
+    // one-time input leaves
+    const size_t per_step = 35ull * c.n_layer + 9 + 2 + 2 + (nb > 1 ? 6 : 0);
+    const size_t n_nodes = per_step * n_step + (n_step - 1) + (nb > 1 ? n_step - 1 : 0) + 64;
     const size_t cap = 2 * n_nodes;
-    const size_t mem = ggml_tensor_overhead() * (n_nodes + 5) + ggml_graph_overhead_custom(cap, false);
+    // n_step extra tensor objects for the gumbel noise leaves + 1 for the inv_t scalar
+    // (leaf data lives in the gallocr vbuffer, not this no-alloc arena)
+    const size_t mem =
+        ggml_tensor_overhead() * (n_nodes + n_step + 1 + 5) + ggml_graph_overhead_custom(cap, false);
 
     DepthStepGraph g;
     g.arena.assign(mem, 0);
@@ -338,6 +357,15 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
     if (nb > 1) {
         g.scale = ggml_new_tensor_1d(g.ctx, GGML_TYPE_F32, 1); // set per frame
         ggml_set_input(g.scale);
+    }
+    // gumbel-max sampling leaves: the inverse-temperature scalar and one [vs] noise
+    // leaf per step, host-drawn per frame from DepthRunner::fused_rng
+    g.inv_t = ggml_new_tensor_1d(g.ctx, GGML_TYPE_F32, 1); // set per frame
+    ggml_set_input(g.inv_t);
+    g.noise_leaves.resize(n_step);
+    for (int j = 0; j < n_step; j++) {
+        g.noise_leaves[j] = ggml_new_tensor_1d(g.ctx, GGML_TYPE_F32, vs); // set per frame
+        ggml_set_input(g.noise_leaves[j]);
     }
 
     // one-time input leaves, set in init after the vbuffer is reserved
@@ -367,18 +395,26 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
         ggml_tensor * logits = dd_step_body(g.ctx, m, kv, nb, j, aud, emb_view, g.h0,
                                             g.pos_leaves[j - 1], g.ff, g.mask_leaves[j - 1],
                                             step_roots[j - 1]);
-        // in-graph greedy sampling: argmax replaces the host sample_token
+        // in-graph seeded gumbel-max sampling: scaled = L * (1/T) + noise, then
+        // argmax replaces the host sample_token. gumbel-max on temperature-scaled raw
+        // logits is the exact categorical sample at temperature T (MUL/ADD/ARGMAX
+        // only, all already in the graph)
         ggml_tensor * L = logits;
         if (nb > 1) {
             ggml_tensor * Lc = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], 0);
             ggml_tensor * Lu = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], (size_t) vs * sizeof(float));
             L = ggml_add(g.ctx, Lu, ggml_mul(g.ctx, ggml_sub(g.ctx, Lc, Lu), g.scale));
         }
-        ggml_tensor * amax = ggml_argmax(g.ctx, L);
+        ggml_tensor * amax = ggml_argmax(g.ctx, ggml_add(g.ctx, ggml_mul(g.ctx, L, g.inv_t),
+                                                         g.noise_leaves[j - 1]));
         amax_nodes[j - 1] = amax;
         codes = codes ? ggml_concat(g.ctx, codes, amax, 1) : amax;
-        if (j < n_step)
-            aud = (nb == 1) ? amax : ggml_reshape_2d(g.ctx, amax, nb, 1);
+        if (j < n_step) {
+            // the merged argmax is a 1-element tensor; for nb>1 broadcast the single
+            // sampled code to every branch with repeat (a [nb,1] reshape of the
+            // 1-element tensor was an out-of-bounds re-read)
+            aud = (nb == 1) ? amax : ggml_repeat_4d(g.ctx, amax, nb, 1, 1, 1);
+        }
     }
 
     g.codes = codes;
@@ -424,9 +460,10 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     };
     RtDepthTiming rtd_acc;
 
-    // ponytail: fused path — one graph submit per frame, in-graph greedy sampling (no
-    // temperature/top-k/top-p, so not byte-identical to the step path). forced codebooks
-    // need the step path, which has no graphs when fused
+    // ponytail: fused path — one graph submit per frame, in-graph seeded gumbel-max
+    // sampling (temperature applied via the inv_t leaf; no top-k/top-p, so not
+    // byte-identical to the step path even at the same seed). forced codebooks need
+    // the step path, which has no graphs when fused
     if (fused && n_force == 0) {
         GGML_ASSERT(hiddens.size() == (size_t) n_branch);
         for (int b = 0; b < n_branch; b++) {
@@ -435,6 +472,19 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
                         hiddens[b].data(), (size_t) m.cfg.hidden_size * sizeof(float));
         }
         int32_t aud_data[2] = { cb0, cb0 };
+        // gumbel-max noise for this frame: g = -log(-log(U)), U uniform in
+        // [1e-7, 1-1e-7], drawn from the dedicated fused stream (same seed as the
+        // step path's rng, separate stream - not a byte-identical cross-path match)
+        const float temp = sp.temperature > 0 ? sp.temperature : 1.0f;
+        const float inv_t = 1.0f / temp;
+        std::uniform_real_distribution<float> dist(1e-7f, 1.0f - 1e-7f);
+        for (size_t i = 0; i < noise_staging.size(); i++)
+            noise_staging[i] = -std::log(-std::log(dist(fused_rng)));
+        for (int j = 0; j < n_step; j++)
+            ggml_backend_tensor_set(fused_graph.noise_leaves[j],
+                                    noise_staging.data() + (size_t) j * vs, 0,
+                                    (size_t) vs * sizeof(float));
+        ggml_backend_tensor_set(fused_graph.inv_t, &inv_t, 0, sizeof(float));
         const std::chrono::steady_clock::time_point fa = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
         ggml_backend_tensor_set(fused_graph.aud, aud_data, 0, (size_t) n_branch * sizeof(int32_t));
         ggml_backend_tensor_set(fused_graph.h0, flat_hiddens.data(), 0,
