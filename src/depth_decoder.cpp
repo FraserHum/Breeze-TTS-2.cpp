@@ -539,6 +539,33 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
                                 (size_t) n_branch * m.cfg.hidden_size * sizeof(float));
         if (n_branch > 1)
             ggml_backend_tensor_set(fused_graph.scale, &cfg_scale, 0, sizeof(float));
+        // the fused graph's pos/ff/mask leaves are baked into the gallocr vbuffer, and
+        // their slots are freed (and reused for later nodes) within the same compute
+        // pass as soon as their last in-graph consumer runs; the fused path sets them
+        // only once in init, so every frame after the first reads stale slot contents
+        // for the rope positions/freq-factors and the attention masks. re-set them
+        // every frame, the way the step path re-sets its pos/ff/mask leaves per step
+        ggml_backend_tensor_set(fused_graph.ff, freq_factors.data(), 0,
+                                freq_factors.size() * sizeof(float));
+        for (int j = 1; j <= n_step; j++) {
+            const int start = j == 1 ? 0 : j;
+            const int n_tok = (j == 1 ? 2 : 1) * n_branch;
+            const int total = (start + (j == 1 ? 2 : 1)) * n_branch;
+            for (int i = 0; i < n_tok; i++) pos_staging[i] = start + i / n_branch;
+            ggml_backend_tensor_set(fused_graph.pos_leaves[j - 1], pos_staging.data(), 0,
+                                    (size_t) n_tok * sizeof(int32_t));
+            const size_t mask_n = (size_t) total * n_tok;
+            GGML_ASSERT(mask_n <= mask_staging.size());
+            for (int q = 0; q < n_tok; q++) {
+                const int qb = q % n_branch;
+                const int qpos = start + q / n_branch;
+                for (int k = 0; k < total; k++)
+                    mask_staging[(size_t) q * total + k] =
+                        (k % n_branch == qb && k / n_branch <= qpos) ? 0.0f : -INFINITY;
+            }
+            ggml_backend_tensor_set(fused_graph.mask_leaves[j - 1], mask_staging.data(), 0,
+                                    mask_n * sizeof(float));
+        }
         const std::chrono::steady_clock::time_point fb = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
         ggml_backend_graph_compute(m.backend.backend, fused_graph.graph);
         const std::chrono::steady_clock::time_point fc = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};

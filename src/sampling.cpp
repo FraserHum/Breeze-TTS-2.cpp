@@ -55,6 +55,8 @@ int sample_token(std::vector<float> & logits, const SampleParams & p, std::mt199
         for (float & v : probs) v /= s;
     }
 
+    if (probs.size() == 1) return idx[0]; // degenerate: no draw, keeps caller rng streams aligned
+
     std::discrete_distribution<int> dist(probs.begin(), probs.end());
     return idx[dist(rng)];
 }
