@@ -364,11 +364,23 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
     const DepthConfig & c = m.cfg.dd;
     const int vs = m.cfg.audio_vocab_size;
 
-    // node budget: per step the body (35/layer + 9), the gumbel scale+add (2), plus
-    // argmax (or the 6-op 2-branch cfg merge for nb>1), plus the code-concat chain,
-    // plus one repeat per inter-step code broadcast for nb>1; the 64 slack covers the
-    // one-time input leaves
-    const size_t per_step = 35ull * c.n_layer + 9 + 2 + 2 + (nb > 1 ? 6 : 0);
+    // exact top-k for the in-graph sampling: the same knob the step path reads in
+    // run() (config default, BREEZE_DEPTH_TOP_K>0 override), baked into the fused
+    // graph at init
+    int dd_topk_k = m.cfg.depth_top_k;
+    {
+        const char * e = std::getenv("BREEZE_DEPTH_TOP_K");
+        if (e) {
+            const int v = std::atoi(e);
+            if (v > 0) dd_topk_k = v;
+        }
+    }
+
+    // node budget: per step the body (35/layer + 9), the topk_mask (1), the gumbel
+    // scale+add (2), plus argmax (or the 6-op 2-branch cfg merge for nb>1), plus the
+    // code-concat chain, plus one repeat per inter-step code broadcast for nb>1; the
+    // 64 slack covers the one-time input leaves
+    const size_t per_step = 35ull * c.n_layer + 9 + 1 + 2 + 2 + (nb > 1 ? 6 : 0);
     const size_t n_nodes = per_step * n_step + (n_step - 1) + (nb > 1 ? n_step - 1 : 0) + 64;
     const size_t cap = 2 * n_nodes;
     // n_step extra tensor objects for the gumbel noise leaves + 1 for the inv_t scalar
@@ -432,14 +444,19 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
         // in-graph seeded gumbel-max sampling: scaled = L * (1/T) + noise, then
         // argmax replaces the host sample_token. gumbel-max on temperature-scaled raw
         // logits is the exact categorical sample at temperature T (MUL/ADD/ARGMAX
-        // only, all already in the graph)
+        // only, all already in the graph). exact top-k: the step path's
+        // sample_token keeps only the top sp.top_k raw logits (partial_sort) and
+        // samples from that support; topk_mask -inf's the rest so gumbel-max over
+        // the masked set is the exact baseline top-k categorical (threshold =
+        // k-th largest value, ties at the boundary kept by both: x >= c)
         ggml_tensor * L = logits;
         if (nb > 1) {
             ggml_tensor * Lc = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], 0);
             ggml_tensor * Lu = ggml_view_2d(g.ctx, logits, vs, 1, logits->nb[1], (size_t) vs * sizeof(float));
             L = ggml_add(g.ctx, Lu, ggml_mul(g.ctx, ggml_sub(g.ctx, Lc, Lu), g.scale));
         }
-        ggml_tensor * amax = ggml_argmax(g.ctx, ggml_add(g.ctx, ggml_mul(g.ctx, L, g.inv_t),
+        ggml_tensor * Lm = ggml_topk_mask(g.ctx, L, dd_topk_k);
+        ggml_tensor * amax = ggml_argmax(g.ctx, ggml_add(g.ctx, ggml_mul(g.ctx, Lm, g.inv_t),
                                                          g.noise_leaves[j - 1]));
         amax_nodes[j - 1] = amax;
         codes = codes ? ggml_concat(g.ctx, codes, amax, 1) : amax;
@@ -484,7 +501,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     if (sp_in) sp = *sp_in;
     // BREEZE_DEPTH_TOP_K=<k> (k>0): env override of the step-path top-k. parity knob:
     // k=1 makes sample_token keep one index, draw no rng, and be a pure greedy argmax;
-    // inert on the fused path (no in-graph top-k yet)
+    // the fused path reads the same knob at build time (in-graph topk_mask)
     const char * tk_env = std::getenv("BREEZE_DEPTH_TOP_K");
     if (tk_env) {
         const int v = std::atoi(tk_env);
@@ -503,9 +520,10 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     RtDepthTiming rtd_acc;
 
     // ponytail: fused path — one graph submit per frame, in-graph seeded gumbel-max
-    // sampling (temperature applied via the inv_t leaf; no top-k/top-p, so not
-    // byte-identical to the step path even at the same seed). forced codebooks need
-    // the step path, which has no graphs when fused
+    // sampling (temperature applied via the inv_t leaf; exact top-k applied
+    // in-graph via topk_mask, no top-p — depth_top_p = 1.0 is a no-op). not
+    // byte-identical to the step path even at the same seed (separate rng streams).
+    // forced codebooks need the step path, which has no graphs when fused
     if (fused && n_force == 0) {
         GGML_ASSERT(hiddens.size() == (size_t) n_branch);
         for (int b = 0; b < n_branch; b++) {

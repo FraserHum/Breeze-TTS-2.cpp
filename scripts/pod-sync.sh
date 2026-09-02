@@ -1,6 +1,7 @@
 #!/bin/sh
 # pod-sync: sync a Breeze branch from the local repo into the dev pod,
-# apply the vk deploy shim, rebuild, and print a state receipt.
+# apply the vk deploy shim + the ggml topk_mask op patch, rebuild, and print
+# a state receipt.
 #
 #   usage: scripts/pod-sync.sh [branch] [--no-build]
 #
@@ -90,6 +91,20 @@ else
     exit 1
 fi
 
+# 3b. ggml topk_mask op: the fused depth path needs the in-graph top-k mask op
+#     and the submodule pointer stays pinned at pristine 36da5713, so the op
+#     ships as a patch applied to the pod's pristine ggml tree (patch paths
+#     are relative to the ggml root, hence -d /src/third_party/ggml)
+if kubectl exec -i -n "$NS" "$POD" -- patch -p1 --forward -s -d /src/third_party/ggml \
+        < "$REPO_DIR/docs/deploy/pod-ggml-topk-mask.patch"; then
+    TOPK_PATCH=applied
+elif kubectl exec -n "$NS" "$POD" -- grep -q 'GGML_OP_TOPK_MASK' /src/third_party/ggml/include/ggml.h; then
+    TOPK_PATCH=already
+else
+    echo "pod-sync: ggml topk_mask patch failed to apply - aborting (the fused path would miss its op)" >&2
+    exit 1
+fi
+
 # 4. stale-mtime guard (tar/rsync can carry old mtimes -> CMake skips recompiles)
 kubectl exec -n "$NS" "$POD" -- sh -c \
     'cd /src && find src include apps -type f \( -name "*.cpp" -o -name "*.h" \) -exec touch {} +'
@@ -112,6 +127,7 @@ echo "=== pod-sync receipt ==="
 echo "branch:  $BRANCH @ $SHA"
 echo "sync:    $SYNC_MODE (never touches .git, build, /models, /cache)"
 echo "shim:    $SHIM"
+echo "topk:    $TOPK_PATCH"
 echo "build:   $BUILD"
 echo "binary:  md5 ${MD5:-none}"
 echo "gates:   scripts/pod-restore.sh (binary md5 + both generation gates)"
