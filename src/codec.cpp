@@ -19,7 +19,13 @@ bool rt_timing_enabled() {
     return en != 0;
 }
 
-static thread_local RtTiming g_rt_last;
+bool vocoder_stateful_enabled() {
+    static const int en = [] {
+        const char * e = std::getenv("BREEZE_VOC_STATEFUL");
+        return e && std::strcmp(e, "1") == 0 ? 1 : 0;
+    }();
+    return en != 0;
+}
 
 const RtTiming & rt_last_decode() { return g_rt_last; }
 

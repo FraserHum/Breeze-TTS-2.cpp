@@ -231,6 +231,11 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     int chunk = is_streaming ? std::min(std::max(1, req.chunk_first), chunk_max) : max_new;
     // the transformer window plus the slack the vocoder convolutions reach back over
     const int ctx = m.cfg.voc.sliding_window + 16;
+    // streaming vocoder state (BREEZE_VOC_STATEFUL=1): one state per part, declared here so the
+    // per-part reset is the same boundary as ctx_start clamping at start == 0
+    const bool voc_stateful = vocoder_stateful_enabled();
+    VocoderState voc_st;
+    if (voc_stateful) codec.init_state(voc_st);
     auto flush = [&](bool final_flush) {
         if (!is_streaming && !final_flush) return true;
         const int have = (int) frames.size() / nc;
@@ -239,9 +244,17 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
             const int count = final_flush ? have - emitted : chunk;
             const int ctx_start = start > ctx ? start - ctx : 0;
             const int sub_T = start + count - ctx_start;
-            std::vector<int> sub(frames.begin() + (size_t) ctx_start * nc, frames.begin() + (size_t) (start + count) * nc);
             const auto tv = clock_now();
-            std::vector<float> audio = codec.decode(sub, sub_T);
+            std::vector<float> audio;
+            if (voc_stateful) {
+                std::vector<int> fresh(frames.begin() + (size_t) start * nc,
+                                       frames.begin() + (size_t) (start + count) * nc);
+                audio = codec.decode_stateful(voc_st, fresh, count, 0, start);
+            } else {
+                std::vector<int> sub(frames.begin() + (size_t) ctx_start * nc,
+                                     frames.begin() + (size_t) (start + count) * nc);
+                audio = codec.decode(sub, sub_T);
+            }
             const double vtime = since(tv);
             tm.vocoder += vtime;
             tm.flushes++;
@@ -254,7 +267,8 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
                        ++rtt_i, rt.graph_ms, rt.decode_ms, sub_T - count, count, count);
                 fflush(stdout);
             }
-            const int skip = (start - ctx_start) * spf;
+            // stateful decodes only the new frames, so there is nothing to skip
+            const int skip = voc_stateful ? 0 : (start - ctx_start) * spf;
             if (!tm.first_audio) {
                 tm.first_vocoder = vtime;
                 tm.first_frames = sub_T;
