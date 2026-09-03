@@ -145,7 +145,14 @@ static std::vector<float> run_conv_tail(BreezeModel & m, const std::vector<float
     const VocoderConfig & c = m.cfg.voc;
     const int C = c.latent_dim;
     Graph g(32768);
-    std::vector<float> seg(lat.begin() + (size_t) from * C, lat.begin() + (size_t) (from + T) * C);
+    // ggml contiguous [T, C] tensors lay i0 (time) FASTEST: element (t, c) lives at flat index
+    // t + c*T, so a host buffer fed via input_f32 must be CHANNEL-MAJOR (channel c holds its
+    // whole T time series contiguously). lat is frame-major; transpose it here. (The repo's own
+    // path never hits this because its latents are in-graph tensors, and ggml ops use ne/nb.)
+    std::vector<float> seg((size_t) T * C);
+    for (int c = 0; c < C; c++)
+        for (int t = 0; t < T; t++)
+            seg[(size_t) c * T + t] = lat[(size_t) (from + t) * C + c];
     ggml_tensor * h = g.input_f32(seg, T, C); // [T, C, 1], time on ne0 like the repo's own conv inputs
     h = codec_detail::conv1d_causal(g.ctx, m.w("codec.dhead.conv.weight"), m.w("codec.dhead.conv.bias"), h, 1, 1);
     const int dilations[3] = { 1, 3, 9 };
