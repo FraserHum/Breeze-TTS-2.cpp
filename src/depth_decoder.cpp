@@ -366,8 +366,9 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
 
     // exact top-k for the in-graph sampling: the same knob the step path reads in
     // run() (config default, BREEZE_DEPTH_TOP_K>0 override), baked into the fused
-    // graph at init
-    int dd_topk_k = m.cfg.depth_top_k;
+    // graph at init. the step path reads 0 (or >= vs) as "no top-k" (keep = n);
+    // the op's k=0 means "mask everything", so map 0 -> vs, where it is the identity
+    int dd_topk_k = (m.cfg.depth_top_k > 0 && m.cfg.depth_top_k < vs) ? m.cfg.depth_top_k : vs;
     {
         const char * e = std::getenv("BREEZE_DEPTH_TOP_K");
         if (e) {
