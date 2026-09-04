@@ -74,7 +74,12 @@ ggml_tensor * convtr1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor *
                 xb->nb[0],xb->nb[1],xb->nb[2],xb->nb[3], (int)ggml_is_transposed(xb));
     }
     ggml_tensor * y3 = ggml_mul_mat(ctx, wt, xb);                        // [Cout, L, K]
-    ggml_tensor * m3 = ggml_permute(ctx, y3, 0, 2, 1, 3);                // [Cout, K, L]
+    // permute so K is the slowest of {K, Cout}: [K, Cout, L]. reshape_2d re-reads the
+    // contiguous buffer with ne[0] fastest, so the (K,Cout) pair becomes co*K + k
+    // (channel-first) -- exactly the M[co*K + k, l] layout col2im_1d gathers. Using
+    // [Cout, K, L] here instead would flatten to k*Cout + co (kernel-first) and scatter
+    // every output to the wrong channel.
+    ggml_tensor * m3 = ggml_permute(ctx, y3, 1, 2, 0, 3);                // [K, Cout, L]
     ggml_tensor * m2 = ggml_reshape_2d(ctx, ggml_cont(ctx, m3), Cout * K, L);
     ggml_tensor * y = ggml_col2im_1d(ctx, m2, stride, (int) Cout, 0);    // [L*stride + K - 1, Cout]
 
