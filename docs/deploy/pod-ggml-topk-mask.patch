@@ -1,5 +1,5 @@
 diff --git a/include/ggml.h b/include/ggml.h
-index 5f6774a6..4f60b4eb 100644
+index 26f31232..86f2c038 100644
 --- a/include/ggml.h
 +++ b/include/ggml.h
 @@ -553,6 +553,7 @@ extern "C" {
@@ -10,7 +10,7 @@ index 5f6774a6..4f60b4eb 100644
          GGML_OP_LEAKY_RELU,
          GGML_OP_TRI,
          GGML_OP_FILL,
-@@ -2412,6 +2413,17 @@ extern "C" {
+@@ -2419,6 +2420,17 @@ extern "C" {
              struct ggml_tensor  * a,
              int                   k);
  
@@ -29,7 +29,7 @@ index 5f6774a6..4f60b4eb 100644
              struct ggml_context * ctx,
              float                 start,
 diff --git a/src/ggml-cpu/ggml-cpu.c b/src/ggml-cpu/ggml-cpu.c
-index 87ac0a70..f8c10c49 100644
+index 6bc4467e..5ad764ff 100644
 --- a/src/ggml-cpu/ggml-cpu.c
 +++ b/src/ggml-cpu/ggml-cpu.c
 @@ -1985,6 +1985,10 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
@@ -43,7 +43,7 @@ index 87ac0a70..f8c10c49 100644
          case GGML_OP_LEAKY_RELU:
              {
                  ggml_compute_forward_leaky_relu(params, tensor);
-@@ -2395,6 +2399,7 @@ static int ggml_get_n_tasks(struct ggml_tensor * node, int n_threads) {
+@@ -2396,6 +2400,7 @@ static int ggml_get_n_tasks(struct ggml_tensor * node, int n_threads) {
          case GGML_OP_TIMESTEP_EMBEDDING:
          case GGML_OP_ARGSORT:
          case GGML_OP_TOP_K:
@@ -52,7 +52,7 @@ index 87ac0a70..f8c10c49 100644
          case GGML_OP_FLASH_ATTN_BACK:
          case GGML_OP_SSM_CONV:
 diff --git a/src/ggml-cpu/ops.cpp b/src/ggml-cpu/ops.cpp
-index b869f4bd..592c48af 100644
+index 266261c5..d5918df2 100644
 --- a/src/ggml-cpu/ops.cpp
 +++ b/src/ggml-cpu/ops.cpp
 @@ -11,6 +11,7 @@
@@ -63,7 +63,7 @@ index b869f4bd..592c48af 100644
  
  // ggml_compute_forward_dup
  
-@@ -8472,6 +8473,74 @@ void ggml_compute_forward_top_k(
+@@ -8611,6 +8612,74 @@ void ggml_compute_forward_top_k(
      }
  }
  
@@ -151,18 +151,18 @@ index 4c1642a6..974863c3 100644
  void ggml_compute_forward_tri(const struct ggml_compute_params * params, struct ggml_tensor * dst);
  void ggml_compute_forward_fill(const struct ggml_compute_params * params, struct ggml_tensor * dst);
 diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
-index c1d86aaa..790156d1 100644
+index 394c84bf..31488043 100644
 --- a/src/ggml-vulkan/ggml-vulkan.cpp
 +++ b/src/ggml-vulkan/ggml-vulkan.cpp
-@@ -1041,6 +1041,7 @@ struct vk_device_struct {
+@@ -1057,6 +1057,7 @@ struct vk_device_struct {
      vk_pipeline pipeline_argsort_f32[num_argsort_pipelines];
      vk_pipeline pipeline_argsort_large_f32[num_argsort_pipelines];
      vk_pipeline pipeline_topk_f32[num_topk_pipelines];
 +    vk_pipeline pipeline_topk_mask_f32;
      vk_pipeline pipeline_sum_rows_f32;
-     vk_pipeline pipeline_fwht_f32[4];
-     vk_pipeline pipeline_cumsum_f32;
-@@ -1721,6 +1722,12 @@ struct vk_op_topk_push_constants {
+     vk_pipeline pipeline_cross_entropy_loss_f32, pipeline_cross_entropy_loss_f32_wg512;
+     vk_pipeline pipeline_cross_entropy_loss_back_f32, pipeline_cross_entropy_loss_back_f32_wg512;
+@@ -1749,6 +1750,12 @@ struct vk_op_topk_push_constants {
      uint32_t last_pass;
  };
  
@@ -175,7 +175,7 @@ index c1d86aaa..790156d1 100644
  struct vk_op_im2col_push_constants {
      uint64_t dst_addr;
      uint32_t batch_offset; uint32_t offset_delta;
-@@ -5755,6 +5762,13 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
+@@ -5814,6 +5821,13 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
          }
      }
  
@@ -189,7 +189,7 @@ index c1d86aaa..790156d1 100644
      ggml_vk_create_pipeline(device, device->pipeline_argmax_f32, "argmax_f32", argmax_f32_len, argmax_f32_data, "main", 2, sizeof(vk_op_push_constants), {1, 1, 1}, { device->subgroup_size }, 1);
  
      ggml_vk_create_pipeline(device, device->pipeline_sum_rows_f32, "sum_rows_f32", sum_rows_f32_len, sum_rows_f32_data, "main", 2, sizeof(vk_op_sum_rows_push_constants), {1, 1, 1}, { device->subgroup_size }, 1);
-@@ -13879,6 +13893,28 @@ static void ggml_vk_topk(ggml_backend_vk_context * ctx, vk_context& subctx, cons
+@@ -14043,6 +14057,28 @@ static void ggml_vk_topk(ggml_backend_vk_context * ctx, vk_context& subctx, cons
      ctx->prealloc_x_need_sync = true;
  }
  
@@ -218,7 +218,7 @@ index c1d86aaa..790156d1 100644
  static void ggml_vk_sum(ggml_backend_vk_context * ctx, vk_context& subctx, const ggml_tensor * src0, ggml_tensor * dst) {
      vk_op_sum_rows_push_constants p = vk_op_sum_rows_push_constants_init(src0, dst, ggml_nelements(src0));
      ggml_vk_op_f32(ctx, subctx, src0, nullptr, nullptr, nullptr, dst, GGML_OP_SUM, p);
-@@ -15667,6 +15703,10 @@ static bool ggml_vk_build_graph(ggml_backend_vk_context * ctx, ggml_cgraph * cgr
+@@ -15929,6 +15965,10 @@ static bool ggml_vk_build_graph(ggml_backend_vk_context * ctx, ggml_cgraph * cgr
      case GGML_OP_TOP_K:
          ggml_vk_topk(ctx, compute_ctx, src0, node);
  
@@ -229,7 +229,7 @@ index c1d86aaa..790156d1 100644
          break;
      case GGML_OP_SUM:
          ggml_vk_sum(ctx, compute_ctx, src0, node);
-@@ -18443,6 +18483,30 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+@@ -18732,6 +18772,30 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
                  }
              }
              return true;
@@ -340,10 +340,10 @@ index 00000000..c0f08408
 +    }
 +}
 diff --git a/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp b/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
-index 17d57d5a..1508f008 100644
+index f0610f4c..44e01ab3 100644
 --- a/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
 +++ b/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
-@@ -1026,6 +1026,7 @@ void process_shaders() {
+@@ -1028,6 +1028,7 @@ void process_shaders() {
  
      string_to_spv("topk_argsort_f32", "topk_argsort.comp", {{"A_TYPE", "float"}});
      string_to_spv("topk_nary_search_f32", "topk_nary_search.comp", {{"A_TYPE", "float"}});
@@ -352,7 +352,7 @@ index 17d57d5a..1508f008 100644
      string_to_spv("argmax_f32", "argmax.comp", merge_maps(base_dict, {{"A_TYPE", "float"}, {"D_TYPE", "int"}}));
      string_to_spv("sum_rows_f32", "sum_rows.comp", merge_maps(base_dict, {{"A_TYPE", "float"}, {"D_TYPE", "float"}}));
 diff --git a/src/ggml.c b/src/ggml.c
-index e0b615c0..4376161d 100644
+index 3bd3e3fe..35bb3ffb 100644
 --- a/src/ggml.c
 +++ b/src/ggml.c
 @@ -1062,6 +1062,7 @@ static const char * GGML_OP_NAME[GGML_OP_COUNT] = {
@@ -389,7 +389,7 @@ index e0b615c0..4376161d 100644
  
  static_assert(GGML_OP_POOL_COUNT == 2, "GGML_OP_POOL_COUNT != 2");
  
-@@ -5407,6 +5409,27 @@ struct ggml_tensor * ggml_top_k(
+@@ -5418,6 +5420,27 @@ struct ggml_tensor * ggml_top_k(
      return result;
  }
  

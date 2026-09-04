@@ -47,7 +47,7 @@ if [ ! -e "$WORKTREE/.git" ]; then
     git -C "$REPO_DIR" worktree add --detach "$WORKTREE" "$SHA"
 fi
 git -C "$WORKTREE" checkout --detach -q "$SHA"
-git -C "$WORKTREE" submodule update --init -q   # pinned ggml, pristine
+git -C "$WORKTREE" submodule update --init -q   # pinned ggml (fork dev tip carries the topk_mask op)
 
 # 2. sync the tree into /src: rsync if the pod has it, else tar + file manifest
 EXCLUDES="--exclude .git --exclude build"
@@ -91,10 +91,11 @@ else
     exit 1
 fi
 
-# 3b. ggml topk_mask op: the fused depth path needs the in-graph top-k mask op
-#     and the submodule pointer stays pinned at pristine 36da5713, so the op
-#     ships as a patch applied to the pod's pristine ggml tree (patch paths
-#     are relative to the ggml root, hence -d /src/third_party/ggml)
+# 3b. ggml topk_mask op: the fused depth path needs the in-graph top-k mask op.
+#     the submodule pointer now pins the fork dev tip (op included), so this patch
+#     is a fallback for pod trees synced from an older pristine pin; it no-ops
+#     (grep -> already) when the tree already carries the op (patch paths are
+#     relative to the ggml root, hence -d /src/third_party/ggml)
 if kubectl exec -i -n "$NS" "$POD" -- patch -p1 --forward -s -d /src/third_party/ggml \
         < "$REPO_DIR/docs/deploy/pod-ggml-topk-mask.patch"; then
     TOPK_PATCH=applied
