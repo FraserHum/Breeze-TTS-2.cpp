@@ -145,6 +145,60 @@ throughout is the safe choice.
 reason to use them. The backbone is bandwidth bound and degrades in ways you can
 hear.
 
+## GGUF file format
+
+The model file is standard GGUF v3, with no repo specific extensions. It is
+written by the Python `gguf` library (`scripts/convert_hf_to_gguf.py`,
+`gguf>=0.10.0` in `scripts/requirements.txt`) and read by the vendored ggml
+(`gguf_init_from_file`, wrapped in `src/gguf_loader.cpp`). Both sides
+implement the format documented at the top of
+`third_party/ggml/include/gguf.h`, which mirrors the upstream spec.
+
+Layout, little endian:
+
+| Section | Encoding |
+| --- | --- |
+| magic | `GGUF` (4 bytes) |
+| version | u32, = 3 |
+| tensor count | u64 |
+| metadata pair count | u64 |
+| metadata pairs | u64 key length, key, u32 value type, value — packed, no per pair alignment |
+| tensor table | per tensor: u64 name length, name, u32 n dims, u64 dims[n], u32 ggml type, u64 data offset |
+| tensor data | starts at an offset aligned to the u32 key `general.alignment` if present, else 32 |
+
+Strings are u64 length + UTF-8 bytes, no null terminator. All enums are int32,
+all bools are int8. An array is u32 element type + u64 element count + the
+elements.
+
+The metadata value types, the `gguf_type` numbering used throughout this
+format:
+
+| Value | Type |
+| --- | --- |
+| 0 | UINT8 |
+| 1 | INT8 |
+| 2 | UINT16 |
+| 3 | INT16 |
+| 4 | UINT32 |
+| 5 | INT32 |
+| 6 | FLOAT32 |
+| 7 | BOOL |
+| 8 | STRING |
+| 9 | ARRAY |
+| 10 | UINT64 |
+| 11 | INT64 |
+| 12 | FLOAT64 |
+
+If you parse these bytes by hand, check the numbers against
+`third_party/ggml/include/gguf.h` first, not against memory or an old
+reference. A wrong type table fails immediately and characteristically: the
+first metadata pair of a Breeze model is `general.architecture` with value
+type `0x08` — a table that calls 8 a float reads the string length field as
+the value and the parse derails from there. A hand rolled scanner that
+disagrees with the vendored header is how a "non standard GGUF dialect"
+conclusion gets born. There is no dialect to find: the file, the writer and
+the reader all use this one layout.
+
 ## Tensor naming
 
 GGUF tensor names are grouped by stage.
