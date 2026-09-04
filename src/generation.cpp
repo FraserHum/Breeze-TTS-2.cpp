@@ -225,10 +225,9 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     std::vector<int> frames;
     int emitted = 0;
     bool stopped = false;
-    const bool is_streaming = req.chunk_first > 0;
     // the first flush is small so audio starts early, then it grows to keep the vocoder efficient
     const int chunk_max = std::max(1, req.chunk_max);
-    int chunk = is_streaming ? std::min(std::max(1, req.chunk_first), chunk_max) : max_new;
+    int chunk = std::min(std::max(1, req.chunk_first), chunk_max);
     // the transformer window plus the slack the vocoder convolutions reach back over
     const int ctx = m.cfg.voc.sliding_window + 16;
     // streaming vocoder state (BREEZE_VOC_STATEFUL=1): one state per part, declared here so the
@@ -237,7 +236,6 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
     VocoderState voc_st;
     if (voc_stateful) codec.init_state(voc_st);
     auto flush = [&](bool final_flush) {
-        if (!is_streaming && !final_flush) return true;
         const int have = (int) frames.size() / nc;
         while (have - emitted >= chunk || (final_flush && have > emitted)) {
             const int start = emitted;

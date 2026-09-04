@@ -17,7 +17,6 @@
 
 #include <chrono>
 #include <cstdio>
-#include <cstring>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -142,103 +141,18 @@ int run_server(const ServerOptions & opts) {
             return;
         }
 
-        const std::string fmt = field(req, "response_format", field(req, "format", "wav"));
-        const bool stream = field(req, "stream", "false") == "true";
-
         res.set_header("X-Sample-Rate", std::to_string(sr));
         res.set_header("X-Sample-Format", "s16le");
         res.set_header("Cache-Control", "no-store");
 
-        const bool sent_ins = !field(req, "instruction", "").empty() || req.has_file("instruction");
-        const char * mode = !g.ref_audio.empty() || !g.ref_codes.empty() ? (sent_ins ? "direction" : "clone") : "design";
+        const bool sent_ins = req.has_file("instruction") || req.has_param("instruction");
+        const char * mode = !g.ref_audio.empty() ? (sent_ins ? "direction" : "clone") : "design";
         printf("gen  %s, %d chars, cfg %.1f, seed %d\n", mode, (int) g.text.size(), g.cfg_scale, g.seed);
         fflush(stdout);
 
-        if (!stream) {
-            g.chunk_first = 0;
-            std::vector<float> all_samples;
-            GenTimings tm;
-            const auto t0 = std::chrono::steady_clock::now();
-            const auto elapsed = [&] {
-                return std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
-            };
-            try {
-                generate(model, codec, g, [&](const float * s, int n) {
-                    all_samples.insert(all_samples.end(), s, s + n);
-                    return true;
-                }, &tm);
-            } catch (const std::exception & e) {
-                fprintf(stderr, "\ngeneration error: %s\n", e.what());
-                res.status = 500;
-                res.set_content("{\"error\":\"generation failed\"}", "application/json");
-                return;
-            }
-            const double secs = (double) all_samples.size() / sr, wall = elapsed();
-            printf("gen complete: %.1fs audio in %.2fs [%.1f fps, %.2fx]\n",
-                   secs, wall, wall > 0 ? secs * 12.5 / wall : 0.0, wall > 0 ? secs / wall : 0.0);
-            fflush(stdout);
-
-            std::vector<uint8_t> pcm = to_pcm16(all_samples.data(), (int) all_samples.size());
-            if (fmt == "pcm") {
-                res.set_content((const char *) pcm.data(), pcm.size(), "audio/pcm");
-            } else {
-                std::vector<uint8_t> wav;
-                uint32_t data_len = (uint32_t) pcm.size();
-                uint32_t riff = 36 + data_len;
-                wav.resize(44 + pcm.size());
-                uint8_t * p = wav.data();
-                std::memcpy(p, "RIFF", 4);
-                p[4] = (uint8_t) (riff & 0xff); p[5] = (uint8_t) ((riff >> 8) & 0xff);
-                p[6] = (uint8_t) ((riff >> 16) & 0xff); p[7] = (uint8_t) ((riff >> 24) & 0xff);
-                std::memcpy(p + 8, "WAVEfmt ", 8);
-                p[16] = 16; p[17] = 0; p[18] = 0; p[19] = 0;
-                p[20] = 1; p[21] = 0;
-                p[22] = 1; p[23] = 0;
-                p[24] = (uint8_t) (sr & 0xff); p[25] = (uint8_t) ((sr >> 8) & 0xff);
-                p[26] = (uint8_t) ((sr >> 16) & 0xff); p[27] = (uint8_t) ((sr >> 24) & 0xff);
-                uint32_t byte_rate = sr * 2;
-                p[28] = (uint8_t) (byte_rate & 0xff); p[29] = (uint8_t) ((byte_rate >> 8) & 0xff);
-                p[30] = (uint8_t) ((byte_rate >> 16) & 0xff); p[31] = (uint8_t) ((byte_rate >> 24) & 0xff);
-                p[32] = 2; p[33] = 0;
-                p[34] = 16; p[35] = 0;
-                std::memcpy(p + 36, "data", 4);
-                p[40] = (uint8_t) (data_len & 0xff); p[41] = (uint8_t) ((data_len >> 8) & 0xff);
-                p[42] = (uint8_t) ((data_len >> 16) & 0xff); p[43] = (uint8_t) ((data_len >> 24) & 0xff);
-                std::memcpy(p + 44, pcm.data(), pcm.size());
-                res.set_content((const char *) wav.data(), wav.size(), "audio/wav");
-            }
-            return;
-        }
-
-        const std::string content_type = fmt == "pcm" ? "audio/pcm" : "audio/wav";
         res.set_chunked_content_provider(
-            content_type.c_str(),
-            [&model, &codec, g, lock, sr, fmt, verbose = opts.verbose](size_t, httplib::DataSink & sink) {
-                if (fmt != "pcm") {
-                    // Emit streaming WAV header with large unknown length so streaming audio decoders start immediately
-                    std::vector<uint8_t> wav(44);
-                    uint8_t * p = wav.data();
-                    std::memcpy(p, "RIFF", 4);
-                    uint32_t riff = 0x7ffffff0;
-                    p[4] = (uint8_t) (riff & 0xff); p[5] = (uint8_t) ((riff >> 8) & 0xff);
-                    p[6] = (uint8_t) ((riff >> 16) & 0xff); p[7] = (uint8_t) ((riff >> 24) & 0xff);
-                    std::memcpy(p + 8, "WAVEfmt ", 8);
-                    p[16] = 16; p[17] = 0; p[18] = 0; p[19] = 0;
-                    p[20] = 1; p[21] = 0;
-                    p[22] = 1; p[23] = 0;
-                    p[24] = (uint8_t) (sr & 0xff); p[25] = (uint8_t) ((sr >> 8) & 0xff);
-                    p[26] = (uint8_t) ((sr >> 16) & 0xff); p[27] = (uint8_t) ((sr >> 24) & 0xff);
-                    uint32_t byte_rate = sr * 2;
-                    p[28] = (uint8_t) (byte_rate & 0xff); p[29] = (uint8_t) ((byte_rate >> 8) & 0xff);
-                    p[30] = (uint8_t) ((byte_rate >> 16) & 0xff); p[31] = (uint8_t) ((byte_rate >> 24) & 0xff);
-                    p[32] = 2; p[33] = 0;
-                    p[34] = 16; p[35] = 0;
-                    std::memcpy(p + 36, "data", 4);
-                    uint32_t data_len = 0x7ffffff0 - 36;
-                    p[40] = (uint8_t) (data_len & 0xff); p[41] = (uint8_t) ((data_len >> 8) & 0xff);
-                    p[42] = (uint8_t) ((data_len >> 16) & 0xff); p[43] = (uint8_t) ((data_len >> 24) & 0xff);
-                    if (!sink.write((const char *) wav.data(), wav.size())) return false;
-                }
+            "audio/pcm",
+            [&model, &codec, g, lock, sr, verbose = opts.verbose](size_t, httplib::DataSink & sink) {
                 GenTimings tm;
                 const auto t0 = std::chrono::steady_clock::now();
                 const auto elapsed = [&] {
@@ -290,70 +204,91 @@ int run_server(const ServerOptions & opts) {
             res.set_content("{\"error\":\"busy\"}", "application/json");
             return;
         }
-        if (!req.has_file("audio")) {
+        std::vector<float> src, ref;
+        const auto load = [&](const char * name, std::vector<float> & out) {
+            if (!req.has_file(name)) return false;
+            const auto & f = req.get_file_value(name);
+            return !f.content.empty() &&
+                   read_wav_buffer((const uint8_t *) f.content.data(), f.content.size(), sr, out);
+        };
+        if (!load("source", src)) {
             res.status = 400;
-            res.set_content("{\"error\":\"audio file is required\"}", "application/json");
+            res.set_content("{\"error\":\"a source wav file is required\"}", "application/json");
             return;
         }
-        const auto & af = req.get_file_value("audio");
-        std::vector<float> src_audio;
-        if (!read_wav_buffer((const uint8_t *) af.content.data(), af.content.size(), sr, src_audio)) {
-            res.status = 400;
-            res.set_content("{\"error\":\"could not parse audio as wav\"}", "application/json");
-            return;
-        }
-        std::vector<float> ref_audio;
         std::string ref_text = field(req, "ref_text", "");
-        if (req.has_file("ref_audio")) {
-            const auto & rf = req.get_file_value("ref_audio");
-            if (!rf.content.empty())
-                read_wav_buffer((const uint8_t *) rf.content.data(), rf.content.size(), sr, ref_audio);
-        }
+        std::vector<int> vcodes;
+        int vframes = 0;
         const std::string vid = field(req, "voice_id", "");
-        ConvertOptions opt;
-        opt.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
-        opt.temperature = (float) atof(field(req, "temperature", "0.6").c_str());
-        opt.top_k = atoi(field(req, "top_k", "50").c_str());
-        opt.seed = atoi(field(req, "seed", "42").c_str());
-        opt.feed_source = field(req, "feed_source", "false") == "true";
-        opt.keep_acoustic = atoi(field(req, "keep_acoustic", "0").c_str());
-        if (!vid.empty() && !store.take(vid, opt.ref_codes, opt.ref_frames, ref_text)) {
-            res.status = 404;
-            res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
-            return;
-        }
-        if (ref_audio.empty() && opt.ref_codes.empty()) {
+        if (!vid.empty()) {
+            if (!store.take(vid, vcodes, vframes, ref_text)) {
+                res.status = 404;
+                res.set_content("{\"error\":\"unknown voice_id\"}", "application/json");
+                return;
+            }
+        } else if (!load("ref_audio", ref)) {
             res.status = 400;
-            res.set_content("{\"error\":\"ref_audio or a valid voice_id is required\"}", "application/json");
+            res.set_content("{\"error\":\"ref_audio or voice_id is required\"}", "application/json");
             return;
         }
-        int src_T = 0;
-        std::vector<int> src_codes = codec.encode(src_audio, src_T);
-        printf("convert %d frames (%.1fs), cfg %.1f, seed %d\n", src_T, (double) src_T / 12.5, opt.cfg_scale, opt.seed);
-        fflush(stdout);
+        if (ref_text.empty()) {
+            res.status = 400;
+            res.set_content("{\"error\":\"ref_text is required\"}", "application/json");
+            return;
+        }
 
-        std::vector<float> audio = convert_voice(model, codec, src_codes, src_T, ref_audio, ref_text, opt);
-        std::vector<uint8_t> pcm = to_pcm16(audio.data(), (int) audio.size());
-        res.set_header("X-Sample-Rate", std::to_string(sr));
-        res.set_header("X-Sample-Format", "s16le");
-        res.set_content((const char *) pcm.data(), pcm.size(), "audio/pcm");
+        printf("conv %.2f s source, %s\n", (double) src.size() / sr,
+               vframes > 0 ? "cached reference" : "uploaded reference");
+        fflush(stdout);
+        try {
+            int T = 0;
+            std::vector<int> codes = codec.encode(src, T);
+            ConvertOptions copt;
+            copt.src_text = field(req, "text", "");
+            copt.temperature = (float) atof(field(req, "temperature", "0.3").c_str());
+            copt.top_k = atoi(field(req, "top_k", "1").c_str());
+            copt.cfg_scale = (float) atof(field(req, "cfg_scale", "1.0").c_str());
+            copt.keep_acoustic = atoi(field(req, "keep_acoustic", "0").c_str());
+            copt.seed = atoi(field(req, "seed", "42").c_str());
+            copt.ref_codes = vcodes;
+            copt.ref_frames = vframes;
+            const auto t0 = std::chrono::steady_clock::now();
+            std::vector<float> audio = convert_voice(model, codec, codes, T, ref, ref_text, copt);
+            const double wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+            const double secs = (double) audio.size() / sr;
+            printf("     %.2f s in %.2f s, %.2fx rt\n", secs, wall, wall > 0 ? secs / wall : 0.0);
+            fflush(stdout);
+            std::vector<uint8_t> pcm = to_pcm16(audio.data(), (int) audio.size());
+            res.set_header("X-Sample-Rate", std::to_string(sr));
+            res.set_header("X-Sample-Format", "s16le");
+            res.set_content((const char *) pcm.data(), pcm.size(), "audio/pcm");
+        } catch (const std::exception & e) {
+            fprintf(stderr, "conversion error: %s\n", e.what());
+            res.status = 500;
+            res.set_content("{\"error\":\"conversion failed\"}", "application/json");
+        }
     });
 
     if (opts.webui) {
         svr.Get("/", [](const httplib::Request &, httplib::Response & res) {
-            res.set_content((const char *) breeze_webui::index_html, strlen(breeze_webui::index_html), "text/html");
+            res.set_content(breeze_webui::index_html, "text/html");
         });
         svr.Get("/style.css", [](const httplib::Request &, httplib::Response & res) {
-            res.set_content((const char *) breeze_webui::style_css, strlen(breeze_webui::style_css), "text/css");
+            res.set_content(breeze_webui::style_css, "text/css");
         });
         svr.Get("/app.js", [](const httplib::Request &, httplib::Response & res) {
-            res.set_content((const char *) breeze_webui::app_js, strlen(breeze_webui::app_js), "application/javascript");
+            res.set_content(breeze_webui::app_js, "application/javascript");
         });
+        printf("web ui: http://%s:%d/\n", opts.host.c_str(), opts.port);
     }
 
     printf("listening on http://%s:%d\n", opts.host.c_str(), opts.port);
-    svr.listen(opts.host.c_str(), opts.port);
+    if (!svr.listen(opts.host, opts.port)) {
+        fprintf(stderr, "failed to bind %s:%d\n", opts.host.c_str(), opts.port);
+        return 1;
+    }
+    model.free();
     return 0;
 }
 
-} // namespace breeze
+}

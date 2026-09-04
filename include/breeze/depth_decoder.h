@@ -37,9 +37,6 @@ struct DepthRunner {
     KVCache kv; // CFG branches share one cache, interleaved per position
     int n_branch = 1;
     std::vector<float> freq_factors;
-    std::vector<float> logits_buf;
-    std::vector<float> combined_logits;
-    std::vector<float> flat_hiddens;
 
     std::vector<float> logits_buf;
     std::vector<float> combined_logits;
