@@ -1,3 +1,5 @@
+diff --git a/src/common.cpp b/src/common.cpp
+index 38c4dea..d6fdf3f 100644
 --- a/src/common.cpp
 +++ b/src/common.cpp
 @@ -1,5 +1,6 @@
@@ -7,12 +9,12 @@
  
  #include <cmath>
  #include <cstring>
-@@ -8,7 +9,7 @@
+@@ -8,7 +9,7 @@ namespace breeze {
  
  void Backend::init(bool prefer_gpu) {
      if (prefer_gpu) {
 -        backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr);
 +        backend = ggml_backend_vk_init(0);
-         is_gpu = backend != nullptr;
-     }
-     if (!backend) {
+         // integrated GPUs (e.g. MoltenVK on Apple silicon) register as IGPU
+         if (!backend) {
+             backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_IGPU, nullptr);
