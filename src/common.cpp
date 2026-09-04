@@ -9,6 +9,10 @@ namespace breeze {
 void Backend::init(bool prefer_gpu) {
     if (prefer_gpu) {
         backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_GPU, nullptr);
+        // integrated GPUs (e.g. MoltenVK on Apple silicon) register as IGPU
+        if (!backend) {
+            backend = ggml_backend_init_by_type(GGML_BACKEND_DEVICE_TYPE_IGPU, nullptr);
+        }
         is_gpu = backend != nullptr;
     }
     if (!backend) {

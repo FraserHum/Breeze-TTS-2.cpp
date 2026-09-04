@@ -52,7 +52,7 @@ index 87ac0a70..f8c10c49 100644
          case GGML_OP_FLASH_ATTN_BACK:
          case GGML_OP_SSM_CONV:
 diff --git a/src/ggml-cpu/ops.cpp b/src/ggml-cpu/ops.cpp
-index b869f4bd..0b17f3c0 100644
+index b869f4bd..592c48af 100644
 --- a/src/ggml-cpu/ops.cpp
 +++ b/src/ggml-cpu/ops.cpp
 @@ -11,6 +11,7 @@
@@ -108,7 +108,7 @@ index b869f4bd..0b17f3c0 100644
 +        // exact-f32 ties at the k boundary are kept (the mask can then cover more
 +        // than k elements)
 +        row.assign(src_data, src_data + ne00);
-+        std::partial_sort(row.begin(), row.begin() + k, row.end(), std::greater<float>());
++        std::nth_element(row.begin(), row.begin() + k - 1, row.end(), std::greater<float>());
 +        const float c = row[k - 1];
 +
 +        for (int64_t j = 0; j < ne00; j++) {
@@ -151,7 +151,7 @@ index 4c1642a6..974863c3 100644
  void ggml_compute_forward_tri(const struct ggml_compute_params * params, struct ggml_tensor * dst);
  void ggml_compute_forward_fill(const struct ggml_compute_params * params, struct ggml_tensor * dst);
 diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
-index c1d86aaa..83a87170 100644
+index c1d86aaa..790156d1 100644
 --- a/src/ggml-vulkan/ggml-vulkan.cpp
 +++ b/src/ggml-vulkan/ggml-vulkan.cpp
 @@ -1041,6 +1041,7 @@ struct vk_device_struct {
@@ -189,72 +189,7 @@ index c1d86aaa..83a87170 100644
      ggml_vk_create_pipeline(device, device->pipeline_argmax_f32, "argmax_f32", argmax_f32_len, argmax_f32_data, "main", 2, sizeof(vk_op_push_constants), {1, 1, 1}, { device->subgroup_size }, 1);
  
      ggml_vk_create_pipeline(device, device->pipeline_sum_rows_f32, "sum_rows_f32", sum_rows_f32_len, sum_rows_f32_data, "main", 2, sizeof(vk_op_sum_rows_push_constants), {1, 1, 1}, { device->subgroup_size }, 1);
-@@ -7679,6 +7693,12 @@ static vk_pipeline ggml_vk_get_to_fp16(ggml_backend_vk_context * ctx, ggml_type
-     return ctx->device->pipeline_dequant[type];
- }
- 
-+// GGML_VK_FORCE_F32ACC=1 -> force f32-accumulation matmul/FA pipelines (quality A/B; off by default)
-+static bool ggml_vk_force_f32acc() {
-+    static const bool force = getenv("GGML_VK_FORCE_F32ACC") != nullptr;
-+    return force;
-+}
-+
- static vk_matmul_pipeline ggml_vk_get_mul_mat_mat_pipeline(ggml_backend_vk_context * ctx, ggml_type src0_type, ggml_type src1_type, ggml_prec prec) {
-     VK_LOG_DEBUG("ggml_vk_get_mul_mat_mat_pipeline(" << ggml_type_name(src0_type) << ", " << ggml_type_name(src1_type) << ", " << prec << ")");
-     if (src0_type == GGML_TYPE_F32 && src1_type == GGML_TYPE_F32) {
-@@ -7690,7 +7710,7 @@ static vk_matmul_pipeline ggml_vk_get_mul_mat_mat_pipeline(ggml_backend_vk_conte
-     if (src0_type == GGML_TYPE_BF16 && src1_type == GGML_TYPE_BF16) {
-         return ctx->device->pipeline_matmul_bf16;
-     }
--    if (prec == GGML_PREC_DEFAULT && ctx->device->fp16 && !(ctx->device->coopmat_support && !ctx->device->coopmat_acc_f16_support)) {
-+    if (prec == GGML_PREC_DEFAULT && ctx->device->fp16 && !(ctx->device->coopmat_support && !ctx->device->coopmat_acc_f16_support) && !ggml_vk_force_f32acc()) {
-         if (src0_type == GGML_TYPE_F16 && src1_type == GGML_TYPE_F32) {
-             return ctx->device->pipeline_matmul_f16_f32.f16acc;
-         }
-@@ -7753,12 +7773,12 @@ static vk_matmul_pipeline ggml_vk_get_mul_mat_mat_pipeline(ggml_backend_vk_conte
- 
-     if (ctx->device->coopmat2) {
-         assert(src1_type == GGML_TYPE_F16);
--        return prec == GGML_PREC_DEFAULT ? ctx->device->pipeline_dequant_mul_mat_mat_f16[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat_f16[src0_type].f32acc;
-+        return (prec == GGML_PREC_DEFAULT && !ggml_vk_force_f32acc()) ? ctx->device->pipeline_dequant_mul_mat_mat_f16[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat_f16[src0_type].f32acc;
-     }
-     if (ctx->device->coopmat_support) {
--        return (ctx->device->fp16 && ctx->device->coopmat_acc_f16_support && prec == GGML_PREC_DEFAULT) ? ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f32acc;
-+        return (ctx->device->fp16 && ctx->device->coopmat_acc_f16_support && prec == GGML_PREC_DEFAULT && !ggml_vk_force_f32acc()) ? ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f32acc;
-     }
--    return (ctx->device->fp16 && prec == GGML_PREC_DEFAULT) ? ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f32acc;
-+    return (ctx->device->fp16 && prec == GGML_PREC_DEFAULT && !ggml_vk_force_f32acc()) ? ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f16acc : ctx->device->pipeline_dequant_mul_mat_mat[src0_type].f32acc;
- }
- 
- static vk_pipeline ggml_vk_get_dequantize_mul_mat_vec(ggml_backend_vk_context * ctx, ggml_type a_type, ggml_type b_type, uint32_t num_cols, uint32_t m, uint32_t k) {
-@@ -7856,7 +7876,7 @@ static vk_matmul_pipeline ggml_vk_get_mul_mat_mat_id_pipeline(ggml_backend_vk_co
-     if (src0_type == GGML_TYPE_BF16 && src1_type == GGML_TYPE_BF16) {
-         return ctx->device->pipeline_matmul_id_bf16;
-     }
--    if (prec == GGML_PREC_DEFAULT && ctx->device->fp16 && !(ctx->device->coopmat_support && !ctx->device->coopmat_acc_f16_support)) {
-+    if (prec == GGML_PREC_DEFAULT && ctx->device->fp16 && !(ctx->device->coopmat_support && !ctx->device->coopmat_acc_f16_support) && !ggml_vk_force_f32acc()) {
-         if (src0_type == GGML_TYPE_F16 && src1_type == GGML_TYPE_F32) {
-             return ctx->device->pipeline_matmul_id_f16_f32.f16acc;
-         }
-@@ -7917,7 +7937,7 @@ static vk_matmul_pipeline ggml_vk_get_mul_mat_mat_id_pipeline(ggml_backend_vk_co
- 
-     vk_matmul_pipeline2& mmp = ctx->device->pipeline_dequant_mul_mat_mat_id[src0_type];
-     // XXX TODO 'prec' is not actually allowed in mul_mat_id.
--    bool prefer_fp16acc = ctx->device->fp16 /*&& prec == GGML_PREC_DEFAULT*/;
-+    bool prefer_fp16acc = ctx->device->fp16 && !ggml_vk_force_f32acc();
-     bool support_fp16acc = !mmp.f16acc->is_empty();
-     bool support_fp32acc = !mmp.f32acc->is_empty();
- 
-@@ -10825,7 +10845,7 @@ static void ggml_vk_flash_attn(ggml_backend_vk_context * ctx, vk_context& subctx
-     uint32_t workgroups_y = (uint32_t)neq2;
-     uint32_t workgroups_z = (uint32_t)neq3;
- 
--    const bool f32acc = !ctx->device->fp16 || dst->op_params[3] == GGML_PREC_F32 || k->type == GGML_TYPE_BF16;
-+    const bool f32acc = !ctx->device->fp16 || dst->op_params[3] == GGML_PREC_F32 || k->type == GGML_TYPE_BF16 || ggml_vk_force_f32acc();
- 
-     // dequant K/V once into an f16 scratch, reordered KV layout so FA can read without a stride
-     auto is_dense_kv_cache = [](const ggml_tensor * t) {
-@@ -13879,6 +13899,28 @@ static void ggml_vk_topk(ggml_backend_vk_context * ctx, vk_context& subctx, cons
+@@ -13879,6 +13893,28 @@ static void ggml_vk_topk(ggml_backend_vk_context * ctx, vk_context& subctx, cons
      ctx->prealloc_x_need_sync = true;
  }
  
@@ -283,7 +218,7 @@ index c1d86aaa..83a87170 100644
  static void ggml_vk_sum(ggml_backend_vk_context * ctx, vk_context& subctx, const ggml_tensor * src0, ggml_tensor * dst) {
      vk_op_sum_rows_push_constants p = vk_op_sum_rows_push_constants_init(src0, dst, ggml_nelements(src0));
      ggml_vk_op_f32(ctx, subctx, src0, nullptr, nullptr, nullptr, dst, GGML_OP_SUM, p);
-@@ -15667,6 +15709,10 @@ static bool ggml_vk_build_graph(ggml_backend_vk_context * ctx, ggml_cgraph * cgr
+@@ -15667,6 +15703,10 @@ static bool ggml_vk_build_graph(ggml_backend_vk_context * ctx, ggml_cgraph * cgr
      case GGML_OP_TOP_K:
          ggml_vk_topk(ctx, compute_ctx, src0, node);
  
@@ -294,7 +229,7 @@ index c1d86aaa..83a87170 100644
          break;
      case GGML_OP_SUM:
          ggml_vk_sum(ctx, compute_ctx, src0, node);
-@@ -18443,6 +18489,30 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+@@ -18443,6 +18483,30 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
                  }
              }
              return true;
@@ -327,10 +262,10 @@ index c1d86aaa..83a87170 100644
                  if ((op->op_params[0] & 0xFF) != GGML_SCALE_MODE_BILINEAR) {
 diff --git a/src/ggml-vulkan/vulkan-shaders/topk_mask.comp b/src/ggml-vulkan/vulkan-shaders/topk_mask.comp
 new file mode 100644
-index 00000000..234aeb35
+index 00000000..c0f08408
 --- /dev/null
 +++ b/src/ggml-vulkan/vulkan-shaders/topk_mask.comp
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,73 @@
 +#version 450
 +
 +#include "types.glsl"
@@ -364,25 +299,10 @@ index 00000000..234aeb35
 +shared float sh_list[KMAX];
 +shared float sh_c;
 +
-+// Fill phase: insert v so the first m+1 entries hold the top m+1 values seen so
-+// far, sorted descending. The shift writes index m+1, which stays in range
-+// because m+1 = n <= k <= 63 < KMAX
-+void list_insert(float v, uint m) {
-+    for (uint i = 0; i < m; ++i) {
-+        if (v > sh_list[i]) {
-+            for (uint j = m + 1; j > i; --j) {
-+                sh_list[j] = sh_list[j - 1];
-+            }
-+            sh_list[i] = v;
-+            return;
-+        }
-+    }
-+    sh_list[m] = v;
-+}
-+
-+// Replace phase (v > the current k-th largest): v enters the top k and evicts
-+// the old k-th. The shift stays within [0, k-1], so no write ever leaves the
-+// list even at k = KMAX - 1
++// top-k list: pre-filled with NEG_INF so every element takes the same replace
++// path (the fillers sort to the bottom and drop out as real values arrive).
++// The shift stays within [0, k-1], so no write ever leaves the list even at
++// k = KMAX - 1
 +void list_replace(float v) {
 +    for (uint i = 0; i < p.k; ++i) {
 +        if (v > sh_list[i]) {
@@ -404,15 +324,9 @@ index 00000000..234aeb35
 +            // k covers the whole row: identity
 +            sh_c = NEG_INF;
 +        } else {
-+            uint n = 0;
++            for (uint i = 0; i < p.k; ++i) sh_list[i] = NEG_INF;
 +            for (uint j = 0; j < p.ncols; ++j) {
-+                const float v = data_a[row_offset + j];
-+                if (n < p.k) {
-+                    n++;
-+                    list_insert(v, n - 1);
-+                } else if (v > sh_list[p.k - 1]) {
-+                    list_replace(v);
-+                }
++                list_replace(data_a[row_offset + j]);
 +            }
 +            sh_c = sh_list[p.k - 1]; // k-th largest
 +        }
@@ -438,7 +352,7 @@ index 17d57d5a..1508f008 100644
      string_to_spv("argmax_f32", "argmax.comp", merge_maps(base_dict, {{"A_TYPE", "float"}, {"D_TYPE", "int"}}));
      string_to_spv("sum_rows_f32", "sum_rows.comp", merge_maps(base_dict, {{"A_TYPE", "float"}, {"D_TYPE", "float"}}));
 diff --git a/src/ggml.c b/src/ggml.c
-index e0b615c0..ea5c6387 100644
+index e0b615c0..4376161d 100644
 --- a/src/ggml.c
 +++ b/src/ggml.c
 @@ -1062,6 +1062,7 @@ static const char * GGML_OP_NAME[GGML_OP_COUNT] = {
@@ -475,7 +389,7 @@ index e0b615c0..ea5c6387 100644
  
  static_assert(GGML_OP_POOL_COUNT == 2, "GGML_OP_POOL_COUNT != 2");
  
-@@ -5407,6 +5409,29 @@ struct ggml_tensor * ggml_top_k(
+@@ -5407,6 +5409,27 @@ struct ggml_tensor * ggml_top_k(
      return result;
  }
  
@@ -495,9 +409,7 @@ index e0b615c0..ea5c6387 100644
 +    result->op     = GGML_OP_TOPK_MASK;
 +    result->src[0] = a;
 +
-+    if (k > 0) {
-+        result->op_params[0] = (uint32_t) k;
-+    }
++    result->op_params[0] = (uint32_t) k;
 +
 +    return result;
 +}
