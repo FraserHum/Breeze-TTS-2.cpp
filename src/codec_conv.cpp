@@ -9,9 +9,9 @@
 namespace breeze {
 namespace codec_detail {
 
-static bool env_flag1(const char * name) {
+static bool env_default_on(const char * name) {
     const char * e = std::getenv(name);
-    return e && std::strcmp(e, "1") == 0;
+    return !e || std::strcmp(e, "0") != 0;
 }
 
 ggml_tensor * conv1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b,
@@ -31,14 +31,14 @@ ggml_tensor * conv1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b
 
 ggml_tensor * convtr1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b,
                               ggml_tensor * x, int stride) {
-    if (!env_flag1("BREEZE_VOC_CONVT_MATMUL")) {
+    if (!env_default_on("BREEZE_VOC_CONVT_MATMUL")) {
         ggml_tensor * y = ggml_conv_transpose_1d(ctx, w, x, stride, 0, 1);
         const int keep = (int) x->ne[0] * stride;
         y = ggml_cont(ctx, ggml_view_2d(ctx, y, keep, y->ne[1], y->nb[1], 0));
         if (b) y = ggml_add(ctx, y, ggml_reshape_2d(ctx, b, 1, b->ne[0]));
         return y;
     }
-    // BREEZE_VOC_CONVT_MATMUL=1: decompose the 1-D transposed conv into per-tap batched
+    // Enabled by default (BREEZE_VOC_CONVT_MATMUL=0 opts out): decompose into per-tap batched
     // matmuls plus the dedicated col2im_1d scatter. Mathematically identical to
     // ggml_conv_transpose_1d (p0=0, d0=1): the reference kernel scatters
     //     out[t, co] = sum_{l, k: t = l*stride + k} sum_ci w[k, co, ci] * x[l, ci]

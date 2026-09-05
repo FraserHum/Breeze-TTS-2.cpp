@@ -25,13 +25,27 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
 | `--split-chars <n>` | `600` | Split long text into pieces of about this many characters. `0` generates in one pass. |
 | `--output <wav>` | `output.wav` | Output path. |
-| `--chunk-first <n>` | `4` | Frames in the first streamed chunk. |
-| `--chunk-max <n>` | `25` | Frames the chunk ramps up to. |
+| `--chunk-first <n>` | `40` | Frames in the first streamed chunk. |
+| `--chunk-max <n>` | `40` | Frames the chunk ramps up to. |
 | `--timings` | off | Print a stage by stage latency breakdown. |
 | `--cpu` | off | Force the CPU backend. |
 | `-h`, `--help` | | Print usage. |
 
 Progress prints as `generated N.NN s` while the audio streams in.
+
+## Vocoder optimizations
+
+Transposed-convolution matmul is enabled by default. Set
+`BREEZE_VOC_CONVT_MATMUL=0` to use the original convolution kernel; only the
+exact value `0` disables the optimization. This applies to the CLI, server and
+library. Seeded repeat runs remain reproducible, but the optimized waveform
+is not byte-identical to the original kernel.
+
+`BREEZE_VOC_STATEFUL=1` enables experimental cached streaming. It remains off
+by default because it misses the established waveform-equivalence gate.
+`BREEZE_DD_FUSED=1` also remains experimental: it changes the sampling/RNG path
+and does not implement depth top-p filtering. See the
+[780M quality and performance measurements](../benchmarks/audio-cpp-780m.md).
 
 ## Latency
 
@@ -53,10 +67,10 @@ The depth decoder dominates because it runs 15 sequential single token passes
 per frame, each needing its own GPU round trip. Everything else is small by
 comparison.
 
-Audio is flushed in growing chunks, starting at 4 frames so playback can begin
-early and growing to 25 frames so the vocoder stays efficient. That keeps time
-to first audio near 350 ms while generation as a whole runs comfortably faster
-than realtime.
+The current defaults flush 40-frame chunks (3.2 seconds of audio). Smaller
+`--chunk-first` values start playback sooner, with a throughput tradeoff.
+The example above uses an earlier 4-frame first chunk; timings depend on the
+hardware, model and chunk settings.
 
 `--chunk-first` and `--chunk-max` tune that ramp, and pairing them with
 `--timings` is the easiest way to find good values for a given device before
