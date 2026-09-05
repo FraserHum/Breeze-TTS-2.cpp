@@ -264,6 +264,14 @@ std::vector<float> MimiCodec::decode_stateful(VocoderState & st, const std::vect
     const int spf = m->cfg.samples_per_frame;
     ggml_tensor * audio = ggml_view_1d(g.ctx, h2, (size_t) count * spf,
                                        (size_t) latent_len * spf * h2->nb[0]);
+    // step 4 reads the pre-RoPE k/v and the new latent back after compute; gallocr reuses
+    // every non-output buffer, so mark them as graph outputs first (same pattern as
+    // MimiCodec::encode and backbone_run) or the ring/latent tail fill with recycled garbage
+    for (int il = 0; il < c.n_layer; il++) {
+        g.mark_output(ks[il]);
+        g.mark_output(vs[il]);
+    }
+    g.mark_output(z_new);
     const auto td0 = std::chrono::steady_clock::now();
     g.compute(m->backend, audio);
     std::vector<float> out = tensor_to_f32(audio);
