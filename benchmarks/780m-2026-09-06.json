@@ -1,0 +1,701 @@
+{
+  "date_local": "2026-09-06 Pacific/Auckland",
+  "benchmark_commit": "18ff504be236b5c599a974b978dab05fb737751f",
+  "benchmark_binary_md5": "dbf13d6f9c18afffb020923c0158d6f6",
+  "default_commit": "0c03bf4fa9519c5908d431e29dd09dc4aa7ee79a",
+  "default_binary_md5": "225a3e5afc8c6b3a7d76f6ac83c3a6b3",
+  "runs": [
+    {
+      "config": "legacy",
+      "quant": "q4_k",
+      "repeat": 1,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3635.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 76.6,
+        "backbone prefill": 73.8,
+        "backbone decode": 3198.7,
+        "depth decode": 11051.4,
+        "vocoder": 12657.3
+      },
+      "decode_rtf": 1.5790727699530516,
+      "stage_rtf": 1.587899061032864
+    },
+    {
+      "config": "legacy",
+      "quant": "q4_k",
+      "repeat": 2,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3610.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 75.4,
+        "backbone prefill": 73.2,
+        "backbone decode": 3221.5,
+        "depth decode": 11143.1,
+        "vocoder": 11888.7
+      },
+      "decode_rtf": 1.54068661971831,
+      "stage_rtf": 1.5494072769953053
+    },
+    {
+      "config": "matmul",
+      "quant": "q4_k",
+      "repeat": 1,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3060.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 77.2,
+        "backbone prefill": 73.9,
+        "backbone decode": 3221.8,
+        "depth decode": 11197.6,
+        "vocoder": 3844.9
+      },
+      "decode_rtf": 1.0718485915492957,
+      "stage_rtf": 1.0807159624413147
+    },
+    {
+      "config": "matmul",
+      "quant": "q4_k",
+      "repeat": 2,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3048.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 76.5,
+        "backbone prefill": 75.4,
+        "backbone decode": 3217.2,
+        "depth decode": 11097.8,
+        "vocoder": 3814.7
+      },
+      "decode_rtf": 1.0639495305164317,
+      "stage_rtf": 1.072863849765258
+    },
+    {
+      "config": "voc2",
+      "quant": "q4_k",
+      "repeat": 1,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3043.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 75.3,
+        "backbone prefill": 73.4,
+        "backbone decode": 3241.9,
+        "depth decode": 11204.8,
+        "vocoder": 1951.8
+      },
+      "decode_rtf": 0.9623532863849765,
+      "stage_rtf": 0.9710798122065728
+    },
+    {
+      "config": "voc2",
+      "quant": "q4_k",
+      "repeat": 2,
+      "frames": 213,
+      "audio_s": 17.04,
+      "first_audio_ms": 3050.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 76.8,
+        "backbone prefill": 74.0,
+        "backbone decode": 3205.8,
+        "depth decode": 11044.2,
+        "vocoder": 1950.8
+      },
+      "decode_rtf": 0.9507511737089203,
+      "stage_rtf": 0.9596009389671363
+    },
+    {
+      "config": "all3",
+      "quant": "q4_k",
+      "repeat": 1,
+      "frames": 257,
+      "audio_s": 20.56,
+      "first_audio_ms": 2999.0,
+      "flushes": 7,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 75.5,
+        "backbone prefill": 74.1,
+        "backbone decode": 3942.0,
+        "depth decode": 12874.3,
+        "vocoder": 2356.4
+      },
+      "decode_rtf": 0.9325243190661479,
+      "stage_rtf": 0.9398005836575876
+    },
+    {
+      "config": "all3",
+      "quant": "q4_k",
+      "repeat": 2,
+      "frames": 257,
+      "audio_s": 20.56,
+      "first_audio_ms": 3019.0,
+      "flushes": 7,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 76.0,
+        "backbone prefill": 73.7,
+        "backbone decode": 3981.4,
+        "depth decode": 13005.4,
+        "vocoder": 2349.6
+      },
+      "decode_rtf": 0.9404863813229574,
+      "stage_rtf": 0.9477675097276264
+    },
+    {
+      "config": "legacy",
+      "quant": "q8_0",
+      "repeat": 1,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 5258.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 83.1,
+        "backbone prefill": 89.6,
+        "backbone decode": 4742.0,
+        "depth decode": 16956.9,
+        "vocoder": 10501.0
+      },
+      "decode_rtf": 1.9925680693069308,
+      "stage_rtf": 2.00325495049505
+    },
+    {
+      "config": "legacy",
+      "quant": "q8_0",
+      "repeat": 2,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 5155.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 74.2,
+        "backbone prefill": 71.3,
+        "backbone decode": 4759.4,
+        "depth decode": 17075.2,
+        "vocoder": 10564.2
+      },
+      "decode_rtf": 2.0048762376237623,
+      "stage_rtf": 2.0138799504950495
+    },
+    {
+      "config": "matmul",
+      "quant": "q8_0",
+      "repeat": 1,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 4758.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 73.8,
+        "backbone prefill": 71.2,
+        "backbone decode": 4769.6,
+        "depth decode": 17124.5,
+        "vocoder": 3791.3
+      },
+      "decode_rtf": 1.5894430693069308,
+      "stage_rtf": 1.5984158415841585
+    },
+    {
+      "config": "matmul",
+      "quant": "q8_0",
+      "repeat": 2,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 4734.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 73.7,
+        "backbone prefill": 71.7,
+        "backbone decode": 4758.3,
+        "depth decode": 17021.8,
+        "vocoder": 3820.8
+      },
+      "decode_rtf": 1.5842141089108912,
+      "stage_rtf": 1.5932116336633662
+    },
+    {
+      "config": "voc2",
+      "quant": "q8_0",
+      "repeat": 1,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 4752.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 74.0,
+        "backbone prefill": 71.0,
+        "backbone decode": 4775.2,
+        "depth decode": 17033.9,
+        "vocoder": 1900.0
+      },
+      "decode_rtf": 1.467147277227723,
+      "stage_rtf": 1.4761200495049507
+    },
+    {
+      "config": "voc2",
+      "quant": "q8_0",
+      "repeat": 2,
+      "frames": 202,
+      "audio_s": 16.16,
+      "first_audio_ms": 4628.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 73.1,
+        "backbone prefill": 71.1,
+        "backbone decode": 4762.9,
+        "depth decode": 17046.8,
+        "vocoder": 1907.1
+      },
+      "decode_rtf": 1.4676237623762376,
+      "stage_rtf": 1.4765470297029704
+    },
+    {
+      "config": "all3",
+      "quant": "q8_0",
+      "repeat": 1,
+      "frames": 238,
+      "audio_s": 19.04,
+      "first_audio_ms": 4584.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 73.7,
+        "backbone prefill": 71.6,
+        "backbone decode": 5653.2,
+        "depth decode": 19572.0,
+        "vocoder": 2140.2
+      },
+      "decode_rtf": 1.4372584033613447,
+      "stage_rtf": 1.444889705882353
+    },
+    {
+      "config": "all3",
+      "quant": "q8_0",
+      "repeat": 2,
+      "frames": 238,
+      "audio_s": 19.04,
+      "first_audio_ms": 4590.0,
+      "flushes": 6,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 73.9,
+        "backbone prefill": 71.1,
+        "backbone decode": 5654.8,
+        "depth decode": 19521.1,
+        "vocoder": 2103.5
+      },
+      "decode_rtf": 1.4327415966386554,
+      "stage_rtf": 1.440357142857143
+    }
+  ],
+  "quality": {
+    "versions": {
+      "numpy": "2.5.2",
+      "pesq": "0.0.4",
+      "torch": "2.14.0",
+      "torchaudio": "2.11.0"
+    },
+    "utmos_source": "https://github.com/tarepan/SpeechMOS/tree/v1.2.0",
+    "utmos_checkpoint_sha256": "38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff",
+    "samples": {
+      "legacy-q4_k-s1": {
+        "sha256": "a8a3b0f8ddfb9b7c426483404e715f5836522b1ee504b8e37a5e92155b65ac76",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.07484567700054943,
+        "peak": 0.788116455078125,
+        "utmos": 4.551185607910156
+      },
+      "legacy-q4_k-s2": {
+        "sha256": "a8a3b0f8ddfb9b7c426483404e715f5836522b1ee504b8e37a5e92155b65ac76",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.07484567700054943,
+        "peak": 0.788116455078125,
+        "utmos": 4.551185607910156
+      },
+      "matmul-q4_k-s1": {
+        "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.07485175456821881,
+        "peak": 0.786224365234375,
+        "utmos": 4.551379203796387
+      },
+      "matmul-q4_k-s2": {
+        "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.07485175456821881,
+        "peak": 0.786224365234375,
+        "utmos": 4.551379203796387
+      },
+      "voc2-q4_k-s1": {
+        "sha256": "dde04d0c13f0374c7f7eb1755254a573c5dc6984708dbf62bb7a66e1992ecace",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.074835802860858,
+        "peak": 0.786224365234375,
+        "utmos": 4.551389694213867
+      },
+      "voc2-q4_k-s2": {
+        "sha256": "dde04d0c13f0374c7f7eb1755254a573c5dc6984708dbf62bb7a66e1992ecace",
+        "samples": 408960,
+        "duration_s": 17.04,
+        "rms": 0.074835802860858,
+        "peak": 0.786224365234375,
+        "utmos": 4.551389694213867
+      },
+      "all3-q4_k-s1": {
+        "sha256": "674209f7f9cadf428e4185d4910fd4c556a1fd4641f9120b7f5f430e5d7bda5c",
+        "samples": 493440,
+        "duration_s": 20.56,
+        "rms": 0.08776071988386394,
+        "peak": 0.61041259765625,
+        "utmos": 4.264924049377441
+      },
+      "all3-q4_k-s2": {
+        "sha256": "674209f7f9cadf428e4185d4910fd4c556a1fd4641f9120b7f5f430e5d7bda5c",
+        "samples": 493440,
+        "duration_s": 20.56,
+        "rms": 0.08776071988386394,
+        "peak": 0.61041259765625,
+        "utmos": 4.264924049377441
+      },
+      "legacy-q8_0-s1": {
+        "sha256": "8f2f88a95c65a09a301dc78b3b201e6ec514fecb5babeec7a056a83461cbb36e",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06591709456216316,
+        "peak": 0.628631591796875,
+        "utmos": 4.509514808654785
+      },
+      "legacy-q8_0-s2": {
+        "sha256": "8f2f88a95c65a09a301dc78b3b201e6ec514fecb5babeec7a056a83461cbb36e",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06591709456216316,
+        "peak": 0.628631591796875,
+        "utmos": 4.509514808654785
+      },
+      "matmul-q8_0-s1": {
+        "sha256": "1a76fb50b488ca71f655b5d87804970c725b222ff293d977bf9814ca063cd433",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06591732888695276,
+        "peak": 0.62841796875,
+        "utmos": 4.5095038414001465
+      },
+      "matmul-q8_0-s2": {
+        "sha256": "1a76fb50b488ca71f655b5d87804970c725b222ff293d977bf9814ca063cd433",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06591732888695276,
+        "peak": 0.62841796875,
+        "utmos": 4.5095038414001465
+      },
+      "voc2-q8_0-s1": {
+        "sha256": "6559f7fe430c9e289f580786523ebf2c2f7a1c02934628d5be058412c195e915",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06607462784799148,
+        "peak": 0.62841796875,
+        "utmos": 4.5090532302856445
+      },
+      "voc2-q8_0-s2": {
+        "sha256": "6559f7fe430c9e289f580786523ebf2c2f7a1c02934628d5be058412c195e915",
+        "samples": 387840,
+        "duration_s": 16.16,
+        "rms": 0.06607462784799148,
+        "peak": 0.62841796875,
+        "utmos": 4.5090532302856445
+      },
+      "all3-q8_0-s1": {
+        "sha256": "2ae061c3bdf9ee9307f98187decc629965042b93f137e69cdf0a2a686679e2a6",
+        "samples": 456960,
+        "duration_s": 19.04,
+        "rms": 0.08044128634770585,
+        "peak": 0.51544189453125,
+        "utmos": 4.52555513381958
+      },
+      "all3-q8_0-s2": {
+        "sha256": "2ae061c3bdf9ee9307f98187decc629965042b93f137e69cdf0a2a686679e2a6",
+        "samples": 456960,
+        "duration_s": 19.04,
+        "rms": 0.08044128634770585,
+        "peak": 0.51544189453125,
+        "utmos": 4.52555513381958
+      }
+    },
+    "comparisons": {
+      "matmul-q4_k-s1": {
+        "snr_db": 44.88218110618626,
+        "correlation": 0.9999837584118119,
+        "max_abs_diff": 0.017364501953125,
+        "rms_diff": 0.00042663616391596493,
+        "pesq_wb": 4.6401166915893555,
+        "utmos_delta": 0.00019359588623046875,
+        "waveform_gate_pass": true
+      },
+      "matmul-q4_k-s2": {
+        "snr_db": 44.88218110618626,
+        "correlation": 0.9999837584118119,
+        "max_abs_diff": 0.017364501953125,
+        "rms_diff": 0.00042663616391596493,
+        "pesq_wb": 4.6401166915893555,
+        "utmos_delta": 0.00019359588623046875,
+        "waveform_gate_pass": true
+      },
+      "voc2-q4_k-s1": {
+        "snr_db": 38.34773472379744,
+        "correlation": 0.9999268520486808,
+        "max_abs_diff": 0.039093017578125,
+        "rms_diff": 0.0009052738697431253,
+        "pesq_wb": 4.636488437652588,
+        "utmos_delta": 0.0002040863037109375,
+        "waveform_gate_pass": false
+      },
+      "voc2-q4_k-s2": {
+        "snr_db": 38.34773472379744,
+        "correlation": 0.9999268520486808,
+        "max_abs_diff": 0.039093017578125,
+        "rms_diff": 0.0009052738697431253,
+        "pesq_wb": 4.636488437652588,
+        "utmos_delta": 0.0002040863037109375,
+        "waveform_gate_pass": false
+      },
+      "all3-q4_k": {
+        "duration_ratio": 1.2065727699530517,
+        "utmos_delta": -0.2864656448364258,
+        "decision": "Keep opt-in: different sampling/RNG contract; single prompt insufficient."
+      },
+      "matmul-q8_0-s1": {
+        "snr_db": 44.193017520626015,
+        "correlation": 0.9999809600067066,
+        "max_abs_diff": 0.009124755859375,
+        "rms_diff": 0.000406768375115278,
+        "pesq_wb": 4.639579772949219,
+        "utmos_delta": -1.0967254638671875e-05,
+        "waveform_gate_pass": true
+      },
+      "matmul-q8_0-s2": {
+        "snr_db": 44.193017520626015,
+        "correlation": 0.9999809600067066,
+        "max_abs_diff": 0.009124755859375,
+        "rms_diff": 0.000406768375115278,
+        "pesq_wb": 4.639579772949219,
+        "utmos_delta": -1.0967254638671875e-05,
+        "waveform_gate_pass": true
+      },
+      "voc2-q8_0-s1": {
+        "snr_db": 28.95150235188238,
+        "correlation": 0.9993678366542953,
+        "max_abs_diff": 0.064453125,
+        "rms_diff": 0.002351922132736579,
+        "pesq_wb": 4.600602626800537,
+        "utmos_delta": -0.000461578369140625,
+        "waveform_gate_pass": false
+      },
+      "voc2-q8_0-s2": {
+        "snr_db": 28.95150235188238,
+        "correlation": 0.9993678366542953,
+        "max_abs_diff": 0.064453125,
+        "rms_diff": 0.002351922132736579,
+        "pesq_wb": 4.600602626800537,
+        "utmos_delta": -0.000461578369140625,
+        "waveform_gate_pass": false
+      },
+      "all3-q8_0": {
+        "duration_ratio": 1.1782178217821782,
+        "utmos_delta": 0.016501903533935547,
+        "decision": "Keep opt-in: different sampling/RNG contract; single prompt insufficient."
+      }
+    },
+    "repeatability": {
+      "legacy-q4_k": true,
+      "matmul-q4_k": true,
+      "voc2-q4_k": true,
+      "all3-q4_k": true,
+      "legacy-q8_0": true,
+      "matmul-q8_0": true,
+      "voc2-q8_0": true,
+      "all3-q8_0": true
+    },
+    "decisions": {
+      "matmul-q4_k": true,
+      "voc2-q4_k": false,
+      "matmul-q8_0": true,
+      "voc2-q8_0": false
+    }
+  },
+  "dd2_runs": [
+    {
+      "config": "matmul",
+      "quant": "q4_k-dd2",
+      "repeat": 1,
+      "frames": 244,
+      "audio_s": 19.52,
+      "first_audio_ms": 2444.0,
+      "flushes": 7,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 75.7,
+        "backbone prefill": 73.3,
+        "backbone decode": 3721.8,
+        "depth decode": 9061.3,
+        "vocoder": 4587.3
+      },
+      "decode_rtf": 0.8898770491803278,
+      "stage_rtf": 0.8975102459016394
+    },
+    {
+      "config": "matmul",
+      "quant": "q4_k-dd2",
+      "repeat": 2,
+      "frames": 244,
+      "audio_s": 19.52,
+      "first_audio_ms": 2511.0,
+      "flushes": 7,
+      "stages_ms": {
+        "reference encode": 0.0,
+        "prompt build": 76.0,
+        "backbone prefill": 73.9,
+        "backbone decode": 3736.3,
+        "depth decode": 9218.8,
+        "vocoder": 4581.4
+      },
+      "decode_rtf": 0.8983862704918033,
+      "stage_rtf": 0.9060655737704918
+    }
+  ],
+  "dd2_quality": {
+    "utmos": 2.9172260761260986,
+    "sha256": "81395b93863f906dde53a1e506f1e456ac0386d365438e4a6ce98b212e322188",
+    "repeatable": true,
+    "audio_s": 19.52,
+    "note": "One prompt only; independent generation, no waveform equivalence claim."
+  },
+  "smoke": [
+    {
+      "mode": "default",
+      "matched_config": "matmul",
+      "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+      "timings": {
+        "config": "default",
+        "quant": "q4_k",
+        "repeat": 1,
+        "frames": 213,
+        "audio_s": 17.04,
+        "first_audio_ms": 3147.0,
+        "flushes": 6,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 75.5,
+          "backbone prefill": 73.7,
+          "backbone decode": 3257.6,
+          "depth decode": 11204.1,
+          "vocoder": 3798.3
+        },
+        "decode_rtf": 1.0715962441314555,
+        "stage_rtf": 1.0803521126760565
+      }
+    },
+    {
+      "mode": "disabled",
+      "matched_config": "legacy",
+      "sha256": "a8a3b0f8ddfb9b7c426483404e715f5836522b1ee504b8e37a5e92155b65ac76",
+      "timings": {
+        "config": "disabled",
+        "quant": "q4_k",
+        "repeat": 1,
+        "frames": 213,
+        "audio_s": 17.04,
+        "first_audio_ms": 3527.0,
+        "flushes": 6,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 75.7,
+          "backbone prefill": 73.8,
+          "backbone decode": 3207.1,
+          "depth decode": 11076.8,
+          "vocoder": 10661.6
+        },
+        "decode_rtf": 1.46393779342723,
+        "stage_rtf": 1.4727112676056338
+      }
+    }
+  ],
+  "logs": {
+    "all3-q4_k-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 1 fused graph (15 steps), compute buffer 271392 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.20 s\ngenerated 20.56 s\ntime to first audio 2999 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          75.5 ms\n  backbone prefill      74.1 ms\n  first vocoder        279.8 ms  (40 frames)\n  backbone decode     3942.0 ms  (15.34 ms/frame)\n  depth decode       12874.3 ms  (50.09 ms/frame)\n  vocoder             2356.4 ms  (9.17 ms/frame)\n  257 frames, 20.56 s audio\nwrote /tmp/breeze-current-all3-q4_k-s1.wav (20.56 s)\n",
+    "all3-q4_k-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 1 fused graph (15 steps), compute buffer 271392 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.20 s\ngenerated 20.56 s\ntime to first audio 3019 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          76.0 ms\n  backbone prefill      73.7 ms\n  first vocoder        270.3 ms  (40 frames)\n  backbone decode     3981.4 ms  (15.49 ms/frame)\n  depth decode       13005.4 ms  (50.60 ms/frame)\n  vocoder             2349.6 ms  (9.14 ms/frame)\n  257 frames, 20.56 s audio\nwrote /tmp/breeze-current-all3-q4_k-s2.wav (20.56 s)\n",
+    "matmul-q8_0-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 4758 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          73.8 ms\n  backbone prefill      71.2 ms\n  first vocoder        282.3 ms  (40 frames)\n  backbone decode     4769.6 ms  (23.61 ms/frame)\n  depth decode       17124.5 ms  (84.77 ms/frame)\n  vocoder             3791.3 ms  (18.77 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-matmul-q8_0-s1.wav (16.16 s)\n",
+    "voc2-q8_0-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 4628 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          73.1 ms\n  backbone prefill      71.1 ms\n  first vocoder        275.1 ms  (40 frames)\n  backbone decode     4762.9 ms  (23.58 ms/frame)\n  depth decode       17046.8 ms  (84.39 ms/frame)\n  vocoder             1907.1 ms  (9.44 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-voc2-q8_0-s2.wav (16.16 s)\n",
+    "matmul-q8_0-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 4734 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          73.7 ms\n  backbone prefill      71.7 ms\n  first vocoder        273.6 ms  (40 frames)\n  backbone decode     4758.3 ms  (23.56 ms/frame)\n  depth decode       17021.8 ms  (84.27 ms/frame)\n  vocoder             3820.8 ms  (18.92 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-matmul-q8_0-s2.wav (16.16 s)\n",
+    "voc2-q8_0-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 4752 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          74.0 ms\n  backbone prefill      71.0 ms\n  first vocoder        275.6 ms  (40 frames)\n  backbone decode     4775.2 ms  (23.64 ms/frame)\n  depth decode       17033.9 ms  (84.33 ms/frame)\n  vocoder             1900.0 ms  (9.41 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-voc2-q8_0-s1.wav (16.16 s)\n",
+    "legacy-q8_0-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 5155 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          74.2 ms\n  backbone prefill      71.3 ms\n  first vocoder        799.5 ms  (40 frames)\n  backbone decode     4759.4 ms  (23.56 ms/frame)\n  depth decode       17075.2 ms  (84.53 ms/frame)\n  vocoder            10564.2 ms  (52.30 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-legacy-q8_0-s2.wav (16.16 s)\n",
+    "legacy-q8_0-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 16.16 s\ntime to first audio 5258 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          83.1 ms\n  backbone prefill      89.6 ms\n  first vocoder        774.0 ms  (40 frames)\n  backbone decode     4742.0 ms  (23.48 ms/frame)\n  depth decode       16956.9 ms  (83.95 ms/frame)\n  vocoder            10501.0 ms  (51.98 ms/frame)\n  202 frames, 16.16 s audio\nwrote /tmp/breeze-current-legacy-q8_0-s1.wav (16.16 s)\n",
+    "all3-q8_0-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 1 fused graph (15 steps), compute buffer 271392 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.04 s\ntime to first audio 4590 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          73.9 ms\n  backbone prefill      71.1 ms\n  first vocoder        273.9 ms  (40 frames)\n  backbone decode     5654.8 ms  (23.76 ms/frame)\n  depth decode       19521.1 ms  (82.02 ms/frame)\n  vocoder             2103.5 ms  (8.84 ms/frame)\n  238 frames, 19.04 s audio\nwrote /tmp/breeze-current-all3-q8_0-s2.wav (19.04 s)\n",
+    "all3-q8_0-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 1 fused graph (15 steps), compute buffer 271392 bytes\nloading /models/breeze-tts-2-q8_0.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.04 s\ntime to first audio 4584 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          73.7 ms\n  backbone prefill      71.6 ms\n  first vocoder        272.6 ms  (40 frames)\n  backbone decode     5653.2 ms  (23.75 ms/frame)\n  depth decode       19572.0 ms  (82.24 ms/frame)\n  vocoder             2140.2 ms  (8.99 ms/frame)\n  238 frames, 19.04 s audio\nwrote /tmp/breeze-current-all3-q8_0-s1.wav (19.04 s)\n",
+    "matmul-q4_k-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3048 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.5 ms\n  backbone prefill      75.4 ms\n  first vocoder        267.6 ms  (40 frames)\n  backbone decode     3217.2 ms  (15.10 ms/frame)\n  depth decode       11097.8 ms  (52.10 ms/frame)\n  vocoder             3814.7 ms  (17.91 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-matmul-q4_k-s2.wav (17.04 s)\n",
+    "voc2-q4_k-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3043 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.3 ms\n  backbone prefill      73.4 ms\n  first vocoder        273.4 ms  (40 frames)\n  backbone decode     3241.9 ms  (15.22 ms/frame)\n  depth decode       11204.8 ms  (52.60 ms/frame)\n  vocoder             1951.8 ms  (9.16 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-voc2-q4_k-s1.wav (17.04 s)\n",
+    "matmul-q4_k-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3060 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          77.2 ms\n  backbone prefill      73.9 ms\n  first vocoder        286.9 ms  (40 frames)\n  backbone decode     3221.8 ms  (15.13 ms/frame)\n  depth decode       11197.6 ms  (52.57 ms/frame)\n  vocoder             3844.9 ms  (18.05 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-matmul-q4_k-s1.wav (17.04 s)\n",
+    "voc2-q4_k-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3050 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.8 ms\n  backbone prefill      74.0 ms\n  first vocoder        272.2 ms  (40 frames)\n  backbone decode     3205.8 ms  (15.05 ms/frame)\n  depth decode       11044.2 ms  (51.85 ms/frame)\n  vocoder             1950.8 ms  (9.16 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-voc2-q4_k-s2.wav (17.04 s)\n",
+    "legacy-q4_k-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3635 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.6 ms\n  backbone prefill      73.8 ms\n  first vocoder        876.6 ms  (40 frames)\n  backbone decode     3198.7 ms  (15.02 ms/frame)\n  depth decode       11051.4 ms  (51.88 ms/frame)\n  vocoder            12657.3 ms  (59.42 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-legacy-q4_k-s1.wav (17.04 s)\n",
+    "legacy-q4_k-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3610 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.4 ms\n  backbone prefill      73.2 ms\n  first vocoder        831.0 ms  (40 frames)\n  backbone decode     3221.5 ms  (15.12 ms/frame)\n  depth decode       11143.1 ms  (52.31 ms/frame)\n  vocoder            11888.7 ms  (55.82 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-current-legacy-q4_k-s2.wav (17.04 s)\n",
+    "matmul-q4_k-dd2-s2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k-dd2.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.20 s\ngenerated 19.52 s\ntime to first audio 2511 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          76.0 ms\n  backbone prefill      73.9 ms\n  first vocoder        279.3 ms  (40 frames)\n  backbone decode     3736.3 ms  (15.31 ms/frame)\n  depth decode        9218.8 ms  (37.78 ms/frame)\n  vocoder             4581.4 ms  (18.78 ms/frame)\n  244 frames, 19.52 s audio\nwrote /tmp/breeze-current-matmul-q4_k-dd2-s2.wav (19.52 s)\n",
+    "matmul-q4_k-dd2-s1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k-dd2.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 19.20 s\ngenerated 19.52 s\ntime to first audio 2444 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          75.7 ms\n  backbone prefill      73.3 ms\n  first vocoder        268.3 ms  (40 frames)\n  backbone decode     3721.8 ms  (15.25 ms/frame)\n  depth decode        9061.3 ms  (37.14 ms/frame)\n  vocoder             4587.3 ms  (18.80 ms/frame)\n  244 frames, 19.52 s audio\nwrote /tmp/breeze-current-matmul-q4_k-dd2-s1.wav (19.52 s)\n",
+    "default": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3147 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.5 ms\n  backbone prefill      73.7 ms\n  first vocoder        267.5 ms  (40 frames)\n  backbone decode     3257.6 ms  (15.29 ms/frame)\n  depth decode       11204.1 ms  (52.60 ms/frame)\n  vocoder             3798.3 ms  (17.83 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-smoke-default.wav (17.04 s)\n",
+    "disabled": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n\ngenerated 3.20 s\ngenerated 6.40 s\ngenerated 9.60 s\ngenerated 12.80 s\ngenerated 16.00 s\ngenerated 17.04 s\ntime to first audio 3527 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.7 ms\n  backbone prefill      73.8 ms\n  first vocoder        750.3 ms  (40 frames)\n  backbone decode     3207.1 ms  (15.06 ms/frame)\n  depth decode       11076.8 ms  (52.00 ms/frame)\n  vocoder            10661.6 ms  (50.05 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/breeze-smoke-disabled.wav (17.04 s)\n"
+  },
+  "receipts": {
+    "receipt.txt": "=== pod-sync receipt ===\nbranch:  dev @ 18ff504be236b5c599a974b978dab05fb737751f\nsync:    rsync (never touches .git, build, /models, /cache)\nshim:    applied\nbuild:   skipped\nbinary:  md5 2b530c9b19aab462d9e7cdbcf4684ea5\ngates:   scripts/pod-restore.sh (binary md5 + both generation gates)\ndbf13d6f9c18afffb020923c0158d6f6  /src/build/breeze-cli\n[ 99%] Built target breeze-quantize\n[100%] Linking CXX executable breeze-convert\n[100%] Built target breeze-convert\n[100%] Linking CXX executable breeze-cli\n[100%] Built target breeze-cli\n[100%] Linking CXX executable breeze-server\n[100%] Built target breeze-server\nBUILD_RC=0\n",
+    "default-receipt.txt": "=== pod-sync receipt ===\nbranch:  dev @ 0c03bf4fa9519c5908d431e29dd09dc4aa7ee79a\nsync:    rsync (never touches .git, build, /models, /cache)\nshim:    applied\nbuild:   skipped\nbinary:  md5 dbf13d6f9c18afffb020923c0158d6f6\ngates:   scripts/pod-restore.sh (binary md5 + both generation gates)\n225a3e5afc8c6b3a7d76f6ac83c3a6b3  /src/build/breeze-cli\n[100%] Built target breeze-cli\n[100%] Linking CXX executable breeze-server\n[100%] Built target breeze-server\nBUILD_RC=0\n",
+    "contention.txt": "2026-08-31T01:22:15.024673476Z      34 frames in 5 flushes, first audio 557 ms\n2026-08-31T08:24:31.285914374Z gen  design, 58 chars, cfg 1.0, seed 42\n2026-08-31T08:24:31.426865651Z depth decoder: 15 static graphs, compute buffer 147740 bytes\n2026-08-31T08:24:32.471920310Z \n  9%|\u2588\u2588\u258e                     | 0.3/3.4s [00:00<00:05, 7.3 fps, 0.58x]  \n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 0.3/0.3s [00:01, 3.4 fps, 0.27x]        \n2026-08-31T08:24:32.471967818Z      10 frames in 2 flushes, first audio 549 ms\n"
+  },
+  "q4_k_checkpoint": {
+    "sha256": "483418fbbb438f5f1c08dbe2b017e42db0f1d126765cd3f772d8622a30a4915c",
+    "local_matches_pod": true,
+    "metadata": {
+      "breeze.num_codebooks": 16,
+      "breeze.depth_top_k": 50,
+      "breeze.depth_top_p": 1.0,
+      "breeze.dd.hidden_size": 1024,
+      "breeze.dd.block_count": 12,
+      "breeze.dd.head_count": 8,
+      "breeze.dd.head_count_kv": 2,
+      "breeze.dd.head_dim": 128,
+      "breeze.dd.feed_forward_length": 8192,
+      "breeze.dd.rms_eps": 9.999999747378752e-06,
+      "breeze.dd.rope_theta": 500000.0,
+      "breeze.dd.rope_factor": 32.0,
+      "breeze.dd.rope_high_freq_factor": 0.0078125,
+      "breeze.dd.rope_low_freq_factor": 0.001953125,
+      "breeze.dd.rope_orig_ctx": 16,
+      "breeze.codec.dec.sliding_window": 72
+    },
+    "depth_parameters": 367073280,
+    "depth_bytes": 314859520
+  }
+}

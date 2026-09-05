@@ -60,3 +60,6 @@ voices/
 /.agents
 /.claude
 skills-lock.json
+
+# Local orchestration records and experimental audio
+/.beehive/
