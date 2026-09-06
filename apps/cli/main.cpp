@@ -3,9 +3,12 @@
 #include "breeze/model.h"
 #include "breeze/voice.h"
 
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <chrono>
+#include <climits>
 #include <string>
 
 using namespace breeze;
@@ -16,6 +19,25 @@ static const char * arg(int argc, char ** argv, int & i, const char * name) {
         return nullptr;
     }
     return argv[++i];
+}
+
+static bool positive_int(const char * value, int & out) {
+    if (!value || !*value) return false;
+    errno = 0;
+    char * end = nullptr;
+    const long parsed = std::strtol(value, &end, 10);
+    if (errno == ERANGE || *end || parsed < 1 || parsed > INT_MAX) return false;
+    out = (int) parsed;
+    return true;
+}
+
+static std::string repeat_output(const std::string & path, int repeat, int count) {
+    if (count == 1 || repeat == 1) return path;
+    const std::string suffix = ".repeat-" + std::to_string(repeat);
+    const size_t slash = path.find_last_of("/\\");
+    const size_t dot = path.find_last_of('.');
+    if (dot == std::string::npos || (slash != std::string::npos && dot < slash)) return path + suffix;
+    return path.substr(0, dot) + suffix + path.substr(dot);
 }
 
 static void usage() {
@@ -37,6 +59,7 @@ static void usage() {
            "  --output <wav>      output path (default output.wav)\n"
            "  --chunk-first <n>   frames in the first streamed chunk (default 40)\n"
            "  --chunk-max <n>     frames the chunk ramps up to (default 40)\n"
+           "  --repeat <n>        resident generation repeats (default 1)\n"
            "  --timings           print a stage by stage latency breakdown\n"
            "  --cpu               force CPU backend\n");
 }
@@ -51,6 +74,7 @@ int main(int argc, char ** argv) {
     bool list_voices = false;
     bool use_gpu = true;
     bool show_timings = false;
+    int repeat = 1;
 
     for (int i = 2; i < argc; i++) {
         std::string a = argv[i];
@@ -72,6 +96,13 @@ int main(int argc, char ** argv) {
         else if (a == "--split-chars") req.split_chars = atoi(arg(argc, argv, i, "--split-chars"));
         else if (a == "--chunk-first") req.chunk_first = atoi(arg(argc, argv, i, "--chunk-first"));
         else if (a == "--chunk-max") req.chunk_max = atoi(arg(argc, argv, i, "--chunk-max"));
+        else if (a == "--repeat") {
+            const char * value = arg(argc, argv, i, "--repeat");
+            if (!positive_int(value, repeat)) {
+                fprintf(stderr, "--repeat must be a positive integer\n");
+                return 1;
+            }
+        }
         else if (a == "--output") output = arg(argc, argv, i, "--output");
         else if (a == "--timings") show_timings = true;
         else if (a == "--cpu") use_gpu = false;
@@ -147,40 +178,58 @@ int main(int argc, char ** argv) {
     if (!voice_name.empty())
         build_voice_prefix(model, voice_name, req.ref_codes, req.ref_text, req.ref_frames);
 
-    std::vector<float> audio;
-    int frames = 0;
-    GenTimings tm;
-    generate(model, codec, req, [&](const float * s, int n) {
-        audio.insert(audio.end(), s, s + n);
-        frames += n;
-        printf("\rgenerated %.2f s", (float) frames / model.cfg.sample_rate);
-        fflush(stdout);
-        return true;
-    }, &tm);
-    printf("\n");
+    for (int run = 0; run < repeat; run++) {
+        std::vector<float> audio;
+        int frames = 0;
+        GenTimings tm;
+        const auto wall_start = std::chrono::steady_clock::now();
+        generate(model, codec, req, [&](const float * s, int n) {
+            audio.insert(audio.end(), s, s + n);
+            frames += n;
+            if (show_timings) {
+                const double elapsed = std::chrono::duration<double, std::milli>(
+                    std::chrono::steady_clock::now() - wall_start).count();
+                printf("  flush %d ready_ms=%.1f delivered_audio_s=%.2f\n",
+                       tm.flushes, elapsed, (double) audio.size() / model.cfg.sample_rate);
+            }
+            printf("\rgenerated %.2f s", (float) frames / model.cfg.sample_rate);
+            fflush(stdout);
+            return true;
+        }, &tm);
+        const double wall_ms = std::chrono::duration<double, std::milli>(
+            std::chrono::steady_clock::now() - wall_start).count();
+        printf("\n");
 
-    if (show_timings) {
-        const double secs = (double) audio.size() / model.cfg.sample_rate;
-        printf("time to first audio %.0f ms over %d flushes\n", tm.first_audio, tm.flushes);
-        const char * tta_breakdown = std::getenv("BREEZE_TTA_BREAKDOWN");
-        if (tta_breakdown && std::strcmp(tta_breakdown, "1") == 0 && tm.first_audio > 0.0) {
-            const double glue = tm.first_audio - tm.encode_ref - tm.prompt - tm.prefill -
-                                tm.bb_first - tm.depth_first - tm.first_vocoder;
-            printf("  tta breakdown     ref_encode=%8.1f prompt=%8.1f prefill=%8.1f bb_first_chunk=%8.1f depth_first_chunk=%8.1f first_vocoder=%8.1f glue=%8.1f ms\n",
-                   tm.encode_ref, tm.prompt, tm.prefill, tm.bb_first, tm.depth_first, tm.first_vocoder, glue);
+        if (show_timings) {
+            const double secs = (double) audio.size() / model.cfg.sample_rate;
+            printf("generation wall     %.1f ms (wall RTF %.3f)\n",
+                   wall_ms, secs > 0.0 ? wall_ms / (secs * 1000.0) : 0.0);
+            printf("time to first audio %.0f ms over %d flushes\n", tm.first_audio, tm.flushes);
+            const char * tta_breakdown = std::getenv("BREEZE_TTA_BREAKDOWN");
+            if (tta_breakdown && std::strcmp(tta_breakdown, "1") == 0 && tm.first_audio > 0.0) {
+                const double glue = tm.first_audio - tm.encode_ref - tm.prompt - tm.prefill -
+                                    tm.bb_first - tm.depth_first - tm.first_vocoder;
+                printf("  tta breakdown     ref_encode=%8.1f prompt=%8.1f prefill=%8.1f bb_first_chunk=%8.1f depth_first_chunk=%8.1f first_vocoder=%8.1f glue=%8.1f ms\n",
+                       tm.encode_ref, tm.prompt, tm.prefill, tm.bb_first, tm.depth_first, tm.first_vocoder, glue);
+            }
+            printf("  reference encode  %8.1f ms\n", tm.encode_ref);
+            printf("  prompt build      %8.1f ms\n", tm.prompt);
+            printf("  backbone prefill  %8.1f ms\n", tm.prefill);
+            printf("  first vocoder     %8.1f ms  (%d frames)\n", tm.first_vocoder, tm.first_frames);
+            printf("  backbone decode   %8.1f ms  (%.2f ms/frame)\n", tm.backbone, tm.backbone / tm.frames);
+            printf("  depth decode      %8.1f ms  (%.2f ms/frame)\n", tm.depth, tm.depth / tm.frames);
+            printf("  vocoder           %8.1f ms  (%.2f ms/frame)\n", tm.vocoder, tm.vocoder / tm.frames);
+            printf("  %d frames, %.2f s audio\n", tm.frames, secs);
         }
-        printf("  reference encode  %8.1f ms\n", tm.encode_ref);
-        printf("  prompt build      %8.1f ms\n", tm.prompt);
-        printf("  backbone prefill  %8.1f ms\n", tm.prefill);
-        printf("  first vocoder     %8.1f ms  (%d frames)\n", tm.first_vocoder, tm.first_frames);
-        printf("  backbone decode   %8.1f ms  (%.2f ms/frame)\n", tm.backbone, tm.backbone / tm.frames);
-        printf("  depth decode      %8.1f ms  (%.2f ms/frame)\n", tm.depth, tm.depth / tm.frames);
-        printf("  vocoder           %8.1f ms  (%.2f ms/frame)\n", tm.vocoder, tm.vocoder / tm.frames);
-        printf("  %d frames, %.2f s audio\n", tm.frames, secs);
-    }
 
-    if (!write_wav(output, audio, model.cfg.sample_rate)) { fprintf(stderr, "failed to write %s\n", output.c_str()); return 1; }
-    printf("wrote %s (%.2f s)\n", output.c_str(), (float) audio.size() / model.cfg.sample_rate);
+        const std::string run_output = repeat_output(output, run + 1, repeat);
+        if (!write_wav(run_output, audio, model.cfg.sample_rate)) {
+            fprintf(stderr, "failed to write %s\n", run_output.c_str());
+            model.free();
+            return 1;
+        }
+        printf("wrote %s (%.2f s)\n", run_output.c_str(), (float) audio.size() / model.cfg.sample_rate);
+    }
     model.free();
     return 0;
 }

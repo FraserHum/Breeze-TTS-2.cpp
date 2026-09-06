@@ -1,6 +1,8 @@
 # CLI
 
-`breeze-cli` runs one request and writes a WAV file.
+`breeze-cli` runs one request and writes a WAV file. Use `--repeat N` for a
+resident benchmark: the model and codec stay loaded while the same seeded
+request runs N times.
 
 ```
 breeze-cli <model.gguf> --text <text> [options]
@@ -27,6 +29,7 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--output <wav>` | `output.wav` | Output path. |
 | `--chunk-first <n>` | `40` | Frames in the first streamed chunk. |
 | `--chunk-max <n>` | `40` | Frames the chunk ramps up to. |
+| `--repeat <n>` | `1` | Resident generation repeats. The first repeated output keeps `--output`; later outputs add `.repeat-N` before the extension. |
 | `--timings` | off | Print a stage by stage latency breakdown. |
 | `--cpu` | off | Force the CPU backend. |
 | `-h`, `--help` | | Print usage. |
@@ -49,9 +52,19 @@ and does not implement depth top-p filtering. See the
 
 ## Latency
 
-`--timings` reports where the time goes:
+`--timings` reports where the time goes. Generation wall time starts after the
+model and codec are loaded and stops when generation returns, so it excludes
+model loading and WAV writing. Wall RTF is generation wall seconds divided by
+the delivered audio seconds. Each flush also reports its absolute elapsed
+milliseconds from the generation start and the cumulative audio duration; the
+two values show whether playback would have underrun.
 
 ```
+  flush 1 ready_ms=364.2 delivered_audio_s=0.32
+  flush 2 ready_ms=6359.8 delivered_audio_s=6.40
+  ...
+  flush 7 ready_ms=17195.4 delivered_audio_s=9.28
+generation wall     17195.4 ms (wall RTF 1.853)
 time to first audio 364 ms over 7 flushes
   reference encode       0.0 ms
   prompt build          28.3 ms
@@ -78,6 +91,11 @@ passing the same numbers to `breeze-server`. Raising `--chunk-max` mostly buys
 back vocoder time, since every flush re-decodes a fixed window of left context
 that gets discarded. See [server.md](server.md) for the measurements and for
 what the client has to do with the result.
+
+With `--repeat N`, output paths are `out.wav`, `out.repeat-2.wav`, and so on;
+the model remains resident and every run starts from the same request and
+seed. With the default `--repeat 1`, the original `--output` path and output
+messages are unchanged.
 
 ## Recipes
 
