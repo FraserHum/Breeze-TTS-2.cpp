@@ -2,6 +2,8 @@
 
 This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-investigation.md) is the evidence record; current static 15-step depth graphs and CFG batching are already present, so they are not repeated work.
 
+Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
+
 ## Goal and gates
 
 The validated decode body is about 85.43 ms/frame for 80 ms of audio; RTF 0.8 is 64 ms/frame, and resident wall glue is outside the current stage sum. The queue result saves 1.66 ms/frame, leaving at least 19.77 ms of body reduction plus wall headroom. Treat 85.43 - 1.66 - 8 - 10 - 2 = 63.77 ms as illustrative only: the known ~0.7 ms setup already leaves about 64.47 ms, and overlap/unmeasured glue remain. Aim for <=62 ms decode body before calling the wall target plausible.

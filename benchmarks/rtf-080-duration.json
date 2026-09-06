@@ -1,0 +1,271 @@
+{
+  "kind": "capped-output-throughput",
+  "quality_scope": "Capped-output throughput only; not complete-utterance quality or listening evidence.",
+  "implementation_commit": "e0c8f9d250c8dc05a5ee6c806db9679f6ef60770",
+  "quant": "q4_k",
+  "runtime": {
+    "queue": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+    "trim": "default (BREEZE_BENCH_DEFAULT_TRIM=1; BREEZE_VOC_TRIM unset)",
+    "stateful_vocoder": 0,
+    "fused_depth": 0,
+    "repeats": 3,
+    "local_timeout_s": 300,
+    "remote_timeout": "timeout -k 15s 295s"
+  },
+  "prompt": {
+    "source": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-stress.sh",
+    "chars": 3373,
+    "sha256": "9740635c9287e8a7fae06eb052991c4d6241bb0883dc0ddb2420557f7d1d3234",
+    "stress_split_chars": 10000,
+    "production_default_split_chars": 600,
+    "one_part_static_check": true,
+    "text": "At dawn, the town opened its old railway station for a day of shared work and quiet discovery. The building had been closed for years, yet its tall windows still caught the first light and spread it across the dusty floor. Volunteers arrived with brushes, boxes, notebooks, and thermoses of coffee, each carrying a different idea about what the station might become. Mara unlocked the side door, checked the folding tables, and welcomed everyone as if the project had already succeeded.\n\nThe first team sorted maps from the station office. They found routes drawn in blue pencil, faded tickets from distant cities, and a timetable that recorded trains no one remembered seeing. A retired conductor explained how the old signals worked, while two students photographed every page before placing it in a labelled folder. Near the window, a carpenter repaired a wooden bench and saved the brass screws in a small dish so nothing original would be lost.\n\nOutside, the garden group cleared weeds from the platform and discovered a line of stone markers beneath the soil. The markers showed where passengers once waited for the morning train. Children brushed them carefully with soft tools, then made a simple sign that described the discovery in plain language. Their teacher asked them to measure the distance between each marker, and soon a quiet debate began about whether the spacing had been chosen for comfort, safety, or the shape of the old carriages.\n\nBy midday, the station smelled of soup, warm bread, and fresh timber. Neighbours who had never met before shared stories about departures, reunions, missed connections, and journeys that changed direction at the last moment. One woman remembered waving from the platform when her brother left for university. A baker described sending parcels by rail during a difficult winter. An engineer brought a pocket watch that had belonged to his grandfather and placed it beside the restored timetable.\n\nIn the afternoon, the volunteers built a small reading room in the former ticket office. They swept the shelves, repaired a lamp, and arranged books about local history beside novels for travellers. A musician tested the room and its gentle echo with a quiet melody, and the sound reached the far end of the platform without becoming harsh. The group decided that future visitors should be able to read, listen, ask questions, and leave a note about their own connection to the station.\n\nAs evening approached, the last boxes were carried upstairs. Mara walked through each room and wrote down the work that remained: repaint the sign, catalogue the photographs, mend the clock, and ask the council about a safe ramp. Nothing was finished in a single day, but every task now had a name and someone willing to help. The volunteers stood together beneath the clock and agreed to return the following Saturday, bringing better tools, more stories, and enough food for everyone.\n\nThe station lights came on just as the sky turned violet. From the road, the building looked occupied again, not because every repair was complete, but because people had begun to care for it together. Mara closed the door, listened to the quiet platform, and imagined the sound of a future train arriving. She knew the restoration would take patience, yet she also knew that patient work could carry a place forward one careful step at a time.",
+    "instruction": "Speak clearly and naturally.",
+    "seed": 42,
+    "repeat": 3
+  },
+  "statistics_note": "p50 and p95 are descriptive sample statistics for n=3 per cap, not population guarantees.",
+  "cases": [
+    {
+      "cap_frames": 125,
+      "cap_audio_s": 10.0,
+      "actual_frames": [
+        125,
+        125,
+        125
+      ],
+      "actual_audio_s": [
+        10.0,
+        10.0,
+        10.0
+      ],
+      "cap_reached": [
+        true,
+        true,
+        true
+      ],
+      "wall_rtf": {
+        "values": [
+          1.19798,
+          1.18041,
+          1.17852
+        ],
+        "mean": 1.185636667,
+        "p50_n3_descriptive": 1.18041,
+        "p95_n3_descriptive": 1.196223
+      },
+      "wall_ms": [
+        11979.8,
+        11804.1,
+        11785.2
+      ],
+      "first_audio_ms": [
+        4469.0,
+        4499.0,
+        4469.0
+      ],
+      "max_playback_deficit_ms": [
+        536.0,
+        362.6,
+        361.2
+      ],
+      "stage_ms": {
+        "prompt_build": [
+          584.3,
+          595.6,
+          577.2
+        ],
+        "backbone_prefill": [
+          686.6,
+          708.5,
+          706.0
+        ],
+        "backbone_decode": [
+          2879.7,
+          2798.0,
+          2811.2
+        ],
+        "depth_decode": [
+          6658.8,
+          6552.3,
+          6572.7
+        ],
+        "vocoder": [
+          1165.8,
+          1145.1,
+          1113.4
+        ]
+      },
+      "sha256": "6506ca8bd439f273ef15c234c934f9783ef3a4907f96c4059a37ebcc3de8a461",
+      "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-125.json",
+      "command": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-125.command.json"
+    },
+    {
+      "cap_frames": 375,
+      "cap_audio_s": 30.0,
+      "actual_frames": [
+        375,
+        375,
+        375
+      ],
+      "actual_audio_s": [
+        30.0,
+        30.0,
+        30.0
+      ],
+      "cap_reached": [
+        true,
+        true,
+        true
+      ],
+      "wall_rtf": {
+        "values": [
+          1.129213333,
+          1.134256667,
+          1.142796667
+        ],
+        "mean": 1.135422222,
+        "p50_n3_descriptive": 1.134256667,
+        "p95_n3_descriptive": 1.141942667
+      },
+      "wall_ms": [
+        33876.4,
+        34027.7,
+        34283.9
+      ],
+      "first_audio_ms": [
+        4513.0,
+        4521.0,
+        4617.0
+      ],
+      "max_playback_deficit_ms": [
+        2169.5,
+        2446.9,
+        2570.1
+      ],
+      "stage_ms": {
+        "prompt_build": [
+          578.6,
+          590.1,
+          607.2
+        ],
+        "backbone_prefill": [
+          681.4,
+          725.2,
+          731.2
+        ],
+        "backbone_decode": [
+          9657.3,
+          9551.0,
+          9605.2
+        ],
+        "depth_decode": [
+          19516.2,
+          19691.2,
+          19901.8
+        ],
+        "vocoder": [
+          3420.7,
+          3459.6,
+          3427.8
+        ]
+      },
+      "sha256": "1dcb866b3205f0f95bb98a8c2fcd34a8d4cf9786763c0af170d77334760c49e6",
+      "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-375.json",
+      "command": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-375.command.json"
+    },
+    {
+      "cap_frames": 750,
+      "cap_audio_s": 60.0,
+      "actual_frames": [
+        750,
+        750,
+        750
+      ],
+      "actual_audio_s": [
+        60.0,
+        60.0,
+        60.0
+      ],
+      "cap_reached": [
+        true,
+        true,
+        true
+      ],
+      "wall_rtf": {
+        "values": [
+          1.163035,
+          1.154218333,
+          1.159961667
+        ],
+        "mean": 1.159071667,
+        "p50_n3_descriptive": 1.159961667,
+        "p95_n3_descriptive": 1.162727667
+      },
+      "wall_ms": [
+        69782.1,
+        69253.1,
+        69597.7
+      ],
+      "first_audio_ms": [
+        4532.0,
+        4474.0,
+        4500.0
+      ],
+      "max_playback_deficit_ms": [
+        7775.3,
+        7313.4,
+        7640.9
+      ],
+      "stage_ms": {
+        "prompt_build": [
+          589.5,
+          580.5,
+          585.7
+        ],
+        "backbone_prefill": [
+          701.1,
+          705.0,
+          719.0
+        ],
+        "backbone_decode": [
+          22391.2,
+          22194.6,
+          22296.4
+        ],
+        "depth_decode": [
+          39322.9,
+          39101.9,
+          39304.0
+        ],
+        "vocoder": [
+          6739.1,
+          6638.0,
+          6657.2
+        ]
+      },
+      "sha256": "16a7699faf800a33839f5024e79ca1527b81ccd084419bd630ebda5d5ac2a082",
+      "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-750.json",
+      "command": "../.beehive/agent/BREEZE-RTF-080-IMPL/duration-q4_k-queue-defaulttrim-750.command.json"
+    }
+  ],
+  "cli_argv_template": [
+    "/src/build/breeze-cli",
+    "/models/breeze-tts-2-q4_k.gguf",
+    "--text",
+    "<prompt.text>",
+    "--instruction",
+    "Speak clearly and naturally.",
+    "--seed",
+    "42",
+    "--repeat",
+    "3",
+    "--timings",
+    "--output",
+    "/tmp/breeze-080-duration-q4_k-queue-defaulttrim-{cap}.wav",
+    "--max-new",
+    "<cap_frames>",
+    "--split-chars",
+    "10000"
+  ]
+}

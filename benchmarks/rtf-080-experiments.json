@@ -1,0 +1,65 @@
+{
+  "kind": "rtf-080-rejected-experiments",
+  "implementation_commit": "e0c8f9d250c8dc05a5ee6c806db9679f6ef60770",
+  "scope": "Compact summaries of bounded A/B receipts; no default changes are implied by rejected rows.",
+  "large_workgroup": {
+    "candidate_wall_rtf": [1.1283568075117372, 1.1265199530516434, 1.1252464788732395],
+    "control_wall_rtf": [0.9596713615023473, 0.9509389671361503, 0.9539377934272301],
+    "mean_wall_rtf_candidate": 1.1267077464788733,
+    "mean_wall_rtf_control": 0.9548493740219093,
+    "candidate_depth_decode_ms": [13965.6, 14080.9, 14041.9],
+    "control_depth_decode_ms": [11059.2, 11079.2, 11108.9],
+    "candidate_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "control_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "decision": "reject: slower despite byte-identical WAVs",
+    "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/large-wg-comparison.json"
+  },
+  "head_f16": {
+    "candidate_wall_rtf": [0.9585856807511737, 0.9383098591549296, 0.9475762910798122],
+    "control_wall_rtf": [0.9595070422535212, 0.956531690140845, 0.9458509389671362],
+    "candidate_mean_wall_rtf": 0.9481572769953052,
+    "control_mean_wall_rtf": 0.9539632237871675,
+    "gain_ms_per_frame": 0.46447574334898434,
+    "candidate_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "control_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "max_playback_deficit_ms": [0, 0, 0],
+    "other_tensors_identical": 1160,
+    "decision": "not retained: measured gain below predeclared 1 ms/frame threshold; WAV parity passes",
+    "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/head-f16-comparison.json"
+  },
+  "backbone_timing": {
+    "calls": 639,
+    "audio_embed_ms": {
+      "build": 0.014151799687010955,
+      "alloc": 0.014666666666666666,
+      "compute": 0.11502190923317684,
+      "readback": 0.06067605633802817,
+      "total": 0.20458215962441315
+    },
+    "backbone_ms": {
+      "build": 0.2856009389671362,
+      "alloc": 0.21864788732394366,
+      "compute": 14.02054303599374,
+      "readback": 0.14454460093896715,
+      "total": 14.669535211267606
+    },
+    "combined_host_build_alloc_ms": 0.5330672926447575,
+    "decision": "skip graph reuse or embedding merge: below 1 ms retained-change gate",
+    "raw": "../.beehive/agent/BREEZE-RTF-080-IMPL/bb-profile-summary.json"
+  },
+  "reference_pair": {
+    "frames": 212,
+    "audio_s": 16.96,
+    "control_wall_rtf": [1.2142983490566037, 1.2022110849056604, 1.1962971698113207],
+    "trim_wall_rtf": [1.1047287735849056, 1.0814740566037735, 1.094941037735849],
+    "control_mean_wall_rtf": 1.2042688679245284,
+    "trim_mean_wall_rtf": 1.0937146226415093,
+    "control_max_playback_deficit_ms": [1403.9999999999982, 1350.800000000001, 1225.5],
+    "trim_max_playback_deficit_ms": [18.30000000000109, 0, 0],
+    "control_sha256": "2ea60b62f7aaffa4d4560198be3e88f80f7382ae7ee807d1717ae415d69750f7",
+    "trim_sha256": "2ea60b62f7aaffa4d4560198be3e88f80f7382ae7ee807d1717ae415d69750f7",
+    "scope": "Reference encoding is included in wall timing; this is not a text-only or general no-underrun claim.",
+    "raw_control": "../.beehive/agent/BREEZE-RTF-080-IMPL/reference-control.json",
+    "raw_trim": "../.beehive/agent/BREEZE-RTF-080-IMPL/reference-trim.json"
+  }
+}
