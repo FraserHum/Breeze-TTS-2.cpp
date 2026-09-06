@@ -16,7 +16,11 @@ struct MimiCodec {
 
     // codes frame-major [f * n_cb + cb]; n_cb 0 means the full set. fewer codebooks drops detail,
     // 1 leaves only the semantic stage
-    std::vector<float> decode(const std::vector<int> & codes, int n_frames, int n_cb = 0);
+    // trim_prefix is the number of left-context frames in the decode window. When
+    // BREEZE_VOC_TRIM=1, the causal post-transformer stack keeps only its proven
+    // convolution history before those new frames; -1 leaves the full output.
+    std::vector<float> decode(const std::vector<int> & codes, int n_frames, int n_cb = 0,
+                              int trim_prefix = -1);
     // audio waveform in, returns codes frame-major, sets n_frames
     std::vector<int> encode(const std::vector<float> & audio, int & n_frames);
 
@@ -84,7 +88,8 @@ ggml_tensor * mimi_transformer(ggml_context * ctx, BreezeModel & m, Graph & g, g
                                const std::string & prefix, int seq_len);
 ggml_tensor * vocoder_transformer(ggml_context * ctx, BreezeModel & m, Graph & g, ggml_tensor * x, int seq_len);
 ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
-                             const std::vector<int> & codes, int n_codebooks, int seq_len);
+                             const std::vector<int> & codes, int n_codebooks, int seq_len,
+                             int trim_prefix = -1);
 
 }
 

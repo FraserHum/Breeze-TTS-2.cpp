@@ -251,8 +251,11 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
             } else {
                 std::vector<int> sub(frames.begin() + (size_t) ctx_start * nc,
                                      frames.begin() + (size_t) (start + count) * nc);
-                audio = codec.decode(sub, sub_T);
+                audio = codec.decode(sub, sub_T, 0, start - ctx_start);
             }
+            const size_t want_samples = (size_t) count * spf;
+            if (audio.size() < want_samples || audio.size() % (size_t) spf != 0) return false;
+            const int decoded_prefix = (int) (audio.size() / (size_t) spf) - count;
             const double vtime = since(tv);
             tm.vocoder += vtime;
             tm.flushes++;
@@ -262,19 +265,19 @@ static bool generate_chunk(BreezeModel & m, MimiCodec & codec, const GenRequest 
                 // ctx_frames = left-context frames re-decoded and skipped; new_frames = frames
                 // kept in this flush; emitted = frames written out (== new_frames here)
                 printf("RTT flush=%d graph_ms=%.3f decode_ms=%.3f ctx_frames=%d new_frames=%d emitted=%d\n",
-                       ++rtt_i, rt.graph_ms, rt.decode_ms, sub_T - count, count, count);
+                       ++rtt_i, rt.graph_ms, rt.decode_ms, decoded_prefix, count, count);
                 fflush(stdout);
             }
             // stateful decodes only the new frames, so there is nothing to skip
-            const int skip = voc_stateful ? 0 : (start - ctx_start) * spf;
+            const size_t skip = voc_stateful ? 0 : audio.size() - want_samples;
             if (!tm.first_audio) {
                 tm.first_vocoder = vtime;
-                tm.first_frames = sub_T;
+                tm.first_frames = decoded_prefix + count;
                 tm.first_audio = since(t_start);
                 tm.bb_first = tm.backbone; // backbone time already spent when audio first came out
                 tm.depth_first = tm.depth; // depth time already spent when audio first came out
             }
-            if (!cb(audio.data() + skip, count * spf)) return false;
+            if (!cb(audio.data() + skip, (int) want_samples)) return false;
             emitted += count;
             chunk = std::min(chunk + chunk / 3 + 1, chunk_max);
             if (!final_flush && have - emitted < chunk) break;

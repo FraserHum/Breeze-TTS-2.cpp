@@ -3,6 +3,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -64,8 +65,64 @@ static ggml_tensor * quantizer_decode(ggml_context * ctx, BreezeModel & m, Graph
     return ggml_cont(ctx, ggml_transpose(ctx, first));
 }
 
+// Return the number of input audio frames whose post-transformer history can
+// reach output frame zero. Missing or inconsistent weights disable the opt-in
+// trim instead of silently assuming the reference architecture.
+static int conv_tail_history(const BreezeModel & m) {
+    const VocoderConfig & c = m.cfg.voc;
+    const int spf = m.cfg.samples_per_frame;
+    if (spf <= 0) return -1;
+
+    auto kernel = [&](const std::string & name, int axis) -> int64_t {
+        ggml_tensor * t = m.wopt(name);
+        if (!t || axis < 0 || axis > 3 || t->ne[axis] <= 0 || t->ne[axis] > std::numeric_limits<int>::max()) return -1;
+        return t->ne[axis];
+    };
+    int64_t rf = 0;
+    auto add = [&](int64_t n) {
+        if (n < 0 || rf > std::numeric_limits<int64_t>::max() - n) return false;
+        rf += n;
+        return true;
+    };
+    auto up = [&](int stride, int64_t k) {
+        if (stride <= 0 || k <= 0 || rf > (std::numeric_limits<int64_t>::max() - (k - 1)) / stride) return false;
+        rf = rf * stride + k - 1;
+        return true;
+    };
+
+    int64_t stride_product = 1;
+    auto multiply_stride = [&](int stride) {
+        if (stride <= 0 || stride_product > std::numeric_limits<int64_t>::max() / stride) return false;
+        stride_product *= stride;
+        return true;
+    };
+
+    for (size_t i = 0; i < c.upsampling_ratios.size(); i++) {
+        const std::string p = "codec.dup." + std::to_string(i);
+        if (!multiply_stride(c.upsampling_ratios[i])) return -1;
+        if (!up(c.upsampling_ratios[i], kernel(p + ".up.conv.weight", 0)) ||
+            !add(kernel(p + ".dw.weight", 1) - 1)) return -1;
+    }
+    if (!add(kernel("codec.dhead.conv.weight", 0) - 1)) return -1;
+
+    const int dilations[3] = { 1, 3, 9 };
+    for (size_t i = 0; i < c.upsample_rates.size(); i++) {
+        const std::string p = "codec.dblk." + std::to_string(i);
+        if (!multiply_stride(c.upsample_rates[i])) return -1;
+        if (!up(c.upsample_rates[i], kernel(p + ".up.conv.weight", 0))) return -1;
+        for (int j = 0; j < 3; j++) {
+            const std::string r = p + ".res." + std::to_string(j);
+            if (!add((kernel(r + ".conv1.conv.weight", 0) - 1) * dilations[j]) ||
+                !add(kernel(r + ".conv2.conv.weight", 0) - 1)) return -1;
+        }
+    }
+    if (!add(kernel("codec.dfin.conv.weight", 0) - 1)) return -1;
+    if (stride_product != spf || rf >= (int64_t) 16 * spf) return -1;
+    return (int) (rf / spf) + 1;
+}
+
 ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
-                             const std::vector<int> & codes, int n_cb, int T) {
+                             const std::vector<int> & codes, int n_cb, int T, int trim_prefix) {
     const VocoderConfig & c = m.cfg.voc;
 
     ggml_tensor * h = quantizer_decode(ctx, m, g, codes, n_cb, T);
@@ -73,6 +130,18 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
 
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
     h = vocoder_transformer(ctx, m, g, h, T);
+
+    // Quantizer, dpre, and transformer still see the full window. The remaining
+    // stack is causal, so drop only old latent frames after a guarded RF check.
+    const int history = trim_prefix >= 0 ? conv_tail_history(m) : -1;
+    if (trim_prefix >= 0 && trim_prefix <= T && history > 0 && history <= 16) {
+        const int keep = std::min(trim_prefix, 16);
+        const int drop = trim_prefix - keep;
+        if (drop > 0) {
+            h = ggml_view_2d(ctx, h, h->ne[0], h->ne[1] - drop, h->nb[1],
+                             (size_t) drop * h->nb[1]);
+        }
+    }
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
 
     for (size_t i = 0; i < c.upsampling_ratios.size(); i++) {

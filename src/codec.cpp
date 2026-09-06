@@ -27,17 +27,26 @@ bool vocoder_stateful_enabled() {
     return en != 0;
 }
 
+static bool vocoder_trim_enabled() {
+    static const int en = [] {
+        const char * e = std::getenv("BREEZE_VOC_TRIM");
+        return e && std::strcmp(e, "1") == 0 ? 1 : 0;
+    }();
+    return en != 0;
+}
+
 const RtTiming & rt_last_decode() { return g_rt_last; }
 
 static ggml_tensor * transpose_cont(ggml_context * ctx, ggml_tensor * x) {
     return ggml_cont(ctx, ggml_transpose(ctx, x));
 }
 
-std::vector<float> MimiCodec::decode(const std::vector<int> & codes, int T, int n_cb) {
+std::vector<float> MimiCodec::decode(const std::vector<int> & codes, int T, int n_cb, int trim_prefix) {
     if (n_cb <= 0) n_cb = m->cfg.num_codebooks;
     const auto tg0 = std::chrono::steady_clock::now();
     Graph g(32768);
-    ggml_tensor * x = vocoder_decode(g.ctx, *m, g, codes, n_cb, T);
+    if (!vocoder_trim_enabled()) trim_prefix = -1;
+    ggml_tensor * x = vocoder_decode(g.ctx, *m, g, codes, n_cb, T, trim_prefix);
     ggml_tensor * audio = ggml_cont(g.ctx, ggml_reshape_1d(g.ctx, x, x->ne[0]));
     const auto td0 = std::chrono::steady_clock::now();
     g.compute(m->backend, audio);
