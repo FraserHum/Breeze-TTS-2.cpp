@@ -92,7 +92,7 @@ def main():
     for fixture in manifest['fixtures']:
         if fixture['kind'] == 'capped-throughput-only':
             continue
-        language = 'zh' if fixture['id'] == 'mandarin' else 'en'
+        language = fixture.get('language', 'zh' if fixture['id'] == 'mandarin' else 'en')
         expected = tokens(fixture['text'], language)
         assert expected
         for kind in ['q4_k', 'q3_k']:
