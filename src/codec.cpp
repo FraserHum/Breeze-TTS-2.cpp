@@ -30,7 +30,7 @@ bool vocoder_stateful_enabled() {
 static bool vocoder_trim_enabled() {
     static const int en = [] {
         const char * e = std::getenv("BREEZE_VOC_TRIM");
-        return e && std::strcmp(e, "1") == 0 ? 1 : 0;
+        return !e || std::strcmp(e, "0") != 0 ? 1 : 0;
     }();
     return en != 0;
 }

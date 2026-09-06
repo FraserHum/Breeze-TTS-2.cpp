@@ -17,8 +17,8 @@ struct MimiCodec {
     // codes frame-major [f * n_cb + cb]; n_cb 0 means the full set. fewer codebooks drops detail,
     // 1 leaves only the semantic stage
     // trim_prefix is the number of left-context frames in the decode window. When
-    // BREEZE_VOC_TRIM=1, the causal post-transformer stack keeps only its proven
-    // convolution history before those new frames; -1 leaves the full output.
+    // BREEZE_VOC_TRIM is unset or not 0, the causal post-transformer stack keeps
+    // only its proven convolution history before those new frames; -1 leaves the full output.
     std::vector<float> decode(const std::vector<int> & codes, int n_frames, int n_cb = 0,
                               int trim_prefix = -1);
     // audio waveform in, returns codes frame-major, sets n_frames
