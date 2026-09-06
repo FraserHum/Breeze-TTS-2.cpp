@@ -196,3 +196,21 @@ proposals. Those handoffs define research prerequisites; they record no
 completed training or performance measurements. Bespoke FFN-kernel and sampler
 work is unimplemented and remains an open avenue, so this bounded pass does
 not claim that engine work is exhausted.
+
+
+## Broader mixed depth Q3_K matrix — 2026-09-06
+
+Four resident repeats across 14 cases preserve identical WAVs within every case.
+Q3_K is faster throughout, but warmed p50/p95 miss 0.8 on every workload. Mean
+RTF is 0.847 held-out English, 0.870 Mandarin, 0.988 uncached reference and
+1.045 at 60-second unsplit capped stress; that stress still has a 1.539-second
+maximum warmed delivery deficit. Existing saved-voice caching lowers the reference
+case to 0.892 with byte-identical audio and about 1.65 seconds earlier first audio.
+
+ASR adds no Q3_K disagreement in these few natural fixtures; speaker cosine is
+close to control. Quality remains inconclusive because these are limited proxy
+checks with a synthetic reference and no listening/independent human-voice gate.
+No defaults changed. Next: complete default-split product measurements, then
+context-dependent backbone investigation and expanded Q3_K quality/calibration,
+ahead of small sampler finishing work. See the [full report and ordered tasks](../docs/research/depth-quant-matrix.md),
+[runtime receipt](depth-corpus/quant-matrix.json), and [speech receipt](depth-corpus/quant-speech.json).

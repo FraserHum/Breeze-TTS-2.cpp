@@ -4,27 +4,34 @@ This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-
 
 Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
 
-## Current ordered work — after the quantization pilot, 2026-09-06
+## Current ordered work — after the broader Q3_K matrix, 2026-09-06
 
-The [measured quantization pilot](depth-quant-pilot.md) now takes precedence over
-the earlier order below. Standard mixed depth Q3_K runs on the existing Vulkan
-backend and has lower conditional output error than the simple rotated scalar
-emulation. No custom format or default change is justified yet.
+The [broader runtime and speech matrix](depth-quant-matrix.md) supersedes the
+short-prompt pilot order. Q3_K improves every workload but misses 0.8 throughout;
+ASR/speaker probes are encouraging but quality acceptance remains inconclusive.
+Existing saved-voice caching preserves exact output and reduces reference Q3_K
+mean wall RTF from 0.988 to 0.892. It needs no new cache implementation.
 
-1. Complete the multilingual, reference-voice and long-form **quality and RTF
-   matrix for standard depth Q3_K**, against the rebuilt Q4_K control.
-2. If quality passes, use the measured remaining gap to decide a combined
-   **exact sampling/readback and small SwiGLU/head** finishing experiment.
-3. If quality fails, expand **handoff 00 calibration** to all layers, later
-   frames and CFG branches, with a BF16 reference and disjoint evaluation;
-   then try **exact-format calibrated Q3_K rounding** and targeted mixed
-   precision. The current controls are uncalibrated.
-4. Keep **handoff 05 stronger rotation/IQ3/custom packing** conditional on a
-   demonstrated shortfall; then consider student handoffs 03/04/06. Existing
-   sparsity/low-rank handoffs 01/02 remain parked on their failed pilot results.
+1. Measure **complete default-split long-form product workloads**, including
+   saved voices. Keep the unsplit capped stress as a separate failed gate.
+2. Profile **backbone context-dependent attention/KV/V-layout cost**, then
+   test one justified existing ggml improvement. Backbone rises from about
+   14 to 29 ms/frame in the unsplit stress; removable savings are unproven.
+3. Expand **handoff 00 quality/calibration coverage** for standard Q3_K;
+   use calibrated rounding/selective precision when held-out quality identifies
+   the need. This CPU/data work can overlap investigation, with one GPU owner.
+4. Reopen **exact sampling/readback plus small SwiGLU/head** finishing work
+   only after the accepted candidate has a sufficiently small measured gap.
+5. Keep **handoff 05 stronger rotation/IQ3/custom packing** conditional on a
+   demonstrated standard-format shortfall and packed-operation feasibility.
+6. Then smaller autoregressive depth student, handoff **03**, and conditional
+   **04/06**. **01/02** remain parked on the failed sparsity/low-rank pilots.
 
-This candidate changes the depth weight format; it does not establish an
-unchanged-Q4_K RTF improvement or completion of the 0.8 goal.
+The detailed task gates and effort are in the matrix report. The held-out gap
+is 3.77 ms/frame, Mandarin 5.59, cached reference 7.35 and long unsplit stress
+19.58. Do not treat the former 3.43 ms short-prompt gap as the whole goal.
+No runtime default changes or unchanged-Q4_K RTF claim follows from this mixed
+Q3_K candidate.
 
 ## Prior ordered work — before the quantization pilot
 
