@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -95,12 +96,81 @@ static void dd_dump_codes(int cb0, const std::vector<int> & codes) {
     fflush(stderr);
 }
 
-static bool dd_capture_layer(int il) {
-    return il == 0 || il == 5 || il == 11;
+static void dd_capture_error(const char * what);
+static void dd_capture_error(const std::string & what);
+
+static constexpr size_t DD_CAPTURE_DEFAULT_MAX_BYTES = 16ull * 1024 * 1024;
+static constexpr size_t DD_CAPTURE_HARD_MAX_BYTES = 256ull * 1024 * 1024;
+static constexpr size_t DD_CAPTURE_MAX_FRAMES = 64;
+static constexpr size_t DD_CAPTURE_MAX_RECORDS = 65536;
+static constexpr int DD_CAPTURE_MAX_FRAME = 4095;
+
+static std::vector<int> dd_capture_selection(const char * env, int max_value,
+                                             size_t max_count, const char * what,
+                                             const std::vector<int> & defaults,
+                                             bool allow_all = false) {
+    if (!env) return defaults;
+    if (!*env) dd_capture_error(std::string(what) + " must not be empty");
+
+    const std::string text(env);
+    if (allow_all && text == "all") {
+        std::vector<int> all;
+        all.reserve((size_t) max_value + 1);
+        for (int i = 0; i <= max_value; i++) all.push_back(i);
+        return all;
+    }
+
+    std::vector<int> result;
+    size_t begin = 0;
+    while (begin <= text.size()) {
+        const size_t end = text.find(',', begin);
+        const std::string token = text.substr(begin, end == std::string::npos ? end : end - begin);
+        if (token.empty()) dd_capture_error(std::string(what) + " contains an empty item");
+        errno = 0;
+        char * parsed_end = nullptr;
+        const long value = std::strtol(token.c_str(), &parsed_end, 10);
+        if (errno == ERANGE || parsed_end == token.c_str() || *parsed_end != '\0' ||
+            value < 0 || value > max_value)
+            dd_capture_error(std::string(what) + " contains an invalid item: " + token);
+        result.push_back((int) value);
+        if (result.size() > max_count)
+            dd_capture_error(std::string(what) + " selects too many items");
+        if (end == std::string::npos) break;
+        begin = end + 1;
+    }
+    std::sort(result.begin(), result.end());
+    if (std::adjacent_find(result.begin(), result.end()) != result.end())
+        dd_capture_error(std::string(what) + " contains a duplicate item");
+    return result;
 }
 
-static bool dd_capture_frame(int frame) {
-    return frame == 0 || frame == 7 || frame == 15;
+static size_t dd_capture_max_bytes(const char * env) {
+    if (!env) return DD_CAPTURE_DEFAULT_MAX_BYTES;
+    if (!*env) dd_capture_error("BREEZE_DEPTH_CAPTURE_MAX_BYTES must not be empty");
+
+    errno = 0;
+    char * end = nullptr;
+    const unsigned long long value = std::strtoull(env, &end, 10);
+    if (errno == ERANGE || end == env || value == 0) dd_capture_error("invalid BREEZE_DEPTH_CAPTURE_MAX_BYTES");
+    unsigned long long multiplier = 1;
+    if (*end == 'K' || *end == 'k') multiplier = 1024ull;
+    else if (*end == 'M' || *end == 'm') multiplier = 1024ull * 1024;
+    else if (*end == 'G' || *end == 'g') multiplier = 1024ull * 1024 * 1024;
+    else if (*end != '\0') dd_capture_error("invalid BREEZE_DEPTH_CAPTURE_MAX_BYTES suffix");
+    if (*end != '\0' && end[1] != '\0')
+        dd_capture_error("invalid BREEZE_DEPTH_CAPTURE_MAX_BYTES suffix");
+    if (value > DD_CAPTURE_HARD_MAX_BYTES / multiplier)
+        dd_capture_error("BREEZE_DEPTH_CAPTURE_MAX_BYTES exceeds the 256 MiB capture bound");
+    return (size_t) (value * multiplier);
+}
+
+static std::string dd_capture_list(const std::vector<int> & values) {
+    std::string result = "[";
+    for (size_t i = 0; i < values.size(); i++) {
+        if (i) result += ',';
+        result += std::to_string(values[i]);
+    }
+    return result + ']';
 }
 
 static void dd_capture_error(const char * what) {
@@ -134,15 +204,21 @@ static void dd_capture_open(DepthRunner & r, const char * dir_name) {
 }
 
 static void dd_capture_write_meta(DepthRunner & r, const std::string & line) {
+    if (r.capture_records >= r.capture_max_records)
+        dd_capture_error("capture metadata record bound exceeded");
     if (!r.capture_meta || std::fprintf(r.capture_meta, "%s\n", line.c_str()) < 0 ||
         std::fflush(r.capture_meta) != 0)
         dd_capture_error("metadata write failed");
+    r.capture_records++;
 }
 
 static std::uint64_t dd_capture_write_f32(DepthRunner & r, const float * data, size_t n) {
     if (!r.capture_blob) dd_capture_error("activation blob is not open");
     const long pos = std::ftell(r.capture_blob);
-    if (pos < 0 || (n && std::fwrite(data, sizeof(float), n, r.capture_blob) != n) ||
+    if (pos < 0 || (std::uint64_t) pos > r.capture_max_bytes ||
+        n > (r.capture_max_bytes - (std::uint64_t) pos) / sizeof(float))
+        dd_capture_error("capture blob exceeds max bytes");
+    if ((n && std::fwrite(data, sizeof(float), n, r.capture_blob) != n) ||
         std::fflush(r.capture_blob) != 0)
         dd_capture_error("activation blob write failed");
     return (std::uint64_t) pos;
@@ -220,7 +296,7 @@ static void dd_capture_close(DepthRunner & r) {
 }
 
 static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap,
-                                 bool capture);
+                                 const std::vector<int> * capture_layers);
 static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step);
 
 void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
@@ -270,8 +346,20 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
         const bool fusion_disabled = std::getenv("GGML_VK_DISABLE_FUSION") != nullptr;
         if (vulkan && !fusion_disabled)
             GGML_ABORT("Vulkan depth capture requires GGML_VK_DISABLE_FUSION to be set before backend init\n");
-        if (c.n_layer < 12 || n_step != 15)
+        if (c.n_layer != 12 || n_step != 15)
             GGML_ABORT("depth capture expects the 12-layer, 15-step depth model\n");
+        capture_frames = dd_capture_selection(
+            std::getenv("BREEZE_DEPTH_CAPTURE_FRAMES"), DD_CAPTURE_MAX_FRAME,
+            DD_CAPTURE_MAX_FRAMES, "BREEZE_DEPTH_CAPTURE_FRAMES", { 0, 7, 15 });
+        capture_layers = dd_capture_selection(
+            std::getenv("BREEZE_DEPTH_CAPTURE_LAYERS"), c.n_layer - 1,
+            (size_t) c.n_layer, "BREEZE_DEPTH_CAPTURE_LAYERS", { 0, 5, 11 }, true);
+        capture_max_bytes = dd_capture_max_bytes(std::getenv("BREEZE_DEPTH_CAPTURE_MAX_BYTES"));
+        capture_records = 0;
+        capture_max_records = 1 + capture_frames.size() *
+            (2 + capture_layers.size() * (size_t) n_step * 3);
+        if (capture_max_records > DD_CAPTURE_MAX_RECORDS)
+            dd_capture_error("capture selection exceeds the metadata record bound");
         dd_capture_open(*this, capture_env);
         dd_capture_write_meta(*this,
             "{\"kind\":\"header\",\"key\":\"header\",\"protocol\":1,\"seed\":" +
@@ -281,7 +369,11 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
             std::to_string(c.n_layer) + ",\"steps\":" + std::to_string(n_step) +
             ",\"vocab\":" + std::to_string(vs) + ",\"branches\":" +
             std::to_string(n_branch) + ",\"fusion_disabled\":" +
-            (fusion_disabled ? "true" : "false") + "}");
+            (fusion_disabled ? "true" : "false") + ",\"capture_frames\":" +
+            dd_capture_list(capture_frames) + ",\"capture_layers\":" +
+            dd_capture_list(capture_layers) + ",\"max_blob_bytes\":" +
+            std::to_string(capture_max_bytes) + ",\"max_records\":" +
+            std::to_string(capture_max_records) + "}");
     }
 
     // dedicated fused-path gumbel stream: the same seed as the step path's rng, but a
@@ -326,7 +418,8 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
         // dangles the tensor addresses of any graph allocated on the shared one
         graphs.resize(n_step);
         for (int j = 1; j <= n_step; j++)
-            graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap, capture_enabled);
+            graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap,
+                                        capture_enabled ? &capture_layers : nullptr);
 
         // reserve the vbuffer exactly once: the largest graph (step 1) first, then assert
         // no later graph grows it, since growth frees and reallocates the vbuffer and
@@ -379,6 +472,11 @@ void DepthRunner::free() {
     std::vector<float>().swap(noise_staging);
     capture_enabled = false;
     capture_dir.clear();
+    std::vector<int>().swap(capture_frames);
+    std::vector<int>().swap(capture_layers);
+    capture_max_bytes = 0;
+    capture_records = 0;
+    capture_max_records = 0;
     std::vector<float>().swap(capture_buf);
     capture_frame = 0;
     graph_cap = 0;
@@ -401,7 +499,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
                               const std::vector<ggml_tensor *> & k_cache,
                               const std::vector<ggml_tensor *> & v_cache,
                               std::vector<ggml_tensor *> & cpy_roots,
-                              std::vector<DepthCaptureRefs> * capture_refs) {
+                              std::vector<DepthCaptureRefs> * capture_refs,
+                              const std::vector<int> * capture_layers) {
     const DepthConfig & c = m.cfg.dd;
     const std::string p = "dd.blk." + std::to_string(il);
     const float scale = 1.0f / std::sqrt((float) c.head_dim);
@@ -422,7 +521,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
 
     res = x;
     h = rms_norm(ctx, x, m.w(p + ".ffn_norm.weight"), c.rms_eps);
-    if (capture_refs && dd_capture_layer(il)) {
+    if (capture_refs && capture_layers &&
+        std::binary_search(capture_layers->begin(), capture_layers->end(), il)) {
         DepthCaptureRefs refs;
         refs.layer = il;
         refs.norm_input = h;
@@ -449,7 +549,8 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
                                   int nb, int j, ggml_tensor * aud, ggml_tensor * emb_tab,
                                   ggml_tensor * h0, ggml_tensor * pos, ggml_tensor * ff,
                                   ggml_tensor * mask, std::vector<ggml_tensor *> & cpy_roots,
-                                  std::vector<DepthCaptureRefs> * capture_refs = nullptr) {
+                                  std::vector<DepthCaptureRefs> * capture_refs = nullptr,
+                                  const std::vector<int> * capture_layers = nullptr) {
     const DepthConfig & c = m.cfg.dd;
     const bool has_hidden = j == 1;
     const int start = has_hidden ? 0 : j;
@@ -465,7 +566,7 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
 
     for (int il = 0; il < c.n_layer; il++)
         x = dd_layer(ctx, m, x, il, pos, ff, mask, start * nb, n_tok, kv.k, kv.v, cpy_roots,
-                     capture_refs);
+                     capture_refs, capture_layers);
     x = rms_norm(ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
 
     ggml_tensor * last = ggml_cont(ctx, ggml_view_2d(ctx, x, c.hidden, nb, x->nb[1],
@@ -481,7 +582,7 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
 // append offset, the head-weight slice, and the CFG concat (present only for j=1)
 // are not writable after build, so every step gets its own graph
 static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap,
-                                 bool capture) {
+                                 const std::vector<int> * capture_layers) {
     const DepthConfig & c = m.cfg.dd;
     const bool has_hidden = j == 1;
     const int start = has_hidden ? 0 : j;
@@ -513,7 +614,7 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
 
     g.logits = dd_step_body(g.ctx, m, kv, nb, j, g.aud, m.w("audio_embd.weight"), g.h0, g.pos,
                             g.ff, g.mask, g.cpy_roots,
-                            capture ? &g.capture_refs : nullptr);
+                            capture_layers ? &g.capture_refs : nullptr, capture_layers);
 
     ggml_set_output(g.logits);
     g.graph = ggml_new_graph_custom(g.ctx, graph_cap, false);
@@ -692,8 +793,11 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     codes.reserve(nc);
 
     const int frame = capture_frame;
-    if (capture_enabled && capture_frame < 16) ++capture_frame;
-    const bool capture_this = capture_enabled && frame < 16 && dd_capture_frame(frame);
+    if (capture_enabled && !capture_frames.empty() &&
+        capture_frame <= capture_frames.back())
+        ++capture_frame;
+    const bool capture_this = capture_enabled &&
+        std::binary_search(capture_frames.begin(), capture_frames.end(), frame);
 
     const bool rtd = rt_depth_timing_enabled();
     auto rtd_now = [] { return std::chrono::steady_clock::now(); };

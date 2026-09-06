@@ -71,11 +71,18 @@ struct DepthRunner {
     std::vector<float> mask_staging;
 
     // BREEZE_DEPTH_CAPTURE=<directory>: bounded, opt-in FFN activation capture.
+    // Optional comma-separated BREEZE_DEPTH_CAPTURE_FRAMES/LAYERS selections default to
+    // 0,7,15 and 0,5,11; LAYERS=all selects all 12 layers. MAX_BYTES defaults to 16 MiB.
     bool capture_enabled = false;
     std::string capture_dir;
     FILE * capture_blob = nullptr;
     FILE * capture_meta = nullptr;
     int capture_frame = 0;
+    std::vector<int> capture_frames;
+    std::vector<int> capture_layers;
+    size_t capture_max_bytes = 0;
+    size_t capture_records = 0;
+    size_t capture_max_records = 0;
     std::vector<float> capture_buf;
 
     // seed is the CLI --seed integer (the same value the step path's rng gets); it seeds
