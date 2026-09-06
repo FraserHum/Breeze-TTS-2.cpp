@@ -15,24 +15,22 @@ substantially but does not rescue Q3; quality acceptance is blocked. The
 full-model numerical gate on CPU and Vulkan, so no throughput or saving claim
 follows and the candidate remains rejected under the current precision path.
 
-The broader language-quality proxy set is complete at 16 samples; results are
-mixed relative to earlier Mandarin proxies and do not establish quality
-acceptance. Expanded all-layer/late-frame capture is complete with byte parity
-at five frames across all 12 layers. Selective Q3_K FFN/Q4 attention is built
-and calibration runtime is in progress with calibration and evaluation kept
-disjoint; the native weighted Q3_K FFN build is in progress. Conditional
-IQ/rotation and the student frontier remain unchanged. The strict-F32 gate
-detects numerical drift, not actual speech failure, and the 0.8 target remains
-unmet.
+The 16-sample language-quality set and expanded capture are complete. Selective
+Q3 FFN/Q4 attention and activation-weighted Q3 FFN both completed four calibration
+speech runs. Long-form wall RTF remains about 0.89–0.91; weighting did not show a
+clear quality or speed improvement. These are separately labelled mixed-format
+models, not unchanged Q4_K results. ASR and the initial UTMOSv2 random-window
+proxies remain descriptive; no candidate has passed speech-quality acceptance.
 
-| Order | Next bounded task | Effort / decision gate |
+| Order | Next bounded task | Decision gate / state |
 |---|---|---|
-| 1 | Evaluate the completed 16-sample language-quality proxy set and expanded all-layer/late-frame capture. | Data/evaluation first. Results are mixed against earlier Mandarin proxies and do not establish acceptance; keep calibration/evaluation disjoint and resolve listening/reference blockers before acceptance. |
-| 2 | Compare calibrated standard Q3_K and selective higher precision using the expanded corpus and original master weights; selective Q3_K FFN/Q4 attention is built and its calibration runtime is in progress. | Retain only with held-out free-running speech quality, human/listening evidence, and measured complete-workload speed. Do not default the current Q3 candidate. |
-| 3 | Revisit handoff **05** rotation/IQ3/custom packing only if calibrated standard Q3_K remains a quality/size shortfall. | Prove quality first, then benchmark one packed operation including decode, transform, scratch, metadata, and backend precision costs before runtime integration. |
-| 4 | Revisit exact sampler/readback and other small finishing work only if the measured remaining gap warrants it. | Prior individual gains were below the retention gate; do not reopen without a changed measured budget and preserved RNG/quality behavior. |
-| 5 | Establish a smaller autoregressive depth student, then investigate handoff **03** parallel/refinement work; conditional **04/06** afterwards. | Week-scale structural work only after bounded quality/quantization work is insufficient or blocked. Reuse the expanded teacher/evaluation data and validate free-running quality and actual 780M latency. |
-| 6 | Re-run the full performance and quality matrix for each retained candidate. | One GPU consumer, profiling/capture disabled, identical settings and >=3 repeats; publish measured gaps and stop when the target passes. |
+| 1 | Measure calibrated native IQ3_XXS FFN with Q4 attention. | Model bytes and finite dequantization verified; 115,605,504 FFN bytes versus Q3_K's 129,761,280. GPU profile and four calibration speech cases in progress. Native Vulkan DMMV may erase the byte saving. |
+| 2 | Complete quality coverage on the existing candidates. | Compare saved calibration speech across all contiguous timeline windows using the same MOS proxy protocol, alongside ASR; retain paired listening as the acceptance gate. Do not choose thresholds from observed scores. |
+| 3 | If needed, screen native IQ2_S; investigate an IQ3 integer-dot port only where native performance and speech evidence justify it. | IQ2_S reduces FFN bytes further but has greater quality risk. Existing CUDA IQ3 integer-dot code is a reuse lead, not evidence of a Vulkan speedup. Include activation quantization and all dispatch costs in measurement. |
+| 4 | Investigate rotation-aware quantization if native formats cannot preserve quality at the required size. | Use the verified BF16 master and calibration data; demonstrate quality before custom packing/runtime integration. Include transform cost and graph placement. |
+| 5 | Revisit exact sampler/readback and small retained operations only when the remaining measured gap is small enough. | Preserve RNG/sampling behavior; prior sub-millisecond observations do not supply the current 8 ms/frame gap. |
+| 6 | Establish a smaller autoregressive depth student if bounded quantization/kernel work is insufficient; parallel/refinement handoffs follow that baseline. | Structural work needs teacher data, training resources, free-running quality and actual 780M measurements. |
+| 7 | Run the untouched final workload matrix after candidate selection. | [Frozen inputs and gates](final-workload-gates.md): nine complete workloads, resident repeats, candidate p50/p95 wall RTF ≤0.8, first audio and delivery gates, paired Q4 quality control. Three timed samples give a descriptive p95, not a population-tail guarantee. |
 
 Validation applies to each candidate throughout this order, not only at the end.
 Existing saved-voice caching and default splitting are already used; no new
