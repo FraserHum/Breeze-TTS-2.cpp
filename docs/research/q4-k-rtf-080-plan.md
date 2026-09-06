@@ -4,7 +4,29 @@ This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-
 
 Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
 
-## Current ordered work — 2026-09-06
+## Current ordered work — after the quantization pilot, 2026-09-06
+
+The [measured quantization pilot](depth-quant-pilot.md) now takes precedence over
+the earlier order below. Standard mixed depth Q3_K runs on the existing Vulkan
+backend and has lower conditional output error than the simple rotated scalar
+emulation. No custom format or default change is justified yet.
+
+1. Complete the multilingual, reference-voice and long-form **quality and RTF
+   matrix for standard depth Q3_K**, against the rebuilt Q4_K control.
+2. If quality passes, use the measured remaining gap to decide a combined
+   **exact sampling/readback and small SwiGLU/head** finishing experiment.
+3. If quality fails, expand **handoff 00 calibration** to all layers, later
+   frames and CFG branches, with a BF16 reference and disjoint evaluation;
+   then try **exact-format calibrated Q3_K rounding** and targeted mixed
+   precision. The current controls are uncalibrated.
+4. Keep **handoff 05 stronger rotation/IQ3/custom packing** conditional on a
+   demonstrated shortfall; then consider student handoffs 03/04/06. Existing
+   sparsity/low-rank handoffs 01/02 remain parked on their failed pilot results.
+
+This candidate changes the depth weight format; it does not establish an
+unchanged-Q4_K RTF improvement or completion of the 0.8 goal.
+
+## Prior ordered work — before the quantization pilot
 
 This section supersedes the historical order below and the initial priority table in `depth-next-results.md`. Investigate unchanged-Q4_K kernels and better quantization before substantial student training. Current short-prompt resident wall RTF is approximately 0.95 (76 ms per 80 ms audio frame); the 0.80 target is 64 ms, leaving approximately 12 ms/frame. Longer and reference-voice workloads have worse receipts: this short-prompt gap is not the full acceptance matrix.
 

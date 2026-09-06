@@ -2,6 +2,15 @@
 
 ## Current status
 
+The new [depth quantization pilot](../docs/research/depth-quant-pilot.md) has a
+separate **mixed depth Q3_K** candidate: warmed mean wall RTF **0.842859** on
+the English report prompt, versus **0.932283** for the current model in this
+session. UTMOS is 4.538 versus 4.551, and four repeats per case are deterministic.
+This single-prompt result is not speech acceptance, a default change, or an
+unchanged-Q4_K speedup. It prioritizes broader Q3_K validation before a custom
+rotated backend. Raw runs and limitations are in
+[quant-runtime.json](depth-corpus/quant-runtime.json).
+
 The RTF 0.8 wall target is **not achieved**. The retained q4_k runtime path is
 the exact conv-tail trim from source commit
 `e0c8f9d250c8dc05a5ee6c806db9679f6ef60770`, with the graphics queue kept as
