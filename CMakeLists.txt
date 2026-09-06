@@ -15,6 +15,7 @@ option(BREEZE_CUDA "Build ggml with the CUDA backend" OFF)
 option(BREEZE_BUILD_CLI "Build the command line app" ON)
 option(BREEZE_BUILD_SERVER "Build the HTTP server" ON)
 option(BREEZE_BUILD_SHARED "Build the shared C library" ON)
+option(BREEZE_BUILD_FFN_BENCH "Build the Q4_K FFN shape benchmark" OFF)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/ggml/CMakeLists.txt")
     message(FATAL_ERROR "third_party/ggml is missing. Run: git submodule update --init --recursive")
@@ -93,6 +94,12 @@ endif()
 
 add_executable(breeze-quantize apps/quantize/main.cpp)
 target_link_libraries(breeze-quantize PRIVATE breeze_core)
+
+if(BREEZE_BUILD_FFN_BENCH)
+    add_executable(depth-ffn-bench tools/depth_ffn_bench.cpp)
+    target_compile_definitions(depth-ffn-bench PRIVATE BREEZE_FFN_VULKAN=$<BOOL:${BREEZE_VULKAN}>)
+    target_link_libraries(depth-ffn-bench PRIVATE ggml)
+endif()
 
 if(BREEZE_BUILD_SERVER)
     add_executable(breeze-server apps/server/main.cpp apps/server/server.cpp apps/server/voices.cpp

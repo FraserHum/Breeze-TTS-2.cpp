@@ -1,0 +1,1922 @@
+{
+  "schema": "breeze-depth-master/v1",
+  "source": {
+    "model": "BreezeBlue/Breeze-TTS-2",
+    "revision": "799624c0b4a1daa8db6d28bbd9850043c0270734",
+    "index_url": "https://huggingface.co/BreezeBlue/Breeze-TTS-2/resolve/799624c0b4a1daa8db6d28bbd9850043c0270734/model.safetensors.index.json",
+    "index_sha256": "19977e3d96bb502ed3165b48adff094f6bd71ec3d349940d1a3ba6a0060bd5e3",
+    "shard": "model-00001-of-00002.safetensors",
+    "shard_url": "https://huggingface.co/BreezeBlue/Breeze-TTS-2/resolve/799624c0b4a1daa8db6d28bbd9850043c0270734/model-00001-of-00002.safetensors",
+    "shard_bytes": 4961989890
+  },
+  "safetensors": {
+    "header_length": 101880,
+    "header_bytes": 101888,
+    "header_sha256": "c3fbcb0b5794d1ff878f8bea799786d02d3181dd9f99fe6daee821a04483bd8f",
+    "data_base": 101888
+  },
+  "selected": {
+    "prefix": "depth_decoder.",
+    "tensor_count": 112,
+    "dtype": "BF16",
+    "tensor_bytes": 868560896,
+    "source_range": {
+      "start": 3011224834,
+      "end_exclusive": 3879785730,
+      "bytes": 868560896
+    },
+    "cache_file": "depth-range.bin",
+    "range_sha256": "6d69058ab262ea751881d263379afaf76161c10d3c2bf9465bca82dda4fdc40a"
+  },
+  "verification": {
+    "status": "passed",
+    "finite_check": "all BF16 exponent patterns with exponent=255 rejected",
+    "generated_at": "2026-09-06T04:45:48.506072+00:00"
+  },
+  "tensors": [
+    {
+      "name": "depth_decoder.codebooks_head.weight",
+      "dtype": "BF16",
+      "shape": [
+        15,
+        1024,
+        2051
+      ],
+      "data_offsets": [
+        3011122946,
+        3074129666
+      ],
+      "source_byte_start": 3011224834,
+      "source_byte_end": 3074231554,
+      "nbytes": 63006720,
+      "local_offset": 0,
+      "sha256": "5671636dd1dcbfbbb94c69a8ea3811903ac47146bb4f4aa4b78fe79d887a0ebd"
+    },
+    {
+      "name": "depth_decoder.model.embed_tokens.weight",
+      "dtype": "BF16",
+      "shape": [
+        32816,
+        2048
+      ],
+      "data_offsets": [
+        3074129666,
+        3208544002
+      ],
+      "source_byte_start": 3074231554,
+      "source_byte_end": 3208645890,
+      "nbytes": 134414336,
+      "local_offset": 63006720,
+      "sha256": "63cea0fd42bac077b686d6fec52d63acda1b45c1fbbec6abe7e01c88e96c5928"
+    },
+    {
+      "name": "depth_decoder.model.inputs_embeds_projector.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        2048
+      ],
+      "data_offsets": [
+        3208544002,
+        3212738306
+      ],
+      "source_byte_start": 3208645890,
+      "source_byte_end": 3212840194,
+      "nbytes": 4194304,
+      "local_offset": 197421056,
+      "sha256": "603faa43578da9a6132dd61433982c355e42f6e0546ca9f837a6f7692f4399c1"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3212738306,
+        3212740354
+      ],
+      "source_byte_start": 3212840194,
+      "source_byte_end": 3212842242,
+      "nbytes": 2048,
+      "local_offset": 201615360,
+      "sha256": "ecd0ebb960c098a0c77976a344eb07206f4c1ef1a0c369223c67b6eb19f54ca5"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3212740354,
+        3229517570
+      ],
+      "source_byte_start": 3212842242,
+      "source_byte_end": 3229619458,
+      "nbytes": 16777216,
+      "local_offset": 201617408,
+      "sha256": "9beeb967bdb84e62dc5e1c3c01b4d511d661c730d093dc05c0e2d8f36ab7a08c"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3229517570,
+        3246294786
+      ],
+      "source_byte_start": 3229619458,
+      "source_byte_end": 3246396674,
+      "nbytes": 16777216,
+      "local_offset": 218394624,
+      "sha256": "a9c6d5069bd00374b37dae8e35e29eb52f299cd18850e0efb7b4d2cf4c41d3a7"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3246294786,
+        3263072002
+      ],
+      "source_byte_start": 3246396674,
+      "source_byte_end": 3263173890,
+      "nbytes": 16777216,
+      "local_offset": 235171840,
+      "sha256": "a5cd5fc146ee88b21c0b5142fdfbe5fba46955ef5078edcf481f7734e61f472f"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3263072002,
+        3263074050
+      ],
+      "source_byte_start": 3263173890,
+      "source_byte_end": 3263175938,
+      "nbytes": 2048,
+      "local_offset": 251949056,
+      "sha256": "566cdd231551f9b1f77fb795578f4b58e9da8b0ae9fbb6ac22d52cebccb2233c"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3263074050,
+        3263598338
+      ],
+      "source_byte_start": 3263175938,
+      "source_byte_end": 3263700226,
+      "nbytes": 524288,
+      "local_offset": 251951104,
+      "sha256": "e4f39e4155e6de024ca72674d4251cd686ed338209e1c65899bd29acb87024d3"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3263598338,
+        3265695490
+      ],
+      "source_byte_start": 3263700226,
+      "source_byte_end": 3265797378,
+      "nbytes": 2097152,
+      "local_offset": 252475392,
+      "sha256": "a1fee954fa5fd75952c81a5427f67d218ae9d343ac79ca6127259214f0d5607d"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3265695490,
+        3267792642
+      ],
+      "source_byte_start": 3265797378,
+      "source_byte_end": 3267894530,
+      "nbytes": 2097152,
+      "local_offset": 254572544,
+      "sha256": "7a25db3ed2ca526e90daa1b6bbce03d119c0740931fd2a4a72f4f2bff8833c64"
+    },
+    {
+      "name": "depth_decoder.model.layers.0.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3267792642,
+        3268316930
+      ],
+      "source_byte_start": 3267894530,
+      "source_byte_end": 3268418818,
+      "nbytes": 524288,
+      "local_offset": 256669696,
+      "sha256": "a8c08652ffef57808fedd702ffd929472516279c31d2b440e715e28ac580730a"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3268316930,
+        3268318978
+      ],
+      "source_byte_start": 3268418818,
+      "source_byte_end": 3268420866,
+      "nbytes": 2048,
+      "local_offset": 257193984,
+      "sha256": "f1fa3fc6c1c660819391b133d6b2f32c62c89b1407eea675fb579c9f149fabf4"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3268318978,
+        3285096194
+      ],
+      "source_byte_start": 3268420866,
+      "source_byte_end": 3285198082,
+      "nbytes": 16777216,
+      "local_offset": 257196032,
+      "sha256": "8cdd0c3b299dd016ad095f0c3cb4ce9fa7653c015251ee8b0ec166ba3d5237fa"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3285096194,
+        3301873410
+      ],
+      "source_byte_start": 3285198082,
+      "source_byte_end": 3301975298,
+      "nbytes": 16777216,
+      "local_offset": 273973248,
+      "sha256": "44fa290850e8e02aa6228d2991f63d3ac4804080635cd0317d1cea37a9190a85"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3301873410,
+        3318650626
+      ],
+      "source_byte_start": 3301975298,
+      "source_byte_end": 3318752514,
+      "nbytes": 16777216,
+      "local_offset": 290750464,
+      "sha256": "fa5a030633ffd3af31d987c16107453f4a0c1cdcfcf9f3739b4dbe811213a895"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3318650626,
+        3318652674
+      ],
+      "source_byte_start": 3318752514,
+      "source_byte_end": 3318754562,
+      "nbytes": 2048,
+      "local_offset": 307527680,
+      "sha256": "70f605e707c4ebfba480da82e50fd33d1016c287fb08170e4e8af53106ff705a"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3318652674,
+        3319176962
+      ],
+      "source_byte_start": 3318754562,
+      "source_byte_end": 3319278850,
+      "nbytes": 524288,
+      "local_offset": 307529728,
+      "sha256": "bbf376ddc805c90bcaef5a7fda9f58ea49db0cae824c54e305f7955f2b1c232d"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3319176962,
+        3321274114
+      ],
+      "source_byte_start": 3319278850,
+      "source_byte_end": 3321376002,
+      "nbytes": 2097152,
+      "local_offset": 308054016,
+      "sha256": "902c74fdf421cff6df300e4ec8c0a2386a7f65af726a7fad7e49e8bb4969266f"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3321274114,
+        3323371266
+      ],
+      "source_byte_start": 3321376002,
+      "source_byte_end": 3323473154,
+      "nbytes": 2097152,
+      "local_offset": 310151168,
+      "sha256": "9741964a3a0ce506e1535e993e2f320defbadfb93cf0693afb1458f4f3ca8836"
+    },
+    {
+      "name": "depth_decoder.model.layers.1.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3323371266,
+        3323895554
+      ],
+      "source_byte_start": 3323473154,
+      "source_byte_end": 3323997442,
+      "nbytes": 524288,
+      "local_offset": 312248320,
+      "sha256": "bda30a690e451ba33f7aa13b275b0c67111d13e44441d2ec69a2b28ef2ae6ff2"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3323895554,
+        3323897602
+      ],
+      "source_byte_start": 3323997442,
+      "source_byte_end": 3323999490,
+      "nbytes": 2048,
+      "local_offset": 312772608,
+      "sha256": "6fd1f6b674a6dcafc4059a9032241231207e18812e7ff8defd901d02d957f1f2"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3323897602,
+        3340674818
+      ],
+      "source_byte_start": 3323999490,
+      "source_byte_end": 3340776706,
+      "nbytes": 16777216,
+      "local_offset": 312774656,
+      "sha256": "83ba76c04645dcad0b4c1b4f0b5d9d429f2bc2f566ba8863f07787c12a9991a4"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3340674818,
+        3357452034
+      ],
+      "source_byte_start": 3340776706,
+      "source_byte_end": 3357553922,
+      "nbytes": 16777216,
+      "local_offset": 329551872,
+      "sha256": "208f168eb9d4a92096145008e31ef3acf6bcc6e3d39ea1dd725f32d9df9cdc34"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3357452034,
+        3374229250
+      ],
+      "source_byte_start": 3357553922,
+      "source_byte_end": 3374331138,
+      "nbytes": 16777216,
+      "local_offset": 346329088,
+      "sha256": "5dd8c9c1a711123505d4249bbb852d2097499f41dd60777c0dba576790cbec14"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3374229250,
+        3374231298
+      ],
+      "source_byte_start": 3374331138,
+      "source_byte_end": 3374333186,
+      "nbytes": 2048,
+      "local_offset": 363106304,
+      "sha256": "6272dd1d136d8b3026d0784731b616a30a5b9e3fb73064b037978fc9cc424ef1"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3374231298,
+        3374755586
+      ],
+      "source_byte_start": 3374333186,
+      "source_byte_end": 3374857474,
+      "nbytes": 524288,
+      "local_offset": 363108352,
+      "sha256": "be2afa0e37e6b4d182561a75c66544b56221ce489eda79d124721222a3188883"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3374755586,
+        3376852738
+      ],
+      "source_byte_start": 3374857474,
+      "source_byte_end": 3376954626,
+      "nbytes": 2097152,
+      "local_offset": 363632640,
+      "sha256": "5a6cb45ba3765451af02f5f84c074eb561991b20197efb49df596709f5a94776"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3376852738,
+        3378949890
+      ],
+      "source_byte_start": 3376954626,
+      "source_byte_end": 3379051778,
+      "nbytes": 2097152,
+      "local_offset": 365729792,
+      "sha256": "4e6a4416c3073175ef86002f4d4ebafa1479cee50a26f22b141763555dfd27be"
+    },
+    {
+      "name": "depth_decoder.model.layers.10.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3378949890,
+        3379474178
+      ],
+      "source_byte_start": 3379051778,
+      "source_byte_end": 3379576066,
+      "nbytes": 524288,
+      "local_offset": 367826944,
+      "sha256": "b88229373d888eca02a15254118395bdeb102031bf3d14ece2cbf9575e11af77"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3379474178,
+        3379476226
+      ],
+      "source_byte_start": 3379576066,
+      "source_byte_end": 3379578114,
+      "nbytes": 2048,
+      "local_offset": 368351232,
+      "sha256": "b22a5ef905c2e7e0490dc419730b5f5a74401b744179b2d079ad930f3e5bee27"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3379476226,
+        3396253442
+      ],
+      "source_byte_start": 3379578114,
+      "source_byte_end": 3396355330,
+      "nbytes": 16777216,
+      "local_offset": 368353280,
+      "sha256": "10b38fc7d26654a307bd050325c9a9cfff76af294834d41a0496b4c52013c398"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3396253442,
+        3413030658
+      ],
+      "source_byte_start": 3396355330,
+      "source_byte_end": 3413132546,
+      "nbytes": 16777216,
+      "local_offset": 385130496,
+      "sha256": "217f1de77315174b59305559daaa9ddb95223122c16e4eb995932fd6cb5940c1"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3413030658,
+        3429807874
+      ],
+      "source_byte_start": 3413132546,
+      "source_byte_end": 3429909762,
+      "nbytes": 16777216,
+      "local_offset": 401907712,
+      "sha256": "e0912562a54ba826a615924e39e4c1632f0fc366d3dcbf98b7df3d424d7bfdf2"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3429807874,
+        3429809922
+      ],
+      "source_byte_start": 3429909762,
+      "source_byte_end": 3429911810,
+      "nbytes": 2048,
+      "local_offset": 418684928,
+      "sha256": "d1e3764ee1889ba2a05d42a4527395f8c603f74a29db9e30dd15ca41e6d489b9"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3429809922,
+        3430334210
+      ],
+      "source_byte_start": 3429911810,
+      "source_byte_end": 3430436098,
+      "nbytes": 524288,
+      "local_offset": 418686976,
+      "sha256": "a472a23673a80e53820dfedd2d313053fceb6bc9ee279d23cc80846b35e6bba7"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3430334210,
+        3432431362
+      ],
+      "source_byte_start": 3430436098,
+      "source_byte_end": 3432533250,
+      "nbytes": 2097152,
+      "local_offset": 419211264,
+      "sha256": "82c0a251062554122a7ab88a9982820c7d5c4d74a37756f8fe5321f8eb819c1c"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3432431362,
+        3434528514
+      ],
+      "source_byte_start": 3432533250,
+      "source_byte_end": 3434630402,
+      "nbytes": 2097152,
+      "local_offset": 421308416,
+      "sha256": "a8d8dc24cf3fa2df36e4143c93e6555190b0f0765b88e61cd1e578375105e885"
+    },
+    {
+      "name": "depth_decoder.model.layers.11.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3434528514,
+        3435052802
+      ],
+      "source_byte_start": 3434630402,
+      "source_byte_end": 3435154690,
+      "nbytes": 524288,
+      "local_offset": 423405568,
+      "sha256": "36ec15f97c53da5c28a7c4840e94c25ec9bbddec197730ac96cb8cd8d7442f39"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3435052802,
+        3435054850
+      ],
+      "source_byte_start": 3435154690,
+      "source_byte_end": 3435156738,
+      "nbytes": 2048,
+      "local_offset": 423929856,
+      "sha256": "c116961b3443e65878a16becfdfa229ed32dcb382f19fd8ec97757b48d0a7a1b"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3435054850,
+        3451832066
+      ],
+      "source_byte_start": 3435156738,
+      "source_byte_end": 3451933954,
+      "nbytes": 16777216,
+      "local_offset": 423931904,
+      "sha256": "bc0d91e757a2e314286b54fc920504becefda58f49b13268b5d2fe99364349cb"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3451832066,
+        3468609282
+      ],
+      "source_byte_start": 3451933954,
+      "source_byte_end": 3468711170,
+      "nbytes": 16777216,
+      "local_offset": 440709120,
+      "sha256": "81917865b3b1e57f0c7e7d8f977bf77780e202e67a7ab1561e5f71bdf509b43f"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3468609282,
+        3485386498
+      ],
+      "source_byte_start": 3468711170,
+      "source_byte_end": 3485488386,
+      "nbytes": 16777216,
+      "local_offset": 457486336,
+      "sha256": "1ccee3a6026d87be0fdd12702790c1e276ff45bf15ef968c9e451789750f2551"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3485386498,
+        3485388546
+      ],
+      "source_byte_start": 3485488386,
+      "source_byte_end": 3485490434,
+      "nbytes": 2048,
+      "local_offset": 474263552,
+      "sha256": "a8c146e4c13dfcb093624edbc6e44ec103762873a2e55838c132d56584280da9"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3485388546,
+        3485912834
+      ],
+      "source_byte_start": 3485490434,
+      "source_byte_end": 3486014722,
+      "nbytes": 524288,
+      "local_offset": 474265600,
+      "sha256": "7a129a8bf588ec730c96f4b18393a3178681184e5617d27fc6272348e7749af6"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3485912834,
+        3488009986
+      ],
+      "source_byte_start": 3486014722,
+      "source_byte_end": 3488111874,
+      "nbytes": 2097152,
+      "local_offset": 474789888,
+      "sha256": "c2a3c25bdf5130acb2eeca82ca2531c166ee34d62fe3dbe32f810b4be33140b1"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3488009986,
+        3490107138
+      ],
+      "source_byte_start": 3488111874,
+      "source_byte_end": 3490209026,
+      "nbytes": 2097152,
+      "local_offset": 476887040,
+      "sha256": "273e1931c70e7006665ec0bb0a7dadf60630ee2a00f7f9fcf414242012c38c40"
+    },
+    {
+      "name": "depth_decoder.model.layers.2.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3490107138,
+        3490631426
+      ],
+      "source_byte_start": 3490209026,
+      "source_byte_end": 3490733314,
+      "nbytes": 524288,
+      "local_offset": 478984192,
+      "sha256": "e6bf9eb9196827669f547eecc2be9f2a4c8ee8e8baa2c8f835e6187f472edc9b"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3490631426,
+        3490633474
+      ],
+      "source_byte_start": 3490733314,
+      "source_byte_end": 3490735362,
+      "nbytes": 2048,
+      "local_offset": 479508480,
+      "sha256": "f64703b4a62e7f806bf203e5c8757e1817b426ada93dade70c576c9904ad2051"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3490633474,
+        3507410690
+      ],
+      "source_byte_start": 3490735362,
+      "source_byte_end": 3507512578,
+      "nbytes": 16777216,
+      "local_offset": 479510528,
+      "sha256": "aababec72103cc293034debaf3fb7550a68e2fdecd9b08ad5ff9171e86c8b9bc"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3507410690,
+        3524187906
+      ],
+      "source_byte_start": 3507512578,
+      "source_byte_end": 3524289794,
+      "nbytes": 16777216,
+      "local_offset": 496287744,
+      "sha256": "18abe371ad4711c692007006e1a3555d3ba9f3c4e3779ebb900791d936637879"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3524187906,
+        3540965122
+      ],
+      "source_byte_start": 3524289794,
+      "source_byte_end": 3541067010,
+      "nbytes": 16777216,
+      "local_offset": 513064960,
+      "sha256": "609959080939710b2121d3e759474fc96836bb84cb473bf898c5e9181d3044e9"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3540965122,
+        3540967170
+      ],
+      "source_byte_start": 3541067010,
+      "source_byte_end": 3541069058,
+      "nbytes": 2048,
+      "local_offset": 529842176,
+      "sha256": "a6d49884082028021af26d55fe15ffe2e7fece8051f3410d6a730bac324fd421"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3540967170,
+        3541491458
+      ],
+      "source_byte_start": 3541069058,
+      "source_byte_end": 3541593346,
+      "nbytes": 524288,
+      "local_offset": 529844224,
+      "sha256": "0ab4773963f7f576e51b261aae10920df17d3629a4c30357399d299e476dd94d"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3541491458,
+        3543588610
+      ],
+      "source_byte_start": 3541593346,
+      "source_byte_end": 3543690498,
+      "nbytes": 2097152,
+      "local_offset": 530368512,
+      "sha256": "ef7be5c728602013b677d15966342f09e1ad84e2fdc6add7e9a41ef015e8d918"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3543588610,
+        3545685762
+      ],
+      "source_byte_start": 3543690498,
+      "source_byte_end": 3545787650,
+      "nbytes": 2097152,
+      "local_offset": 532465664,
+      "sha256": "709284076b9e50f93495507cc66a990a22c2480d5d9ab8b81911172df17710d0"
+    },
+    {
+      "name": "depth_decoder.model.layers.3.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3545685762,
+        3546210050
+      ],
+      "source_byte_start": 3545787650,
+      "source_byte_end": 3546311938,
+      "nbytes": 524288,
+      "local_offset": 534562816,
+      "sha256": "18c4a2e515ef7b1286873d5b7fb5c22ceb14f4b434861d324c2ca0860f82e8c3"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3546210050,
+        3546212098
+      ],
+      "source_byte_start": 3546311938,
+      "source_byte_end": 3546313986,
+      "nbytes": 2048,
+      "local_offset": 535087104,
+      "sha256": "fcfe8950015d831b18244408fb6d5a659a503392606a08c5498beb4f40511f8d"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3546212098,
+        3562989314
+      ],
+      "source_byte_start": 3546313986,
+      "source_byte_end": 3563091202,
+      "nbytes": 16777216,
+      "local_offset": 535089152,
+      "sha256": "b3bc767958326eac88bd2e3109880aa201e93df8c335899799a1fe834fd6c209"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3562989314,
+        3579766530
+      ],
+      "source_byte_start": 3563091202,
+      "source_byte_end": 3579868418,
+      "nbytes": 16777216,
+      "local_offset": 551866368,
+      "sha256": "15b4c40de72ebd15de56d9c36646e8d3cc437015dccf8a50ae97f461a9911e8e"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3579766530,
+        3596543746
+      ],
+      "source_byte_start": 3579868418,
+      "source_byte_end": 3596645634,
+      "nbytes": 16777216,
+      "local_offset": 568643584,
+      "sha256": "86873a5925d524a2b12d81250321acca31f20dfdfb8d694af4f2148d85cf86a9"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3596543746,
+        3596545794
+      ],
+      "source_byte_start": 3596645634,
+      "source_byte_end": 3596647682,
+      "nbytes": 2048,
+      "local_offset": 585420800,
+      "sha256": "eeb42c1030d3598d830de986709f3b2bfaf5a0f135cd20af062f86e5153d0f67"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3596545794,
+        3597070082
+      ],
+      "source_byte_start": 3596647682,
+      "source_byte_end": 3597171970,
+      "nbytes": 524288,
+      "local_offset": 585422848,
+      "sha256": "d7940899018783b1c5e71b65e679d99fc9561b6d483e02a8e9679f61a2cfaa77"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3597070082,
+        3599167234
+      ],
+      "source_byte_start": 3597171970,
+      "source_byte_end": 3599269122,
+      "nbytes": 2097152,
+      "local_offset": 585947136,
+      "sha256": "11805b365dbf0fa1fa859831a8f7485f908a68d3135b5b8bde153ec93fd3a233"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3599167234,
+        3601264386
+      ],
+      "source_byte_start": 3599269122,
+      "source_byte_end": 3601366274,
+      "nbytes": 2097152,
+      "local_offset": 588044288,
+      "sha256": "93ed356ef7d629dcb44222755be61bbdb630609eecc7c2a7e5bea74fa34e61ad"
+    },
+    {
+      "name": "depth_decoder.model.layers.4.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3601264386,
+        3601788674
+      ],
+      "source_byte_start": 3601366274,
+      "source_byte_end": 3601890562,
+      "nbytes": 524288,
+      "local_offset": 590141440,
+      "sha256": "2845884a571df0855cc8cc54f517f6aeef0e078f05dcefa2134f1c05c343c15d"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3601788674,
+        3601790722
+      ],
+      "source_byte_start": 3601890562,
+      "source_byte_end": 3601892610,
+      "nbytes": 2048,
+      "local_offset": 590665728,
+      "sha256": "95675a3cb3a9a942d5130dec9b0c397ec705e20f4ba2ed3efeea9c7ad117021c"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3601790722,
+        3618567938
+      ],
+      "source_byte_start": 3601892610,
+      "source_byte_end": 3618669826,
+      "nbytes": 16777216,
+      "local_offset": 590667776,
+      "sha256": "9a16fb6f118db22f34022c87bb787a743227c95666c9e3abf76fafa2ffa728f8"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3618567938,
+        3635345154
+      ],
+      "source_byte_start": 3618669826,
+      "source_byte_end": 3635447042,
+      "nbytes": 16777216,
+      "local_offset": 607444992,
+      "sha256": "89c4498c5858d3da9406ae66e08119a21904e3aca48f8526c83a076389b87b49"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3635345154,
+        3652122370
+      ],
+      "source_byte_start": 3635447042,
+      "source_byte_end": 3652224258,
+      "nbytes": 16777216,
+      "local_offset": 624222208,
+      "sha256": "3e102617a4f68ae17955907f42f9b68dd5fe6c110212c19fcd2fe3b5c276a153"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3652122370,
+        3652124418
+      ],
+      "source_byte_start": 3652224258,
+      "source_byte_end": 3652226306,
+      "nbytes": 2048,
+      "local_offset": 640999424,
+      "sha256": "03dddc4ecfd72d746e0790bc778112c07f39bbca194fdfa9ff7ba3491b246a3e"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3652124418,
+        3652648706
+      ],
+      "source_byte_start": 3652226306,
+      "source_byte_end": 3652750594,
+      "nbytes": 524288,
+      "local_offset": 641001472,
+      "sha256": "b67f1eedf840daaa6b308616cb72a0c4698ecb22fad7059c4847ddc0cb9a5018"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3652648706,
+        3654745858
+      ],
+      "source_byte_start": 3652750594,
+      "source_byte_end": 3654847746,
+      "nbytes": 2097152,
+      "local_offset": 641525760,
+      "sha256": "792cf81a93dfd2fc1259c18941862b5e948dd0ee1e491f46da10ad33c06106a1"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3654745858,
+        3656843010
+      ],
+      "source_byte_start": 3654847746,
+      "source_byte_end": 3656944898,
+      "nbytes": 2097152,
+      "local_offset": 643622912,
+      "sha256": "6cc606566caf4b33fd38f84c3299dc1398da8c7d4597e64be971024028d63a00"
+    },
+    {
+      "name": "depth_decoder.model.layers.5.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3656843010,
+        3657367298
+      ],
+      "source_byte_start": 3656944898,
+      "source_byte_end": 3657469186,
+      "nbytes": 524288,
+      "local_offset": 645720064,
+      "sha256": "d39a86464bcc950a8ae372cdce8e387da59aef8fced4ce5b1ef933aaa19cc8e4"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3657367298,
+        3657369346
+      ],
+      "source_byte_start": 3657469186,
+      "source_byte_end": 3657471234,
+      "nbytes": 2048,
+      "local_offset": 646244352,
+      "sha256": "e36fa6d876980aab89c5fc25e57b3894602b5a89bd27cf3a40b76a909a652808"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3657369346,
+        3674146562
+      ],
+      "source_byte_start": 3657471234,
+      "source_byte_end": 3674248450,
+      "nbytes": 16777216,
+      "local_offset": 646246400,
+      "sha256": "17b9fd7f95bb73c31a4390d67e35abe59630616631725b435e39573474460cbf"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3674146562,
+        3690923778
+      ],
+      "source_byte_start": 3674248450,
+      "source_byte_end": 3691025666,
+      "nbytes": 16777216,
+      "local_offset": 663023616,
+      "sha256": "cc3fe3732e6b6b28d38b14ba13fbe8394805ee201a15cb1dcececa6f4bac1273"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3690923778,
+        3707700994
+      ],
+      "source_byte_start": 3691025666,
+      "source_byte_end": 3707802882,
+      "nbytes": 16777216,
+      "local_offset": 679800832,
+      "sha256": "d02729050b3a39da215b9dd59ac040084c5ad5cda910c62d5a2f464a801b5057"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3707700994,
+        3707703042
+      ],
+      "source_byte_start": 3707802882,
+      "source_byte_end": 3707804930,
+      "nbytes": 2048,
+      "local_offset": 696578048,
+      "sha256": "95885f1f1774b3ab8cbd2c061f0e33dc86a682680c086a76d37a73872f9ee50f"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3707703042,
+        3708227330
+      ],
+      "source_byte_start": 3707804930,
+      "source_byte_end": 3708329218,
+      "nbytes": 524288,
+      "local_offset": 696580096,
+      "sha256": "acbec813a364950c3964debd9281805502224b3ff2cfb176420afa374afeb0ea"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3708227330,
+        3710324482
+      ],
+      "source_byte_start": 3708329218,
+      "source_byte_end": 3710426370,
+      "nbytes": 2097152,
+      "local_offset": 697104384,
+      "sha256": "691aca38993e9542f06ea3817d872dcef6c3c4e3ae39b37444826f5b3c524084"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3710324482,
+        3712421634
+      ],
+      "source_byte_start": 3710426370,
+      "source_byte_end": 3712523522,
+      "nbytes": 2097152,
+      "local_offset": 699201536,
+      "sha256": "74c93b072f03414c110a4a2ffbdd6bb14176b570d5849758e2e15ca4a0ab005a"
+    },
+    {
+      "name": "depth_decoder.model.layers.6.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3712421634,
+        3712945922
+      ],
+      "source_byte_start": 3712523522,
+      "source_byte_end": 3713047810,
+      "nbytes": 524288,
+      "local_offset": 701298688,
+      "sha256": "3ec45de36035d03efcad497cc350f9243aa449534f0cc20351176f84c117af88"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3712945922,
+        3712947970
+      ],
+      "source_byte_start": 3713047810,
+      "source_byte_end": 3713049858,
+      "nbytes": 2048,
+      "local_offset": 701822976,
+      "sha256": "155522fac58e9604ff4a822accaa6d335f5de9d1a7b00109db1c16ddb2565b90"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3712947970,
+        3729725186
+      ],
+      "source_byte_start": 3713049858,
+      "source_byte_end": 3729827074,
+      "nbytes": 16777216,
+      "local_offset": 701825024,
+      "sha256": "2751098eeea5eb7ef2d5d51e6558217888c2b87378000c2613fd4effd18e818e"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3729725186,
+        3746502402
+      ],
+      "source_byte_start": 3729827074,
+      "source_byte_end": 3746604290,
+      "nbytes": 16777216,
+      "local_offset": 718602240,
+      "sha256": "ea11295e14ba9b8648ea8f699e8db2f66c2c7b550fec0a77c3912210c231cbf5"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3746502402,
+        3763279618
+      ],
+      "source_byte_start": 3746604290,
+      "source_byte_end": 3763381506,
+      "nbytes": 16777216,
+      "local_offset": 735379456,
+      "sha256": "abd56032eb206130e4afe1951f597805a02b93f60db82d688aa5aa12e80ecb14"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3763279618,
+        3763281666
+      ],
+      "source_byte_start": 3763381506,
+      "source_byte_end": 3763383554,
+      "nbytes": 2048,
+      "local_offset": 752156672,
+      "sha256": "618fc5b8d044217168f66f6f5f7fb843a53a70d415be5979741d5a24cf90d76b"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3763281666,
+        3763805954
+      ],
+      "source_byte_start": 3763383554,
+      "source_byte_end": 3763907842,
+      "nbytes": 524288,
+      "local_offset": 752158720,
+      "sha256": "04ec7593fd2af0f5ab32c21f648fce7fbaaf023b64c4bfcbd2efdb58650dce86"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3763805954,
+        3765903106
+      ],
+      "source_byte_start": 3763907842,
+      "source_byte_end": 3766004994,
+      "nbytes": 2097152,
+      "local_offset": 752683008,
+      "sha256": "f21ca39a897f2d0da87f79b7baba6bc6a1d06d6bfa97091e55dfb23df542a737"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3765903106,
+        3768000258
+      ],
+      "source_byte_start": 3766004994,
+      "source_byte_end": 3768102146,
+      "nbytes": 2097152,
+      "local_offset": 754780160,
+      "sha256": "29bc53b6d9d66c7596939ed825a457acf1aa68777f3227e87ebebc32fba90697"
+    },
+    {
+      "name": "depth_decoder.model.layers.7.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3768000258,
+        3768524546
+      ],
+      "source_byte_start": 3768102146,
+      "source_byte_end": 3768626434,
+      "nbytes": 524288,
+      "local_offset": 756877312,
+      "sha256": "916fba086b2b450e0d327a2a4d5d90e65ab0939ae20dab5f5259f1837b980929"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3768524546,
+        3768526594
+      ],
+      "source_byte_start": 3768626434,
+      "source_byte_end": 3768628482,
+      "nbytes": 2048,
+      "local_offset": 757401600,
+      "sha256": "38990ffe4d867eb54a84ed3ab3e530e0587f6aaae77c5b69c8f00322f939ba80"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3768526594,
+        3785303810
+      ],
+      "source_byte_start": 3768628482,
+      "source_byte_end": 3785405698,
+      "nbytes": 16777216,
+      "local_offset": 757403648,
+      "sha256": "7505812ed20323c7d888e0abd054762a86a0c04b2da3aaab16c1cc5dd337bd6e"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3785303810,
+        3802081026
+      ],
+      "source_byte_start": 3785405698,
+      "source_byte_end": 3802182914,
+      "nbytes": 16777216,
+      "local_offset": 774180864,
+      "sha256": "0fe4a3fc10d32de41159a1ac7a5499c55b66ce9ec2ecb5fec98cf79814369c03"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3802081026,
+        3818858242
+      ],
+      "source_byte_start": 3802182914,
+      "source_byte_end": 3818960130,
+      "nbytes": 16777216,
+      "local_offset": 790958080,
+      "sha256": "40436691fec483e6ede716efa691559faa12539e2e8bcf0577a042b68c99355b"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3818858242,
+        3818860290
+      ],
+      "source_byte_start": 3818960130,
+      "source_byte_end": 3818962178,
+      "nbytes": 2048,
+      "local_offset": 807735296,
+      "sha256": "4566f67d4d3a5d4676c728a397849ad91dbebf1b0a84efb29e252eb9fc0afe4b"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3818860290,
+        3819384578
+      ],
+      "source_byte_start": 3818962178,
+      "source_byte_end": 3819486466,
+      "nbytes": 524288,
+      "local_offset": 807737344,
+      "sha256": "79e0ee9abf9a6f4197f0bd99886eb41ba50b9dbea3e2026e462bc443f9487a33"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3819384578,
+        3821481730
+      ],
+      "source_byte_start": 3819486466,
+      "source_byte_end": 3821583618,
+      "nbytes": 2097152,
+      "local_offset": 808261632,
+      "sha256": "d5e4a91157c6bdcfc75a923607395c40c7f68071ab1aa7616d740a5fec1d408b"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3821481730,
+        3823578882
+      ],
+      "source_byte_start": 3821583618,
+      "source_byte_end": 3823680770,
+      "nbytes": 2097152,
+      "local_offset": 810358784,
+      "sha256": "bbaff40581ef0b127051d6133b1c4086afa7e5468793727929fcadeedcf484b5"
+    },
+    {
+      "name": "depth_decoder.model.layers.8.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3823578882,
+        3824103170
+      ],
+      "source_byte_start": 3823680770,
+      "source_byte_end": 3824205058,
+      "nbytes": 524288,
+      "local_offset": 812455936,
+      "sha256": "9d52f36633ac56bc59d4ea2331d0f12b5f7b7222c6c72ee65ea945e1201c2cfa"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.input_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3824103170,
+        3824105218
+      ],
+      "source_byte_start": 3824205058,
+      "source_byte_end": 3824207106,
+      "nbytes": 2048,
+      "local_offset": 812980224,
+      "sha256": "a37f24d695c051548d46e02d11ca0120da4cf20a98781c7816eba2b66f7502bb"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.mlp.down_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        8192
+      ],
+      "data_offsets": [
+        3824105218,
+        3840882434
+      ],
+      "source_byte_start": 3824207106,
+      "source_byte_end": 3840984322,
+      "nbytes": 16777216,
+      "local_offset": 812982272,
+      "sha256": "f9ca5d7bbcf42813a44ca4bc6a3f5aa561a1c0fb717879738064a9245feb1794"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.mlp.gate_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3840882434,
+        3857659650
+      ],
+      "source_byte_start": 3840984322,
+      "source_byte_end": 3857761538,
+      "nbytes": 16777216,
+      "local_offset": 829759488,
+      "sha256": "30b4f0396ce1c1b025563a79b17d1b5ade2a7a41c19ce43685ed1d26d7879f46"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.mlp.up_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        8192,
+        1024
+      ],
+      "data_offsets": [
+        3857659650,
+        3874436866
+      ],
+      "source_byte_start": 3857761538,
+      "source_byte_end": 3874538754,
+      "nbytes": 16777216,
+      "local_offset": 846536704,
+      "sha256": "ab5cfe1f0ac28b22f8e2010807037b926a1502f443b901c33b07bc74875685dc"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.post_attention_layernorm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3874436866,
+        3874438914
+      ],
+      "source_byte_start": 3874538754,
+      "source_byte_end": 3874540802,
+      "nbytes": 2048,
+      "local_offset": 863313920,
+      "sha256": "dbd4de3134d112cca4ab6c2068e4851eaf61146fb6745dc01f08407e5dd481af"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.self_attn.k_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3874438914,
+        3874963202
+      ],
+      "source_byte_start": 3874540802,
+      "source_byte_end": 3875065090,
+      "nbytes": 524288,
+      "local_offset": 863315968,
+      "sha256": "dafcc35ede2dbdd5e0b3cc9c1aa6c08b3cf5ba6605b9d7ec76ee6bfdd31a8d71"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.self_attn.o_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3874963202,
+        3877060354
+      ],
+      "source_byte_start": 3875065090,
+      "source_byte_end": 3877162242,
+      "nbytes": 2097152,
+      "local_offset": 863840256,
+      "sha256": "ef9896ca77c5a90a16e44cfa0d910fd7b56756e5a32523439d70fb92c2be92f5"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.self_attn.q_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024,
+        1024
+      ],
+      "data_offsets": [
+        3877060354,
+        3879157506
+      ],
+      "source_byte_start": 3877162242,
+      "source_byte_end": 3879259394,
+      "nbytes": 2097152,
+      "local_offset": 865937408,
+      "sha256": "b9ee4347e8e9bc7789981cdfd028c63c22de55c4d67d263fd9ff757640ed957e"
+    },
+    {
+      "name": "depth_decoder.model.layers.9.self_attn.v_proj.weight",
+      "dtype": "BF16",
+      "shape": [
+        256,
+        1024
+      ],
+      "data_offsets": [
+        3879157506,
+        3879681794
+      ],
+      "source_byte_start": 3879259394,
+      "source_byte_end": 3879783682,
+      "nbytes": 524288,
+      "local_offset": 868034560,
+      "sha256": "5f28d792f1b78dfe4de48bc0e1ee00ff463decd447bba21604a7e9d9137bf742"
+    },
+    {
+      "name": "depth_decoder.model.norm.weight",
+      "dtype": "BF16",
+      "shape": [
+        1024
+      ],
+      "data_offsets": [
+        3879681794,
+        3879683842
+      ],
+      "source_byte_start": 3879783682,
+      "source_byte_end": 3879785730,
+      "nbytes": 2048,
+      "local_offset": 868558848,
+      "sha256": "9bfdd03d7a276ef10bdd4fc2a7bd957490f759c27307c23b12c6f170988267b8"
+    }
+  ],
+  "notes": [
+    "Source offsets are absolute shard offsets; local_offset indexes cache_file.",
+    "This cache contains depth tensors only; it is not a complete model checkpoint."
+  ]
+}

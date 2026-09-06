@@ -18,7 +18,9 @@ The final same-binary row-specialization experiment used the existing integer Q4
 
 Both multi-row variants are rejected. Their depth-stage penalties are about 1.67 and 2.16 ms/frame; the corresponding whole-run wall penalties are about 2.118 and 2.137 ms/frame from the mean-RTF differences. The one-row result is approximately the existing `0.95` root baseline; this experiment does not establish that an RTF target has been reached. The earlier native large-workgroup path is also rejected. Those results close the two low-risk exact-FFN probes; they do not exhaust custom kernel designs, so no further bespoke kernel is prioritized from this pilot.
 
-## Handoff priority
+## Handoff priority (historical)
+
+Superseded by the [current ordered work](q4-k-rtf-080-plan.md#current-ordered-work--2026-09-06): bounded exact-Q4_K kernel investigation and rotation-assisted quantization feasibility precede substantial student training. The numerical findings here remain unchanged.
 
 | priority | status / next action |
 |---|---|

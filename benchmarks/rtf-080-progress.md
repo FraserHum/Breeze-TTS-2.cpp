@@ -172,6 +172,9 @@ The subsequent [depth investigation](../docs/research/depth-next-results.md)
 validated the small activation corpus, screened simple sparsity/low-rank
 candidates, and rejected the tested integer multi-row shader variants. No
 additional performance change was retained; RTF 0.8 remains unachieved.
+
+The real-weight FFN graph probe separates isolated submission overhead from an already-batched product. A full-generation A/B of native SwiGLU preserved all 14 WAV hashes but saved only **0.872 ms/frame** in the warmed comparison, below the 1 ms retention gate; the original implementation was restored. The BF16 depth master is now verified locally, enabling the next quantization study. No new product default or RTF-0.8 claim follows. See [kernel results](../docs/research/ffn-kernel-feasibility.md) and [product A/B](depth-corpus/swiglu-product.json).
+
 That report contains the updated priority order.
 
 The model-track work uses the [shared activation and teacher corpus

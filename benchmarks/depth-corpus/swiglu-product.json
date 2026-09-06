@@ -1,0 +1,154 @@
+{
+  "scope": "Full product common swiglu_ffn helper replaced with native ggml_swiglu_split; q4_k current graphicsqueue recipe. No model/sampling change.",
+  "frames": 213,
+  "audio_seconds": 17.04,
+  "gate_ms_per_frame": 1.0,
+  "rounds": {
+    "initial": {
+      "control": {
+        "wall_ms_all": [
+          17146.8,
+          15764.3,
+          16017.6
+        ],
+        "wall_rtf_all": [
+          1.0062676056338027,
+          0.9251349765258216,
+          0.9400000000000001
+        ],
+        "depth_ms_per_frame_all": [
+          55.48,
+          50.48,
+          51.45
+        ],
+        "wav_sha256": [
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+        ],
+        "measured_indices_one_based": [
+          1,
+          2,
+          3
+        ],
+        "mean_measured_wall_ms": 16309.566666666666,
+        "mean_measured_wall_rtf": 0.9571341940532081,
+        "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2957.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6206.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9589.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12905.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=16050.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17146.6 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     17146.8 ms (wall RTF 1.006)\ntime to first audio 2958 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.9 ms\n  backbone prefill      73.5 ms\n  first vocoder        264.3 ms  (40 frames)\n  backbone decode     3235.5 ms  (15.19 ms/frame)\n  depth decode       11817.7 ms  (55.48 ms/frame)\n  vocoder             1936.7 ms  (9.09 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-control.wav (17.04 s)\n  flush 1 ready_ms=2879.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5792.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8718.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11731.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14705.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15764.1 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15764.3 ms (wall RTF 0.925)\ntime to first audio 2879 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          34.9 ms\n  backbone prefill      52.7 ms\n  first vocoder        256.0 ms  (40 frames)\n  backbone decode     3066.9 ms  (14.40 ms/frame)\n  depth decode       10752.9 ms  (50.48 ms/frame)\n  vocoder             1850.2 ms  (8.69 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-control.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=3014.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5995.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8969.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11904.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14936.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16017.4 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     16017.6 ms (wall RTF 0.940)\ntime to first audio 3015 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.3 ms\n  backbone prefill      52.8 ms\n  first vocoder        257.8 ms  (40 frames)\n  backbone decode     3096.4 ms  (14.54 ms/frame)\n  depth decode       10958.3 ms  (51.45 ms/frame)\n  vocoder             1872.0 ms  (8.79 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-control.repeat-3.wav (17.04 s)\n",
+        "driver": "import os,subprocess,json\nfrom pathlib import Path\nenv=os.environ.copy()\nfor name in ['GGML_VK_DISABLE_MMVQ','GGML_VK_FORCE_MMVQ','GGML_VK_PERF_LOGGER','GGML_VK_MAX_NODES_PER_SUBMIT','BREEZE_DEPTH_CAPTURE','RADV_DEBUG']: env.pop(name,None)\nenv.update(BREEZE_VOC_STATEFUL='0',BREEZE_DD_FUSED='0',BREEZE_VOC_CONVT_MATMUL='1',BREEZE_VOC_TRIM='1',GGML_VK_ALLOW_GRAPHICS_QUEUE='1')\nargs=['/tmp/ffn-swiglu-baseline-cli', '/models/breeze-tts-2-q4_k.gguf', '--text', 'The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.', '--instruction', 'Speak clearly and naturally.', '--seed', '42', '--repeat', '3', '--timings', '--output', '/tmp/ffn-swiglu-control.wav']\nwith open('/tmp/ffn-swiglu-control.log','w') as f: result=subprocess.run(args,env=env,stdout=f,stderr=subprocess.STDOUT)\nPath('/tmp/ffn-swiglu-control.rc').write_text(str(result.returncode))\n"
+      },
+      "candidate": {
+        "wall_ms_all": [
+          15816.9,
+          15996.6,
+          15672.8
+        ],
+        "wall_rtf_all": [
+          0.9282218309859155,
+          0.9387676056338028,
+          0.9197652582159624
+        ],
+        "depth_ms_per_frame_all": [
+          50.06,
+          51.3,
+          50.08
+        ],
+        "wav_sha256": [
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+        ],
+        "measured_indices_one_based": [
+          1,
+          2,
+          3
+        ],
+        "mean_measured_wall_ms": 15828.766666666666,
+        "mean_measured_wall_rtf": 0.9289182316118936,
+        "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2944.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5868.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8859.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11793.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14757.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15816.7 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15816.9 ms (wall RTF 0.928)\ntime to first audio 2945 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.5 ms\n  backbone prefill      71.6 ms\n  first vocoder        264.1 ms  (40 frames)\n  backbone decode     3105.0 ms  (14.58 ms/frame)\n  depth decode       10662.9 ms  (50.06 ms/frame)\n  vocoder             1894.5 ms  (8.89 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-candidate.wav (17.04 s)\n  flush 1 ready_ms=2955.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5858.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8913.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11883.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14943.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15996.4 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15996.6 ms (wall RTF 0.939)\ntime to first audio 2956 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.3 ms\n  backbone prefill      51.2 ms\n  first vocoder        259.5 ms  (40 frames)\n  backbone decode     3128.6 ms  (14.69 ms/frame)\n  depth decode       10926.8 ms  (51.30 ms/frame)\n  vocoder             1851.3 ms  (8.69 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-candidate.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2853.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5789.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8704.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11616.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14577.8 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15672.6 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15672.8 ms (wall RTF 0.920)\ntime to first audio 2854 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.0 ms\n  backbone prefill      50.9 ms\n  first vocoder        253.6 ms  (40 frames)\n  backbone decode     3076.7 ms  (14.44 ms/frame)\n  depth decode       10667.3 ms  (50.08 ms/frame)\n  vocoder             1840.2 ms  (8.64 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-candidate.repeat-3.wav (17.04 s)\n",
+        "driver": "import os,subprocess,json\nfrom pathlib import Path\nenv=os.environ.copy()\nfor name in ['GGML_VK_DISABLE_MMVQ','GGML_VK_FORCE_MMVQ','GGML_VK_PERF_LOGGER','GGML_VK_MAX_NODES_PER_SUBMIT','BREEZE_DEPTH_CAPTURE','RADV_DEBUG']: env.pop(name,None)\nenv.update(BREEZE_VOC_STATEFUL='0',BREEZE_DD_FUSED='0',BREEZE_VOC_CONVT_MATMUL='1',BREEZE_VOC_TRIM='1',GGML_VK_ALLOW_GRAPHICS_QUEUE='1')\nargs=['/src/build/breeze-cli', '/models/breeze-tts-2-q4_k.gguf', '--text', 'The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.', '--instruction', 'Speak clearly and naturally.', '--seed', '42', '--repeat', '3', '--timings', '--output', '/tmp/ffn-swiglu-candidate.wav']\nwith open('/tmp/ffn-swiglu-candidate.log','w') as f: result=subprocess.run(args,env=env,stdout=f,stderr=subprocess.STDOUT)\nPath('/tmp/ffn-swiglu-candidate.rc').write_text(str(result.returncode))\n"
+      }
+    },
+    "warm_reversed_order": {
+      "control": {
+        "wall_ms_all": [
+          16096.6,
+          16027.3,
+          15817.2,
+          16049.0
+        ],
+        "wall_rtf_all": [
+          0.9446361502347418,
+          0.940569248826291,
+          0.9282394366197183,
+          0.9418427230046948
+        ],
+        "depth_ms_per_frame_all": [
+          51.1,
+          51.45,
+          50.64,
+          51.6
+        ],
+        "wav_sha256": [
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+        ],
+        "measured_indices_one_based": [
+          2,
+          3,
+          4
+        ],
+        "mean_measured_wall_ms": 15964.5,
+        "mean_measured_wall_rtf": 0.9368838028169014,
+        "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3027.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5970.6 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8971.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11998.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15017.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16096.4 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16096.6 ms (wall RTF 0.945)\ntime to first audio 3027 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          78.8 ms\n  backbone prefill      76.1 ms\n  first vocoder        268.0 ms  (40 frames)\n  backbone decode     3135.0 ms  (14.72 ms/frame)\n  depth decode       10884.3 ms  (51.10 ms/frame)\n  vocoder             1915.8 ms  (8.99 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-control.wav (17.04 s)\n  flush 1 ready_ms=2940.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5888.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8818.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11900.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14937.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16027.1 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16027.3 ms (wall RTF 0.941)\ntime to first audio 2941 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.0 ms\n  backbone prefill      52.9 ms\n  first vocoder        269.1 ms  (40 frames)\n  backbone decode     3102.8 ms  (14.57 ms/frame)\n  depth decode       10959.5 ms  (51.45 ms/frame)\n  vocoder             1873.5 ms  (8.80 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-control.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2892.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5828.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8818.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11769.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14745.9 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15817.0 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15817.2 ms (wall RTF 0.928)\ntime to first audio 2892 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.3 ms\n  backbone prefill      57.4 ms\n  first vocoder        258.0 ms  (40 frames)\n  backbone decode     3076.6 ms  (14.44 ms/frame)\n  depth decode       10786.2 ms  (50.64 ms/frame)\n  vocoder             1859.1 ms  (8.73 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-control.repeat-3.wav (17.04 s)\n  flush 1 ready_ms=2943.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5869.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8953.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11952.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14982.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16048.8 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     16049.0 ms (wall RTF 0.942)\ntime to first audio 2944 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.9 ms\n  backbone prefill      55.2 ms\n  first vocoder        252.3 ms  (40 frames)\n  backbone decode     3108.8 ms  (14.60 ms/frame)\n  depth decode       10991.7 ms  (51.60 ms/frame)\n  vocoder             1853.9 ms  (8.70 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-control.repeat-4.wav (17.04 s)\n",
+        "driver": "import os,subprocess,json\nfrom pathlib import Path\nenv=os.environ.copy()\nfor name in ['GGML_VK_DISABLE_MMVQ','GGML_VK_FORCE_MMVQ','GGML_VK_PERF_LOGGER','GGML_VK_MAX_NODES_PER_SUBMIT','BREEZE_DEPTH_CAPTURE','RADV_DEBUG']: env.pop(name,None)\nenv.update(BREEZE_VOC_STATEFUL='0',BREEZE_DD_FUSED='0',BREEZE_VOC_CONVT_MATMUL='1',BREEZE_VOC_TRIM='1',GGML_VK_ALLOW_GRAPHICS_QUEUE='1')\nargs=['/tmp/ffn-swiglu-baseline-cli', '/models/breeze-tts-2-q4_k.gguf', '--text', 'The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.', '--instruction', 'Speak clearly and naturally.', '--seed', '42', '--repeat', '4', '--timings', '--output', '/tmp/ffn-swiglu-warm-control.wav']\nwith open('/tmp/ffn-swiglu-warm-control.log','w') as f: result=subprocess.run(args,env=env,stdout=f,stderr=subprocess.STDOUT)\nPath('/tmp/ffn-swiglu-warm-control.rc').write_text(str(result.returncode))\n"
+      },
+      "candidate": {
+        "wall_ms_all": [
+          15905.0,
+          15805.5,
+          15739.5,
+          15791.4
+        ],
+        "wall_rtf_all": [
+          0.9333920187793427,
+          0.9275528169014085,
+          0.9236795774647887,
+          0.926725352112676
+        ],
+        "depth_ms_per_frame_all": [
+          50.42,
+          50.65,
+          50.31,
+          50.43
+        ],
+        "wav_sha256": [
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+        ],
+        "measured_indices_one_based": [
+          2,
+          3,
+          4
+        ],
+        "mean_measured_wall_ms": 15778.8,
+        "mean_measured_wall_rtf": 0.9259859154929577,
+        "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2958.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5954.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8898.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11848.0 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14847.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15904.8 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15905.0 ms (wall RTF 0.933)\ntime to first audio 2959 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.0 ms\n  backbone prefill      70.8 ms\n  first vocoder        271.0 ms  (40 frames)\n  backbone decode     3115.7 ms  (14.63 ms/frame)\n  depth decode       10739.0 ms  (50.42 ms/frame)\n  vocoder             1896.9 ms  (8.91 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-candidate.wav (17.04 s)\n  flush 1 ready_ms=2862.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5769.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8740.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11673.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14743.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15805.3 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15805.5 ms (wall RTF 0.928)\ntime to first audio 2862 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.7 ms\n  backbone prefill      53.8 ms\n  first vocoder        253.4 ms  (40 frames)\n  backbone decode     3088.1 ms  (14.50 ms/frame)\n  depth decode       10787.5 ms  (50.65 ms/frame)\n  vocoder             1836.8 ms  (8.62 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-candidate.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2907.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5840.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8745.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11726.5 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14691.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15739.3 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15739.5 ms (wall RTF 0.924)\ntime to first audio 2908 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          30.6 ms\n  backbone prefill      50.9 ms\n  first vocoder        263.0 ms  (40 frames)\n  backbone decode     3076.7 ms  (14.44 ms/frame)\n  depth decode       10715.3 ms  (50.31 ms/frame)\n  vocoder             1858.8 ms  (8.73 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-candidate.repeat-3.wav (17.04 s)\n  flush 1 ready_ms=2846.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5791.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8717.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11642.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14707.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15791.3 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15791.4 ms (wall RTF 0.927)\ntime to first audio 2847 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.3 ms\n  backbone prefill      51.4 ms\n  first vocoder        254.6 ms  (40 frames)\n  backbone decode     3085.8 ms  (14.49 ms/frame)\n  depth decode       10740.9 ms  (50.43 ms/frame)\n  vocoder             1875.2 ms  (8.80 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/ffn-swiglu-warm-candidate.repeat-4.wav (17.04 s)\n",
+        "driver": "import os,subprocess,json\nfrom pathlib import Path\nenv=os.environ.copy()\nfor name in ['GGML_VK_DISABLE_MMVQ','GGML_VK_FORCE_MMVQ','GGML_VK_PERF_LOGGER','GGML_VK_MAX_NODES_PER_SUBMIT','BREEZE_DEPTH_CAPTURE','RADV_DEBUG']: env.pop(name,None)\nenv.update(BREEZE_VOC_STATEFUL='0',BREEZE_DD_FUSED='0',BREEZE_VOC_CONVT_MATMUL='1',BREEZE_VOC_TRIM='1',GGML_VK_ALLOW_GRAPHICS_QUEUE='1')\nargs=['/src/build/breeze-cli', '/models/breeze-tts-2-q4_k.gguf', '--text', 'The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.', '--instruction', 'Speak clearly and naturally.', '--seed', '42', '--repeat', '4', '--timings', '--output', '/tmp/ffn-swiglu-warm-candidate.wav']\nwith open('/tmp/ffn-swiglu-warm-candidate.log','w') as f: result=subprocess.run(args,env=env,stdout=f,stderr=subprocess.STDOUT)\nPath('/tmp/ffn-swiglu-warm-candidate.rc').write_text(str(result.returncode))\n"
+      }
+    }
+  },
+  "saving_ms_per_frame": 0.8718309859154963,
+  "decision": "Not retained: warmed sameaudio difference below1ms/frame gate. Initial control first run outlier; preserve both rounds, no broad quality reruns justified.",
+  "candidate_source": "75e11b691fcb58bcb3c79c25a286d34e82354dd398dab8be54183e8ed57f24b7  /src/build/breeze-cli\nafb313e4e02023b05f14a5907a69b4237387559bf46d2ba5231180e66638da29  /src/src/common.cpp\n",
+  "restoration": {
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "common_cpp_sha256": "17e78b906013eb9c7f36d362837188a6c03ca13f6e16a1ea10ac6f86587cb847",
+    "ggml_vulkan_sha256": "78ddb01613ebd010879a9b72cdcaa173f30e40fc0c67b48c80908713ea792f70",
+    "cmake_md5": "ad32568296922d3200745fb10e8911f9",
+    "build_rc": 0
+  }
+}

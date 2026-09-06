@@ -1,0 +1,939 @@
+{
+  "probe": "real_q4_k_ffn_graph",
+  "backend": "gpu",
+  "device": "Vulkan0",
+  "model": "/models/breeze-tts-2-q4_k.gguf",
+  "weights": "real_model_Q4_K",
+  "input": "synthetic_normalized_f32_scale_0.25",
+  "timed_scope": "graph_compute_plus_synchronize",
+  "runs": [
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 1,
+      "warmup": 4,
+      "iterations": 12,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 658.54425,
+              "submissions": 5,
+              "checksum": "8ab02dd52eedb55b",
+              "repeat_checksum": "8ab02dd52eedb55b"
+            },
+            "per_ffn": {
+              "mean_us": 415.625583333,
+              "submissions": 1,
+              "checksum": "8ab02dd52eedb55b",
+              "repeat_checksum": "8ab02dd52eedb55b"
+            },
+            "batched": {
+              "mean_us": 411.254166667,
+              "submissions": 1,
+              "checksum": "8ab02dd52eedb55b",
+              "repeat_checksum": "8ab02dd52eedb55b"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 377.748666667,
+              "submissions": 1,
+              "checksum": "8ab02dd52eedb55b",
+              "repeat_checksum": "8ab02dd52eedb55b"
+            },
+            "batched_swiglu": {
+              "mean_us": 375.16475,
+              "submissions": 1,
+              "checksum": "8ab02dd52eedb55b",
+              "repeat_checksum": "8ab02dd52eedb55b"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 618.149416667,
+              "submissions": 5,
+              "checksum": "e9f8e3c07f401672",
+              "repeat_checksum": "e9f8e3c07f401672"
+            },
+            "per_ffn": {
+              "mean_us": 461.55075,
+              "submissions": 1,
+              "checksum": "e9f8e3c07f401672",
+              "repeat_checksum": "e9f8e3c07f401672"
+            },
+            "batched": {
+              "mean_us": 457.88475,
+              "submissions": 1,
+              "checksum": "e9f8e3c07f401672",
+              "repeat_checksum": "e9f8e3c07f401672"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 415.456083333,
+              "submissions": 1,
+              "checksum": "e9f8e3c07f401672",
+              "repeat_checksum": "e9f8e3c07f401672"
+            },
+            "batched_swiglu": {
+              "mean_us": 411.21825,
+              "submissions": 1,
+              "checksum": "e9f8e3c07f401672",
+              "repeat_checksum": "e9f8e3c07f401672"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 4,
+      "iterations": 12,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6966.3675,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 5030.84983333,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2655.78633333,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3374.00383333,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2410.63608333,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 6186.67608333,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4413.05108333,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2960.06883333,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3662.73416667,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2473.19625,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 50,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6789.09274,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 4093.12026,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2369.54704,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3144.86554,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2326.92684,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 6523.59186,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4136.35042,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2394.35768,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3437.04046,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2434.38308,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 50,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6876.57292,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 5993.29328,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2416.002,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3257.68934,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2355.01172,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 6471.69602,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4174.07736,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2372.56024,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3184.02874,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2332.03692,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 50,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6847.93662,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 4436.29672,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2437.9627,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3435.9352,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2322.59382,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 6500.44456,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4089.89528,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2518.81762,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3268.2912,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2420.73518,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ]
+    }
+  ],
+  "manager_verification": {
+    "iterations": 100,
+    "warmup": 20,
+    "layers": 12,
+    "graphics_queue": true,
+    "source_sha256": "ac02e26f28041a47a511345a9489dfb1775a83820e1b817d41f6522777e6deec",
+    "binary_sha256": "4204c0cdedb08fb5add9232a44e2506d9261ad0cb08ad2f6d6c3779dac12eccc",
+    "runs": [
+      {
+        "repeat": 1,
+        "variant": "split",
+        "n": "1",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "6873.301",
+        "per_submission_us": "114.555",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 1,
+        "variant": "per_ffn",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4358.858",
+        "per_submission_us": "363.238",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 1,
+        "variant": "batched",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2324.955",
+        "per_submission_us": "2324.955",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 1,
+        "variant": "per_ffn_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3213.120",
+        "per_submission_us": "267.760",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 1,
+        "variant": "batched_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2384.492",
+        "per_submission_us": "2384.492",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 1,
+        "variant": "split",
+        "n": "2",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "6941.076",
+        "per_submission_us": "115.685",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 1,
+        "variant": "per_ffn",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4002.940",
+        "per_submission_us": "333.578",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 1,
+        "variant": "batched",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2350.564",
+        "per_submission_us": "2350.564",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 1,
+        "variant": "per_ffn_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3256.976",
+        "per_submission_us": "271.415",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 1,
+        "variant": "batched_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2401.171",
+        "per_submission_us": "2401.171",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 2,
+        "variant": "split",
+        "n": "1",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "6841.631",
+        "per_submission_us": "114.027",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 2,
+        "variant": "per_ffn",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4015.417",
+        "per_submission_us": "334.618",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 2,
+        "variant": "batched",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2314.623",
+        "per_submission_us": "2314.623",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 2,
+        "variant": "per_ffn_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3178.409",
+        "per_submission_us": "264.867",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 2,
+        "variant": "batched_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2363.192",
+        "per_submission_us": "2363.192",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 2,
+        "variant": "split",
+        "n": "2",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "6928.384",
+        "per_submission_us": "115.473",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 2,
+        "variant": "per_ffn",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4065.767",
+        "per_submission_us": "338.814",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 2,
+        "variant": "batched",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2383.728",
+        "per_submission_us": "2383.728",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 2,
+        "variant": "per_ffn_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3217.211",
+        "per_submission_us": "268.101",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 2,
+        "variant": "batched_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2401.153",
+        "per_submission_us": "2401.153",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 3,
+        "variant": "split",
+        "n": "1",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "6805.662",
+        "per_submission_us": "113.428",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 3,
+        "variant": "per_ffn",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4058.619",
+        "per_submission_us": "338.218",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 3,
+        "variant": "batched",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2685.050",
+        "per_submission_us": "2685.050",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 3,
+        "variant": "per_ffn_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3300.458",
+        "per_submission_us": "275.038",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 3,
+        "variant": "batched_swiglu",
+        "n": "1",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2391.654",
+        "per_submission_us": "2391.654",
+        "checksum": "fa45fb51a7fb99ae",
+        "repeat_checksum": "fa45fb51a7fb99ae"
+      },
+      {
+        "repeat": 3,
+        "variant": "split",
+        "n": "2",
+        "layers": "12",
+        "submissions": "60",
+        "mean_us": "7067.720",
+        "per_submission_us": "117.795",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 3,
+        "variant": "per_ffn",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "4056.448",
+        "per_submission_us": "338.037",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 3,
+        "variant": "batched",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2380.301",
+        "per_submission_us": "2380.301",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 3,
+        "variant": "per_ffn_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "12",
+        "mean_us": "3175.941",
+        "per_submission_us": "264.662",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      },
+      {
+        "repeat": 3,
+        "variant": "batched_swiglu",
+        "n": "2",
+        "layers": "12",
+        "submissions": "1",
+        "mean_us": "2399.593",
+        "per_submission_us": "2399.593",
+        "checksum": "d48e42ef0599b7a0",
+        "repeat_checksum": "d48e42ef0599b7a0"
+      }
+    ],
+    "logs": {
+      "1": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nbackend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=6873.301 per_submission_us=114.555 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4358.858 per_submission_us=363.238 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched n=1 layers=12 submissions=1 mean_us=2324.955 per_submission_us=2324.955 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3213.120 per_submission_us=267.760 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2384.492 per_submission_us=2384.492 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=fa45fb51a7fb99ae swiglu_checksum=fa45fb51a7fb99ae\nvariant=split n=2 layers=12 submissions=60 mean_us=6941.076 per_submission_us=115.685 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4002.940 per_submission_us=333.578 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2350.564 per_submission_us=2350.564 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3256.976 per_submission_us=271.415 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2401.171 per_submission_us=2401.171 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\n",
+      "2": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nbackend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=6841.631 per_submission_us=114.027 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4015.417 per_submission_us=334.618 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched n=1 layers=12 submissions=1 mean_us=2314.623 per_submission_us=2314.623 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3178.409 per_submission_us=264.867 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2363.192 per_submission_us=2363.192 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=fa45fb51a7fb99ae swiglu_checksum=fa45fb51a7fb99ae\nvariant=split n=2 layers=12 submissions=60 mean_us=6928.384 per_submission_us=115.473 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4065.767 per_submission_us=338.814 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2383.728 per_submission_us=2383.728 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3217.211 per_submission_us=268.101 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2401.153 per_submission_us=2401.153 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\n",
+      "3": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nbackend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=6805.662 per_submission_us=113.428 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4058.619 per_submission_us=338.218 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched n=1 layers=12 submissions=1 mean_us=2685.050 per_submission_us=2685.050 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3300.458 per_submission_us=275.038 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2391.654 per_submission_us=2391.654 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=fa45fb51a7fb99ae swiglu_checksum=fa45fb51a7fb99ae\nvariant=split n=2 layers=12 submissions=60 mean_us=7067.720 per_submission_us=117.795 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4056.448 per_submission_us=338.037 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2380.301 per_submission_us=2380.301 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3175.941 per_submission_us=264.662 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2399.593 per_submission_us=2399.593 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\n"
+    },
+    "note": "Independent later100iteration verification; retain separate from worker50iteration runs. Same outputs for all modes; fixed variant order. Latest harness adds explicit crossvariant failuregate outside timing."
+  },
+  "radv_compiler_stats": {
+    "command": "RADV_DEBUG=nocache,shaderstats,cs,asm GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /src/build/depth-ffn-bench --backend gpu --layers 1 --warmup 0 --iterations 1",
+    "scope": "Earlier synthetic harness. Shader identities not mapped; static compilerstats not runtimeoccupancy. No timingused.",
+    "log_sha256": "ed431bccab0e22bb993c76e4d0d3dbbc43ded3f96b1bf717be1fc08322f02f32",
+    "shaders": [
+      {
+        "Driver pipeline hash": 1004083455903173477,
+        "SGPRs": 108,
+        "VGPRs": 56,
+        "Spilled SGPRs": 0,
+        "Spilled VGPRs": 0,
+        "Code size": 4536,
+        "LDS size": 0,
+        "Scratch size": 0,
+        "Subgroups per SIMD": 18,
+        "Combined inputs": 0,
+        "Combined outputs": 0,
+        "Hash": 2720021152,
+        "Instructions": 977,
+        "Copies": 63,
+        "Branches": 30,
+        "Latency": 4386,
+        "Inverse Throughput": 1505,
+        "VMEM Clause": 10,
+        "SMEM Clause": 22,
+        "Pre-Sched SGPRs": 19,
+        "Pre-Sched VGPRs": 42,
+        "VALU": 472,
+        "SALU": 222,
+        "VMEM": 32,
+        "SMEM": 24,
+        "VOPD": 0
+      },
+      {
+        "Driver pipeline hash": 3529797031662323806,
+        "SGPRs": 108,
+        "VGPRs": 32,
+        "Spilled SGPRs": 0,
+        "Spilled VGPRs": 0,
+        "Code size": 608,
+        "LDS size": 0,
+        "Scratch size": 0,
+        "Subgroups per SIMD": 32,
+        "Combined inputs": 0,
+        "Combined outputs": 0,
+        "Hash": 743202803,
+        "Instructions": 114,
+        "Copies": 16,
+        "Branches": 5,
+        "Latency": 3142,
+        "Inverse Throughput": 651,
+        "VMEM Clause": 3,
+        "SMEM Clause": 2,
+        "Pre-Sched SGPRs": 14,
+        "Pre-Sched VGPRs": 13,
+        "VALU": 61,
+        "SALU": 20,
+        "VMEM": 3,
+        "SMEM": 2,
+        "VOPD": 0
+      },
+      {
+        "Driver pipeline hash": 7195640168652356557,
+        "SGPRs": 108,
+        "VGPRs": 32,
+        "Spilled SGPRs": 0,
+        "Spilled VGPRs": 0,
+        "Code size": 13296,
+        "LDS size": 0,
+        "Scratch size": 0,
+        "Subgroups per SIMD": 32,
+        "Combined inputs": 0,
+        "Combined outputs": 0,
+        "Hash": 4004777053,
+        "Instructions": 2539,
+        "Copies": 118,
+        "Branches": 44,
+        "Latency": 16437,
+        "Inverse Throughput": 4242,
+        "VMEM Clause": 57,
+        "SMEM Clause": 40,
+        "Pre-Sched SGPRs": 23,
+        "Pre-Sched VGPRs": 26,
+        "VALU": 1548,
+        "SALU": 278,
+        "VMEM": 102,
+        "SMEM": 42,
+        "VOPD": 0
+      },
+      {
+        "Driver pipeline hash": 7425067731871191874,
+        "SGPRs": 108,
+        "VGPRs": 32,
+        "Spilled SGPRs": 0,
+        "Spilled VGPRs": 0,
+        "Code size": 8260,
+        "LDS size": 0,
+        "Scratch size": 0,
+        "Subgroups per SIMD": 32,
+        "Combined inputs": 0,
+        "Combined outputs": 0,
+        "Hash": 1389757552,
+        "Instructions": 1609,
+        "Copies": 82,
+        "Branches": 29,
+        "Latency": 10153,
+        "Inverse Throughput": 2870,
+        "VMEM Clause": 28,
+        "SMEM Clause": 25,
+        "Pre-Sched SGPRs": 22,
+        "Pre-Sched VGPRs": 24,
+        "VALU": 949,
+        "SALU": 229,
+        "VMEM": 58,
+        "SMEM": 27,
+        "VOPD": 0
+      }
+    ]
+  },
+  "final_harness_source_sha256": "f1e023dbfe21e3339e5d5e5d181e56b0271666c1f3a86175bd6b0fad1bce4e55",
+  "restoration": {
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "common_cpp_sha256": "17e78b906013eb9c7f36d362837188a6c03ca13f6e16a1ea10ac6f86587cb847",
+    "ggml_vulkan_sha256": "78ddb01613ebd010879a9b72cdcaa173f30e40fc0c67b48c80908713ea792f70",
+    "cmake_md5": "ad32568296922d3200745fb10e8911f9",
+    "build_rc": 0
+  }
+}

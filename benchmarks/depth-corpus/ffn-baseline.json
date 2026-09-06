@@ -1,0 +1,165 @@
+{
+  "date": "2026-09-06",
+  "source_revision": "f756f8ebde683ab0e2feddaabc3580fff3504f40",
+  "ggml_revision": "e7d634a0a457d37eb4d3b70a90d3cdf19bcd306d",
+  "pod": "hermes-voice/breezetts-dev",
+  "device": "AMD Radeon 780M Graphics (RADV PHOENIX)",
+  "backend": "Vulkan0",
+  "weights": {
+    "type": "Q4_K",
+    "source": "deterministic synthetic f32 quantized with ggml_quantize_chunk",
+    "representative_matrices": 24,
+    "rotating_matrices_per_shape": 12,
+    "bytes_per_matrix": 4718592,
+    "resident_bytes": 113246208
+  },
+  "timed_scope": "ggml_backend_graph_compute plus ggml_backend_synchronize; host set/get and quantization excluded",
+  "command": "env -u GGML_VK_DISABLE_MMVQ -u GGML_VK_FORCE_MMVQ -u GGML_VK_ALLOW_GRAPHICS_QUEUE -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT /src/build/depth-ffn-bench --backend gpu --layers {1|12} --warmup 10 --iterations 100",
+  "runs": [
+    {
+      "layers": 12,
+      "rep": 1,
+      "results_us": {
+        "gate_up_n1": 159.246,
+        "gate_up_n2": 160.864,
+        "down_n1": 127.584,
+        "down_n2": 156.7
+      },
+      "checksums": {
+        "gate_up_n1": "0d531f74f7518f21",
+        "gate_up_n2": "d735b52b843a8acc",
+        "down_n1": "2192ea4f77e1d98c",
+        "down_n2": "236dd4f4b9cf39b8"
+      }
+    },
+    {
+      "layers": 12,
+      "rep": 2,
+      "results_us": {
+        "gate_up_n1": 158.056,
+        "gate_up_n2": 161.25,
+        "down_n1": 128.324,
+        "down_n2": 152.851
+      },
+      "checksums": {
+        "gate_up_n1": "0d531f74f7518f21",
+        "gate_up_n2": "d735b52b843a8acc",
+        "down_n1": "2192ea4f77e1d98c",
+        "down_n2": "236dd4f4b9cf39b8"
+      }
+    },
+    {
+      "layers": 12,
+      "rep": 3,
+      "results_us": {
+        "gate_up_n1": 158.749,
+        "gate_up_n2": 162.226,
+        "down_n1": 129.762,
+        "down_n2": 152.734
+      },
+      "checksums": {
+        "gate_up_n1": "0d531f74f7518f21",
+        "gate_up_n2": "d735b52b843a8acc",
+        "down_n1": "2192ea4f77e1d98c",
+        "down_n2": "236dd4f4b9cf39b8"
+      }
+    },
+    {
+      "layers": 1,
+      "rep": 1,
+      "results_us": {
+        "gate_up_n1": 173.475,
+        "gate_up_n2": 171.644,
+        "down_n1": 132.655,
+        "down_n2": 156.421
+      },
+      "checksums": {
+        "gate_up_n1": "1429155de80c3718",
+        "gate_up_n2": "b96901eb804854fe",
+        "down_n1": "08188be9df81a775",
+        "down_n2": "e6cbd77824c36f88"
+      }
+    },
+    {
+      "layers": 1,
+      "rep": 2,
+      "results_us": {
+        "gate_up_n1": 157.818,
+        "gate_up_n2": 171.366,
+        "down_n1": 127.589,
+        "down_n2": 153.533
+      },
+      "checksums": {
+        "gate_up_n1": "1429155de80c3718",
+        "gate_up_n2": "b96901eb804854fe",
+        "down_n1": "08188be9df81a775",
+        "down_n2": "e6cbd77824c36f88"
+      }
+    },
+    {
+      "layers": 1,
+      "rep": 3,
+      "results_us": {
+        "gate_up_n1": 178.073,
+        "gate_up_n2": 180.589,
+        "down_n1": 150.688,
+        "down_n2": 153.104
+      },
+      "checksums": {
+        "gate_up_n1": "1429155de80c3718",
+        "gate_up_n2": "b96901eb804854fe",
+        "down_n1": "08188be9df81a775",
+        "down_n2": "e6cbd77824c36f88"
+      }
+    }
+  ],
+  "graphics_queue_runs": {
+    "command": "env -u GGML_VK_DISABLE_MMVQ -u GGML_VK_FORCE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /src/build/depth-ffn-bench --backend gpu --layers 12 --warmup 10 --iterations 100",
+    "runs": [
+      {
+        "rep": 1,
+        "results_us": {
+          "gate_up_n1": 158.671,
+          "gate_up_n2": 173.097,
+          "down_n1": 133.618,
+          "down_n2": 155.704
+        }
+      },
+      {
+        "rep": 2,
+        "results_us": {
+          "gate_up_n1": 157.629,
+          "gate_up_n2": 167.743,
+          "down_n1": 130.548,
+          "down_n2": 156.896
+        }
+      },
+      {
+        "rep": 3,
+        "results_us": {
+          "gate_up_n1": 157.932,
+          "gate_up_n2": 171.149,
+          "down_n1": 130.743,
+          "down_n2": 156.811
+        }
+      }
+    ],
+    "qualification": "This is the graphics-queue A/B of the isolated synthetic probe; it is not the product end-to-end queue result."
+  },
+  "dispatch_receipt": {
+    "command": "env -u GGML_VK_DISABLE_MMVQ -u GGML_VK_FORCE_MMVQ -u GGML_VK_ALLOW_GRAPHICS_QUEUE GGML_VK_PERF_LOGGER=1 /src/build/depth-ffn-bench --backend gpu --layers 1 --warmup 0 --iterations 1",
+    "labels": [
+      "MUL_MAT_VEC q4_K m=8192 n=1 k=1024",
+      "MUL_MAT_VEC q4_K m=8192 n=2 k=1024",
+      "MUL_MAT_VEC q4_K m=1024 n=1 k=8192",
+      "MUL_MAT_VEC q4_K m=1024 n=2 k=8192"
+    ],
+    "qualification": "GGML_VK_PERF_LOGGER changes synchronization and is a dispatch receipt only; its timings are excluded from results_us"
+  },
+  "restore": {
+    "cmake_md5": "ad32568296922d3200745fb10e8911f9",
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "benchmark_source_removed": true,
+    "cmake_option_removed": true
+  }
+}
