@@ -214,3 +214,13 @@ No defaults changed. Next: complete default-split product measurements, then
 context-dependent backbone investigation and expanded Q3_K quality/calibration,
 ahead of small sampler finishing work. See the [full report and ordered tasks](../docs/research/depth-quant-matrix.md),
 [runtime receipt](depth-corpus/quant-matrix.json), and [speech receipt](depth-corpus/quant-speech.json).
+
+## Default-split long-form and backbone context — 2026-09-06
+
+Six complete-input cases, four resident repeats each, retain identical WAVs within each case. Mixed depth Q3_K mean RTF is **0.897 English, 0.899 Mandarin and 0.911 saved voice**, versus Q4 **0.977, 0.994 and 1.005**. Q3 has no warmed flush-readiness deficit, but still misses 0.8 by 7.8–8.9 ms/frame. This is not an audio-device underrun test.
+
+Long Mandarin quality is a blocker: Whisper medium disagreements are 158/233 Q4 and 103/233 Q3. An instruction-only Mandarin control improves Q4 to 34/233 but leaves Q3 at 110/233. These are proxy diagnostics, not listening or accepted quality. Calibration and targeted precision now need broader language coverage before Q3 deployment.
+
+The new diagnostic tool measures existing backbone calls at fixed contexts: **12.76 / 14.99 / 17.99 / 28.05 ms** for 64 / 256 / 512 / 1024 tokens, with exact repeated output checks passing. Separate profiler traces implicate QK and context-growing contiguous-copy work. Next engine experiment: existing native backbone flash attention, with full numerical/speech A/B; no speedup is yet claimed. No production defaults changed.
+
+See [full findings](../docs/research/default-split-longform.md), [updated ordered tasks](../docs/research/q4-k-rtf-080-plan.md), [runtime receipt](depth-corpus/quant-longform.json), [ASR diagnostic](depth-corpus/quant-longform-asr-diagnostic.json), and [context receipt](depth-corpus/backbone-context.json).

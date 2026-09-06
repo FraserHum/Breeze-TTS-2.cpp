@@ -4,34 +4,27 @@ This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-
 
 Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
 
-## Current ordered work — after the broader Q3_K matrix, 2026-09-06
+## Current ordered work — after default-split long-form and context probes, 2026-09-06
 
-The [broader runtime and speech matrix](depth-quant-matrix.md) supersedes the
-short-prompt pilot order. Q3_K improves every workload but misses 0.8 throughout;
-ASR/speaker probes are encouraging but quality acceptance remains inconclusive.
-Existing saved-voice caching preserves exact output and reduces reference Q3_K
-mean wall RTF from 0.988 to 0.892. It needs no new cache implementation.
+The [complete-input report](default-split-longform.md) closes the measurement and
+backbone profiling tasks. Mixed depth Q3_K mean RTF is 0.897/0.899/0.911 for
+English/Mandarin/saved voice, leaving **7.8–8.9 ms/frame** to 0.8. All warmed
+performance gates still fail. Explicit Mandarin instruction improves Q4 ASR
+substantially but does not rescue Q3; quality acceptance is blocked.
 
-1. Measure **complete default-split long-form product workloads**, including
-   saved voices. Keep the unsplit capped stress as a separate failed gate.
-2. Profile **backbone context-dependent attention/KV/V-layout cost**, then
-   test one justified existing ggml improvement. Backbone rises from about
-   14 to 29 ms/frame in the unsplit stress; removable savings are unproven.
-3. Expand **handoff 00 quality/calibration coverage** for standard Q3_K;
-   use calibrated rounding/selective precision when held-out quality identifies
-   the need. This CPU/data work can overlap investigation, with one GPU owner.
-4. Reopen **exact sampling/readback plus small SwiGLU/head** finishing work
-   only after the accepted candidate has a sufficiently small measured gap.
-5. Keep **handoff 05 stronger rotation/IQ3/custom packing** conditional on a
-   demonstrated standard-format shortfall and packed-operation feasibility.
-6. Then smaller autoregressive depth student, handoff **03**, and conditional
-   **04/06**. **01/02** remain parked on the failed sparsity/low-rank pilots.
+| Order | Next bounded task | Effort / decision gate |
+|---|---|---|
+| 1 | Establish a language-explicit Q4 quality baseline and expand handoff **00** with disjoint long-form, language, voice and seed coverage. | Data/evaluation first; include listening and predeclared intelligibility criteria. Diagnose the Q3 gap before deployment. One Mandarin fixture is evidence to investigate, not a universal verdict. |
+| 2 | A/B existing native flash attention at the **backbone call site only**. | About one day for a bounded probe; no custom shader. Fixed-context cost grows 12.76→28.05 ms from 64→1024 tokens, with QK and contiguous V layout implicated. Preserve full context/masks/positions/sampling; numerical and complete-speech A/B, >=1 ms/frame retained saving and no first-audio regression. Gain remains unmeasured. Can proceed alongside task 1 with one GPU owner. |
+| 3 | Compare calibrated standard Q3_K and targeted higher precision using the expanded corpus. | Scope after task 1; use original masters and held-out free-running speech. Retain only with quality acceptance and measured complete-workload speed. Do not default the current Q3 candidate. |
+| 4 | Revisit exact sampler/readback and small SwiGLU/head changes only for a small remaining gap. | Prior individual gains were below the retention gate; do not reopen without a changed measured budget or new evidence. |
+| 5 | Handoff **05**: stronger rotation/IQ3/custom packing. | Conditional on calibrated standard-format shortfall; prove quality, then one packed operation including transform costs before runtime integration. |
+| 6 | Smaller autoregressive depth student, then handoff **03** parallel/refinement work; conditional **04/06** afterwards. | Week-scale structural work if bounded engine/quantization work remains insufficient. **01/02** stay parked after failed sparsity/low-rank pilots. |
 
-The detailed task gates and effort are in the matrix report. The held-out gap
-is 3.77 ms/frame, Mandarin 5.59, cached reference 7.35 and long unsplit stress
-19.58. Do not treat the former 3.43 ms short-prompt gap as the whole goal.
-No runtime default changes or unchanged-Q4_K RTF claim follows from this mixed
-Q3_K candidate.
+Re-run the full performance and quality matrix for each retained candidate.
+Existing saved-voice caching and default splitting are already used; no new
+cache or shorter context is needed. Keep the failed unsplit stress separately.
+No runtime default changes or unchanged-Q4_K RTF claim follows from these probes.
 
 ## Prior ordered work — before the quantization pilot
 

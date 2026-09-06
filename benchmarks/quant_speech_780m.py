@@ -47,6 +47,7 @@ def main():
     p.add_argument('--asr-bin', type=Path)
     p.add_argument('--asr-model', type=Path)
     p.add_argument('--speaker-model', type=Path)
+    p.add_argument('--speaker-fixture', default='reference')
     p.add_argument('--output', type=Path)
     p.add_argument('--self-test', action='store_true')
     p.add_argument('--verify', type=Path)
@@ -129,8 +130,8 @@ def main():
         return vector / np.linalg.norm(vector)
     reference = args.directory / 'reference-input.wav'
     ref = embedding(reference)
-    vectors = {kind: embedding(args.directory / ('reference-' + kind + '.wav')) for kind in ['q4_k', 'q3_k']}
-    result['speaker'] = dict(reference_sha256=sha(reference), embedding_dim=len(ref),
+    vectors = {kind: embedding(args.directory / (args.speaker_fixture + '-' + kind + '.wav')) for kind in ['q4_k', 'q3_k']}
+    result['speaker'] = dict(fixture=args.speaker_fixture, reference_sha256=sha(reference), embedding_dim=len(ref),
         reference_self_cosine=float(ref @ ref), q4_reference_cosine=float(vectors['q4_k'] @ ref),
         q3_reference_cosine=float(vectors['q3_k'] @ ref), q3_q4_cosine=float(vectors['q3_k'] @ vectors['q4_k']))
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False) + '\n')

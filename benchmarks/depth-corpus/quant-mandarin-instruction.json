@@ -1,0 +1,415 @@
+{
+  "schema": "breeze-mandarin-instruction/v1",
+  "diagnostic": "one-variable explicit Mandarin instruction quality diagnostic",
+  "quality_only": true,
+  "manifest": {
+    "schema": "breeze-mandarin-instruction/v1",
+    "diagnostic": "one-variable instruction language-control probe",
+    "fixture_id": "mandarin",
+    "text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+    "weighted_chars": 783,
+    "instruction_original": "Speak clearly and naturally.",
+    "instruction_diagnostic": "Speak clearly and naturally in Mandarin Chinese.",
+    "seed": 42,
+    "split_chars_omitted": true,
+    "split_budget": 600,
+    "anchor_budget_without_reference": 200,
+    "max_new": 1200,
+    "repeat": 1,
+    "env": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1"
+    },
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "fixture_source": ".beehive/agent/BREEZE-LONGFORM/manifest.json",
+    "marker_required": "/tmp/breeze-bb-context.complete",
+    "runs": [
+      {
+        "id": "mandarin-q4_k",
+        "model": "q4_k",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese."
+      },
+      {
+        "id": "mandarin-q3_k",
+        "model": "q3_k",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese."
+      }
+    ],
+    "quality_only": true,
+    "limitations": [
+      "Single resident run per model; no warmed RTF acceptance gate.",
+      "ASR and human quality scoring are owned by the manager."
+    ]
+  },
+  "preflight": {
+    "marker": "/tmp/breeze-bb-context.complete",
+    "marker_contents": "",
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "env": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1"
+    }
+  },
+  "split_evidence": {
+    "source": "src/text_split.cpp via .beehive/agent/BREEZE-LONGFORM/split_probe",
+    "probe_header": "parts=3 concat=ok first_budget=200",
+    "part_count": 3,
+    "concatenation": true,
+    "parts": [
+      "part=1 bytes=108 weighted=108 text=\"清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。\"",
+      "part=2 bytes=588 weighted=588 text=\"高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。\"",
+      "part=3 bytes=87 weighted=87 text=\"志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。\""
+    ]
+  },
+  "original_control": {
+    "report": "benchmarks/depth-corpus/quant-longform.json",
+    "case_ids": [
+      "mandarin-q4_k",
+      "mandarin-q3_k"
+    ],
+    "instruction": "Speak clearly and naturally."
+  },
+  "runs": {
+    "mandarin-q4_k": {
+      "model": "q4_k",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q4_k.gguf",
+        "--text",
+        "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "--instruction",
+        "Speak clearly and naturally in Mandarin Chinese.",
+        "--seed",
+        "42",
+        "--repeat",
+        "1",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-mandarin-instruction/mandarin-q4_k.wav"
+      ],
+      "log_sha256": "2925430fe1500d00fa1b92ae611425acc2f4c3813b83fb64239520f517e429ee",
+      "wav": "mandarin-q4_k.wav",
+      "wav_sha256": "bdcb00670bed099659acc374b97b227aee2678a97439aa75d34ebd7c6aaf2151",
+      "wav_pcm_samples": 1449600,
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 60799.7,
+        "wall_rtf": 1.006617549668874,
+        "wall_rtf_reported": 1.007,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 251.4,
+          "backbone prefill": 613.6,
+          "first vocoder": 252.7,
+          "backbone decode": 14356.1,
+          "depth decode": 38989.5,
+          "vocoder": 6524.6
+        },
+        "stage_rtf": 1.0055496688741723,
+        "decode_rtf": 0.991228476821192,
+        "frames": 755,
+        "audio_s": 60.4,
+        "first_audio_ms": 3007.0,
+        "flushes": 20,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 3007.2,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 6014.5,
+            "delivered_audio_s": 6.4
+          },
+          {
+            "index": 3,
+            "ready_ms": 7633.7,
+            "delivered_audio_s": 8.08
+          },
+          {
+            "index": 4,
+            "ready_ms": 11128.6,
+            "delivered_audio_s": 11.28
+          },
+          {
+            "index": 5,
+            "ready_ms": 14215.0,
+            "delivered_audio_s": 14.48
+          },
+          {
+            "index": 6,
+            "ready_ms": 17384.3,
+            "delivered_audio_s": 17.68
+          },
+          {
+            "index": 7,
+            "ready_ms": 20486.3,
+            "delivered_audio_s": 20.88
+          },
+          {
+            "index": 8,
+            "ready_ms": 23639.7,
+            "delivered_audio_s": 24.08
+          },
+          {
+            "index": 9,
+            "ready_ms": 26826.7,
+            "delivered_audio_s": 27.28
+          },
+          {
+            "index": 10,
+            "ready_ms": 30041.5,
+            "delivered_audio_s": 30.48
+          },
+          {
+            "index": 11,
+            "ready_ms": 33234.9,
+            "delivered_audio_s": 33.68
+          },
+          {
+            "index": 12,
+            "ready_ms": 36505.1,
+            "delivered_audio_s": 36.88
+          },
+          {
+            "index": 13,
+            "ready_ms": 39773.5,
+            "delivered_audio_s": 40.08
+          },
+          {
+            "index": 14,
+            "ready_ms": 43162.8,
+            "delivered_audio_s": 43.28
+          },
+          {
+            "index": 15,
+            "ready_ms": 46537.5,
+            "delivered_audio_s": 46.48
+          },
+          {
+            "index": 16,
+            "ready_ms": 49901.0,
+            "delivered_audio_s": 49.68
+          },
+          {
+            "index": 17,
+            "ready_ms": 53284.1,
+            "delivered_audio_s": 52.88
+          },
+          {
+            "index": 18,
+            "ready_ms": 54867.3,
+            "delivered_audio_s": 54.24
+          },
+          {
+            "index": 19,
+            "ready_ms": 58020.5,
+            "delivered_audio_s": 57.44
+          },
+          {
+            "index": 20,
+            "ready_ms": 60799.5,
+            "delivered_audio_s": 60.4
+          }
+        ],
+        "max_playback_deficit_ms": 773.3000000000029,
+        "max_delivery_deficit_ms": 773.3000000000029,
+        "backbone_decode_ms_per_frame": 19.01,
+        "depth_decode_ms_per_frame": 51.64,
+        "vocoder_ms_per_frame": 8.64
+      },
+      "termination": {
+        "max_new": 1200,
+        "frames": 755,
+        "status": "below-cap",
+        "pass": true
+      }
+    },
+    "mandarin-q3_k": {
+      "model": "q3_k",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q3_k.gguf",
+        "--text",
+        "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "--instruction",
+        "Speak clearly and naturally in Mandarin Chinese.",
+        "--seed",
+        "42",
+        "--repeat",
+        "1",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-mandarin-instruction/mandarin-q3_k.wav"
+      ],
+      "log_sha256": "59e7fc2bb94f72fc7a53fa8cf25840ae16a6bc8aacce0498745285eb80567f2f",
+      "wav": "mandarin-q3_k.wav",
+      "wav_sha256": "52cabfc5bd397b8337d8db1b43715f79fcb20982f6a8079f25c5d51c530a105c",
+      "wav_pcm_samples": 1236480,
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 46540.4,
+        "wall_rtf": 0.9033462732919255,
+        "wall_rtf_reported": 0.903,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 249.7,
+          "backbone prefill": 607.9,
+          "first vocoder": 253.7,
+          "backbone decode": 11785.0,
+          "depth decode": 28076.9,
+          "vocoder": 5756.6
+        },
+        "stage_rtf": 0.9020982142857142,
+        "decode_rtf": 0.885452251552795,
+        "frames": 644,
+        "audio_s": 51.52,
+        "first_audio_ms": 2729.0,
+        "flushes": 18,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 2729.0,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 5384.8,
+            "delivered_audio_s": 6.4
+          },
+          {
+            "index": 3,
+            "ready_ms": 5708.7,
+            "delivered_audio_s": 6.64
+          },
+          {
+            "index": 4,
+            "ready_ms": 8907.3,
+            "delivered_audio_s": 9.84
+          },
+          {
+            "index": 5,
+            "ready_ms": 11658.6,
+            "delivered_audio_s": 13.04
+          },
+          {
+            "index": 6,
+            "ready_ms": 14520.5,
+            "delivered_audio_s": 16.24
+          },
+          {
+            "index": 7,
+            "ready_ms": 17320.3,
+            "delivered_audio_s": 19.44
+          },
+          {
+            "index": 8,
+            "ready_ms": 20118.8,
+            "delivered_audio_s": 22.64
+          },
+          {
+            "index": 9,
+            "ready_ms": 22976.0,
+            "delivered_audio_s": 25.84
+          },
+          {
+            "index": 10,
+            "ready_ms": 25803.5,
+            "delivered_audio_s": 29.04
+          },
+          {
+            "index": 11,
+            "ready_ms": 28661.9,
+            "delivered_audio_s": 32.24
+          },
+          {
+            "index": 12,
+            "ready_ms": 31586.1,
+            "delivered_audio_s": 35.44
+          },
+          {
+            "index": 13,
+            "ready_ms": 34516.8,
+            "delivered_audio_s": 38.64
+          },
+          {
+            "index": 14,
+            "ready_ms": 37474.7,
+            "delivered_audio_s": 41.84
+          },
+          {
+            "index": 15,
+            "ready_ms": 40593.5,
+            "delivered_audio_s": 45.04
+          },
+          {
+            "index": 16,
+            "ready_ms": 41914.9,
+            "delivered_audio_s": 46.32
+          },
+          {
+            "index": 17,
+            "ready_ms": 44811.3,
+            "delivered_audio_s": 49.52
+          },
+          {
+            "index": 18,
+            "ready_ms": 46540.2,
+            "delivered_audio_s": 51.52
+          }
+        ],
+        "max_playback_deficit_ms": 0.0,
+        "max_delivery_deficit_ms": 0.0,
+        "backbone_decode_ms_per_frame": 18.3,
+        "depth_decode_ms_per_frame": 43.6,
+        "vocoder_ms_per_frame": 8.94
+      },
+      "termination": {
+        "max_new": 1200,
+        "frames": 644,
+        "status": "below-cap",
+        "pass": true
+      }
+    }
+  },
+  "quality": {
+    "status": "Whisper medium ASR analyzed; no listening performed",
+    "acceptance": "not accepted; single-fixture proxy evidence",
+    "limitations": [
+      "One resident run per model; no warmed RTF acceptance gate.",
+      "Throughput and frame count do not establish intelligibility, accent, or speaker quality.",
+      "The instruction is the only requested variable changed from the original Mandarin fixture."
+    ],
+    "asr_receipt": "quant-longform-asr-diagnostic.json#medium_instruction_control",
+    "medium_character_disagreements": {
+      "q4_k": 34,
+      "q3_k": 110,
+      "reference_characters": 233
+    }
+  }
+}

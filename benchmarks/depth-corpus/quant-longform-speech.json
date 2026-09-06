@@ -1,0 +1,3928 @@
+{
+  "schema": "breeze-quant-speech/v1",
+  "samples": {
+    "english-q4_k": {
+      "wav_sha256": "9fc34a09853c6607f86a67a480ee9799c57406c536aebad0f460a52075f34109",
+      "language": "en",
+      "expected_text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+      "transcript": "At sunrise, the coastal library opened its doors\nfor a week of community work.\nVolunteers carried boxes through the reading room\nwhere tall windows warmed the tables.\nOne team repaired damaged books\nand photographed their covers\nwhile a retired teacher sorted harbor letters\nand students copied names from a faded register.\nNear the entrance, a carpenter tightened chairs\nand built a stand for local newspapers.\nBy midday, strangers shared memories of storms, concerts,\nand friends who had moved away.\nIn the afternoon, they arranged a children's reading corner\nand a quiet desk for language learners.\nBefore closing, Mara listed the remaining work,\nmend the clock, finish the catalog, repaint the sign,\nand ask the council about a safer ramp.\nThe volunteers agreed to return on Saturday\nwith better tools and more books\nbecause patient work had made the building useful again.",
+      "normalized_expected": [
+        "at",
+        "sunrise",
+        "the",
+        "coastal",
+        "library",
+        "opened",
+        "its",
+        "doors",
+        "for",
+        "a",
+        "week",
+        "of",
+        "community",
+        "work",
+        "volunteers",
+        "carried",
+        "boxes",
+        "through",
+        "the",
+        "reading",
+        "room",
+        "where",
+        "tall",
+        "windows",
+        "warmed",
+        "the",
+        "tables",
+        "one",
+        "team",
+        "repaired",
+        "damaged",
+        "books",
+        "and",
+        "photographed",
+        "their",
+        "covers",
+        "while",
+        "a",
+        "retired",
+        "teacher",
+        "sorted",
+        "harbour",
+        "letters",
+        "and",
+        "students",
+        "copied",
+        "names",
+        "from",
+        "a",
+        "faded",
+        "register",
+        "near",
+        "the",
+        "entrance",
+        "a",
+        "carpenter",
+        "tightened",
+        "chairs",
+        "and",
+        "built",
+        "a",
+        "stand",
+        "for",
+        "local",
+        "newspapers",
+        "by",
+        "midday",
+        "strangers",
+        "shared",
+        "memories",
+        "of",
+        "storms",
+        "concerts",
+        "and",
+        "friends",
+        "who",
+        "had",
+        "moved",
+        "away",
+        "in",
+        "the",
+        "afternoon",
+        "they",
+        "arranged",
+        "a",
+        "children",
+        "s",
+        "reading",
+        "corner",
+        "and",
+        "a",
+        "quiet",
+        "desk",
+        "for",
+        "language",
+        "learners",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "the",
+        "remaining",
+        "work",
+        "mend",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalogue",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "the",
+        "volunteers",
+        "agreed",
+        "to",
+        "return",
+        "on",
+        "saturday",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "books",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "made",
+        "the",
+        "building",
+        "useful",
+        "again"
+      ],
+      "normalized_transcript": [
+        "at",
+        "sunrise",
+        "the",
+        "coastal",
+        "library",
+        "opened",
+        "its",
+        "doors",
+        "for",
+        "a",
+        "week",
+        "of",
+        "community",
+        "work",
+        "volunteers",
+        "carried",
+        "boxes",
+        "through",
+        "the",
+        "reading",
+        "room",
+        "where",
+        "tall",
+        "windows",
+        "warmed",
+        "the",
+        "tables",
+        "one",
+        "team",
+        "repaired",
+        "damaged",
+        "books",
+        "and",
+        "photographed",
+        "their",
+        "covers",
+        "while",
+        "a",
+        "retired",
+        "teacher",
+        "sorted",
+        "harbor",
+        "letters",
+        "and",
+        "students",
+        "copied",
+        "names",
+        "from",
+        "a",
+        "faded",
+        "register",
+        "near",
+        "the",
+        "entrance",
+        "a",
+        "carpenter",
+        "tightened",
+        "chairs",
+        "and",
+        "built",
+        "a",
+        "stand",
+        "for",
+        "local",
+        "newspapers",
+        "by",
+        "midday",
+        "strangers",
+        "shared",
+        "memories",
+        "of",
+        "storms",
+        "concerts",
+        "and",
+        "friends",
+        "who",
+        "had",
+        "moved",
+        "away",
+        "in",
+        "the",
+        "afternoon",
+        "they",
+        "arranged",
+        "a",
+        "children",
+        "s",
+        "reading",
+        "corner",
+        "and",
+        "a",
+        "quiet",
+        "desk",
+        "for",
+        "language",
+        "learners",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "the",
+        "remaining",
+        "work",
+        "mend",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalog",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "the",
+        "volunteers",
+        "agreed",
+        "to",
+        "return",
+        "on",
+        "saturday",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "books",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "made",
+        "the",
+        "building",
+        "useful",
+        "again"
+      ],
+      "edit_distance": 2,
+      "reference_units": 142,
+      "metric": "WER",
+      "disagreement_rate": 0.014084507042253521,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/english-q4_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/english-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,620"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3620
+            },
+            "text": " At sunrise, the coastal library opened its doors"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,620",
+              "to": "00:00:05,860"
+            },
+            "offsets": {
+              "from": 3620,
+              "to": 5860
+            },
+            "text": " for a week of community work."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,860",
+              "to": "00:00:08,820"
+            },
+            "offsets": {
+              "from": 5860,
+              "to": 8820
+            },
+            "text": " Volunteers carried boxes through the reading room"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:08,820",
+              "to": "00:00:11,300"
+            },
+            "offsets": {
+              "from": 8820,
+              "to": 11300
+            },
+            "text": " where tall windows warmed the tables."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,300",
+              "to": "00:00:13,500"
+            },
+            "offsets": {
+              "from": 11300,
+              "to": 13500
+            },
+            "text": " One team repaired damaged books"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,500",
+              "to": "00:00:15,380"
+            },
+            "offsets": {
+              "from": 13500,
+              "to": 15380
+            },
+            "text": " and photographed their covers"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,380",
+              "to": "00:00:17,900"
+            },
+            "offsets": {
+              "from": 15380,
+              "to": 17900
+            },
+            "text": " while a retired teacher sorted harbor letters"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:17,900",
+              "to": "00:00:21,100"
+            },
+            "offsets": {
+              "from": 17900,
+              "to": 21100
+            },
+            "text": " and students copied names from a faded register."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:21,100",
+              "to": "00:00:23,780"
+            },
+            "offsets": {
+              "from": 21100,
+              "to": 23780
+            },
+            "text": " Near the entrance, a carpenter tightened chairs"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:23,780",
+              "to": "00:00:26,580"
+            },
+            "offsets": {
+              "from": 23780,
+              "to": 26580
+            },
+            "text": " and built a stand for local newspapers."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:26,580",
+              "to": "00:00:30,900"
+            },
+            "offsets": {
+              "from": 26580,
+              "to": 30900
+            },
+            "text": " By midday, strangers shared memories of storms, concerts,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:30,900",
+              "to": "00:00:33,120"
+            },
+            "offsets": {
+              "from": 30900,
+              "to": 33120
+            },
+            "text": " and friends who had moved away."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:33,120",
+              "to": "00:00:36,380"
+            },
+            "offsets": {
+              "from": 33120,
+              "to": 36380
+            },
+            "text": " In the afternoon, they arranged a children's reading corner"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:36,380",
+              "to": "00:00:38,980"
+            },
+            "offsets": {
+              "from": 36380,
+              "to": 38980
+            },
+            "text": " and a quiet desk for language learners."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:38,980",
+              "to": "00:00:42,300"
+            },
+            "offsets": {
+              "from": 38980,
+              "to": 42300
+            },
+            "text": " Before closing, Mara listed the remaining work,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:42,300",
+              "to": "00:00:46,200"
+            },
+            "offsets": {
+              "from": 42300,
+              "to": 46200
+            },
+            "text": " mend the clock, finish the catalog, repaint the sign,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:46,200",
+              "to": "00:00:48,580"
+            },
+            "offsets": {
+              "from": 46200,
+              "to": 48580
+            },
+            "text": " and ask the council about a safer ramp."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:48,580",
+              "to": "00:00:51,460"
+            },
+            "offsets": {
+              "from": 48580,
+              "to": 51460
+            },
+            "text": " The volunteers agreed to return on Saturday"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:51,460",
+              "to": "00:00:53,940"
+            },
+            "offsets": {
+              "from": 51460,
+              "to": 53940
+            },
+            "text": " with better tools and more books"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:53,940",
+              "to": "00:00:57,300"
+            },
+            "offsets": {
+              "from": 53940,
+              "to": 57300
+            },
+            "text": " because patient work had made the building useful again."
+          }
+        ]
+      }
+    },
+    "english-q3_k": {
+      "wav_sha256": "e0e8aeefa8ca0e12bc85296211a05d26a32068f215ce834cc4249e8642582076",
+      "language": "en",
+      "expected_text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+      "transcript": "At sunrise, the coastal library opened its doors\nfor a week of community work.\nVolunteers carried boxes through the reading room,\nwhere tall windows warmed the tables.\nOne team repaired damaged books\nand photographed their covers,\nwhile a retired teacher sorted harbor letters\nand students copied names from a faded register.\nNear the entrance, a carpenter tightened chairs\nand built a stand for local newspapers.\nBy midday, strangers shared memories of storms,\nconcerts, and friends who had moved away.\nIn the afternoon, they arranged a children's reading corner\nand a quiet desk for language learners.\nBefore closing, Mara listed the remaining work.\nMen the clock, finished the catalog, repaint the sign,\nand asked the council about a safer ramp.\nThe volunteers agreed to return on Saturday\nwith better tools and more books,\nbecause patient work had made the building useful again.",
+      "normalized_expected": [
+        "at",
+        "sunrise",
+        "the",
+        "coastal",
+        "library",
+        "opened",
+        "its",
+        "doors",
+        "for",
+        "a",
+        "week",
+        "of",
+        "community",
+        "work",
+        "volunteers",
+        "carried",
+        "boxes",
+        "through",
+        "the",
+        "reading",
+        "room",
+        "where",
+        "tall",
+        "windows",
+        "warmed",
+        "the",
+        "tables",
+        "one",
+        "team",
+        "repaired",
+        "damaged",
+        "books",
+        "and",
+        "photographed",
+        "their",
+        "covers",
+        "while",
+        "a",
+        "retired",
+        "teacher",
+        "sorted",
+        "harbour",
+        "letters",
+        "and",
+        "students",
+        "copied",
+        "names",
+        "from",
+        "a",
+        "faded",
+        "register",
+        "near",
+        "the",
+        "entrance",
+        "a",
+        "carpenter",
+        "tightened",
+        "chairs",
+        "and",
+        "built",
+        "a",
+        "stand",
+        "for",
+        "local",
+        "newspapers",
+        "by",
+        "midday",
+        "strangers",
+        "shared",
+        "memories",
+        "of",
+        "storms",
+        "concerts",
+        "and",
+        "friends",
+        "who",
+        "had",
+        "moved",
+        "away",
+        "in",
+        "the",
+        "afternoon",
+        "they",
+        "arranged",
+        "a",
+        "children",
+        "s",
+        "reading",
+        "corner",
+        "and",
+        "a",
+        "quiet",
+        "desk",
+        "for",
+        "language",
+        "learners",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "the",
+        "remaining",
+        "work",
+        "mend",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalogue",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "the",
+        "volunteers",
+        "agreed",
+        "to",
+        "return",
+        "on",
+        "saturday",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "books",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "made",
+        "the",
+        "building",
+        "useful",
+        "again"
+      ],
+      "normalized_transcript": [
+        "at",
+        "sunrise",
+        "the",
+        "coastal",
+        "library",
+        "opened",
+        "its",
+        "doors",
+        "for",
+        "a",
+        "week",
+        "of",
+        "community",
+        "work",
+        "volunteers",
+        "carried",
+        "boxes",
+        "through",
+        "the",
+        "reading",
+        "room",
+        "where",
+        "tall",
+        "windows",
+        "warmed",
+        "the",
+        "tables",
+        "one",
+        "team",
+        "repaired",
+        "damaged",
+        "books",
+        "and",
+        "photographed",
+        "their",
+        "covers",
+        "while",
+        "a",
+        "retired",
+        "teacher",
+        "sorted",
+        "harbor",
+        "letters",
+        "and",
+        "students",
+        "copied",
+        "names",
+        "from",
+        "a",
+        "faded",
+        "register",
+        "near",
+        "the",
+        "entrance",
+        "a",
+        "carpenter",
+        "tightened",
+        "chairs",
+        "and",
+        "built",
+        "a",
+        "stand",
+        "for",
+        "local",
+        "newspapers",
+        "by",
+        "midday",
+        "strangers",
+        "shared",
+        "memories",
+        "of",
+        "storms",
+        "concerts",
+        "and",
+        "friends",
+        "who",
+        "had",
+        "moved",
+        "away",
+        "in",
+        "the",
+        "afternoon",
+        "they",
+        "arranged",
+        "a",
+        "children",
+        "s",
+        "reading",
+        "corner",
+        "and",
+        "a",
+        "quiet",
+        "desk",
+        "for",
+        "language",
+        "learners",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "the",
+        "remaining",
+        "work",
+        "men",
+        "the",
+        "clock",
+        "finished",
+        "the",
+        "catalog",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "asked",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "the",
+        "volunteers",
+        "agreed",
+        "to",
+        "return",
+        "on",
+        "saturday",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "books",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "made",
+        "the",
+        "building",
+        "useful",
+        "again"
+      ],
+      "edit_distance": 5,
+      "reference_units": 142,
+      "metric": "WER",
+      "disagreement_rate": 0.035211267605633804,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/english-q3_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/english-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,580"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3580
+            },
+            "text": " At sunrise, the coastal library opened its doors"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,580",
+              "to": "00:00:05,860"
+            },
+            "offsets": {
+              "from": 3580,
+              "to": 5860
+            },
+            "text": " for a week of community work."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,860",
+              "to": "00:00:08,760"
+            },
+            "offsets": {
+              "from": 5860,
+              "to": 8760
+            },
+            "text": " Volunteers carried boxes through the reading room,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:08,760",
+              "to": "00:00:10,900"
+            },
+            "offsets": {
+              "from": 8760,
+              "to": 10900
+            },
+            "text": " where tall windows warmed the tables."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:10,900",
+              "to": "00:00:13,180"
+            },
+            "offsets": {
+              "from": 10900,
+              "to": 13180
+            },
+            "text": " One team repaired damaged books"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,180",
+              "to": "00:00:15,180"
+            },
+            "offsets": {
+              "from": 13180,
+              "to": 15180
+            },
+            "text": " and photographed their covers,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,180",
+              "to": "00:00:18,260"
+            },
+            "offsets": {
+              "from": 15180,
+              "to": 18260
+            },
+            "text": " while a retired teacher sorted harbor letters"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:18,260",
+              "to": "00:00:22,000"
+            },
+            "offsets": {
+              "from": 18260,
+              "to": 22000
+            },
+            "text": " and students copied names from a faded register."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:22,000",
+              "to": "00:00:25,500"
+            },
+            "offsets": {
+              "from": 22000,
+              "to": 25500
+            },
+            "text": " Near the entrance, a carpenter tightened chairs"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:25,500",
+              "to": "00:00:28,180"
+            },
+            "offsets": {
+              "from": 25500,
+              "to": 28180
+            },
+            "text": " and built a stand for local newspapers."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:28,180",
+              "to": "00:00:31,940"
+            },
+            "offsets": {
+              "from": 28180,
+              "to": 31940
+            },
+            "text": " By midday, strangers shared memories of storms,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:31,940",
+              "to": "00:00:35,540"
+            },
+            "offsets": {
+              "from": 31940,
+              "to": 35540
+            },
+            "text": " concerts, and friends who had moved away."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:35,540",
+              "to": "00:00:39,100"
+            },
+            "offsets": {
+              "from": 35540,
+              "to": 39100
+            },
+            "text": " In the afternoon, they arranged a children's reading corner"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:39,100",
+              "to": "00:00:41,640"
+            },
+            "offsets": {
+              "from": 39100,
+              "to": 41640
+            },
+            "text": " and a quiet desk for language learners."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:41,640",
+              "to": "00:00:45,220"
+            },
+            "offsets": {
+              "from": 41640,
+              "to": 45220
+            },
+            "text": " Before closing, Mara listed the remaining work."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:45,220",
+              "to": "00:00:49,420"
+            },
+            "offsets": {
+              "from": 45220,
+              "to": 49420
+            },
+            "text": " Men the clock, finished the catalog, repaint the sign,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:49,420",
+              "to": "00:00:51,540"
+            },
+            "offsets": {
+              "from": 49420,
+              "to": 51540
+            },
+            "text": " and asked the council about a safer ramp."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:51,540",
+              "to": "00:00:53,980"
+            },
+            "offsets": {
+              "from": 51540,
+              "to": 53980
+            },
+            "text": " The volunteers agreed to return on Saturday"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:53,980",
+              "to": "00:00:56,200"
+            },
+            "offsets": {
+              "from": 53980,
+              "to": 56200
+            },
+            "text": " with better tools and more books,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:56,200",
+              "to": "00:01:00,000"
+            },
+            "offsets": {
+              "from": 56200,
+              "to": 60000
+            },
+            "text": " because patient work had made the building useful again."
+          }
+        ]
+      }
+    },
+    "mandarin-q4_k": {
+      "wav_sha256": "f274957eb8e154f746f9e7ca154c3379ceeafe02a444ad1b176bbf57ca557d27",
+      "language": "zh",
+      "expected_text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+      "transcript": "清晨 海編的圖書館為社區工作州打開大門\n大家戴著箱子和筆記本走入越南室高大的槍防洋\n陽光落在桌面上\n自供整理書架\n掩軍營帶來地圖和故事的農具\n第一組人員修補受損書著\n退修老師整理講口腎鏡\n學生抄六名生物探\n入口仙狼西仙廊\n范延朝口風雨\n人民衰長更有目考為特口神將利用神\n濕病主謀強於道啟動迷藤和邊名終生話\n第一組人員修補受損書著\n退修老師整理講口腎鏡\n掩軍營帶來地圖和故事的農具\n退修老師整理講口腎鏡\n學生抄六名生物探\n入口仙狼西仙廊\n范廉朝口風雨\n人民衰長更有目考為特口神將利用神\n學生抄六名生物探\n退修老師整理講口腎鏡\n學生抄六名生物探\n抄六名生物探\n抄六名生物探\n學生抄六名生物探\n抄六名生物探\n近考見了建築重新有了用處。",
+      "normalized_expected": [
+        "清",
+        "晨",
+        "海",
+        "边",
+        "的",
+        "图",
+        "书",
+        "馆",
+        "为",
+        "社",
+        "区",
+        "工",
+        "作",
+        "周",
+        "打",
+        "开",
+        "大",
+        "门",
+        "大",
+        "家",
+        "带",
+        "著",
+        "箱",
+        "子",
+        "和",
+        "笔",
+        "记",
+        "本",
+        "走",
+        "进",
+        "阅",
+        "览",
+        "室",
+        "高",
+        "大",
+        "的",
+        "窗",
+        "户",
+        "让",
+        "阳",
+        "光",
+        "落",
+        "在",
+        "桌",
+        "面",
+        "上",
+        "志",
+        "工",
+        "整",
+        "理",
+        "书",
+        "架",
+        "也",
+        "欢",
+        "迎",
+        "带",
+        "来",
+        "地",
+        "图",
+        "和",
+        "故",
+        "事",
+        "的",
+        "邻",
+        "居",
+        "第",
+        "一",
+        "组",
+        "人",
+        "员",
+        "修",
+        "补",
+        "受",
+        "损",
+        "书",
+        "籍",
+        "退",
+        "休",
+        "老",
+        "师",
+        "整",
+        "理",
+        "港",
+        "口",
+        "信",
+        "件",
+        "学",
+        "生",
+        "抄",
+        "录",
+        "名",
+        "册",
+        "姓",
+        "名",
+        "入",
+        "口",
+        "旁",
+        "木",
+        "匠",
+        "修",
+        "好",
+        "椅",
+        "子",
+        "收",
+        "起",
+        "螺",
+        "丝",
+        "还",
+        "为",
+        "地",
+        "方",
+        "报",
+        "纸",
+        "做",
+        "了",
+        "小",
+        "架",
+        "子",
+        "中",
+        "午",
+        "时",
+        "人",
+        "们",
+        "分",
+        "享",
+        "暴",
+        "风",
+        "雨",
+        "音",
+        "乐",
+        "会",
+        "远",
+        "行",
+        "以",
+        "及",
+        "搬",
+        "到",
+        "外",
+        "地",
+        "朋",
+        "友",
+        "的",
+        "回",
+        "忆",
+        "下",
+        "午",
+        "大",
+        "家",
+        "布",
+        "置",
+        "儿",
+        "童",
+        "阅",
+        "读",
+        "角",
+        "留",
+        "下",
+        "一",
+        "张",
+        "安",
+        "静",
+        "的",
+        "桌",
+        "子",
+        "给",
+        "学",
+        "习",
+        "新",
+        "语",
+        "言",
+        "的",
+        "人",
+        "闭",
+        "馆",
+        "前",
+        "玛",
+        "拉",
+        "检",
+        "查",
+        "灯",
+        "光",
+        "记",
+        "下",
+        "要",
+        "修",
+        "理",
+        "的",
+        "时",
+        "钟",
+        "完",
+        "成",
+        "的",
+        "目",
+        "录",
+        "重",
+        "新",
+        "粉",
+        "刷",
+        "的",
+        "招",
+        "牌",
+        "和",
+        "安",
+        "全",
+        "坡",
+        "道",
+        "志",
+        "工",
+        "约",
+        "好",
+        "星",
+        "期",
+        "六",
+        "再",
+        "回",
+        "来",
+        "因",
+        "为",
+        "耐",
+        "心",
+        "合",
+        "作",
+        "让",
+        "这",
+        "座",
+        "建",
+        "筑",
+        "重",
+        "新",
+        "有",
+        "了",
+        "用",
+        "处"
+      ],
+      "normalized_transcript": [
+        "清",
+        "晨",
+        "海",
+        "编",
+        "的",
+        "图",
+        "书",
+        "馆",
+        "为",
+        "社",
+        "区",
+        "工",
+        "作",
+        "州",
+        "打",
+        "开",
+        "大",
+        "门",
+        "大",
+        "家",
+        "戴",
+        "著",
+        "箱",
+        "子",
+        "和",
+        "笔",
+        "记",
+        "本",
+        "走",
+        "入",
+        "越",
+        "南",
+        "室",
+        "高",
+        "大",
+        "的",
+        "枪",
+        "防",
+        "洋",
+        "阳",
+        "光",
+        "落",
+        "在",
+        "桌",
+        "面",
+        "上",
+        "自",
+        "供",
+        "整",
+        "理",
+        "书",
+        "架",
+        "掩",
+        "军",
+        "营",
+        "带",
+        "来",
+        "地",
+        "图",
+        "和",
+        "故",
+        "事",
+        "的",
+        "农",
+        "具",
+        "第",
+        "一",
+        "组",
+        "人",
+        "员",
+        "修",
+        "补",
+        "受",
+        "损",
+        "书",
+        "著",
+        "退",
+        "修",
+        "老",
+        "师",
+        "整",
+        "理",
+        "讲",
+        "口",
+        "肾",
+        "镜",
+        "学",
+        "生",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "入",
+        "口",
+        "仙",
+        "狼",
+        "西",
+        "仙",
+        "廊",
+        "范",
+        "延",
+        "朝",
+        "口",
+        "风",
+        "雨",
+        "人",
+        "民",
+        "衰",
+        "长",
+        "更",
+        "有",
+        "目",
+        "考",
+        "为",
+        "特",
+        "口",
+        "神",
+        "将",
+        "利",
+        "用",
+        "神",
+        "湿",
+        "病",
+        "主",
+        "谋",
+        "强",
+        "于",
+        "道",
+        "启",
+        "动",
+        "迷",
+        "藤",
+        "和",
+        "边",
+        "名",
+        "终",
+        "生",
+        "话",
+        "第",
+        "一",
+        "组",
+        "人",
+        "员",
+        "修",
+        "补",
+        "受",
+        "损",
+        "书",
+        "著",
+        "退",
+        "修",
+        "老",
+        "师",
+        "整",
+        "理",
+        "讲",
+        "口",
+        "肾",
+        "镜",
+        "掩",
+        "军",
+        "营",
+        "带",
+        "来",
+        "地",
+        "图",
+        "和",
+        "故",
+        "事",
+        "的",
+        "农",
+        "具",
+        "退",
+        "修",
+        "老",
+        "师",
+        "整",
+        "理",
+        "讲",
+        "口",
+        "肾",
+        "镜",
+        "学",
+        "生",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "入",
+        "口",
+        "仙",
+        "狼",
+        "西",
+        "仙",
+        "廊",
+        "范",
+        "廉",
+        "朝",
+        "口",
+        "风",
+        "雨",
+        "人",
+        "民",
+        "衰",
+        "长",
+        "更",
+        "有",
+        "目",
+        "考",
+        "为",
+        "特",
+        "口",
+        "神",
+        "将",
+        "利",
+        "用",
+        "神",
+        "学",
+        "生",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "退",
+        "修",
+        "老",
+        "师",
+        "整",
+        "理",
+        "讲",
+        "口",
+        "肾",
+        "镜",
+        "学",
+        "生",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "学",
+        "生",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "抄",
+        "六",
+        "名",
+        "生",
+        "物",
+        "探",
+        "近",
+        "考",
+        "见",
+        "了",
+        "建",
+        "筑",
+        "重",
+        "新",
+        "有",
+        "了",
+        "用",
+        "处"
+      ],
+      "edit_distance": 198,
+      "reference_units": 233,
+      "metric": "CER",
+      "disagreement_rate": 0.8497854077253219,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/mandarin-q4_k.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/mandarin-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,740"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3740
+            },
+            "text": "清晨 海編的圖書館為社區工作州打開大門"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,740",
+              "to": "00:00:07,800"
+            },
+            "offsets": {
+              "from": 3740,
+              "to": 7800
+            },
+            "text": "大家戴著箱子和筆記本走入越南室高大的槍防洋"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:07,800",
+              "to": "00:00:09,400"
+            },
+            "offsets": {
+              "from": 7800,
+              "to": 9400
+            },
+            "text": "陽光落在桌面上"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,400",
+              "to": "00:00:10,800"
+            },
+            "offsets": {
+              "from": 9400,
+              "to": 10800
+            },
+            "text": "自供整理書架"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:10,800",
+              "to": "00:00:13,900"
+            },
+            "offsets": {
+              "from": 10800,
+              "to": 13900
+            },
+            "text": "掩軍營帶來地圖和故事的農具"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,900",
+              "to": "00:00:16,300"
+            },
+            "offsets": {
+              "from": 13900,
+              "to": 16300
+            },
+            "text": "第一組人員修補受損書著"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:16,300",
+              "to": "00:00:18,500"
+            },
+            "offsets": {
+              "from": 16300,
+              "to": 18500
+            },
+            "text": "退修老師整理講口腎鏡"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:18,500",
+              "to": "00:00:20,480"
+            },
+            "offsets": {
+              "from": 18500,
+              "to": 20480
+            },
+            "text": "學生抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:20,480",
+              "to": "00:00:21,880"
+            },
+            "offsets": {
+              "from": 20480,
+              "to": 21880
+            },
+            "text": "入口仙狼西仙廊"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:21,880",
+              "to": "00:00:23,280"
+            },
+            "offsets": {
+              "from": 21880,
+              "to": 23280
+            },
+            "text": "范延朝口風雨"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:23,280",
+              "to": "00:00:26,120"
+            },
+            "offsets": {
+              "from": 23280,
+              "to": 26120
+            },
+            "text": "人民衰長更有目考為特口神將利用神"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:26,120",
+              "to": "00:00:30,680"
+            },
+            "offsets": {
+              "from": 26120,
+              "to": 30680
+            },
+            "text": "濕病主謀強於道啟動迷藤和邊名終生話"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:30,680",
+              "to": "00:00:32,520"
+            },
+            "offsets": {
+              "from": 30680,
+              "to": 32520
+            },
+            "text": "第一組人員修補受損書著"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:32,520",
+              "to": "00:00:35,220"
+            },
+            "offsets": {
+              "from": 32520,
+              "to": 35220
+            },
+            "text": "退修老師整理講口腎鏡"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:35,220",
+              "to": "00:00:37,460"
+            },
+            "offsets": {
+              "from": 35220,
+              "to": 37460
+            },
+            "text": "掩軍營帶來地圖和故事的農具"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:37,460",
+              "to": "00:00:39,600"
+            },
+            "offsets": {
+              "from": 37460,
+              "to": 39600
+            },
+            "text": "退修老師整理講口腎鏡"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:39,600",
+              "to": "00:00:40,500"
+            },
+            "offsets": {
+              "from": 39600,
+              "to": 40500
+            },
+            "text": "學生抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:40,500",
+              "to": "00:00:41,400"
+            },
+            "offsets": {
+              "from": 40500,
+              "to": 41400
+            },
+            "text": "入口仙狼西仙廊"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:41,400",
+              "to": "00:00:42,200"
+            },
+            "offsets": {
+              "from": 41400,
+              "to": 42200
+            },
+            "text": "范廉朝口風雨"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:42,200",
+              "to": "00:00:44,000"
+            },
+            "offsets": {
+              "from": 42200,
+              "to": 44000
+            },
+            "text": "人民衰長更有目考為特口神將利用神"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:44,000",
+              "to": "00:00:45,020"
+            },
+            "offsets": {
+              "from": 44000,
+              "to": 45020
+            },
+            "text": "學生抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:45,020",
+              "to": "00:00:46,860"
+            },
+            "offsets": {
+              "from": 45020,
+              "to": 46860
+            },
+            "text": "退修老師整理講口腎鏡"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:46,860",
+              "to": "00:00:47,860"
+            },
+            "offsets": {
+              "from": 46860,
+              "to": 47860
+            },
+            "text": "學生抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:47,860",
+              "to": "00:00:49,100"
+            },
+            "offsets": {
+              "from": 47860,
+              "to": 49100
+            },
+            "text": "抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:49,100",
+              "to": "00:00:50,260"
+            },
+            "offsets": {
+              "from": 49100,
+              "to": 50260
+            },
+            "text": "抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:50,260",
+              "to": "00:00:52,300"
+            },
+            "offsets": {
+              "from": 50260,
+              "to": 52300
+            },
+            "text": "學生抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:52,300",
+              "to": "00:00:53,500"
+            },
+            "offsets": {
+              "from": 52300,
+              "to": 53500
+            },
+            "text": "抄六名生物探"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:53,500",
+              "to": "00:00:55,900"
+            },
+            "offsets": {
+              "from": 53500,
+              "to": 55900
+            },
+            "text": "近考見了建築重新有了用處。"
+          }
+        ]
+      }
+    },
+    "mandarin-q3_k": {
+      "wav_sha256": "5b8e4564f0cb231e194d621b299dbc29009ba5cdf3cbd021b56a5443bf4d7b88",
+      "language": "zh",
+      "expected_text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+      "transcript": "清晨 海濱的陶水館為社企工作州打開大門\n大家帶著雙擲 同筆記本走入越南室\n高大的窗戶讓陽光落在桌面上 自供整理書架\n人文形帶來地圖和故事的凌居\n第一組人員修補受損租著\n退修老師整理港口事件 說生抽六名實姓名\n若跑旁 武將修好儀紙 修製螺絲\n還為地方報紙做了手架子\n同時 人文分享暴風雨 音樂會 遠行轉動的手架\n溫馨對臉和唔動預計分頭導師鑽技\n有溫鬥 買地 定線燈 土耳的弊役\n倒曬燈 拱地 靠軍路工 做實七道花石 抬撓桶之後呢\n喺一個族生來蹭底 由老堂到\n作爭後咁的童盛度 過意感性\n更多特種都同性憤發的招牌和安全比頭\n自供約好星期六再回來\n因為內心合作 令這座建築重新有了用處",
+      "normalized_expected": [
+        "清",
+        "晨",
+        "海",
+        "边",
+        "的",
+        "图",
+        "书",
+        "馆",
+        "为",
+        "社",
+        "区",
+        "工",
+        "作",
+        "周",
+        "打",
+        "开",
+        "大",
+        "门",
+        "大",
+        "家",
+        "带",
+        "著",
+        "箱",
+        "子",
+        "和",
+        "笔",
+        "记",
+        "本",
+        "走",
+        "进",
+        "阅",
+        "览",
+        "室",
+        "高",
+        "大",
+        "的",
+        "窗",
+        "户",
+        "让",
+        "阳",
+        "光",
+        "落",
+        "在",
+        "桌",
+        "面",
+        "上",
+        "志",
+        "工",
+        "整",
+        "理",
+        "书",
+        "架",
+        "也",
+        "欢",
+        "迎",
+        "带",
+        "来",
+        "地",
+        "图",
+        "和",
+        "故",
+        "事",
+        "的",
+        "邻",
+        "居",
+        "第",
+        "一",
+        "组",
+        "人",
+        "员",
+        "修",
+        "补",
+        "受",
+        "损",
+        "书",
+        "籍",
+        "退",
+        "休",
+        "老",
+        "师",
+        "整",
+        "理",
+        "港",
+        "口",
+        "信",
+        "件",
+        "学",
+        "生",
+        "抄",
+        "录",
+        "名",
+        "册",
+        "姓",
+        "名",
+        "入",
+        "口",
+        "旁",
+        "木",
+        "匠",
+        "修",
+        "好",
+        "椅",
+        "子",
+        "收",
+        "起",
+        "螺",
+        "丝",
+        "还",
+        "为",
+        "地",
+        "方",
+        "报",
+        "纸",
+        "做",
+        "了",
+        "小",
+        "架",
+        "子",
+        "中",
+        "午",
+        "时",
+        "人",
+        "们",
+        "分",
+        "享",
+        "暴",
+        "风",
+        "雨",
+        "音",
+        "乐",
+        "会",
+        "远",
+        "行",
+        "以",
+        "及",
+        "搬",
+        "到",
+        "外",
+        "地",
+        "朋",
+        "友",
+        "的",
+        "回",
+        "忆",
+        "下",
+        "午",
+        "大",
+        "家",
+        "布",
+        "置",
+        "儿",
+        "童",
+        "阅",
+        "读",
+        "角",
+        "留",
+        "下",
+        "一",
+        "张",
+        "安",
+        "静",
+        "的",
+        "桌",
+        "子",
+        "给",
+        "学",
+        "习",
+        "新",
+        "语",
+        "言",
+        "的",
+        "人",
+        "闭",
+        "馆",
+        "前",
+        "玛",
+        "拉",
+        "检",
+        "查",
+        "灯",
+        "光",
+        "记",
+        "下",
+        "要",
+        "修",
+        "理",
+        "的",
+        "时",
+        "钟",
+        "完",
+        "成",
+        "的",
+        "目",
+        "录",
+        "重",
+        "新",
+        "粉",
+        "刷",
+        "的",
+        "招",
+        "牌",
+        "和",
+        "安",
+        "全",
+        "坡",
+        "道",
+        "志",
+        "工",
+        "约",
+        "好",
+        "星",
+        "期",
+        "六",
+        "再",
+        "回",
+        "来",
+        "因",
+        "为",
+        "耐",
+        "心",
+        "合",
+        "作",
+        "让",
+        "这",
+        "座",
+        "建",
+        "筑",
+        "重",
+        "新",
+        "有",
+        "了",
+        "用",
+        "处"
+      ],
+      "normalized_transcript": [
+        "清",
+        "晨",
+        "海",
+        "滨",
+        "的",
+        "陶",
+        "水",
+        "馆",
+        "为",
+        "社",
+        "企",
+        "工",
+        "作",
+        "州",
+        "打",
+        "开",
+        "大",
+        "门",
+        "大",
+        "家",
+        "带",
+        "著",
+        "双",
+        "掷",
+        "同",
+        "笔",
+        "记",
+        "本",
+        "走",
+        "入",
+        "越",
+        "南",
+        "室",
+        "高",
+        "大",
+        "的",
+        "窗",
+        "户",
+        "让",
+        "阳",
+        "光",
+        "落",
+        "在",
+        "桌",
+        "面",
+        "上",
+        "自",
+        "供",
+        "整",
+        "理",
+        "书",
+        "架",
+        "人",
+        "文",
+        "形",
+        "带",
+        "来",
+        "地",
+        "图",
+        "和",
+        "故",
+        "事",
+        "的",
+        "凌",
+        "居",
+        "第",
+        "一",
+        "组",
+        "人",
+        "员",
+        "修",
+        "补",
+        "受",
+        "损",
+        "租",
+        "著",
+        "退",
+        "修",
+        "老",
+        "师",
+        "整",
+        "理",
+        "港",
+        "口",
+        "事",
+        "件",
+        "说",
+        "生",
+        "抽",
+        "六",
+        "名",
+        "实",
+        "姓",
+        "名",
+        "若",
+        "跑",
+        "旁",
+        "武",
+        "将",
+        "修",
+        "好",
+        "仪",
+        "纸",
+        "修",
+        "制",
+        "螺",
+        "丝",
+        "还",
+        "为",
+        "地",
+        "方",
+        "报",
+        "纸",
+        "做",
+        "了",
+        "手",
+        "架",
+        "子",
+        "同",
+        "时",
+        "人",
+        "文",
+        "分",
+        "享",
+        "暴",
+        "风",
+        "雨",
+        "音",
+        "乐",
+        "会",
+        "远",
+        "行",
+        "转",
+        "动",
+        "的",
+        "手",
+        "架",
+        "温",
+        "馨",
+        "对",
+        "脸",
+        "和",
+        "唔",
+        "动",
+        "预",
+        "计",
+        "分",
+        "头",
+        "导",
+        "师",
+        "钻",
+        "技",
+        "有",
+        "温",
+        "斗",
+        "买",
+        "地",
+        "定",
+        "线",
+        "灯",
+        "土",
+        "耳",
+        "的",
+        "弊",
+        "役",
+        "倒",
+        "晒",
+        "灯",
+        "拱",
+        "地",
+        "靠",
+        "军",
+        "路",
+        "工",
+        "做",
+        "实",
+        "七",
+        "道",
+        "花",
+        "石",
+        "抬",
+        "挠",
+        "桶",
+        "之",
+        "后",
+        "呢",
+        "喺",
+        "一",
+        "个",
+        "族",
+        "生",
+        "来",
+        "蹭",
+        "底",
+        "由",
+        "老",
+        "堂",
+        "到",
+        "作",
+        "争",
+        "后",
+        "咁",
+        "的",
+        "童",
+        "盛",
+        "度",
+        "过",
+        "意",
+        "感",
+        "性",
+        "更",
+        "多",
+        "特",
+        "种",
+        "都",
+        "同",
+        "性",
+        "愤",
+        "发",
+        "的",
+        "招",
+        "牌",
+        "和",
+        "安",
+        "全",
+        "比",
+        "头",
+        "自",
+        "供",
+        "约",
+        "好",
+        "星",
+        "期",
+        "六",
+        "再",
+        "回",
+        "来",
+        "因",
+        "为",
+        "内",
+        "心",
+        "合",
+        "作",
+        "令",
+        "这",
+        "座",
+        "建",
+        "筑",
+        "重",
+        "新",
+        "有",
+        "了",
+        "用",
+        "处"
+      ],
+      "edit_distance": 128,
+      "reference_units": 233,
+      "metric": "CER",
+      "disagreement_rate": 0.5493562231759657,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/mandarin-q3_k.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/mandarin-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:04,000"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 4000
+            },
+            "text": "清晨 海濱的陶水館為社企工作州打開大門"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:04,000",
+              "to": "00:00:07,000"
+            },
+            "offsets": {
+              "from": 4000,
+              "to": 7000
+            },
+            "text": "大家帶著雙擲 同筆記本走入越南室"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:07,000",
+              "to": "00:00:11,000"
+            },
+            "offsets": {
+              "from": 7000,
+              "to": 11000
+            },
+            "text": "高大的窗戶讓陽光落在桌面上 自供整理書架"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,000",
+              "to": "00:00:14,000"
+            },
+            "offsets": {
+              "from": 11000,
+              "to": 14000
+            },
+            "text": "人文形帶來地圖和故事的凌居"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:14,000",
+              "to": "00:00:17,000"
+            },
+            "offsets": {
+              "from": 14000,
+              "to": 17000
+            },
+            "text": "第一組人員修補受損租著"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:17,000",
+              "to": "00:00:21,000"
+            },
+            "offsets": {
+              "from": 17000,
+              "to": 21000
+            },
+            "text": "退修老師整理港口事件 說生抽六名實姓名"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:21,000",
+              "to": "00:00:24,000"
+            },
+            "offsets": {
+              "from": 21000,
+              "to": 24000
+            },
+            "text": "若跑旁 武將修好儀紙 修製螺絲"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:24,000",
+              "to": "00:00:27,000"
+            },
+            "offsets": {
+              "from": 24000,
+              "to": 27000
+            },
+            "text": "還為地方報紙做了手架子"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:27,000",
+              "to": "00:00:31,000"
+            },
+            "offsets": {
+              "from": 27000,
+              "to": 31000
+            },
+            "text": "同時 人文分享暴風雨 音樂會 遠行轉動的手架"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:31,000",
+              "to": "00:00:33,000"
+            },
+            "offsets": {
+              "from": 31000,
+              "to": 33000
+            },
+            "text": "溫馨對臉和唔動預計分頭導師鑽技"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:33,000",
+              "to": "00:00:36,000"
+            },
+            "offsets": {
+              "from": 33000,
+              "to": 36000
+            },
+            "text": "有溫鬥 買地 定線燈 土耳的弊役"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:36,000",
+              "to": "00:00:40,000"
+            },
+            "offsets": {
+              "from": 36000,
+              "to": 40000
+            },
+            "text": "倒曬燈 拱地 靠軍路工 做實七道花石 抬撓桶之後呢"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:40,000",
+              "to": "00:00:42,000"
+            },
+            "offsets": {
+              "from": 40000,
+              "to": 42000
+            },
+            "text": "喺一個族生來蹭底 由老堂到"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:42,000",
+              "to": "00:00:44,000"
+            },
+            "offsets": {
+              "from": 42000,
+              "to": 44000
+            },
+            "text": "作爭後咁的童盛度 過意感性"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:44,000",
+              "to": "00:00:48,000"
+            },
+            "offsets": {
+              "from": 44000,
+              "to": 48000
+            },
+            "text": "更多特種都同性憤發的招牌和安全比頭"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:48,000",
+              "to": "00:00:50,000"
+            },
+            "offsets": {
+              "from": 48000,
+              "to": 50000
+            },
+            "text": "自供約好星期六再回來"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:50,000",
+              "to": "00:00:53,000"
+            },
+            "offsets": {
+              "from": 50000,
+              "to": 53000
+            },
+            "text": "因為內心合作 令這座建築重新有了用處"
+          }
+        ]
+      }
+    },
+    "saved-voice-en-q4_k": {
+      "wav_sha256": "beb5dfec52234c6b7c61f7732e20c7bb85e86ac022a643be7c99f4c2079d7960",
+      "language": "en",
+      "expected_text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+      "transcript": "At sunrise, the neighborhood museum opened\nfor a careful day of shared work.\nVolunteers moved boxes through the hall,\ncleaned display cases, and labeled objects from the basement.\nMara welcomed families with maps and notebooks\nwhile an old clock marked the hours above the desk.\nThe first group sorted railway photographs\nand copied each date into a fresh register.\nA retired engineer explained older tools\nwhile two students measured cases\nso a new shelf would not block the windows.\nAt midday, neighbors shared soup and stories\nabout departures, reunions,\nand journeys that changed direction.\nBefore closing, Mara listed four requests.\nRepair the clock, finish the catalog, repaint the sign,\nand ask the council about a safer ramp.\nEveryone agreed to return with better tools\nand more photographs because patient work\nhad given the museum a future.",
+      "normalized_expected": [
+        "at",
+        "sunrise",
+        "the",
+        "neighbourhood",
+        "museum",
+        "opened",
+        "for",
+        "a",
+        "careful",
+        "day",
+        "of",
+        "shared",
+        "work",
+        "volunteers",
+        "moved",
+        "boxes",
+        "through",
+        "the",
+        "hall",
+        "cleaned",
+        "display",
+        "cases",
+        "and",
+        "labelled",
+        "objects",
+        "from",
+        "the",
+        "basement",
+        "mara",
+        "welcomed",
+        "families",
+        "with",
+        "maps",
+        "and",
+        "notebooks",
+        "while",
+        "an",
+        "old",
+        "clock",
+        "marked",
+        "the",
+        "hours",
+        "above",
+        "the",
+        "desk",
+        "the",
+        "first",
+        "group",
+        "sorted",
+        "railway",
+        "photographs",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "fresh",
+        "register",
+        "a",
+        "retired",
+        "engineer",
+        "explained",
+        "older",
+        "tools",
+        "while",
+        "two",
+        "students",
+        "measured",
+        "cases",
+        "so",
+        "a",
+        "new",
+        "shelf",
+        "would",
+        "not",
+        "block",
+        "the",
+        "windows",
+        "at",
+        "midday",
+        "neighbours",
+        "shared",
+        "soup",
+        "and",
+        "stories",
+        "about",
+        "departures",
+        "reunions",
+        "and",
+        "journeys",
+        "that",
+        "changed",
+        "direction",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "four",
+        "requests",
+        "repair",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalogue",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "everyone",
+        "agreed",
+        "to",
+        "return",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "photographs",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "given",
+        "the",
+        "museum",
+        "a",
+        "future"
+      ],
+      "normalized_transcript": [
+        "at",
+        "sunrise",
+        "the",
+        "neighborhood",
+        "museum",
+        "opened",
+        "for",
+        "a",
+        "careful",
+        "day",
+        "of",
+        "shared",
+        "work",
+        "volunteers",
+        "moved",
+        "boxes",
+        "through",
+        "the",
+        "hall",
+        "cleaned",
+        "display",
+        "cases",
+        "and",
+        "labeled",
+        "objects",
+        "from",
+        "the",
+        "basement",
+        "mara",
+        "welcomed",
+        "families",
+        "with",
+        "maps",
+        "and",
+        "notebooks",
+        "while",
+        "an",
+        "old",
+        "clock",
+        "marked",
+        "the",
+        "hours",
+        "above",
+        "the",
+        "desk",
+        "the",
+        "first",
+        "group",
+        "sorted",
+        "railway",
+        "photographs",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "fresh",
+        "register",
+        "a",
+        "retired",
+        "engineer",
+        "explained",
+        "older",
+        "tools",
+        "while",
+        "two",
+        "students",
+        "measured",
+        "cases",
+        "so",
+        "a",
+        "new",
+        "shelf",
+        "would",
+        "not",
+        "block",
+        "the",
+        "windows",
+        "at",
+        "midday",
+        "neighbors",
+        "shared",
+        "soup",
+        "and",
+        "stories",
+        "about",
+        "departures",
+        "reunions",
+        "and",
+        "journeys",
+        "that",
+        "changed",
+        "direction",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "four",
+        "requests",
+        "repair",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalog",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "everyone",
+        "agreed",
+        "to",
+        "return",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "photographs",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "given",
+        "the",
+        "museum",
+        "a",
+        "future"
+      ],
+      "edit_distance": 4,
+      "reference_units": 136,
+      "metric": "WER",
+      "disagreement_rate": 0.029411764705882353,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/saved-voice-en-q4_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/saved-voice-en-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:02,860"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 2860
+            },
+            "text": " At sunrise, the neighborhood museum opened"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:02,860",
+              "to": "00:00:05,320"
+            },
+            "offsets": {
+              "from": 2860,
+              "to": 5320
+            },
+            "text": " for a careful day of shared work."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,320",
+              "to": "00:00:07,920"
+            },
+            "offsets": {
+              "from": 5320,
+              "to": 7920
+            },
+            "text": " Volunteers moved boxes through the hall,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:07,920",
+              "to": "00:00:12,160"
+            },
+            "offsets": {
+              "from": 7920,
+              "to": 12160
+            },
+            "text": " cleaned display cases, and labeled objects from the basement."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:12,160",
+              "to": "00:00:15,320"
+            },
+            "offsets": {
+              "from": 12160,
+              "to": 15320
+            },
+            "text": " Mara welcomed families with maps and notebooks"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,320",
+              "to": "00:00:18,760"
+            },
+            "offsets": {
+              "from": 15320,
+              "to": 18760
+            },
+            "text": " while an old clock marked the hours above the desk."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:18,760",
+              "to": "00:00:21,060"
+            },
+            "offsets": {
+              "from": 18760,
+              "to": 21060
+            },
+            "text": " The first group sorted railway photographs"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:21,060",
+              "to": "00:00:24,360"
+            },
+            "offsets": {
+              "from": 21060,
+              "to": 24360
+            },
+            "text": " and copied each date into a fresh register."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:24,360",
+              "to": "00:00:27,240"
+            },
+            "offsets": {
+              "from": 24360,
+              "to": 27240
+            },
+            "text": " A retired engineer explained older tools"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:27,240",
+              "to": "00:00:29,440"
+            },
+            "offsets": {
+              "from": 27240,
+              "to": 29440
+            },
+            "text": " while two students measured cases"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:29,440",
+              "to": "00:00:32,400"
+            },
+            "offsets": {
+              "from": 29440,
+              "to": 32400
+            },
+            "text": " so a new shelf would not block the windows."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:32,400",
+              "to": "00:00:35,520"
+            },
+            "offsets": {
+              "from": 32400,
+              "to": 35520
+            },
+            "text": " At midday, neighbors shared soup and stories"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:35,520",
+              "to": "00:00:37,840"
+            },
+            "offsets": {
+              "from": 35520,
+              "to": 37840
+            },
+            "text": " about departures, reunions,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:37,840",
+              "to": "00:00:39,920"
+            },
+            "offsets": {
+              "from": 37840,
+              "to": 39920
+            },
+            "text": " and journeys that changed direction."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:39,920",
+              "to": "00:00:43,480"
+            },
+            "offsets": {
+              "from": 39920,
+              "to": 43480
+            },
+            "text": " Before closing, Mara listed four requests."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:43,480",
+              "to": "00:00:48,220"
+            },
+            "offsets": {
+              "from": 43480,
+              "to": 48220
+            },
+            "text": " Repair the clock, finish the catalog, repaint the sign,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:48,220",
+              "to": "00:00:50,600"
+            },
+            "offsets": {
+              "from": 48220,
+              "to": 50600
+            },
+            "text": " and ask the council about a safer ramp."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:51,600",
+              "to": "00:00:54,000"
+            },
+            "offsets": {
+              "from": 51600,
+              "to": 54000
+            },
+            "text": " Everyone agreed to return with better tools"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:54,000",
+              "to": "00:00:56,720"
+            },
+            "offsets": {
+              "from": 54000,
+              "to": 56720
+            },
+            "text": " and more photographs because patient work"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:56,720",
+              "to": "00:00:58,520"
+            },
+            "offsets": {
+              "from": 56720,
+              "to": 58520
+            },
+            "text": " had given the museum a future."
+          }
+        ]
+      }
+    },
+    "saved-voice-en-q3_k": {
+      "wav_sha256": "ff7483144830d0be70c76699cdd77cc48fe73f89123ce53e375c1a23eeba96ff",
+      "language": "en",
+      "expected_text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+      "transcript": "At sunrise, the neighborhood museum opened\nfor a careful day of shared work.\nVolunteers moved boxes through the hall,\ncleaned display cases,\nand labeled objects from the basement.\nMara welcomed families with maps and notebooks\nwhile an old clock marked the hours above the desk.\nThe first group sorted railway photographs\nand copied each date into a fresh register.\nA retired engineer explained older tools\nwhile two students measured cases\nso a new shelf would not block the windows.\nAt midday, neighbors shared soup and stories\nabout departures, reunions,\nand journeys that changed direction.\nBefore closing, Mara listed four requests.\nRepair the clock, finish the catalog, repaint the sign,\nand ask the council about a safer ramp.\nEveryone agreed to return with better tools\nand more photographs\nbecause patient work had given the museum a future.",
+      "normalized_expected": [
+        "at",
+        "sunrise",
+        "the",
+        "neighbourhood",
+        "museum",
+        "opened",
+        "for",
+        "a",
+        "careful",
+        "day",
+        "of",
+        "shared",
+        "work",
+        "volunteers",
+        "moved",
+        "boxes",
+        "through",
+        "the",
+        "hall",
+        "cleaned",
+        "display",
+        "cases",
+        "and",
+        "labelled",
+        "objects",
+        "from",
+        "the",
+        "basement",
+        "mara",
+        "welcomed",
+        "families",
+        "with",
+        "maps",
+        "and",
+        "notebooks",
+        "while",
+        "an",
+        "old",
+        "clock",
+        "marked",
+        "the",
+        "hours",
+        "above",
+        "the",
+        "desk",
+        "the",
+        "first",
+        "group",
+        "sorted",
+        "railway",
+        "photographs",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "fresh",
+        "register",
+        "a",
+        "retired",
+        "engineer",
+        "explained",
+        "older",
+        "tools",
+        "while",
+        "two",
+        "students",
+        "measured",
+        "cases",
+        "so",
+        "a",
+        "new",
+        "shelf",
+        "would",
+        "not",
+        "block",
+        "the",
+        "windows",
+        "at",
+        "midday",
+        "neighbours",
+        "shared",
+        "soup",
+        "and",
+        "stories",
+        "about",
+        "departures",
+        "reunions",
+        "and",
+        "journeys",
+        "that",
+        "changed",
+        "direction",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "four",
+        "requests",
+        "repair",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalogue",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "everyone",
+        "agreed",
+        "to",
+        "return",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "photographs",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "given",
+        "the",
+        "museum",
+        "a",
+        "future"
+      ],
+      "normalized_transcript": [
+        "at",
+        "sunrise",
+        "the",
+        "neighborhood",
+        "museum",
+        "opened",
+        "for",
+        "a",
+        "careful",
+        "day",
+        "of",
+        "shared",
+        "work",
+        "volunteers",
+        "moved",
+        "boxes",
+        "through",
+        "the",
+        "hall",
+        "cleaned",
+        "display",
+        "cases",
+        "and",
+        "labeled",
+        "objects",
+        "from",
+        "the",
+        "basement",
+        "mara",
+        "welcomed",
+        "families",
+        "with",
+        "maps",
+        "and",
+        "notebooks",
+        "while",
+        "an",
+        "old",
+        "clock",
+        "marked",
+        "the",
+        "hours",
+        "above",
+        "the",
+        "desk",
+        "the",
+        "first",
+        "group",
+        "sorted",
+        "railway",
+        "photographs",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "fresh",
+        "register",
+        "a",
+        "retired",
+        "engineer",
+        "explained",
+        "older",
+        "tools",
+        "while",
+        "two",
+        "students",
+        "measured",
+        "cases",
+        "so",
+        "a",
+        "new",
+        "shelf",
+        "would",
+        "not",
+        "block",
+        "the",
+        "windows",
+        "at",
+        "midday",
+        "neighbors",
+        "shared",
+        "soup",
+        "and",
+        "stories",
+        "about",
+        "departures",
+        "reunions",
+        "and",
+        "journeys",
+        "that",
+        "changed",
+        "direction",
+        "before",
+        "closing",
+        "mara",
+        "listed",
+        "four",
+        "requests",
+        "repair",
+        "the",
+        "clock",
+        "finish",
+        "the",
+        "catalog",
+        "repaint",
+        "the",
+        "sign",
+        "and",
+        "ask",
+        "the",
+        "council",
+        "about",
+        "a",
+        "safer",
+        "ramp",
+        "everyone",
+        "agreed",
+        "to",
+        "return",
+        "with",
+        "better",
+        "tools",
+        "and",
+        "more",
+        "photographs",
+        "because",
+        "patient",
+        "work",
+        "had",
+        "given",
+        "the",
+        "museum",
+        "a",
+        "future"
+      ],
+      "edit_distance": 4,
+      "reference_units": 136,
+      "metric": "WER",
+      "disagreement_rate": 0.029411764705882353,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/saved-voice-en-q3_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-LONGFORM/results/speech-probes/saved-voice-en-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:02,400"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 2400
+            },
+            "text": " At sunrise, the neighborhood museum opened"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:02,400",
+              "to": "00:00:04,920"
+            },
+            "offsets": {
+              "from": 2400,
+              "to": 4920
+            },
+            "text": " for a careful day of shared work."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:04,920",
+              "to": "00:00:07,380"
+            },
+            "offsets": {
+              "from": 4920,
+              "to": 7380
+            },
+            "text": " Volunteers moved boxes through the hall,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:07,380",
+              "to": "00:00:08,800"
+            },
+            "offsets": {
+              "from": 7380,
+              "to": 8800
+            },
+            "text": " cleaned display cases,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:08,800",
+              "to": "00:00:11,760"
+            },
+            "offsets": {
+              "from": 8800,
+              "to": 11760
+            },
+            "text": " and labeled objects from the basement."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,760",
+              "to": "00:00:14,620"
+            },
+            "offsets": {
+              "from": 11760,
+              "to": 14620
+            },
+            "text": " Mara welcomed families with maps and notebooks"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:14,620",
+              "to": "00:00:17,960"
+            },
+            "offsets": {
+              "from": 14620,
+              "to": 17960
+            },
+            "text": " while an old clock marked the hours above the desk."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:17,960",
+              "to": "00:00:20,200"
+            },
+            "offsets": {
+              "from": 17960,
+              "to": 20200
+            },
+            "text": " The first group sorted railway photographs"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:20,200",
+              "to": "00:00:23,320"
+            },
+            "offsets": {
+              "from": 20200,
+              "to": 23320
+            },
+            "text": " and copied each date into a fresh register."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:23,320",
+              "to": "00:00:25,880"
+            },
+            "offsets": {
+              "from": 23320,
+              "to": 25880
+            },
+            "text": " A retired engineer explained older tools"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:25,880",
+              "to": "00:00:27,600"
+            },
+            "offsets": {
+              "from": 25880,
+              "to": 27600
+            },
+            "text": " while two students measured cases"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:27,600",
+              "to": "00:00:30,480"
+            },
+            "offsets": {
+              "from": 27600,
+              "to": 30480
+            },
+            "text": " so a new shelf would not block the windows."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:30,480",
+              "to": "00:00:33,160"
+            },
+            "offsets": {
+              "from": 30480,
+              "to": 33160
+            },
+            "text": " At midday, neighbors shared soup and stories"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:33,160",
+              "to": "00:00:35,200"
+            },
+            "offsets": {
+              "from": 33160,
+              "to": 35200
+            },
+            "text": " about departures, reunions,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:35,200",
+              "to": "00:00:37,040"
+            },
+            "offsets": {
+              "from": 35200,
+              "to": 37040
+            },
+            "text": " and journeys that changed direction."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:37,040",
+              "to": "00:00:40,520"
+            },
+            "offsets": {
+              "from": 37040,
+              "to": 40520
+            },
+            "text": " Before closing, Mara listed four requests."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:40,520",
+              "to": "00:00:44,680"
+            },
+            "offsets": {
+              "from": 40520,
+              "to": 44680
+            },
+            "text": " Repair the clock, finish the catalog, repaint the sign,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:44,680",
+              "to": "00:00:47,720"
+            },
+            "offsets": {
+              "from": 44680,
+              "to": 47720
+            },
+            "text": " and ask the council about a safer ramp."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:47,720",
+              "to": "00:00:50,080"
+            },
+            "offsets": {
+              "from": 47720,
+              "to": 50080
+            },
+            "text": " Everyone agreed to return with better tools"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:50,080",
+              "to": "00:00:51,600"
+            },
+            "offsets": {
+              "from": 50080,
+              "to": 51600
+            },
+            "text": " and more photographs"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:51,600",
+              "to": "00:00:54,640"
+            },
+            "offsets": {
+              "from": 51600,
+              "to": 54640
+            },
+            "text": " because patient work had given the museum a future."
+          }
+        ]
+      }
+    }
+  },
+  "models": {
+    "asr_binary": {
+      "path": "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+      "sha256": "cd3fbfea58ab2d5ddc5b5e5ac745940ec0f07d66e5b7e80af758e9bc2c6b2286"
+    },
+    "asr_model": {
+      "path": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+      "sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b"
+    },
+    "speaker_model": {
+      "path": "/tmp/breeze-speaker-eval-20260906/wespeaker_en_voxceleb_resnet34.onnx",
+      "sha256": "5ef208a9da1453335308a6b6f4e6dfbd7e183a38b604de0a57664f45d257fe94"
+    }
+  },
+  "versions": {
+    "numpy": "2.5.2",
+    "sherpa-onnx": "1.13.7",
+    "opencc-python-reimplemented": "0.1.7"
+  },
+  "normalization": "NFKC/lowercase; English alphanumeric words; Mandarin OpenCC t2s then alphanumeric characters.",
+  "limitations": [
+    "ASR disagreement includes recognizer errors, spelling and number formatting; not human WER.",
+    "No expected transcript is given to the recognizer as a prompt.",
+    "Speaker cosine is descriptive; no task-specific acceptance threshold is established.",
+    "The reference clip is synthetic speech, not a human speaker validation set.",
+    "Only first-repeat WAVs are scored; repeated identical audio is not independent quality evidence."
+  ],
+  "speaker": {
+    "fixture": "saved-voice-en",
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "embedding_dim": 256,
+    "reference_self_cosine": 0.9999999999999999,
+    "q4_reference_cosine": 0.9587223236597692,
+    "q3_reference_cosine": 0.9329409524900433,
+    "q3_q4_cosine": 0.9647983760055409
+  }
+}

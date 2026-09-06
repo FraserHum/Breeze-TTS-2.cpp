@@ -1,0 +1,1970 @@
+{
+  "schema": "breeze-backbone-context/v1",
+  "status": "complete",
+  "generated_at": "2026-09-06",
+  "objective": "Measure fixed-context backbone scaling through the existing execution path on the Q3_K 780M model.",
+  "scope": {
+    "contexts": [
+      64,
+      256,
+      512,
+      1024
+    ],
+    "rounds": 3,
+    "round_orders": {
+      "1": [
+        64,
+        256,
+        512,
+        1024
+      ],
+      "2": [
+        1024,
+        512,
+        256,
+        64
+      ],
+      "3": [
+        256,
+        512,
+        1024,
+        64
+      ]
+    },
+    "warmup_iterations": 5,
+    "timed_iterations": 30,
+    "prefix_policy": "Each context uses the same deterministic initialized prefix seed; each timed query rewinds only state.pos=context-1, then overwrites the final slot.",
+    "input_kind": "Synthetic initialized backbone prefix; no speech text, audio, RTF, or quality claim.",
+    "model": "/tmp/breeze-depth-blocks-q3_k.gguf",
+    "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+    "backend_requested": "gpu",
+    "backend_observed": "Vulkan0",
+    "graphics_queue": true,
+    "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+    "profile_logger_scope": "Separate GGML_VK_PERF_LOGGER=1 runs with warmup=1 and iterations=1; profiling changes timing and is attribution only.",
+    "config": {
+      "hidden": 2048,
+      "layers": 28,
+      "heads": 16,
+      "kv_heads": 8,
+      "head_dim": 128,
+      "ffn": 6144,
+      "rope_theta": 1000000.0
+    }
+  },
+  "provenance": {
+    "pod": "hermes-voice/breezetts-dev",
+    "namespace": "hermes-voice",
+    "completion_marker": "/tmp/breeze-longform/complete (verified before pod build and GPU runs)",
+    "probe_source": {
+      "workspace_path": "tools/backbone_context_bench.cpp",
+      "workspace_sha256": "21089774a6dff2a8fb6b995c649323e949cd0f58ffef2fe2dfb08739feec254a",
+      "pod_path": "/tmp/backbone_context_bench.cpp",
+      "pod_sha256": "21089774a6dff2a8fb6b995c649323e949cd0f58ffef2fe2dfb08739feec254a",
+      "copy_method": "kubectl cp workspace source into pod before isolated compilation"
+    },
+    "pod_source_provenance": {
+      "/src/src/backbone.cpp": {
+        "sha256": "e06248cca9f4f77a45e9c4c3fef0a8a74b568411e0672afb735538b5383862e5",
+        "note": "Manager verified pod source matches local source."
+      },
+      "/src/src/text_split.cpp": {
+        "sha256": "8fd38989896e588c79ad6f3b6f26b851ab1a15dcd61312e69b2fc38c7f93f8d8",
+        "note": "Manager verified pod source matches local source."
+      },
+      "/tmp/breeze-pod-common.cpp": {
+        "sha256": "17e78b906013eb9c7f36d362837188a6c03ca13f6e16a1ea10ac6f86587cb847",
+        "note": "Pod common.cpp copy; differs from local by ggml-vulkan include and explicit ggml_backend_vk_init(0)."
+      },
+      "archive_symbol_check": "Manager observed common.cpp.o references ggml_silu, with no ggml_swiglu_split or flash references."
+    },
+    "isolated_binary": {
+      "path": "/tmp/backbone-context-bench",
+      "md5": "7e2c6f723e2cb2cd7a2e98825a571961",
+      "sha256": "5696713c0a80e6148d65ba023642c225c8e67240e6e558aca4712f5ff7793248",
+      "sha256_status": "Manager collected read-only after measurement and GPU release."
+    },
+    "core_and_shared_libraries": {
+      "link_source": "/src/build/CMakeFiles/breeze-cli.dir/link.txt",
+      "core": {
+        "path": "/src/build/libbreeze_core.a",
+        "sha256": "c6ae61fb746cdcbd17e002208a5fa869072f3b7028e5664da723f661b5ee788f",
+        "status": "Manager collected read-only after measurement; no before/after checksum pair retained."
+      },
+      "shared": [
+        {
+          "path": "/src/build/third_party/ggml/src/libggml.so.0.22.0",
+          "sha256": "1d4d3fe918689df45bc9e7f4f58a4618b96349dfae7ce146c96786e72ea312f1",
+          "status": "Manager collected read-only after measurement; no before/after checksum pair retained."
+        },
+        {
+          "path": "/src/build/third_party/ggml/src/libggml-cpu.so.0.22.0",
+          "sha256": "f6fd5bda05b5b3b62aaca321e6854ee3a644a4ea7f9272dcfe909d6d1b92776b",
+          "status": "Manager collected read-only after measurement; no before/after checksum pair retained."
+        },
+        {
+          "path": "/src/build/third_party/ggml/src/ggml-vulkan/libggml-vulkan.so.0.22.0",
+          "sha256": "92c19cadfc94697b434491ef7de6415beddb0177f9bf23e28813112117da588c",
+          "status": "Manager collected read-only after measurement; no before/after checksum pair retained."
+        },
+        {
+          "path": "/src/build/third_party/ggml/src/libggml-base.so.0.22.0",
+          "sha256": "8f30bd7a0e73c2db64574b35432dfd219c8996afb9c702ef953cd9c8f9cb1333",
+          "status": "Manager collected read-only after measurement; no before/after checksum pair retained."
+        }
+      ],
+      "link_line": "/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/breeze-cli.dir/link.d CMakeFiles/breeze-cli.dir/apps/cli/main.cpp.o -o breeze-cli -Wl,-rpath,/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan libbreeze_core.a third_party/ggml/src/libggml.so.0.22.0 third_party/ggml/src/libggml-cpu.so.0.22.0 third_party/ggml/src/ggml-vulkan/libggml-vulkan.so.0.22.0 third_party/ggml/src/libggml-base.so.0.22.0"
+    },
+    "cli_md5": {
+      "before": "067a25764c424185bd684f60354852e0",
+      "after": "067a25764c424185bd684f60354852e0",
+      "path": "/src/build/breeze-cli",
+      "unchanged": true
+    },
+    "model": {
+      "path": "/tmp/breeze-depth-blocks-q3_k.gguf",
+      "sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "compile_command": "kubectl -n hermes-voice exec breezetts-dev -- sh -c 'set -eu; /usr/bin/c++ -O3 -DNDEBUG -std=gnu++17 -fPIE -DGGML_BACKEND_SHARED -DGGML_SHARED -DGGML_USE_CPU -DGGML_USE_VULKAN -I/src/include -I/src/third_party/ggml/include /tmp/backbone_context_bench.cpp -o /tmp/backbone-context-bench -Wl,-rpath,/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan /src/build/libbreeze_core.a /src/build/third_party/ggml/src/libggml.so.0.22.0 /src/build/third_party/ggml/src/libggml-cpu.so.0.22.0 /src/build/third_party/ggml/src/ggml-vulkan/libggml-vulkan.so.0.22.0 /src/build/third_party/ggml/src/libggml-base.so.0.22.0'"
+  },
+  "fixed_context_runs": [
+    {
+      "round": 1,
+      "order_index": 0,
+      "context": 64,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 64 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round1-ctx64.log",
+      "log_sha256": "a36dcb7e41de90953274776fe7922668b583b45a48b59c5c801537f202917e46",
+      "log_md5": "929a6c8d9a0aeb78c211d971bdcb2fe7",
+      "prefix_tokens": 63,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 110952.513,
+      "samples_us": [
+        12689.857,
+        12684.788,
+        12728.31,
+        12658.168,
+        12603.257,
+        12937.127,
+        12734.09,
+        12750.701,
+        12680.921,
+        12630.107,
+        12583.891,
+        12573.472,
+        12703.653,
+        12934.412,
+        12730.083,
+        12736.525,
+        12720.014,
+        12712.941,
+        12615.92,
+        12672.085,
+        12640.336,
+        12612.062,
+        12612.945,
+        12664.661,
+        12622.483,
+        12615.69,
+        12610.43,
+        12713.542,
+        12615.99,
+        12655.123
+      ],
+      "mean_us": 12681.453,
+      "min_us": 12573.472,
+      "max_us": 12937.127,
+      "sample_mean_us": 12681.4528,
+      "sample_stdev_us": 85.65363105067719,
+      "sample_cv": 0.006754244359974056,
+      "sample_range_us": 363.65500000000065,
+      "sample_range_pct_of_mean": 0.028676130860968915,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 1,
+      "order_index": 1,
+      "context": 256,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 256 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round1-ctx256.log",
+      "log_sha256": "063ed74046ae58f076113e55b7fbd2f70aefc6a7a85333d721b2fed39c86a91a",
+      "log_md5": "8afea6b2f5f6fb2aa8a732c8292a6b46",
+      "prefix_tokens": 255,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 305673.276,
+      "samples_us": [
+        14920.889,
+        14849.204,
+        14960.151,
+        14915.959,
+        14985.118,
+        14837.905,
+        14876.365,
+        14717.861,
+        14938.732,
+        14762.784,
+        15024.922,
+        14789.293,
+        14745.502,
+        15300.965,
+        15504.544,
+        16059.317,
+        15393.117,
+        15891.955,
+        15302.288,
+        15097.447,
+        15264.548,
+        14981.842,
+        15117.885,
+        15127.873,
+        15214.204,
+        15097.186,
+        15315.232,
+        14950.303,
+        14894.83,
+        15355.377
+      ],
+      "mean_us": 15106.453,
+      "min_us": 14717.861,
+      "max_us": 16059.317,
+      "sample_mean_us": 15106.453266666667,
+      "sample_stdev_us": 316.3509418800727,
+      "sample_cv": 0.020941443785360316,
+      "sample_range_us": 1341.4559999999983,
+      "sample_range_pct_of_mean": 0.08880019527548566,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 1,
+      "order_index": 2,
+      "context": 512,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 512 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round1-ctx512.log",
+      "log_sha256": "04413bbd14f8560d2c47490c2ee5cd37e1c7b8ccafeeb7748785b794a95fc12c",
+      "log_md5": "de7d938eee58cb2d9d7f60a3fe681cc8",
+      "prefix_tokens": 511,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 557624.526,
+      "samples_us": [
+        17753.598,
+        17735.374,
+        18248.419,
+        19676.305,
+        18714.536,
+        18315.524,
+        17798.04,
+        17726.097,
+        18320.062,
+        17788.714,
+        17835.14,
+        18085.015,
+        18822.567,
+        17983.356,
+        17906.623,
+        17812.428,
+        18031.134,
+        18265.741,
+        18715.808,
+        18840.811,
+        17839.258,
+        17716.88,
+        18484.908,
+        18121.473,
+        17810.494,
+        18731.387,
+        18234.112,
+        17818.499,
+        17820.452,
+        17675.683
+      ],
+      "mean_us": 18154.281,
+      "min_us": 17675.683,
+      "max_us": 19676.305,
+      "sample_mean_us": 18154.28126666667,
+      "sample_stdev_us": 468.284079472834,
+      "sample_cv": 0.025794691213287358,
+      "sample_range_us": 2000.6219999999994,
+      "sample_range_pct_of_mean": 0.11020111292829696,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 1,
+      "order_index": 3,
+      "context": 1024,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1024 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round1-ctx1024.log",
+      "log_sha256": "487c186855943e48a8f49ddfdf731471b90b74a634419a3179034939a783c492",
+      "log_md5": "420c2f72ddcc254b1ab3593e848feccc",
+      "prefix_tokens": 1023,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 1146612.201,
+      "samples_us": [
+        27664.817,
+        27715.581,
+        27639.83,
+        27875.158,
+        28025.227,
+        32275.293,
+        28109.604,
+        28079.679,
+        28200.394,
+        27988.759,
+        27898.762,
+        27938.606,
+        28281.203,
+        28374.356,
+        28447.663,
+        27438.515,
+        27513.946,
+        27699.781,
+        27594.296,
+        28034.114,
+        28220.49,
+        28053.6,
+        27541.327,
+        27665.999,
+        27622.418,
+        27690.535,
+        28253.001,
+        27639.76,
+        27467.73,
+        29101.5
+      ],
+      "mean_us": 28068.398,
+      "min_us": 27438.515,
+      "max_us": 32275.293,
+      "sample_mean_us": 28068.398133333332,
+      "sample_stdev_us": 872.5471071316294,
+      "sample_cv": 0.03108645897734414,
+      "sample_range_us": 4836.778000000002,
+      "sample_range_pct_of_mean": 0.1723211270206391,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 2,
+      "order_index": 0,
+      "context": 1024,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1024 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round2-ctx1024.log",
+      "log_sha256": "32b0e452124a07cde258be730317a8969634b298fd2564c2152a61b380b58a23",
+      "log_md5": "95b5f09d10609b672c3905b041920b8c",
+      "prefix_tokens": 1023,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 1144713.348,
+      "samples_us": [
+        28069.34,
+        27355.471,
+        27477.979,
+        27848.779,
+        27941.21,
+        27737.421,
+        28342.788,
+        27803.204,
+        27536.619,
+        27380.838,
+        27735.539,
+        27438.506,
+        27441.421,
+        27372.924,
+        27360.54,
+        27617.96,
+        30921.245,
+        28250.797,
+        27938.446,
+        27741.339,
+        27955.317,
+        28438.125,
+        27445.87,
+        27345.924,
+        27600.918,
+        27410.624,
+        27325.085,
+        27379.405,
+        27366.412,
+        27374.537
+      ],
+      "mean_us": 27765.153,
+      "min_us": 27325.085,
+      "max_us": 30921.245,
+      "sample_mean_us": 27765.152766666666,
+      "sample_stdev_us": 676.4268236794077,
+      "sample_cv": 0.024362438390452112,
+      "sample_range_us": 3596.16,
+      "sample_range_pct_of_mean": 0.12952062717686014,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 2,
+      "order_index": 1,
+      "context": 512,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 512 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round2-ctx512.log",
+      "log_sha256": "f2b91026c11e645793cd43be88432d7476782da705dd9464a1c0516502ffff22",
+      "log_md5": "d53e8d7cabbe8ecb7e8b2e8cdc300ac1",
+      "prefix_tokens": 511,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 553175.05,
+      "samples_us": [
+        17831.523,
+        17736.576,
+        18312.087,
+        18687.666,
+        18519.022,
+        18691.042,
+        17766.532,
+        17620.48,
+        17739.222,
+        17774.667,
+        17856.741,
+        17666.486,
+        17700.82,
+        17697.463,
+        17659.252,
+        17739.301,
+        17686.684,
+        17764.919,
+        17834.028,
+        17745.944,
+        17690.01,
+        17737.117,
+        17771.291,
+        17736.497,
+        17651.909,
+        17789.506,
+        17955.063,
+        18162.66,
+        18213.213,
+        18332.365
+      ],
+      "mean_us": 17902.336,
+      "min_us": 17620.48,
+      "max_us": 18691.042,
+      "sample_mean_us": 17902.3362,
+      "sample_stdev_us": 312.132098240517,
+      "sample_cv": 0.01743527184125371,
+      "sample_range_us": 1070.5620000000017,
+      "sample_range_pct_of_mean": 0.05980012820896535,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 2,
+      "order_index": 2,
+      "context": 256,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 256 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round2-ctx256.log",
+      "log_sha256": "bd6c25ca3322f42101d92c2802a9bf59f3a30bfac8fc37e84107af298e4f53ec",
+      "log_md5": "5c8f4f7e0d64ed88105da9897f081e17",
+      "prefix_tokens": 255,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 301894.865,
+      "samples_us": [
+        14884.481,
+        14820.122,
+        14728.611,
+        14783.172,
+        14711.349,
+        14979.026,
+        14779.125,
+        14746.084,
+        14910.028,
+        14859.905,
+        15065.588,
+        15161.967,
+        15050.37,
+        14725.805,
+        14662.617,
+        14752.385,
+        14795.615,
+        14738.208,
+        14960.903,
+        15110.972,
+        15299.583,
+        15220.797,
+        15431.117,
+        15248.598,
+        15322.816,
+        14865.756,
+        14900.962,
+        15227.679,
+        14804.863,
+        14714.114
+      ],
+      "mean_us": 14942.087,
+      "min_us": 14662.617,
+      "max_us": 15431.117,
+      "sample_mean_us": 14942.087266666667,
+      "sample_stdev_us": 218.76526863283266,
+      "sample_cv": 0.014640877457653583,
+      "sample_range_us": 768.5,
+      "sample_range_pct_of_mean": 0.05143190414329842,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 2,
+      "order_index": 3,
+      "context": 64,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 64 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round2-ctx64.log",
+      "log_sha256": "f4dd542166ba3fd2877c0899f9a4cc1b6b19308ec156a450c5e56035dc251af2",
+      "log_md5": "bc523b6c191d826f532d356a69103d60",
+      "prefix_tokens": 63,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 110076.854,
+      "samples_us": [
+        12768.595,
+        12789.162,
+        12807.566,
+        12867.108,
+        12706.809,
+        12727.278,
+        12698.994,
+        12692.453,
+        12695.699,
+        12687.443,
+        12641.017,
+        12677.265,
+        12783.762,
+        12760.89,
+        12699.084,
+        12835.008,
+        12765.188,
+        13574.102,
+        13795.085,
+        12908.144,
+        12794.683,
+        12732.837,
+        12872.037,
+        12707.461,
+        12702.211,
+        12693.876,
+        12650.374,
+        12884.24,
+        12683.506,
+        12753.236
+      ],
+      "mean_us": 12811.837,
+      "min_us": 12641.017,
+      "max_us": 13795.085,
+      "sample_mean_us": 12811.8371,
+      "sample_stdev_us": 249.2047160258838,
+      "sample_cv": 0.019451130550659577,
+      "sample_range_us": 1154.0679999999993,
+      "sample_range_pct_of_mean": 0.09007826051737726,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 3,
+      "order_index": 0,
+      "context": 256,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 256 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round3-ctx256.log",
+      "log_sha256": "c5261d88647f9ac49cee60fcc1d9af0b41df9e6ebea5abc6b813507086eda53d",
+      "log_md5": "b1e7e63d1cee18ae70976b63ea7e7259",
+      "prefix_tokens": 255,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 301431.654,
+      "samples_us": [
+        15027.848,
+        14911.871,
+        14770.508,
+        15082.4,
+        14907.163,
+        14833.305,
+        14843.835,
+        14734.461,
+        15137.702,
+        15157.609,
+        14898.437,
+        14621.411,
+        14749.6,
+        14867.398,
+        15135.709,
+        15720.345,
+        15454.781,
+        15117.334,
+        14859.665,
+        14683.897,
+        14777.191,
+        14917.742,
+        14800.505,
+        14882.206,
+        14744.61,
+        14729.383,
+        14819.98,
+        14735.533,
+        14692.383,
+        14707.692
+      ],
+      "mean_us": 14910.75,
+      "min_us": 14621.411,
+      "max_us": 15720.345,
+      "sample_mean_us": 14910.750133333333,
+      "sample_stdev_us": 238.28069289010497,
+      "sample_cv": 0.01598046313963929,
+      "sample_range_us": 1098.9339999999993,
+      "sample_range_pct_of_mean": 0.0737007856863825,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 3,
+      "order_index": 1,
+      "context": 512,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 512 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round3-ctx512.log",
+      "log_sha256": "99813d7ab7a3955b7044e0e4be4d8a124bfc5b1b1fea23e6db2c7452d2f6621c",
+      "log_md5": "3fddc99a7d9d86d524ff21eefe9fd655",
+      "prefix_tokens": 511,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 551341.688,
+      "samples_us": [
+        17723.402,
+        17747.136,
+        17666.716,
+        17724.134,
+        18021.336,
+        18329.39,
+        17968.908,
+        17753.999,
+        17774.147,
+        17891.675,
+        17850.047,
+        17860.317,
+        17862.801,
+        18017.78,
+        18366.067,
+        18163.982,
+        18079.164,
+        17827.326,
+        17884.432,
+        17903.547,
+        17820.903,
+        17825.903,
+        17698.216,
+        17733.751,
+        17662.028,
+        17750.442,
+        17978.998,
+        17721.268,
+        17686.754,
+        19066.902
+      ],
+      "mean_us": 17912.049,
+      "min_us": 17662.028,
+      "max_us": 19066.902,
+      "sample_mean_us": 17912.049033333333,
+      "sample_stdev_us": 283.14171798046607,
+      "sample_cv": 0.015807332676097244,
+      "sample_range_us": 1404.8739999999998,
+      "sample_range_pct_of_mean": 0.07843178618959824,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 3,
+      "order_index": 2,
+      "context": 1024,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1024 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round3-ctx1024.log",
+      "log_sha256": "751e95a57fa735d9dec3adba3b88ce3e52e6f845198f3aaee5f23099dc77dc3d",
+      "log_md5": "7cc84d46f401d7de67a7657dc4cdaa58",
+      "prefix_tokens": 1023,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 1139879.792,
+      "samples_us": [
+        27629.98,
+        27802.641,
+        27547.057,
+        27624.18,
+        27934.075,
+        27650.108,
+        27446.61,
+        27519.015,
+        27450.447,
+        27577.835,
+        27430.5,
+        28303.83,
+        29962.999,
+        27970.542,
+        27509.126,
+        27794.987,
+        27855.088,
+        27441.011,
+        27351.033,
+        27440.98,
+        27407.909,
+        28130.178,
+        29135.033,
+        27735.917,
+        33044.403,
+        30596.512,
+        29836.654,
+        28966.49,
+        29676.316,
+        29655.618
+      ],
+      "mean_us": 28314.236,
+      "min_us": 27351.033,
+      "max_us": 33044.403,
+      "sample_mean_us": 28314.2358,
+      "sample_stdev_us": 1287.8405189025002,
+      "sample_cv": 0.045483852292510056,
+      "sample_range_us": 5693.369999999999,
+      "sample_range_pct_of_mean": 0.20107800331308956,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    },
+    {
+      "round": 3,
+      "order_index": 3,
+      "context": 64,
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ -u GGML_VK_PERF_LOGGER -u GGML_VK_PERF_LOGGER_CONCURRENT -u GGML_VK_MAX_NODES_PER_SUBMIT -u BREEZE_DEPTH_STEP_TIMING -u BREEZE_RT_TIMING -u BREEZE_VOC_STATEFUL -u BREEZE_DD_FUSED -u BREEZE_VOC_CONVT_MATMUL -u BREEZE_DEPTH_CAPTURE GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 64 --warmup 5 --iterations 30'",
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/round3-ctx64.log",
+      "log_sha256": "5df41ef4bac4447cc240a791d8ade260c0a40f97594e3f72025fe3b36dec3c66",
+      "log_md5": "1dae13f87060a229e01973c4288640bd",
+      "prefix_tokens": 63,
+      "slack_tokens": 8,
+      "warmup": 5,
+      "iterations": 30,
+      "prefill_us": 110418.203,
+      "samples_us": [
+        12780.367,
+        12725.544,
+        12843.383,
+        12971.301,
+        13153.037,
+        12741.073,
+        13122.731,
+        12882.706,
+        12740.362,
+        12673.327,
+        12792.629,
+        12773.674,
+        12848.443,
+        12731.295,
+        12722.669,
+        12699.686,
+        12644.674,
+        12772.031,
+        12691.031,
+        12651.838,
+        12620.259,
+        12621.752,
+        12671.003,
+        12683.807,
+        12715.576,
+        12794.803,
+        13097.254,
+        13023.497,
+        12726.707,
+        12621.982
+      ],
+      "mean_us": 12784.615,
+      "min_us": 12620.259,
+      "max_us": 13153.037,
+      "sample_mean_us": 12784.6147,
+      "sample_stdev_us": 149.49337012358401,
+      "sample_cv": 0.011693224522721363,
+      "sample_range_us": 532.7780000000002,
+      "sample_range_pct_of_mean": 0.04167337166602293,
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "timed_scope": "full_host_backbone_run_including_graph_compute_and_output_readback",
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      }
+    }
+  ],
+  "scaling_summary": [
+    {
+      "context": 64,
+      "round_means_us": [
+        12681.453,
+        12811.837,
+        12784.615
+      ],
+      "round_prefill_us": [
+        110952.513,
+        110076.854,
+        110418.203
+      ],
+      "mean_of_round_means_us": 12759.301666666666,
+      "between_round_stdev_us": 68.77914289472747,
+      "between_round_cv": 0.00539050997394404,
+      "min_round_mean_us": 12681.453,
+      "max_round_mean_us": 12811.837,
+      "round_mean_range_pct": 0.010218741072689325,
+      "relative_to_context_64": 1.0,
+      "context_64_over_mean": 1.0
+    },
+    {
+      "context": 256,
+      "round_means_us": [
+        15106.453,
+        14942.087,
+        14910.75
+      ],
+      "round_prefill_us": [
+        305673.276,
+        301894.865,
+        301431.654
+      ],
+      "mean_of_round_means_us": 14986.43,
+      "between_round_stdev_us": 105.11727873665663,
+      "between_round_cv": 0.007014164062865981,
+      "min_round_mean_us": 14910.75,
+      "max_round_mean_us": 15106.453,
+      "round_mean_range_pct": 0.013058680419552857,
+      "relative_to_context_64": 1.1745493908300364,
+      "context_64_over_mean": 0.8513903355680216
+    },
+    {
+      "context": 512,
+      "round_means_us": [
+        18154.281,
+        17902.336,
+        17912.049
+      ],
+      "round_prefill_us": [
+        557624.526,
+        553175.05,
+        551341.688
+      ],
+      "mean_of_round_means_us": 17989.555333333334,
+      "between_round_stdev_us": 142.73925366322084,
+      "between_round_cv": 0.007934562640285801,
+      "min_round_mean_us": 17902.336,
+      "max_round_mean_us": 18154.281,
+      "round_mean_range_pct": 0.014005071016578382,
+      "relative_to_context_64": 1.4099169220468049,
+      "context_64_over_mean": 0.7092616482312162
+    },
+    {
+      "context": 1024,
+      "round_means_us": [
+        28068.398,
+        27765.153,
+        28314.236
+      ],
+      "round_prefill_us": [
+        1146612.201,
+        1144713.348,
+        1139879.792
+      ],
+      "mean_of_round_means_us": 28049.262333333332,
+      "between_round_stdev_us": 275.04120696058254,
+      "between_round_cv": 0.009805648494139813,
+      "min_round_mean_us": 27765.153,
+      "max_round_mean_us": 28314.236,
+      "round_mean_range_pct": 0.019575666321444758,
+      "relative_to_context_64": 2.198338362561901,
+      "context_64_over_mean": 0.45488902756289956
+    }
+  ],
+  "logger_runs": [
+    {
+      "context": 64,
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/logger-ctx64.log",
+      "log_sha256": "258c2de827b38217b17f0b8157eafe01db4285d210b735e3a100fdc97db20bef",
+      "log_md5": "63a60009a785b2d0ff874d8f21f166b4",
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ GGML_VK_ALLOW_GRAPHICS_QUEUE=1 GGML_VK_PERF_LOGGER=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 64 --warmup 1 --iterations 1'",
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "header_timing_us": {
+        "prefill_us": 112595.883,
+        "timed_mean_us": 13901.045,
+        "timed_min_us": 13901.045,
+        "timed_max_us": 13901.045
+      },
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      },
+      "profile_blocks": [
+        {
+          "phase": "prefill",
+          "query_tokens": 63,
+          "key_tokens": 63,
+          "total_us": 107649.0,
+          "operations": [
+            {
+              "name": "ADD",
+              "count": 56,
+              "per_call_us": 29.036,
+              "total_us": 1626.06
+            },
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 20.366,
+              "total_us": 1160.9
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 9.625,
+              "total_us": 539.037
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 79.889,
+              "total_us": 2236.92
+            },
+            {
+              "name": "MUL_MAT f32 m=128 n=63 k=63 batch=16",
+              "count": 28,
+              "per_call_us": 32.502,
+              "total_us": 910.075,
+              "throughput": "496.205 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT f32 m=63 n=63 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 126.435,
+              "total_us": 3540.18,
+              "throughput": "128.078 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=1024 n=63 k=2048",
+              "count": 56,
+              "per_call_us": 208.934,
+              "total_us": 11700.3,
+              "throughput": "1264.4 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=2048 n=63 k=2048",
+              "count": 56,
+              "per_call_us": 289.775,
+              "total_us": 16227.4,
+              "throughput": "1823.32 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=2048 n=63 k=6144",
+              "count": 28,
+              "per_call_us": 813.767,
+              "total_us": 22785.5,
+              "throughput": "1948.12 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=6144 n=63 k=2048",
+              "count": 56,
+              "per_call_us": 676.713,
+              "total_us": 37895.9,
+              "throughput": "2342.29 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 43.963,
+              "total_us": 43.963,
+              "throughput": "191.137 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,63,1,1)",
+              "count": 57,
+              "per_call_us": 34.654,
+              "total_us": 1975.28
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,63,1)",
+              "count": 28,
+              "per_call_us": 95.209,
+              "total_us": 2665.86
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,63,1)",
+              "count": 28,
+              "per_call_us": 65.669,
+              "total_us": 1838.76
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 70.413,
+              "total_us": 1971.57
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 18.964,
+              "total_us": 530.997
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT f32 m=63 n=63 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 126.435,
+              "total_us": 3540.18
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT f32 m=128 n=63 k=63 batch=16",
+              "count": 28,
+              "per_call_us": 32.502,
+              "total_us": 910.075
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nADD: 56 x 29.036 us = 1626.06 us\nCONT: 57 x 20.366 us = 1160.9 us\nCPY: 56 x 9.625 us = 539.037 us\nMUL: 28 x 79.889 us = 2236.92 us\nMUL_MAT f32 m=128 n=63 k=63 batch=16: 28 x 32.502 us = 910.075 us (496.205 GFLOPS/s)\nMUL_MAT f32 m=63 n=63 k=128 batch=16: 28 x 126.435 us = 3540.18 us (128.078 GFLOPS/s)\nMUL_MAT q4_K m=1024 n=63 k=2048: 56 x 208.934 us = 11700.3 us (1264.4 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=63 k=2048: 56 x 289.775 us = 16227.4 us (1823.32 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=63 k=6144: 28 x 813.767 us = 22785.5 us (1948.12 GFLOPS/s)\nMUL_MAT q4_K m=6144 n=63 k=2048: 56 x 676.713 us = 37895.9 us (2342.29 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 43.963 us = 43.963 us (191.137 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,63,1,1): 57 x 34.654 us = 1975.28 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,63,1): 28 x 95.209 us = 2665.86 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,63,1): 28 x 65.669 us = 1838.76 us\nSILU: 28 x 70.413 us = 1971.57 us\nSOFT_MAX: 28 x 18.964 us = 530.997 us\nTotal time: 107649 us."
+        },
+        {
+          "phase": "warmup_n1",
+          "query_tokens": 1,
+          "key_tokens": 64,
+          "total_us": 13581.2,
+          "operations": [
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 3.773,
+              "total_us": 215.064
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 1.848,
+              "total_us": 103.539
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 2.882,
+              "total_us": 80.702
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 37.788,
+              "total_us": 1058.08,
+              "throughput": "221.935 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144",
+              "count": 28,
+              "per_call_us": 95.081,
+              "total_us": 2662.28,
+              "throughput": "264.655 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=128 n=1 k=64 batch=16",
+              "count": 28,
+              "per_call_us": 8.361,
+              "total_us": 234.109,
+              "throughput": "31.1081 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=64 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 43.461,
+              "total_us": 1216.91,
+              "throughput": "6.00814 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=1024 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 17.725,
+              "total_us": 992.616,
+              "throughput": "236.571 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 34.18,
+              "total_us": 957.044,
+              "throughput": "245.364 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 41.558,
+              "total_us": 41.558,
+              "throughput": "202.198 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=6144 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 92.765,
+              "total_us": 5194.88,
+              "throughput": "271.217 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,1,1,1)",
+              "count": 57,
+              "per_call_us": 6.675,
+              "total_us": 380.492
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1)",
+              "count": 28,
+              "per_call_us": 3.899,
+              "total_us": 109.193
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1)",
+              "count": 28,
+              "per_call_us": 5.338,
+              "total_us": 149.47
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 2.216,
+              "total_us": 62.062
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 4.4,
+              "total_us": 123.217
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=64 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 43.461,
+              "total_us": 1216.91
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=128 n=1 k=64 batch=16",
+              "count": 28,
+              "per_call_us": 8.361,
+              "total_us": 234.109
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nCONT: 57 x 3.773 us = 215.064 us\nCPY: 56 x 1.848 us = 103.539 us\nMUL: 28 x 2.882 us = 80.702 us\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 37.788 us = 1058.08 us (221.935 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144: 28 x 95.081 us = 2662.28 us (264.655 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=64 batch=16: 28 x 8.361 us = 234.109 us (31.1081 GFLOPS/s)\nMUL_MAT_VEC f32 m=64 n=1 k=128 batch=16: 28 x 43.461 us = 1216.91 us (6.00814 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=1 k=2048: 56 x 17.725 us = 992.616 us (236.571 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 34.18 us = 957.044 us (245.364 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 41.558 us = 41.558 us (202.198 GFLOPS/s)\nMUL_MAT_VEC q4_K m=6144 n=1 k=2048: 56 x 92.765 us = 5194.88 us (271.217 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,1,1,1): 57 x 6.675 us = 380.492 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1): 28 x 3.899 us = 109.193 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1): 28 x 5.338 us = 149.47 us\nSILU: 28 x 2.216 us = 62.062 us\nSOFT_MAX: 28 x 4.4 us = 123.217 us\nTotal time: 13581.2 us."
+        },
+        {
+          "phase": "timed_n1",
+          "query_tokens": 1,
+          "key_tokens": 64,
+          "total_us": 12895.9,
+          "operations": [
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 3.735,
+              "total_us": 212.902
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 1.695,
+              "total_us": 94.953
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 2.873,
+              "total_us": 80.46
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 37.704,
+              "total_us": 1055.71,
+              "throughput": "222.432 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144",
+              "count": 28,
+              "per_call_us": 96.907,
+              "total_us": 2713.42,
+              "throughput": "259.667 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=128 n=1 k=64 batch=16",
+              "count": 28,
+              "per_call_us": 7.921,
+              "total_us": 221.806,
+              "throughput": "32.8336 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=64 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 17.379,
+              "total_us": 486.631,
+              "throughput": "15.0244 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=1024 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 17.484,
+              "total_us": 979.11,
+              "throughput": "239.834 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 34.455,
+              "total_us": 964.741,
+              "throughput": "243.406 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 41.879,
+              "total_us": 41.879,
+              "throughput": "200.648 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=6144 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 93.968,
+              "total_us": 5262.21,
+              "throughput": "267.747 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,1,1,1)",
+              "count": 57,
+              "per_call_us": 6.238,
+              "total_us": 355.61
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1)",
+              "count": 28,
+              "per_call_us": 3.584,
+              "total_us": 100.376
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1)",
+              "count": 28,
+              "per_call_us": 5.322,
+              "total_us": 149.025
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 2.126,
+              "total_us": 59.539
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 4.198,
+              "total_us": 117.57
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=64 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 17.379,
+              "total_us": 486.631
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=128 n=1 k=64 batch=16",
+              "count": 28,
+              "per_call_us": 7.921,
+              "total_us": 221.806
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nCONT: 57 x 3.735 us = 212.902 us\nCPY: 56 x 1.695 us = 94.953 us\nMUL: 28 x 2.873 us = 80.46 us\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 37.704 us = 1055.71 us (222.432 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144: 28 x 96.907 us = 2713.42 us (259.667 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=64 batch=16: 28 x 7.921 us = 221.806 us (32.8336 GFLOPS/s)\nMUL_MAT_VEC f32 m=64 n=1 k=128 batch=16: 28 x 17.379 us = 486.631 us (15.0244 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=1 k=2048: 56 x 17.484 us = 979.11 us (239.834 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 34.455 us = 964.741 us (243.406 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 41.879 us = 41.879 us (200.648 GFLOPS/s)\nMUL_MAT_VEC q4_K m=6144 n=1 k=2048: 56 x 93.968 us = 5262.21 us (267.747 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,1,1,1): 57 x 6.238 us = 355.61 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1): 28 x 3.584 us = 100.376 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1): 28 x 5.322 us = 149.025 us\nSILU: 28 x 2.126 us = 59.539 us\nSOFT_MAX: 28 x 4.198 us = 117.57 us\nTotal time: 12895.9 us.\nmodel=/tmp/breeze-depth-blocks-q3_k.gguf\nbackend=Vulkan0\ncontext=64 prefix_tokens=63 slack=8 warmup=1 iterations=1\nconfig=hidden:2048 layers:28 heads:16 kv_heads:8 head_dim:128 ffn:6144 rope_theta:1000000\ntimed_scope=full_host_backbone_run_including_graph_compute_and_output_readback\nprefill_us=112595.883 mean_us=13901.045 min_us=13901.045 max_us=13901.045\nsample[0]_us=13901.045\nfinite_output=true expected_output_shapes=true expected_final_position=true exact_repeated_hidden_and_logits=true"
+        }
+      ],
+      "logger_is_perturbed_attribution": true
+    },
+    {
+      "context": 1024,
+      "log": ".beehive/agent/BREEZE-BB-CONTEXT/logger-ctx1024.log",
+      "log_sha256": "fdec05491627532723c7a101a052b9a3870f923b9ecdf1957816a3f425b65ee0",
+      "log_md5": "2f27954147759a1e03d1881c74713036",
+      "command": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ GGML_VK_ALLOW_GRAPHICS_QUEUE=1 GGML_VK_PERF_LOGGER=1 /tmp/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1024 --warmup 1 --iterations 1'",
+      "config": {
+        "hidden": 2048,
+        "layers": 28,
+        "heads": 16,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "ffn": 6144,
+        "rope_theta": 1000000.0
+      },
+      "header_timing_us": {
+        "prefill_us": 1160789.808,
+        "timed_mean_us": 29541.336,
+        "timed_min_us": 29541.336,
+        "timed_max_us": 29541.336
+      },
+      "checks": {
+        "finite_output": true,
+        "expected_output_shapes": true,
+        "expected_final_position": true,
+        "exact_repeated_hidden_and_logits": true
+      },
+      "profile_blocks": [
+        {
+          "phase": "prefill",
+          "query_tokens": 1023,
+          "key_tokens": 1023,
+          "total_us": 1144100.0,
+          "operations": [
+            {
+              "name": "ADD",
+              "count": 56,
+              "per_call_us": 351.416,
+              "total_us": 19679.3
+            },
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 243.119,
+              "total_us": 13857.8
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 113.386,
+              "total_us": 6349.64
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 1017.01,
+              "total_us": 28476.3
+            },
+            {
+              "name": "MUL_MAT f32 m=1023 n=1023 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 1830.02,
+              "total_us": 51240.6,
+              "throughput": "2333.22 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT f32 m=128 n=1023 k=1023 batch=16",
+              "count": 28,
+              "per_call_us": 1727.79,
+              "total_us": 48378.1,
+              "throughput": "2479.75 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=1024 n=1023 k=2048",
+              "count": 56,
+              "per_call_us": 1362.8,
+              "total_us": 76316.8,
+              "throughput": "3147.73 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=2048 n=1023 k=2048",
+              "count": 56,
+              "per_call_us": 2471.8,
+              "total_us": 138421.0,
+              "throughput": "3470.92 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=2048 n=1023 k=6144",
+              "count": 28,
+              "per_call_us": 6880.28,
+              "total_us": 192648.0,
+              "throughput": "3741.49 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT q4_K m=6144 n=1023 k=2048",
+              "count": 56,
+              "per_call_us": 7488.48,
+              "total_us": 419355.0,
+              "throughput": "3437.06 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 46.648,
+              "total_us": 46.648,
+              "throughput": "180.135 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,1023,1,1)",
+              "count": 57,
+              "per_call_us": 245.426,
+              "total_us": 13989.3
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,1023,1)",
+              "count": 28,
+              "per_call_us": 763.57,
+              "total_us": 21380.0
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,1023,1)",
+              "count": 28,
+              "per_call_us": 391.43,
+              "total_us": 10960.1
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 725.553,
+              "total_us": 20315.5
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 2952.91,
+              "total_us": 82681.4
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT f32 m=1023 n=1023 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 1830.02,
+              "total_us": 51240.6
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT f32 m=128 n=1023 k=1023 batch=16",
+              "count": 28,
+              "per_call_us": 1727.79,
+              "total_us": 48378.1
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nADD: 56 x 351.416 us = 19679.3 us\nCONT: 57 x 243.119 us = 13857.8 us\nCPY: 56 x 113.386 us = 6349.64 us\nMUL: 28 x 1017.01 us = 28476.3 us\nMUL_MAT f32 m=1023 n=1023 k=128 batch=16: 28 x 1830.02 us = 51240.6 us (2333.22 GFLOPS/s)\nMUL_MAT f32 m=128 n=1023 k=1023 batch=16: 28 x 1727.79 us = 48378.1 us (2479.75 GFLOPS/s)\nMUL_MAT q4_K m=1024 n=1023 k=2048: 56 x 1362.8 us = 76316.8 us (3147.73 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=1023 k=2048: 56 x 2471.8 us = 138421 us (3470.92 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=1023 k=6144: 28 x 6880.28 us = 192648 us (3741.49 GFLOPS/s)\nMUL_MAT q4_K m=6144 n=1023 k=2048: 56 x 7488.48 us = 419355 us (3437.06 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 46.648 us = 46.648 us (180.135 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,1023,1,1): 57 x 245.426 us = 13989.3 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1023,1): 28 x 763.57 us = 21380 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1023,1): 28 x 391.43 us = 10960.1 us\nSILU: 28 x 725.553 us = 20315.5 us\nSOFT_MAX: 28 x 2952.91 us = 82681.4 us\nTotal time: 1.1441e+06 us."
+        },
+        {
+          "phase": "warmup_n1",
+          "query_tokens": 1,
+          "key_tokens": 1024,
+          "total_us": 28145.3,
+          "operations": [
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 105.816,
+              "total_us": 6031.55
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 1.593,
+              "total_us": 89.211
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 2.408,
+              "total_us": 67.435
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 45.289,
+              "total_us": 1268.12,
+              "throughput": "185.175 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144",
+              "count": 28,
+              "per_call_us": 95.071,
+              "total_us": 2662.0,
+              "throughput": "264.683 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 283.683,
+              "total_us": 7943.15,
+              "throughput": "14.7274 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16",
+              "count": 28,
+              "per_call_us": 56.25,
+              "total_us": 1575.02,
+              "throughput": "74.5281 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=1024 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 17.038,
+              "total_us": 954.143,
+              "throughput": "246.11 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 50.93,
+              "total_us": 1426.06,
+              "throughput": "164.667 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 41.198,
+              "total_us": 41.198,
+              "throughput": "203.965 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=6144 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 92.821,
+              "total_us": 5198.01,
+              "throughput": "271.054 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,1,1,1)",
+              "count": 57,
+              "per_call_us": 5.312,
+              "total_us": 302.787
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1)",
+              "count": 28,
+              "per_call_us": 3.331,
+              "total_us": 93.284
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1)",
+              "count": 28,
+              "per_call_us": 5.146,
+              "total_us": 144.099
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 1.761,
+              "total_us": 49.32
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 10.712,
+              "total_us": 299.953
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 283.683,
+              "total_us": 7943.15
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16",
+              "count": 28,
+              "per_call_us": 56.25,
+              "total_us": 1575.02
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nCONT: 57 x 105.816 us = 6031.55 us\nCPY: 56 x 1.593 us = 89.211 us\nMUL: 28 x 2.408 us = 67.435 us\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 45.289 us = 1268.12 us (185.175 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144: 28 x 95.071 us = 2662 us (264.683 GFLOPS/s)\nMUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16: 28 x 283.683 us = 7943.15 us (14.7274 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16: 28 x 56.25 us = 1575.02 us (74.5281 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=1 k=2048: 56 x 17.038 us = 954.143 us (246.11 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 50.93 us = 1426.06 us (164.667 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 41.198 us = 41.198 us (203.965 GFLOPS/s)\nMUL_MAT_VEC q4_K m=6144 n=1 k=2048: 56 x 92.821 us = 5198.01 us (271.054 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,1,1,1): 57 x 5.312 us = 302.787 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1): 28 x 3.331 us = 93.284 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1): 28 x 5.146 us = 144.099 us\nSILU: 28 x 1.761 us = 49.32 us\nSOFT_MAX: 28 x 10.712 us = 299.953 us\nTotal time: 28145.3 us."
+        },
+        {
+          "phase": "timed_n1",
+          "query_tokens": 1,
+          "key_tokens": 1024,
+          "total_us": 27803.9,
+          "operations": [
+            {
+              "name": "CONT",
+              "count": 57,
+              "per_call_us": 106.607,
+              "total_us": 6076.64
+            },
+            {
+              "name": "CPY",
+              "count": 56,
+              "per_call_us": 1.533,
+              "total_us": 85.888
+            },
+            {
+              "name": "MUL",
+              "count": 28,
+              "per_call_us": 2.524,
+              "total_us": 70.68
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 44.645,
+              "total_us": 1250.08,
+              "throughput": "187.847 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144",
+              "count": 28,
+              "per_call_us": 97.656,
+              "total_us": 2734.38,
+              "throughput": "257.676 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 262.237,
+              "total_us": 7342.66,
+              "throughput": "15.9318 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16",
+              "count": 28,
+              "per_call_us": 57.102,
+              "total_us": 1598.87,
+              "throughput": "73.4165 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=1024 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 17.073,
+              "total_us": 956.109,
+              "throughput": "245.603 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2048 n=1 k=2048",
+              "count": 28,
+              "per_call_us": 52.115,
+              "total_us": 1459.24,
+              "throughput": "160.922 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=2052 n=1 k=2048",
+              "count": 1,
+              "per_call_us": 39.835,
+              "total_us": 39.835,
+              "throughput": "210.944 GFLOPS/s"
+            },
+            {
+              "name": "MUL_MAT_VEC q4_K m=6144 n=1 k=2048",
+              "count": 56,
+              "per_call_us": 94.647,
+              "total_us": 5300.24,
+              "throughput": "265.826 GFLOPS/s"
+            },
+            {
+              "name": "RMS_NORM_MUL RMS_NORM(2048,1,1,1)",
+              "count": 57,
+              "per_call_us": 5.444,
+              "total_us": 310.319
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1)",
+              "count": 28,
+              "per_call_us": 3.258,
+              "total_us": 91.243
+            },
+            {
+              "name": "RMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1)",
+              "count": 28,
+              "per_call_us": 5.097,
+              "total_us": 142.736
+            },
+            {
+              "name": "SILU",
+              "count": 28,
+              "per_call_us": 1.793,
+              "total_us": 50.205
+            },
+            {
+              "name": "SOFT_MAX",
+              "count": 28,
+              "per_call_us": 10.529,
+              "total_us": 294.824
+            }
+          ],
+          "attention_ops": {
+            "qk": {
+              "role": "QK attention score matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16",
+              "count": 28,
+              "per_call_us": 262.237,
+              "total_us": 7342.66
+            },
+            "v_times_p": {
+              "role": "V*P attention output matmul",
+              "shape_key": "MUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16",
+              "count": 28,
+              "per_call_us": 57.102,
+              "total_us": 1598.87
+            }
+          },
+          "raw_profile_block": "Vulkan Timings:\nCONT: 57 x 106.607 us = 6076.64 us\nCPY: 56 x 1.533 us = 85.888 us\nMUL: 28 x 2.524 us = 70.68 us\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 44.645 us = 1250.08 us (187.847 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144: 28 x 97.656 us = 2734.38 us (257.676 GFLOPS/s)\nMUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16: 28 x 262.237 us = 7342.66 us (15.9318 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16: 28 x 57.102 us = 1598.87 us (73.4165 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=1 k=2048: 56 x 17.073 us = 956.109 us (245.603 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2048 n=1 k=2048: 28 x 52.115 us = 1459.24 us (160.922 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 1 x 39.835 us = 39.835 us (210.944 GFLOPS/s)\nMUL_MAT_VEC q4_K m=6144 n=1 k=2048: 56 x 94.647 us = 5300.24 us (265.826 GFLOPS/s)\nRMS_NORM_MUL RMS_NORM(2048,1,1,1): 57 x 5.444 us = 310.319 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1): 28 x 3.258 us = 91.243 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1): 28 x 5.097 us = 142.736 us\nSILU: 28 x 1.793 us = 50.205 us\nSOFT_MAX: 28 x 10.529 us = 294.824 us\nTotal time: 27803.9 us.\nmodel=/tmp/breeze-depth-blocks-q3_k.gguf\nbackend=Vulkan0\ncontext=1024 prefix_tokens=1023 slack=8 warmup=1 iterations=1\nconfig=hidden:2048 layers:28 heads:16 kv_heads:8 head_dim:128 ffn:6144 rope_theta:1000000\ntimed_scope=full_host_backbone_run_including_graph_compute_and_output_readback\nprefill_us=1160789.808 mean_us=29541.336 min_us=29541.336 max_us=29541.336\nsample[0]_us=29541.336\nfinite_output=true expected_output_shapes=true expected_final_position=true exact_repeated_hidden_and_logits=true"
+        }
+      ],
+      "logger_is_perturbed_attribution": true
+    }
+  ],
+  "dominant_op_evidence": [
+    {
+      "context": 64,
+      "phase": "prefill",
+      "profile_total_us": 107649.0,
+      "qk_shape": "MUL_MAT f32 m=63 n=63 k=128 batch=16",
+      "qk_total_us": 3540.18,
+      "v_times_p_shape": "MUL_MAT f32 m=128 n=63 k=63 batch=16",
+      "v_times_p_total_us": 910.075,
+      "largest_profiled_ops": [
+        {
+          "shape": "MUL_MAT q4_K m=6144 n=63 k=2048",
+          "total_us": 37895.9
+        },
+        {
+          "shape": "MUL_MAT q4_K m=2048 n=63 k=6144",
+          "total_us": 22785.5
+        }
+      ]
+    },
+    {
+      "context": 1024,
+      "phase": "prefill",
+      "profile_total_us": 1144100.0,
+      "qk_shape": "MUL_MAT f32 m=1023 n=1023 k=128 batch=16",
+      "qk_total_us": 51240.6,
+      "v_times_p_shape": "MUL_MAT f32 m=128 n=1023 k=1023 batch=16",
+      "v_times_p_total_us": 48378.1,
+      "largest_profiled_ops": [
+        {
+          "shape": "MUL_MAT q4_K m=6144 n=1023 k=2048",
+          "total_us": 419355.0
+        },
+        {
+          "shape": "SOFT_MAX",
+          "total_us": 82681.4
+        },
+        {
+          "shape": "MUL_MAT q4_K m=2048 n=1023 k=6144",
+          "total_us": 192648.0
+        }
+      ]
+    },
+    {
+      "context": 64,
+      "phase": "timed_n1",
+      "profile_total_us": 12895.9,
+      "qk_shape": "MUL_MAT_VEC f32 m=64 n=1 k=128 batch=16",
+      "qk_total_us": 486.631,
+      "v_times_p_shape": "MUL_MAT_VEC f32 m=128 n=1 k=64 batch=16",
+      "v_times_p_total_us": 221.806
+    },
+    {
+      "context": 1024,
+      "phase": "timed_n1",
+      "profile_total_us": 27803.9,
+      "qk_shape": "MUL_MAT_VEC f32 m=1024 n=1 k=128 batch=16",
+      "qk_total_us": 7342.66,
+      "v_times_p_shape": "MUL_MAT_VEC f32 m=128 n=1 k=1024 batch=16",
+      "v_times_p_total_us": 1598.87
+    }
+  ],
+  "findings": [
+    "All 12 fixed-context runs used Vulkan0 and passed finite output, expected hidden/logit shapes, final state position, and exact repeated hidden/logit equality checks.",
+    "Mean final n=1 host time rises from approximately 12.76 ms at context 64 to 28.05 ms at context 1024; this is a backbone diagnostic on synthetic prefixes, not speech RTF.",
+    "The fixed-context process order was varied across three rounds (ascending, descending, rotated) and per-process samples are retained for variation analysis.",
+    "Logger shape keys identify prefill QK and V*P as the f32 m/n/k attention matmuls and final n=1 QK/V*P as the corresponding MUL_MAT_VEC shapes; profile totals are perturbed attribution and are not end-to-end timing claims.",
+    "Prefill profiling at context 1024 shows large q4_K FFN matmuls and growing attention QK/V*P work; no custom attention or runtime changes were made."
+  ],
+  "limitations": [
+    "The model is Q3_K and inputs are deterministic synthetic initialized prefixes.",
+    "No speech quality, Mandarin quality, audio, or RTF conclusion is supported by this artifact.",
+    "Logger runs alter scheduling and timing; use fixed-context host timing for scaling and logger blocks only for operation attribution.",
+    "The pod was released after all timing/logger processes exited; no extra GPU experiment was run.",
+    "Core/shared-library SHA256 values were collected after measurement; no before/after pair was retained."
+  ]
+}
