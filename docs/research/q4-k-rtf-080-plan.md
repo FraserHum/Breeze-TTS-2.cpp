@@ -4,27 +4,33 @@ This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-
 
 Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
 
-## Current ordered work — after default-split long-form and context probes, 2026-09-06
+## Current ordered work — after default-split long-form and rejected backbone flash A/B, 2026-09-07
 
 The [complete-input report](default-split-longform.md) closes the measurement and
 backbone profiling tasks. Mixed depth Q3_K mean RTF is 0.897/0.899/0.911 for
 English/Mandarin/saved voice, leaving **7.8–8.9 ms/frame** to 0.8. All warmed
 performance gates still fail. Explicit Mandarin instruction improves Q4 ASR
-substantially but does not rescue Q3; quality acceptance is blocked.
+substantially but does not rescue Q3; quality acceptance is blocked. The
+[native backbone flash report](backbone-flash-attention.md) records a failed
+full-model numerical gate on CPU and Vulkan, so no throughput or saving claim
+follows and the candidate remains rejected under the current precision path.
 
 | Order | Next bounded task | Effort / decision gate |
 |---|---|---|
-| 1 | Establish a language-explicit Q4 quality baseline and expand handoff **00** with disjoint long-form, language, voice and seed coverage. | Data/evaluation first; include listening and predeclared intelligibility criteria. Diagnose the Q3 gap before deployment. One Mandarin fixture is evidence to investigate, not a universal verdict. |
-| 2 | A/B existing native flash attention at the **backbone call site only**. | About one day for a bounded probe; no custom shader. Fixed-context cost grows 12.76→28.05 ms from 64→1024 tokens, with QK and contiguous V layout implicated. Preserve full context/masks/positions/sampling; numerical and complete-speech A/B, >=1 ms/frame retained saving and no first-audio regression. Gain remains unmeasured. Can proceed alongside task 1 with one GPU owner. |
-| 3 | Compare calibrated standard Q3_K and targeted higher precision using the expanded corpus. | Scope after task 1; use original masters and held-out free-running speech. Retain only with quality acceptance and measured complete-workload speed. Do not default the current Q3 candidate. |
-| 4 | Revisit exact sampler/readback and small SwiGLU/head changes only for a small remaining gap. | Prior individual gains were below the retention gate; do not reopen without a changed measured budget or new evidence. |
-| 5 | Handoff **05**: stronger rotation/IQ3/custom packing. | Conditional on calibrated standard-format shortfall; prove quality, then one packed operation including transform costs before runtime integration. |
-| 6 | Smaller autoregressive depth student, then handoff **03** parallel/refinement work; conditional **04/06** afterwards. | Week-scale structural work if bounded engine/quantization work remains insufficient. **01/02** stay parked after failed sparsity/low-rank pilots. |
+| 1 | Execute the language-explicit Q4_K/Q3_K quality pairs and expand all-layer/late-frame calibration from the existing manifest specification. | Data/evaluation first. The manifest is ready input coverage only, not collected calibration data; add the minimum capture selection/streaming instrumentation, keep calibration/evaluation disjoint, and resolve listening/reference blockers before acceptance. |
+| 2 | Compare calibrated standard Q3_K and selective higher precision using the expanded corpus and original master weights. | Retain only with held-out free-running speech quality, human/listening evidence, and measured complete-workload speed. Do not default the current Q3 candidate. |
+| 3 | Revisit handoff **05** rotation/IQ3/custom packing only if calibrated standard Q3_K remains a quality/size shortfall. | Prove quality first, then benchmark one packed operation including decode, transform, scratch, metadata, and backend precision costs before runtime integration. |
+| 4 | Revisit exact sampler/readback and other small finishing work only if the measured remaining gap warrants it. | Prior individual gains were below the retention gate; do not reopen without a changed measured budget and preserved RNG/quality behavior. |
+| 5 | Establish a smaller autoregressive depth student, then investigate handoff **03** parallel/refinement work; conditional **04/06** afterwards. | Week-scale structural work only after bounded quality/quantization work is insufficient or blocked. Reuse the expanded teacher/evaluation data and validate free-running quality and actual 780M latency. |
+| 6 | Re-run the full performance and quality matrix for each retained candidate. | One GPU consumer, profiling/capture disabled, identical settings and >=3 repeats; publish measured gaps and stop when the target passes. |
 
-Re-run the full performance and quality matrix for each retained candidate.
+Validation applies to each candidate throughout this order, not only at the end.
 Existing saved-voice caching and default splitting are already used; no new
 cache or shorter context is needed. Keep the failed unsplit stress separately.
 No runtime default changes or unchanged-Q4_K RTF claim follows from these probes.
+Native backbone flash attention remains rejected under the current precision
+path; reopen it only for concrete precision-preserving backend evidence and a
+passing full-model numerical gate.
 
 ## Prior ordered work — before the quantization pilot
 

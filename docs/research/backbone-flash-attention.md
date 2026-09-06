@@ -1,0 +1,11 @@
+# Native backbone flash attention: rejected numerical A/B
+
+Decision date: 2026-09-07. The opt-in native `ggml_flash_attn_ext` path is rejected under the unchanged numerical gate. The candidate runtime and benchmark changes were restored; the zero-context patch and machine-readable receipt remain archived as [backbone-flash-candidate.patch](../../benchmarks/depth-corpus/backbone-flash-candidate.patch) and [backbone-flash-numerical.json](../../benchmarks/depth-corpus/backbone-flash-numerical.json).
+
+The predeclared gate was `max_abs <= 0.01` and `relative_l2 <= 0.001`, with no relaxation. The isolated CPU F32 attention primitive passed five query/prefill, GQA, causal-mask, and strided-view cases: worst `max_abs=2.98023224e-08`, `relative_l2=2.23709303e-07`. That result checks the tested primitive mappings only; it does not establish full-model or Vulkan equivalence.
+
+The full Q3_K 28-layer A/B remained finite with valid shapes and positions but failed on CPU and every tested Vulkan context. CPU context 4 reached hidden `max_abs=0.101967663`, `relative_l2=0.0308438608`, and logits `max_abs=0.199326381`, `relative_l2=0.0362246698`. Vulkan contexts 1, 4, and 64 all returned code 7; their worst observed hidden/logit max-absolute errors were `0.00750541687/0.0343682766`, `0.158910751/0.18561244`, and `0.781842217/0.807219267` respectively, with relative-L2 failures as well. The baseline CLI MD5 stayed `067a25764c424185bd684f60354852e0` before and after the probe.
+
+Because the numerical gate failed, throughput and speech were not measured, and no saving is claimed. The primitive agreement rules out an obvious mapping error in the tested small cases, while the full-model drift leaves the precise cause unresolved; this is not evidence for a definitive operator or backend diagnosis. Reopen native backbone flash attention only with concrete precision-preserving backend evidence and a passing full-model numerical A/B.
+
+Next work is [language-quality-manifest.json](../../benchmarks/depth-corpus/language-quality-manifest.json) quality pairs plus all-layer/late-frame calibration instrumentation, then calibrated standard Q3_K/selective precision. Custom rotation or packed feasibility is conditional on that quality result; small finishing work is considered only if the measured remaining gap warrants it, with the student track later.
