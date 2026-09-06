@@ -19,14 +19,17 @@ The 16-sample language-quality set and expanded capture are complete. Selective
 Q3 FFN/Q4 attention and activation-weighted Q3 FFN both completed four calibration
 speech runs. Long-form wall RTF remains about 0.89–0.91; weighting did not show a
 clear quality or speed improvement. These are separately labelled mixed-format
-models, not unchanged Q4_K results. ASR and the initial UTMOSv2 random-window
-proxies remain descriptive; no candidate has passed speech-quality acceptance.
+models, not unchanged Q4_K results. ASR and UTMOSv2 proxies remain descriptive; no candidate has passed
+speech-quality acceptance. Native IQ3_XXS completed at long-form RTF
+0.906/0.916 with similar ASR, but its full-timeline MOS proxy was lower than
+Q4 on all four calibration cases. Its integer-dot prototype was cancelled
+before code changes; the source feasibility report remains available.
 
 | Order | Next bounded task | Decision gate / state |
 |---|---|---|
-| 1 | Measure calibrated native IQ3_XXS FFN with Q4 attention. | Model bytes and finite dequantization verified; 115,605,504 FFN bytes versus Q3_K's 129,761,280. GPU profile and four calibration speech cases in progress. Native Vulkan DMMV may erase the byte saving. |
-| 2 | Complete quality coverage on the existing candidates. | Compare saved calibration speech across all contiguous timeline windows using the same MOS proxy protocol, alongside ASR; retain paired listening as the acceptance gate. Do not choose thresholds from observed scores. |
-| 3 | If needed, screen native IQ2_S; investigate an IQ3 integer-dot port only where native performance and speech evidence justify it. | IQ2_S reduces FFN bytes further but has greater quality risk. Existing CUDA IQ3 integer-dot code is a reuse lead, not evidence of a Vulkan speedup. Include activation quantization and all dispatch costs in measurement. |
+| 1 | Screen calibrated native IQ2_S FFN with Q4 attention. | Build in progress. Native IQ3 gave no clear speed gain and an unfavorable naturalness proxy; IQ2_S is a separate higher-risk control, not a presumed improvement. Measure actual runtime and speech before retention. |
+| 2 | Screen fixed Hadamard rotation on actual depth projections offline. | One layer, gate/up/down; verify float identity first, fit importance on one calibration fixture and evaluate on the other. Compare rotated and unrotated native Q3_K/IQ2_S. Projection error is a diagnostic, not speech quality or speed. |
+| 3 | Investigate a packed kernel only for a quality-promising candidate. | The IQ3 integer-dot implementation is paused on its unfavorable MOS evidence. Existing CUDA arithmetic remains a reuse lead; include activation quantization and dispatch costs if this branch reopens. |
 | 4 | Investigate rotation-aware quantization if native formats cannot preserve quality at the required size. | Use the verified BF16 master and calibration data; demonstrate quality before custom packing/runtime integration. Include transform cost and graph placement. |
 | 5 | Revisit exact sampler/readback and small retained operations only when the remaining measured gap is small enough. | Preserve RNG/sampling behavior; prior sub-millisecond observations do not supply the current 8 ms/frame gap. |
 | 6 | Establish a smaller autoregressive depth student if bounded quantization/kernel work is insufficient; parallel/refinement handoffs follow that baseline. | Structural work needs teacher data, training resources, free-running quality and actual 780M measurements. |

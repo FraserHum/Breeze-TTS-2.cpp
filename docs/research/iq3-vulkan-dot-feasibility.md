@@ -99,3 +99,8 @@ a profile identifying enough scalar-DMMV cost to justify the port. A slow
 native result can motivate this probe; it does not predict a successful port.
 Until then, retain the float IQ3 path/fallback. CUDA IQ3 DP4A support is useful
 porting evidence, but it is not an AMD/RADV performance claim.
+
+The subsequent four-case IQ3 pilot reached long-form RTF 0.906/0.916. Its
+full-timeline MOS proxy was lower than Q4 in all four cases, so the proposed
+kernel prototype was cancelled before code changes. This is a quality warning,
+not proof of audible failure; no custom-kernel speed measurement exists.
