@@ -4,6 +4,10 @@
 
 No audio, model output, activation data, generation result, or acceptance claim is included here. The target durations are planning buckets. After candidate selection, record the emitted WAV duration and bucket coverage without truncating or rewriting text after seeing candidate quality.
 
+## Active scope: English only
+
+The user explicitly excluded Mandarin from the target. `acceptance_scope.active_fixture_ids` selects the five existing English fixtures: design short/medium/long and saved-voice short/long. Mandarin inputs remain in the historical fixture pool and do not affect acceptance or candidate ranking. Run new quality and performance comparisons in English.
+
 ## Fixed workload
 
 | Bucket | Target audio | `max_new` | Design split parts | Saved matrix split parts |
@@ -20,7 +24,7 @@ For every repeat, retain the command, return code, timeout, log and WAV SHA-256,
 
 ## Acceptance gates
 
-The selected candidate must satisfy every runtime gate on all nine workloads. Run and report the paired Q4_K control with identical inputs and settings, but do not apply the candidate’s .8 verdict to Q4: Q4 is the measured control, and a slower Q4 baseline does not invalidate a faster candidate.
+The selected candidate must satisfy every runtime gate on all five active English workloads. Run and report the paired Q4_K control with identical inputs and settings, but do not apply the candidate’s .8 verdict to Q4: Q4 is the measured control, and a slower Q4 baseline does not invalidate a faster candidate.
 
 - wall RTF p50 ≤ **0.8** and wall RTF p95 ≤ **0.8**;
 - every timed first-audio value ≤ the existing approximately **3.1 s** goal;
@@ -33,7 +37,7 @@ The candidate and Q4 control must use identical text, instruction, seed, voice m
 
 ## Quality evidence
 
-Run current local ASR, speaker, and MOS proxies where their inputs exist, retaining transcripts, commands, durations, hashes, model/checkpoint hashes, and paired candidate/Q4 values. English uses normalized WER and Mandarin uses normalized CER. The matrix speaker score is descriptive against a synthetic reference. None of these proxies is a human quality gate or proves intelligibility, prosody, speaker identity, or deployment quality. Paired human listening against Q4 remains required before acceptance; new independent human reference recordings are useful context but are not an added gate for this manifest.
+Run current local ASR, speaker, and MOS proxies where their inputs exist, retaining transcripts, commands, durations, hashes, model/checkpoint hashes, and paired candidate/Q4 values. Use normalized English WER for the active scope. The matrix speaker score is descriptive against a synthetic reference. None of these proxies is a human quality gate or proves intelligibility, prosody, speaker identity, or deployment quality. Paired human listening against Q4 remains required before acceptance; new independent human reference recordings are useful context but are not an added gate for this manifest.
 
 The existing performance and quality receipts provide context only: [default-split-longform.md](default-split-longform.md), [depth-quant-matrix.md](depth-quant-matrix.md), [language-quality-runtime.json](../../benchmarks/depth-corpus/language-quality-runtime.json), and [quant-longform.json](../../benchmarks/depth-corpus/quant-longform.json). They do not pre-accept this untouched workload.
 

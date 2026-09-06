@@ -4,6 +4,15 @@ This is a bounded plan, not an implementation. The [investigation](q4-k-rtf-080-
 
 Current measured status is maintained in the [RTF-080 implementation progress](../../benchmarks/rtf-080-progress.md). The estimates and historical baseline below remain the pre-measurement plan; use the current receipts for decisions without rewriting this record.
 
+## Active deployment scope: English only
+
+User clarification: Mandarin is not a requirement. All future candidate ranking,
+quality gates and performance acceptance apply to English, including saved voice.
+Historical Mandarin measurements remain evidence only. IQ3's English MOS deltas
+are −0.207 (short) and −0.027 (long); these limited proxy results leave English
+quality unresolved and do not conclusively reject IQ3. Its measured English-long
+RTF is 0.906, so a kernel probe remains conditional on English quality evidence.
+
 ## Current ordered work — after default-split long-form and rejected backbone flash A/B, 2026-09-07
 
 The [complete-input report](default-split-longform.md) closes the measurement and
@@ -33,7 +42,7 @@ before code changes; the source feasibility report remains available.
 | 4 | Investigate rotation-aware quantization if native formats cannot preserve quality at the required size. | Use the verified BF16 master and calibration data; demonstrate quality before custom packing/runtime integration. Include transform cost and graph placement. |
 | 5 | Revisit exact sampler/readback and small retained operations only when the remaining measured gap is small enough. | Preserve RNG/sampling behavior; prior sub-millisecond observations do not supply the current 8 ms/frame gap. |
 | 6 | Establish a smaller autoregressive depth student if bounded quantization/kernel work is insufficient; parallel/refinement handoffs follow that baseline. | Structural work needs teacher data, training resources, free-running quality and actual 780M measurements. |
-| 7 | Run the untouched final workload matrix after candidate selection. | [Frozen inputs and gates](final-workload-gates.md): nine complete workloads, resident repeats, candidate p50/p95 wall RTF ≤0.8, first audio and delivery gates, paired Q4 quality control. Three timed samples give a descriptive p95, not a population-tail guarantee. |
+| 7 | Run the untouched final workload matrix after candidate selection. | [Frozen inputs and gates](final-workload-gates.md): five active English workloads, resident repeats, candidate p50/p95 wall RTF ≤0.8, first audio and delivery gates, paired Q4 quality control. Three timed samples give a descriptive p95, not a population-tail guarantee. |
 
 Validation applies to each candidate throughout this order, not only at the end.
 Existing saved-voice caching and default splitting are already used; no new

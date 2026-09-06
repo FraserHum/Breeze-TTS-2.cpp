@@ -66,8 +66,14 @@
     "repeat_semantics": {
       "resident_process": true,
       "warmup_repeat": 1,
-      "timed_repeats": [2, 3, 4],
-      "summary_excludes": [1],
+      "timed_repeats": [
+        2,
+        3,
+        4
+      ],
+      "summary_excludes": [
+        1
+      ],
       "report_all_repeats": true,
       "reason": "Match the existing parser's resident --repeat 4 semantics: first run is explicit warmup, three later runs are timed."
     },
@@ -285,9 +291,9 @@
   "measurement_protocol": {
     "selection_order": [
       "Freeze candidate and Q4 control identity, hashes, source revision, and settings.",
-      "Run every fixture with the exact manifest text, instruction, seed, voice, split policy, and cap.",
+      "Run every active English fixture with the exact manifest text, instruction, seed, voice, split policy, and cap.",
       "Keep the first resident repeat as an explicit warmup; summarize repeats 2-4 and report repeat 1 too.",
-      "Run the same nine fixtures for candidate and Q4 with no post-hoc text, seed, voice, cap, or sampling changes."
+      "Run the same five active English fixtures for candidate and Q4 with no post-hoc text, seed, voice, cap, or sampling changes."
     ],
     "runtime_metrics": {
       "wall_rtf": "generation wall milliseconds / (1000 * emitted audio seconds)",
@@ -308,7 +314,7 @@
   },
   "acceptance_gates": {
     "runtime": {
-      "scope": "Apply the numeric runtime gates to the selected candidate on every one of the nine workloads; run and report Q4 on the same workloads as the control.",
+      "scope": "Apply runtime gates to the selected candidate on the five English fixtures listed in acceptance_scope.active_fixture_ids. Measure paired Q4 controls. Mandarin is outside acceptance scope.",
       "wall_rtf_p50_max": 0.8,
       "wall_rtf_p95_max": 0.8,
       "first_audio_goal_max_ms": 3100,
@@ -347,5 +353,19 @@
     "A zero parsed delivery deficit is not evidence about an audio device, driver, or listener experience.",
     "ASR, speaker cosine, and MOS proxies cannot establish intelligibility, prosody, speaker identity, or deployment quality without paired human listening against Q4.",
     "The new texts expand prompt coverage but do not by themselves establish broad linguistic or prompt-family independence."
-  ]
+  ],
+  "acceptance_scope": {
+    "languages": [
+      "en"
+    ],
+    "active_fixture_ids": [
+      "final-design-en-short-42",
+      "final-design-en-medium-123",
+      "final-design-en-long-42",
+      "final-matrix-en-short-42",
+      "final-matrix-en-long-42"
+    ],
+    "active_fixture_count": 5,
+    "reason": "User explicitly scoped the deployment target to English only. Mandarin fixtures remain historical inputs and are not acceptance gates."
+  }
 }
