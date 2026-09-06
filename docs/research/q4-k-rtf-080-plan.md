@@ -15,10 +15,20 @@ substantially but does not rescue Q3; quality acceptance is blocked. The
 full-model numerical gate on CPU and Vulkan, so no throughput or saving claim
 follows and the candidate remains rejected under the current precision path.
 
+The broader language-quality proxy set is complete at 16 samples; results are
+mixed relative to earlier Mandarin proxies and do not establish quality
+acceptance. Expanded all-layer/late-frame capture is complete with byte parity
+at five frames across all 12 layers. Selective Q3_K FFN/Q4 attention is built
+and calibration runtime is in progress with calibration and evaluation kept
+disjoint; the native weighted Q3_K FFN build is in progress. Conditional
+IQ/rotation and the student frontier remain unchanged. The strict-F32 gate
+detects numerical drift, not actual speech failure, and the 0.8 target remains
+unmet.
+
 | Order | Next bounded task | Effort / decision gate |
 |---|---|---|
-| 1 | Execute the language-explicit Q4_K/Q3_K quality pairs and expand all-layer/late-frame calibration from the existing manifest specification. | Data/evaluation first. The manifest is ready input coverage only, not collected calibration data; add the minimum capture selection/streaming instrumentation, keep calibration/evaluation disjoint, and resolve listening/reference blockers before acceptance. |
-| 2 | Compare calibrated standard Q3_K and selective higher precision using the expanded corpus and original master weights. | Retain only with held-out free-running speech quality, human/listening evidence, and measured complete-workload speed. Do not default the current Q3 candidate. |
+| 1 | Evaluate the completed 16-sample language-quality proxy set and expanded all-layer/late-frame capture. | Data/evaluation first. Results are mixed against earlier Mandarin proxies and do not establish acceptance; keep calibration/evaluation disjoint and resolve listening/reference blockers before acceptance. |
+| 2 | Compare calibrated standard Q3_K and selective higher precision using the expanded corpus and original master weights; selective Q3_K FFN/Q4 attention is built and its calibration runtime is in progress. | Retain only with held-out free-running speech quality, human/listening evidence, and measured complete-workload speed. Do not default the current Q3 candidate. |
 | 3 | Revisit handoff **05** rotation/IQ3/custom packing only if calibrated standard Q3_K remains a quality/size shortfall. | Prove quality first, then benchmark one packed operation including decode, transform, scratch, metadata, and backend precision costs before runtime integration. |
 | 4 | Revisit exact sampler/readback and other small finishing work only if the measured remaining gap warrants it. | Prior individual gains were below the retention gate; do not reopen without a changed measured budget and preserved RNG/quality behavior. |
 | 5 | Establish a smaller autoregressive depth student, then investigate handoff **03** parallel/refinement work; conditional **04/06** afterwards. | Week-scale structural work only after bounded quality/quantization work is insufficient or blocked. Reuse the expanded teacher/evaluation data and validate free-running quality and actual 780M latency. |
