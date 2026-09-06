@@ -168,7 +168,13 @@ in the ledger paths cited there.
 
 ## Next bounded work
 
-The next model-track step is to reuse the [shared activation and teacher corpus
+The subsequent [depth investigation](../docs/research/depth-next-results.md)
+validated the small activation corpus, screened simple sparsity/low-rank
+candidates, and rejected the tested integer multi-row shader variants. No
+additional performance change was retained; RTF 0.8 remains unachieved.
+That report contains the updated priority order.
+
+The model-track work uses the [shared activation and teacher corpus
 handoff](../docs/handoffs/breeze-investigations/00-shared-activation-corpus.md)
 for the [codebook-conditioned FFN sparsity](../docs/handoffs/breeze-investigations/01-codebook-conditioned-sparsity.md)
 and [activation-aware low-rank FFN](../docs/handoffs/breeze-investigations/02-activation-aware-low-rank.md)

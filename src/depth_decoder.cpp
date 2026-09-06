@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <random>
 #include <string>
 
@@ -94,11 +95,137 @@ static void dd_dump_codes(int cb0, const std::vector<int> & codes) {
     fflush(stderr);
 }
 
-static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap);
+static bool dd_capture_layer(int il) {
+    return il == 0 || il == 5 || il == 11;
+}
+
+static bool dd_capture_frame(int frame) {
+    return frame == 0 || frame == 7 || frame == 15;
+}
+
+static void dd_capture_error(const char * what) {
+    GGML_ABORT("depth capture: %s\n", what);
+}
+
+static void dd_capture_error(const std::string & what) {
+    GGML_ABORT("depth capture: %s\n", what.c_str());
+}
+
+static void dd_capture_open(DepthRunner & r, const char * dir_name) {
+    namespace fs = std::filesystem;
+    std::error_code ec;
+    const fs::path dir(dir_name);
+    if (fs::exists(dir, ec)) {
+        if (ec || !fs::is_directory(dir, ec))
+            dd_capture_error("BREEZE_DEPTH_CAPTURE must name a directory");
+        if (!fs::is_empty(dir, ec) || ec)
+            dd_capture_error("output directory must be empty (refusing overwrite)");
+    } else if (ec || !fs::create_directories(dir, ec) || ec) {
+        dd_capture_error("failed to create output directory");
+    }
+
+    r.capture_dir = dir.string();
+    const std::string blob = (dir / "activations.f32").string();
+    const std::string meta = (dir / "metadata.jsonl").string();
+    r.capture_blob = std::fopen(blob.c_str(), "wb");
+    r.capture_meta = std::fopen(meta.c_str(), "wb");
+    if (!r.capture_blob || !r.capture_meta)
+        dd_capture_error("failed to open activations.f32 or metadata.jsonl");
+}
+
+static void dd_capture_write_meta(DepthRunner & r, const std::string & line) {
+    if (!r.capture_meta || std::fprintf(r.capture_meta, "%s\n", line.c_str()) < 0 ||
+        std::fflush(r.capture_meta) != 0)
+        dd_capture_error("metadata write failed");
+}
+
+static std::uint64_t dd_capture_write_f32(DepthRunner & r, const float * data, size_t n) {
+    if (!r.capture_blob) dd_capture_error("activation blob is not open");
+    const long pos = std::ftell(r.capture_blob);
+    if (pos < 0 || (n && std::fwrite(data, sizeof(float), n, r.capture_blob) != n) ||
+        std::fflush(r.capture_blob) != 0)
+        dd_capture_error("activation blob write failed");
+    return (std::uint64_t) pos;
+}
+
+static std::string dd_capture_shape(const ggml_tensor * t) {
+    return "[" + std::to_string(t->ne[0]) + "," + std::to_string(t->ne[1]) + "," +
+           std::to_string(t->ne[2]) + "]";
+}
+
+static std::string dd_capture_key(int frame, int step, int layer, const char * tensor) {
+    return "f" + std::to_string(frame) + "/s" + std::to_string(step) + "/l" +
+           std::to_string(layer) + "/" + tensor;
+}
+
+static void dd_capture_tensor(DepthRunner & r, int frame, int step, const DepthCaptureRefs & refs,
+                              int branches, ggml_tensor * t, const char * name) {
+    if (!t || t->type != GGML_TYPE_F32) dd_capture_error("selected tensor is not F32");
+    const size_t n = (size_t) ggml_nelements(t);
+    r.capture_buf.resize(n);
+    ggml_backend_tensor_get(t, r.capture_buf.data(), 0, n * sizeof(float));
+    const std::uint64_t offset = dd_capture_write_f32(r, r.capture_buf.data(), n);
+    const std::string key = dd_capture_key(frame, step, refs.layer, name);
+    const std::string shape = dd_capture_shape(t);
+    dd_capture_write_meta(r,
+        "{\"kind\":\"tensor\",\"key\":\"" + key + "\",\"frame\":" +
+        std::to_string(frame) + ",\"step\":" + std::to_string(step) +
+        ",\"layer\":" + std::to_string(refs.layer) + " ,\"tensor\":\"" + name +
+        "\",\"dtype\":\"f32\",\"shape\":" + shape + ",\"offset\":" +
+        std::to_string(offset) + ",\"byte_offset\":" + std::to_string(offset) +
+        ",\"nbytes\":" + std::to_string(n * sizeof(float)) +
+        ",\"branches\":" + std::to_string(branches) +
+        ",\"branch\":\"all\",\"token_layout\":\"position_major_branch_interleaved\"}");
+}
+
+static void dd_capture_host_hidden(DepthRunner & r, int frame, int branches, int hidden) {
+    const size_t n = (size_t) branches * hidden;
+    const std::uint64_t offset = dd_capture_write_f32(r, r.flat_hiddens.data(), n);
+    const std::string key = "f" + std::to_string(frame) + "/host/backbone_hidden";
+    dd_capture_write_meta(r,
+        "{\"kind\":\"tensor\",\"key\":\"" + key + "\",\"frame\":" +
+        std::to_string(frame) + ",\"step\":0,\"layer\":-1,\"tensor\":\"backbone_hidden\","
+        "\"dtype\":\"f32\",\"shape\":[" + std::to_string(hidden) + "," +
+        std::to_string(branches) + ",1],\"offset\":" + std::to_string(offset) +
+        ",\"byte_offset\":" + std::to_string(offset) + ",\"nbytes\":" +
+        std::to_string(n * sizeof(float)) + ",\"branches\":" + std::to_string(branches) +
+        ",\"branch\":\"all\",\"token_layout\":\"branch_major\"}");
+}
+
+static void dd_capture_frame_record(DepthRunner & r, int frame, int cb0,
+                                    const std::vector<int> & codes, int branches) {
+    std::string line = "{\"kind\":\"frame\",\"key\":\"frame/" + std::to_string(frame) +
+                       "\",\"frame\":" + std::to_string(frame) + ",\"cb0\":" +
+                       std::to_string(cb0) + ",\"codes\":[";
+    for (size_t i = 0; i < codes.size(); i++) {
+        if (i) line += ',';
+        line += std::to_string(codes[i]);
+    }
+    line += "],\"branches\":" + std::to_string(branches) +
+            ",\"branch\":\"all\",\"token_layout\":\"frame_major_codebooks\"}";
+    dd_capture_write_meta(r, line);
+}
+
+static void dd_capture_close(DepthRunner & r) {
+    bool failed = false;
+    if (r.capture_blob) {
+        failed = std::fclose(r.capture_blob) != 0 || failed;
+        r.capture_blob = nullptr;
+    }
+    if (r.capture_meta) {
+        failed = std::fclose(r.capture_meta) != 0 || failed;
+        r.capture_meta = nullptr;
+    }
+    if (failed) dd_capture_error("failed to close capture output");
+}
+
+static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap,
+                                 bool capture);
 static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, int n_step);
 
 void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
     n_branch = n_branches;
+    capture_frame = 0;
     const int nc = m.cfg.num_codebooks;
     const int vs = m.cfg.audio_vocab_size;
     const int hidden = m.cfg.hidden_size;
@@ -132,6 +259,30 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
 
     const char * fused_env = std::getenv("BREEZE_DD_FUSED");
     fused = fused_env != nullptr && fused_env[0] == '1';
+
+    const char * capture_env = std::getenv("BREEZE_DEPTH_CAPTURE");
+    capture_enabled = capture_env != nullptr && capture_env[0] != '\0';
+    if (capture_enabled) {
+        if (fused) GGML_ABORT("depth capture refuses BREEZE_DD_FUSED=1\n");
+        if (n_branch < 1 || n_branch > 2)
+            GGML_ABORT("depth capture supports one or two branches\n");
+        const bool vulkan = std::strncmp(m.backend.name(), "Vulkan", 6) == 0;
+        const bool fusion_disabled = std::getenv("GGML_VK_DISABLE_FUSION") != nullptr;
+        if (vulkan && !fusion_disabled)
+            GGML_ABORT("Vulkan depth capture requires GGML_VK_DISABLE_FUSION to be set before backend init\n");
+        if (c.n_layer < 12 || n_step != 15)
+            GGML_ABORT("depth capture expects the 12-layer, 15-step depth model\n");
+        dd_capture_open(*this, capture_env);
+        dd_capture_write_meta(*this,
+            "{\"kind\":\"header\",\"key\":\"header\",\"protocol\":1,\"seed\":" +
+            std::to_string(seed) + ",\"backend\":\"" + m.backend.name() +
+            "\",\"endian\":\"little\",\"hidden\":" + std::to_string(hidden) +
+            ",\"ffn\":" + std::to_string(c.ffn) + ",\"layers\":" +
+            std::to_string(c.n_layer) + ",\"steps\":" + std::to_string(n_step) +
+            ",\"vocab\":" + std::to_string(vs) + ",\"branches\":" +
+            std::to_string(n_branch) + ",\"fusion_disabled\":" +
+            (fusion_disabled ? "true" : "false") + "}");
+    }
 
     // dedicated fused-path gumbel stream: the same seed as the step path's rng, but a
     // separate stream (different draw sequence), so same-seed runs are not
@@ -175,7 +326,7 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
         // dangles the tensor addresses of any graph allocated on the shared one
         graphs.resize(n_step);
         for (int j = 1; j <= n_step; j++)
-            graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap);
+            graphs[j - 1] = build_step(m, kv, n_branch, j, graph_cap, capture_enabled);
 
         // reserve the vbuffer exactly once: the largest graph (step 1) first, then assert
         // no later graph grows it, since growth frees and reallocates the vbuffer and
@@ -191,6 +342,7 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
 }
 
 void DepthRunner::free() {
+    if (capture_enabled) dd_capture_close(*this);
     kv.free();
     if (depth_alloc) ggml_gallocr_free(depth_alloc);
     depth_alloc = nullptr;
@@ -200,6 +352,7 @@ void DepthRunner::free() {
         g.graph = nullptr;
         std::vector<uint8_t>().swap(g.arena);
         std::vector<ggml_tensor *>().swap(g.cpy_roots);
+        std::vector<DepthCaptureRefs>().swap(g.capture_refs);
         g.aud = g.h0 = g.pos = g.ff = g.mask = g.logits = nullptr;
     }
     std::vector<DepthStepGraph>().swap(graphs);
@@ -211,6 +364,7 @@ void DepthRunner::free() {
     std::vector<ggml_tensor *>().swap(fused_graph.pos_leaves);
     std::vector<ggml_tensor *>().swap(fused_graph.mask_leaves);
     std::vector<ggml_tensor *>().swap(fused_graph.noise_leaves);
+    std::vector<DepthCaptureRefs>().swap(fused_graph.capture_refs);
     fused_graph.aud = fused_graph.h0 = fused_graph.pos = fused_graph.ff = fused_graph.mask =
         fused_graph.logits = fused_graph.codes = fused_graph.scale = fused_graph.inv_t = nullptr;
     fused = false;
@@ -223,6 +377,10 @@ void DepthRunner::free() {
     std::vector<int32_t>().swap(pos_staging);
     std::vector<float>().swap(mask_staging);
     std::vector<float>().swap(noise_staging);
+    capture_enabled = false;
+    capture_dir.clear();
+    std::vector<float>().swap(capture_buf);
+    capture_frame = 0;
     graph_cap = 0;
 }
 
@@ -242,7 +400,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
                               int start, int n,
                               const std::vector<ggml_tensor *> & k_cache,
                               const std::vector<ggml_tensor *> & v_cache,
-                              std::vector<ggml_tensor *> & cpy_roots) {
+                              std::vector<ggml_tensor *> & cpy_roots,
+                              std::vector<DepthCaptureRefs> * capture_refs) {
     const DepthConfig & c = m.cfg.dd;
     const std::string p = "dd.blk." + std::to_string(il);
     const float scale = 1.0f / std::sqrt((float) c.head_dim);
@@ -263,7 +422,23 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
 
     res = x;
     h = rms_norm(ctx, x, m.w(p + ".ffn_norm.weight"), c.rms_eps);
-    h = swiglu_ffn(ctx, h, m.w(p + ".ffn_gate.weight"), m.w(p + ".ffn_up.weight"), m.w(p + ".ffn_down.weight"));
+    if (capture_refs && dd_capture_layer(il)) {
+        DepthCaptureRefs refs;
+        refs.layer = il;
+        refs.norm_input = h;
+        ggml_tensor * g = ggml_silu(ctx, ggml_mul_mat(ctx, m.w(p + ".ffn_gate.weight"), h));
+        ggml_tensor * u = ggml_mul_mat(ctx, m.w(p + ".ffn_up.weight"), h);
+        refs.swiglu_product = ggml_mul(ctx, g, u);
+        refs.down_output = ggml_mul_mat(ctx, m.w(p + ".ffn_down.weight"), refs.swiglu_product);
+        ggml_set_output(refs.norm_input);
+        ggml_set_output(refs.swiglu_product);
+        ggml_set_output(refs.down_output);
+        capture_refs->push_back(refs);
+        h = refs.down_output;
+    } else {
+        h = swiglu_ffn(ctx, h, m.w(p + ".ffn_gate.weight"), m.w(p + ".ffn_up.weight"),
+                       m.w(p + ".ffn_down.weight"));
+    }
     return ggml_add(ctx, res, h);
 }
 
@@ -273,7 +448,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
 static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVCache & kv,
                                   int nb, int j, ggml_tensor * aud, ggml_tensor * emb_tab,
                                   ggml_tensor * h0, ggml_tensor * pos, ggml_tensor * ff,
-                                  ggml_tensor * mask, std::vector<ggml_tensor *> & cpy_roots) {
+                                  ggml_tensor * mask, std::vector<ggml_tensor *> & cpy_roots,
+                                  std::vector<DepthCaptureRefs> * capture_refs = nullptr) {
     const DepthConfig & c = m.cfg.dd;
     const bool has_hidden = j == 1;
     const int start = has_hidden ? 0 : j;
@@ -288,7 +464,8 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
     ggml_tensor * x = linear(ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
 
     for (int il = 0; il < c.n_layer; il++)
-        x = dd_layer(ctx, m, x, il, pos, ff, mask, start * nb, n_tok, kv.k, kv.v, cpy_roots);
+        x = dd_layer(ctx, m, x, il, pos, ff, mask, start * nb, n_tok, kv.k, kv.v, cpy_roots,
+                     capture_refs);
     x = rms_norm(ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
 
     ggml_tensor * last = ggml_cont(ctx, ggml_view_2d(ctx, x, c.hidden, nb, x->nb[1],
@@ -303,7 +480,8 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
 // depth_step built it per step, with the step j shapes baked in: the KV length and
 // append offset, the head-weight slice, and the CFG concat (present only for j=1)
 // are not writable after build, so every step gets its own graph
-static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap) {
+static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, int j, size_t graph_cap,
+                                 bool capture) {
     const DepthConfig & c = m.cfg.dd;
     const bool has_hidden = j == 1;
     const int start = has_hidden ? 0 : j;
@@ -334,7 +512,8 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     ggml_set_input(g.mask);
 
     g.logits = dd_step_body(g.ctx, m, kv, nb, j, g.aud, m.w("audio_embd.weight"), g.h0, g.pos,
-                            g.ff, g.mask, g.cpy_roots);
+                            g.ff, g.mask, g.cpy_roots,
+                            capture ? &g.capture_refs : nullptr);
 
     ggml_set_output(g.logits);
     g.graph = ggml_new_graph_custom(g.ctx, graph_cap, false);
@@ -512,6 +691,10 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     std::vector<int> codes = { cb0 };
     codes.reserve(nc);
 
+    const int frame = capture_frame;
+    if (capture_enabled && capture_frame < 16) ++capture_frame;
+    const bool capture_this = capture_enabled && frame < 16 && dd_capture_frame(frame);
+
     const bool rtd = rt_depth_timing_enabled();
     auto rtd_now = [] { return std::chrono::steady_clock::now(); };
     auto rtd_ms = [](const std::chrono::steady_clock::time_point & a,
@@ -614,6 +797,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
                 std::memcpy(flat_hiddens.data() + (size_t) b * m.cfg.hidden_size,
                             hiddens[b].data(), (size_t) m.cfg.hidden_size * sizeof(float));
             }
+            if (capture_this) dd_capture_host_hidden(*this, frame, n_branch, m.cfg.hidden_size);
         }
         const int audio_code = j == 1 ? cb0 : codes[head_idx] + head_idx * vs;
         for (int b = 0; b < n_branch; b++) idx_staging[b] = audio_code;
@@ -645,6 +829,17 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         ggml_backend_tensor_get(g.logits, logits_buf.data(), 0, n_out * sizeof(float));
         const std::chrono::steady_clock::time_point rtd_e = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
 
+        if (capture_this) {
+            for (const DepthCaptureRefs & refs : g.capture_refs) {
+                dd_capture_tensor(*this, frame, j, refs, n_branch, refs.norm_input,
+                                  "ffn_norm_input");
+                dd_capture_tensor(*this, frame, j, refs, n_branch, refs.swiglu_product,
+                                  "post_silu_times_up");
+                dd_capture_tensor(*this, frame, j, refs, n_branch, refs.down_output,
+                                  "ffn_down_output");
+            }
+        }
+
         if (n_branch > 1) {
             for (int i = 0; i < vs; i++)
                 combined_logits[i] = logits_buf[vs + i] + cfg_scale * (logits_buf[i] - logits_buf[vs + i]);
@@ -662,6 +857,7 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
     }
     if (rtd) g_rtd_last = rtd_acc;
     const std::vector<int> result(codes.begin() + 1, codes.end());
+    if (capture_this) dd_capture_frame_record(*this, frame, cb0, codes, n_branch);
     if (dd_debug_enabled()) dd_dump_codes(cb0, result);
     return result;
 }

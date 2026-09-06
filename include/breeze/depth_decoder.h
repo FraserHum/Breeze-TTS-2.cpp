@@ -4,10 +4,21 @@
 #include "breeze/sampling.h"
 
 #include <cstdint>
+#include <cstdio>
 #include <random>
+#include <string>
 #include <vector>
 
 namespace breeze {
+
+// Capture-only references.  Marking these existing graph nodes as outputs keeps
+// their allocator slots alive without adding graph operations.
+struct DepthCaptureRefs {
+    int layer = -1;
+    ggml_tensor * norm_input = nullptr;
+    ggml_tensor * swiglu_product = nullptr;
+    ggml_tensor * down_output = nullptr;
+};
 
 // one static compute graph for one depth step: built once in init with that step's
 // shapes (KV length, append offset, head slice, and the step 1 CFG concat) baked in,
@@ -30,6 +41,7 @@ struct DepthStepGraph {
     std::vector<ggml_tensor *> noise_leaves;  // per-step [vs] f32 gumbel noise, set per frame
     std::vector<ggml_tensor *> pos_leaves;   // per-step position leaves, set once after vbuffer reserve
     std::vector<ggml_tensor *> mask_leaves;  // per-step mask leaves, set once after vbuffer reserve
+    std::vector<DepthCaptureRefs> capture_refs; // selected FFN nodes, capture mode only
 };
 
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
@@ -57,6 +69,14 @@ struct DepthRunner {
     std::vector<int32_t> idx_staging;
     std::vector<int32_t> pos_staging;
     std::vector<float> mask_staging;
+
+    // BREEZE_DEPTH_CAPTURE=<directory>: bounded, opt-in FFN activation capture.
+    bool capture_enabled = false;
+    std::string capture_dir;
+    FILE * capture_blob = nullptr;
+    FILE * capture_meta = nullptr;
+    int capture_frame = 0;
+    std::vector<float> capture_buf;
 
     // seed is the CLI --seed integer (the same value the step path's rng gets); it seeds
     // the dedicated fused-path gumbel stream
