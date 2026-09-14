@@ -11,7 +11,7 @@ int main(int argc, char ** argv) {
     backend.init(argc == 1);
     if (argc == 1 && !backend.is_gpu) return 2;
     bool pass = true;
-    for (int branches : {1, 2}) for (int positions : {2, 4, 16}) {
+    for (int branches : {1, 2}) for (int positions : {2, 3, 4, 15, 16}) {
         const int hd = 128, heads = 8, kv_heads = 2;
         const int queries = (positions == 2 ? 2 : 1) * branches;
         const int tokens = positions * branches, capacity = 17 * branches;
@@ -32,6 +32,8 @@ int main(int argc, char ** argv) {
         auto * regular = breeze::attention(graph.ctx, q, k, v, mask, 1.0f / std::sqrt(float(hd)), heads, kv_heads);
         auto * flash = breeze::attention_flash(graph.ctx, q, k, v,
             ggml_cast(graph.ctx, mask, GGML_TYPE_F16), 1.0f / std::sqrt(float(hd)));
+        pass = pass && regular->ne[0] == hd * heads && regular->ne[1] == queries &&
+            flash->ne[0] == hd * heads && flash->ne[1] == queries;
         graph.mark_output(regular);
         graph.compute(backend, flash);
         auto a = breeze::tensor_to_f32(regular), b = breeze::tensor_to_f32(flash);
