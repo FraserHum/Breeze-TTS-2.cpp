@@ -66,3 +66,17 @@ Reproduce the model and cases with the scripts embedded in
 output tensor hashes, the donor/base hashes, exact commands and runtime logs'
 hashes. Run `python3 benchmarks/verify_calibrated_ffn_refresh.py` to check the
 archived receipts. Model/WAV blobs remain outside Git.
+
+## User listening approval — 2026-09-15
+
+The user reviewed the pairs and stated: "the quality is fine". Audio quality
+for this exact candidate is approved; the receipt's pending status records
+the earlier measurement-time state. This is not a deployment or broader
+speaker-consistency approval. The user also asked why the voices differ.
+Every request used `Speak clearly and naturally.` and seed 42. Report/home
+had no reference voice; the voice pair used the same `test17s` saved reference.
+Each Q4/Q3 pair had identical text and conditioning. The generic instruction
+specifies delivery, not speaker identity; the saved-reference case adds
+speaker conditioning. Quantized weights can alter sampled audio codes even
+with the same random seed, so identity/prosody consistency needs separate
+assessment from acceptable overall sound quality.
