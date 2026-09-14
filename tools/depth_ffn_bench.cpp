@@ -49,6 +49,7 @@ struct ModelWeights {
     ggml_context * tensor_ctx = nullptr;
     ggml_backend_buffer_t buffer = nullptr;
     std::array<std::array<ggml_tensor *, 3>, kLayers> weights{};
+    std::array<ggml_tensor *, kLayers> packed_gate_up{};
 
     ModelWeights() = default;
 
@@ -78,8 +79,10 @@ struct FfnCase {
     ggml_tensor * input = nullptr;
     std::array<Chain, kLayers> normal{};
     std::array<Chain, kLayers> fused{};
+    std::array<Chain, kLayers> packed{};
     ggml_cgraph * normal_batch = nullptr;
     ggml_cgraph * fused_batch = nullptr;
+    ggml_cgraph * packed_batch = nullptr;
 };
 
 struct OutputStats {
@@ -100,8 +103,9 @@ struct CompareStats {
 };
 
 struct CaseResults {
-    std::array<TimedResult, 5> values{};
+    std::array<TimedResult, 6> values{};
     CompareStats normal_vs_swiglu;
+    CompareStats normal_vs_packed;
 };
 
 static void usage(const char * argv0) {
@@ -228,7 +232,7 @@ static bool load_weights(const std::string & path, ggml_backend_t backend, Model
         return false;
     }
 
-    const size_t tensor_bytes = ggml_tensor_overhead() * kLayers * 3 + 4096;
+    const size_t tensor_bytes = ggml_tensor_overhead() * kLayers * 4 + 4096;
     ggml_context * weight_ctx = make_context(tensor_bytes);
     std::array<std::array<size_t, 3>, kLayers> sizes{};
     for (int layer = 0; layer < kLayers; ++layer) {
@@ -263,6 +267,9 @@ static bool load_weights(const std::string & path, ggml_backend_t backend, Model
         }
     }
 
+    for (int layer = 0; layer < kLayers; ++layer) {
+        model.packed_gate_up[layer] = ggml_new_tensor_2d(weight_ctx, GGML_TYPE_Q4_K, kHidden, 2 * kFfn);
+    }
     model.tensor_ctx = weight_ctx;
     model.buffer = ggml_backend_alloc_ctx_tensors(model.tensor_ctx, backend);
     if (!model.buffer) {
@@ -290,6 +297,10 @@ static bool load_weights(const std::string & path, ggml_backend_t backend, Model
                 return false;
             }
             ggml_backend_tensor_set(model.weights[layer][kind], bytes.data(), 0, bytes.size());
+            if (kind != Down) {
+                ggml_backend_tensor_set(model.packed_gate_up[layer], bytes.data(),
+                                        kind == Up ? sizes[layer][Gate] : 0, bytes.size());
+            }
         }
     }
     std::fclose(file);
@@ -322,11 +333,13 @@ static ggml_cgraph * make_batch_graph(ggml_context * ctx,
 }
 
 static Chain build_chain(ggml_context * ctx, const ModelWeights & model, int layer,
-                         ggml_tensor * input, bool use_swiglu) {
+                         ggml_tensor * input, bool use_swiglu, bool packed = false) {
     Chain chain;
-    chain.gate = ggml_mul_mat(ctx, model.weights[layer][Gate], input);
-    chain.up = ggml_mul_mat(ctx, model.weights[layer][Up], input);
-    if (use_swiglu) {
+    chain.gate = ggml_mul_mat(ctx, packed ? model.packed_gate_up[layer] : model.weights[layer][Gate], input);
+    chain.up = packed ? nullptr : ggml_mul_mat(ctx, model.weights[layer][Up], input);
+    if (packed) {
+        chain.product = ggml_swiglu(ctx, chain.gate);
+    } else if (use_swiglu) {
         chain.product = ggml_swiglu_split(ctx, chain.gate, chain.up);
     } else {
         chain.silu = ggml_silu(ctx, chain.gate);
@@ -335,7 +348,7 @@ static Chain build_chain(ggml_context * ctx, const ModelWeights & model, int lay
     chain.down = ggml_mul_mat(ctx, model.weights[layer][Down], chain.product);
     chain.full_graph = make_full_graph(ctx, chain.down);
     chain.split_graphs[0] = make_single_graph(ctx, chain.gate);
-    chain.split_graphs[1] = make_single_graph(ctx, chain.up);
+    chain.split_graphs[1] = chain.up ? make_single_graph(ctx, chain.up) : nullptr;
     chain.split_graphs[2] = chain.silu ? make_single_graph(ctx, chain.silu) : nullptr;
     chain.split_graphs[3] = make_single_graph(ctx, chain.product);
     chain.split_graphs[4] = make_single_graph(ctx, chain.down);
@@ -350,15 +363,19 @@ static FfnCase build_case(ggml_context * ctx, const ModelWeights & model, int n,
     for (int layer = 0; layer < kLayers; ++layer) {
         result.normal[layer] = build_chain(ctx, model, layer, result.input, false);
         result.fused[layer] = build_chain(ctx, model, layer, result.input, true);
+        result.packed[layer] = build_chain(ctx, model, layer, result.input, true, true);
     }
     std::array<ggml_tensor *, kLayers> normal_outputs{};
     std::array<ggml_tensor *, kLayers> fused_outputs{};
+    std::array<ggml_tensor *, kLayers> packed_outputs{};
     for (int layer = 0; layer < layers; ++layer) {
         normal_outputs[layer] = result.normal[layer].down;
         fused_outputs[layer] = result.fused[layer].down;
+        packed_outputs[layer] = result.packed[layer].down;
     }
     result.normal_batch = make_batch_graph(ctx, normal_outputs, layers);
     result.fused_batch = make_batch_graph(ctx, fused_outputs, layers);
+    result.packed_batch = make_batch_graph(ctx, packed_outputs, layers);
     return result;
 }
 
@@ -373,6 +390,7 @@ enum class Variant {
     Batched,
     PerFfnSwiglu,
     BatchedSwiglu,
+    Packed,
 };
 
 static const char * variant_name(Variant variant) {
@@ -381,16 +399,21 @@ static const char * variant_name(Variant variant) {
     case Variant::PerFfn: return "per_ffn";
     case Variant::Batched: return "batched";
     case Variant::PerFfnSwiglu: return "per_ffn_swiglu";
-    default: return "batched_swiglu";
+    case Variant::BatchedSwiglu: return "batched_swiglu";
+    default: return "packed";
     }
 }
 
 static int submission_count(Variant variant, int layers) {
     return variant == Variant::Split ? layers * 5
-        : variant == Variant::Batched || variant == Variant::BatchedSwiglu ? 1 : layers;
+        : variant == Variant::Batched || variant == Variant::BatchedSwiglu || variant == Variant::Packed ? 1 : layers;
 }
 
 static void run_once(ggml_backend_t backend, const FfnCase & ffn, Variant variant, int layers) {
+    if (variant == Variant::Packed) {
+        compute_and_sync(backend, ffn.packed_batch);
+        return;
+    }
     const bool fused = variant == Variant::PerFfnSwiglu || variant == Variant::BatchedSwiglu;
     if (variant == Variant::Batched || variant == Variant::BatchedSwiglu) {
         compute_and_sync(backend, fused ? ffn.fused_batch : ffn.normal_batch);
@@ -414,7 +437,8 @@ static OutputStats read_outputs(ggml_backend_t backend, const FfnCase & ffn,
     const bool fused = variant == Variant::PerFfnSwiglu || variant == Variant::BatchedSwiglu;
     OutputStats stats;
     for (int layer = 0; layer < layers; ++layer) {
-        const ggml_tensor * tensor = fused ? ffn.fused[layer].down : ffn.normal[layer].down;
+        const ggml_tensor * tensor = variant == Variant::Packed ? ffn.packed[layer].down
+            : fused ? ffn.fused[layer].down : ffn.normal[layer].down;
         const size_t count = static_cast<size_t>(ggml_nelements(tensor));
         const size_t old_size = stats.values.size();
         stats.values.resize(old_size + count);
@@ -529,7 +553,9 @@ static void write_json(const Options & options, const std::string & device,
         }
         const CompareStats & compare = cases[case_index].normal_vs_swiglu;
         output << "\n    }, \"normal_vs_swiglu\": {\"max_abs\": " << compare.max_abs
-               << ", \"max_rel\": " << compare.max_rel << "}}";
+               << ", \"max_rel\": " << compare.max_rel << "}, \"normal_vs_packed\": {\"max_abs\": "
+               << cases[case_index].normal_vs_packed.max_abs << ", \"max_rel\": "
+               << cases[case_index].normal_vs_packed.max_rel << "}}";
     }
     output << "\n  ]\n}\n";
     output.flush();
@@ -608,18 +634,24 @@ int main(int argc, char ** argv) {
                                               options.layers, options.warmup, options.iterations);
         const TimedResult fused_batch = run_variant(backend, ffn, Variant::BatchedSwiglu,
                                                     options.layers, options.warmup, options.iterations);
+        const TimedResult packed = run_variant(backend, ffn, Variant::Packed,
+                                               options.layers, options.warmup, options.iterations);
         print_result(ffn, Variant::Split, split, options.layers);
         print_result(ffn, Variant::PerFfn, normal, options.layers);
         print_result(ffn, Variant::Batched, batched, options.layers);
         print_result(ffn, Variant::PerFfnSwiglu, fused, options.layers);
         print_result(ffn, Variant::BatchedSwiglu, fused_batch, options.layers);
-        results[case_index].values = {split, normal, batched, fused, fused_batch};
+        print_result(ffn, Variant::Packed, packed, options.layers);
+        results[case_index].values = {split, normal, batched, fused, fused_batch, packed};
         results[case_index].normal_vs_swiglu = compare_results(normal, fused);
+        results[case_index].normal_vs_packed = compare_results(normal, packed);
         print_tolerance(ffn, normal, fused, results[case_index].normal_vs_swiglu);
         if (split.output.hash != normal.output.hash || normal.output.hash != batched.output.hash ||
             fused.output.hash != fused_batch.output.hash ||
             results[case_index].normal_vs_swiglu.max_abs > 1e-5 ||
-            results[case_index].normal_vs_swiglu.max_rel > 1e-5) {
+            results[case_index].normal_vs_swiglu.max_rel > 1e-5 ||
+            results[case_index].normal_vs_packed.max_abs > 1e-5 ||
+            results[case_index].normal_vs_packed.max_rel > 1e-5) {
             std::fprintf(stderr, "FFN variants failed output-equivalence gate\n");
             return 9;
         }
