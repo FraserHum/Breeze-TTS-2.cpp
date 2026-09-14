@@ -90,7 +90,7 @@ bool GGUFModel::pack_weights(const BreezeConfig & cfg, Backend & be) {
     if (plans.empty()) return true;
 
     const size_t n_tensors = plans.size();
-    const size_t meta_size = n_tensors * ggml_tensor_overhead() + 64 * 1024;
+    const size_t meta_size = n_tensors * (ggml_tensor_overhead() + 1024) + 1024 * 1024;
     ggml_init_params params = { meta_size, nullptr, true };
     packed_meta = ggml_init(params);
     if (!packed_meta) return false;
@@ -112,6 +112,11 @@ bool GGUFModel::pack_weights(const BreezeConfig & cfg, Backend & be) {
             total_out += t->ne[1];
         }
         ggml_tensor * t_packed = ggml_new_tensor_2d(packed_meta, first->type, in_dim, total_out);
+        if (!t_packed) {
+            ggml_free(packed_meta);
+            packed_meta = nullptr;
+            return false;
+        }
         ggml_set_name(t_packed, plan.out_name.c_str());
         packed_tensors.push_back(t_packed);
     }
