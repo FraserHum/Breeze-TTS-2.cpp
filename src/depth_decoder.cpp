@@ -36,7 +36,7 @@ static std::vector<float> llama3_freq_factors(const DepthConfig & c) {
 }
 
 static size_t dd_step_n_nodes(int n_layer) {
-    return 35ull * n_layer + 9;
+    return 48ull * n_layer + 16;
 }
 
 static void dd_require(ggml_tensor * t, const char * what, int64_t ne0, int64_t ne1, int64_t ne2) {
@@ -607,9 +607,9 @@ static DepthStepGraph build_step(BreezeModel & m, const KVCache & kv, int nb, in
     const int n_tok = n_pos * nb;
     const int total = (start + n_pos) * nb;
 
-    // per-step node budget: 35/layer + 9 fixed (j=1, with the CFG concat) / 8 (j>=2)
-    const size_t n_nodes = 35ull * c.n_layer + (has_hidden ? 9 : 8);
-    const size_t mem = ggml_tensor_overhead() * (n_nodes + 5) + ggml_graph_overhead_custom(graph_cap, false);
+    // per-step node budget: 48/layer + 16 fixed (j=1, with the CFG concat) / 12 (j>=2)
+    const size_t n_nodes = 48ull * c.n_layer + (has_hidden ? 16 : 12);
+    const size_t mem = ggml_tensor_overhead() * (n_nodes + 16) + ggml_graph_overhead_custom(graph_cap, false);
     DepthStepGraph g;
     g.arena.assign(mem, 0);
     ggml_init_params p{ mem, g.arena.data(), true };
@@ -678,13 +678,13 @@ static DepthStepGraph build_fused(BreezeModel & m, const KVCache & kv, int nb, i
     // scale+add (2), plus argmax (or the 6-op 2-branch cfg merge for nb>1), plus the
     // code-concat chain, plus one repeat per inter-step code broadcast for nb>1; the
     // 64 slack covers the one-time input leaves
-    const size_t per_step = 35ull * c.n_layer + 9 + 1 + 2 + 2 + (nb > 1 ? 6 : 0);
+    const size_t per_step = 48ull * c.n_layer + 16 + 1 + 2 + 2 + (nb > 1 ? 6 : 0);
     const size_t n_nodes = per_step * n_step + (n_step - 1) + (nb > 1 ? n_step - 1 : 0) + 64;
     const size_t cap = 2 * n_nodes;
     // n_step extra tensor objects for the gumbel noise leaves + 1 for the inv_t scalar
     // (leaf data lives in the gallocr vbuffer, not this no-alloc arena)
     const size_t mem =
-        ggml_tensor_overhead() * (n_nodes + n_step + 1 + 5) + ggml_graph_overhead_custom(cap, false);
+        ggml_tensor_overhead() * (n_nodes + n_step + 1 + 16) + ggml_graph_overhead_custom(cap, false);
 
     DepthStepGraph g;
     g.arena.assign(mem, 0);
