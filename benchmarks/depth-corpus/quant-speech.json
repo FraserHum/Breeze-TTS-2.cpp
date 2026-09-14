@@ -1,0 +1,1774 @@
+{
+  "schema": "breeze-quant-speech/v1",
+  "samples": {
+    "mandarin-q4_k": {
+      "wav_sha256": "23efea7a0647b8a576c8f39ea3c99ee5cbc115372db845aba65a9a86908efdca",
+      "language": "zh",
+      "expected_text": "今天的天氣非常晴朗，我們決定到公園散步。微風吹過樹梢，孩子們在草地上玩耍，遠處傳來輕快的笑聲。這是一段用來測試語音合成品質和速度的中文文字，請用清楚自然的聲音朗讀。",
+      "transcript": "今天的天气非常晴朗\n我们决定到公园散步\n微风吹过树梢\n孩子们在草地上玩耍\n远处传来轻快的笑声\n这是一段用来测试\n语音合成轻质和速度的中文文字\n请用清楚自然的声音朗读",
+      "normalized_expected": [
+        "今",
+        "天",
+        "的",
+        "天",
+        "气",
+        "非",
+        "常",
+        "晴",
+        "朗",
+        "我",
+        "们",
+        "决",
+        "定",
+        "到",
+        "公",
+        "园",
+        "散",
+        "步",
+        "微",
+        "风",
+        "吹",
+        "过",
+        "树",
+        "梢",
+        "孩",
+        "子",
+        "们",
+        "在",
+        "草",
+        "地",
+        "上",
+        "玩",
+        "耍",
+        "远",
+        "处",
+        "传",
+        "来",
+        "轻",
+        "快",
+        "的",
+        "笑",
+        "声",
+        "这",
+        "是",
+        "一",
+        "段",
+        "用",
+        "来",
+        "测",
+        "试",
+        "语",
+        "音",
+        "合",
+        "成",
+        "品",
+        "质",
+        "和",
+        "速",
+        "度",
+        "的",
+        "中",
+        "文",
+        "文",
+        "字",
+        "请",
+        "用",
+        "清",
+        "楚",
+        "自",
+        "然",
+        "的",
+        "声",
+        "音",
+        "朗",
+        "读"
+      ],
+      "normalized_transcript": [
+        "今",
+        "天",
+        "的",
+        "天",
+        "气",
+        "非",
+        "常",
+        "晴",
+        "朗",
+        "我",
+        "们",
+        "决",
+        "定",
+        "到",
+        "公",
+        "园",
+        "散",
+        "步",
+        "微",
+        "风",
+        "吹",
+        "过",
+        "树",
+        "梢",
+        "孩",
+        "子",
+        "们",
+        "在",
+        "草",
+        "地",
+        "上",
+        "玩",
+        "耍",
+        "远",
+        "处",
+        "传",
+        "来",
+        "轻",
+        "快",
+        "的",
+        "笑",
+        "声",
+        "这",
+        "是",
+        "一",
+        "段",
+        "用",
+        "来",
+        "测",
+        "试",
+        "语",
+        "音",
+        "合",
+        "成",
+        "轻",
+        "质",
+        "和",
+        "速",
+        "度",
+        "的",
+        "中",
+        "文",
+        "文",
+        "字",
+        "请",
+        "用",
+        "清",
+        "楚",
+        "自",
+        "然",
+        "的",
+        "声",
+        "音",
+        "朗",
+        "读"
+      ],
+      "edit_distance": 1,
+      "reference_units": 75,
+      "metric": "CER",
+      "disagreement_rate": 0.013333333333333334,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/mandarin-q4_k.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/mandarin-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:01,960"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 1960
+            },
+            "text": "今天的天气非常晴朗"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:01,960",
+              "to": "00:00:03,960"
+            },
+            "offsets": {
+              "from": 1960,
+              "to": 3960
+            },
+            "text": "我们决定到公园散步"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,960",
+              "to": "00:00:05,640"
+            },
+            "offsets": {
+              "from": 3960,
+              "to": 5640
+            },
+            "text": "微风吹过树梢"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,640",
+              "to": "00:00:07,680"
+            },
+            "offsets": {
+              "from": 5640,
+              "to": 7680
+            },
+            "text": "孩子们在草地上玩耍"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:07,680",
+              "to": "00:00:10,560"
+            },
+            "offsets": {
+              "from": 7680,
+              "to": 10560
+            },
+            "text": "远处传来轻快的笑声"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:10,560",
+              "to": "00:00:12,040"
+            },
+            "offsets": {
+              "from": 10560,
+              "to": 12040
+            },
+            "text": "这是一段用来测试"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:12,040",
+              "to": "00:00:15,240"
+            },
+            "offsets": {
+              "from": 12040,
+              "to": 15240
+            },
+            "text": "语音合成轻质和速度的中文文字"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,240",
+              "to": "00:00:18,240"
+            },
+            "offsets": {
+              "from": 15240,
+              "to": 18240
+            },
+            "text": "请用清楚自然的声音朗读"
+          }
+        ]
+      }
+    },
+    "mandarin-q3_k": {
+      "wav_sha256": "bc1dedcd93a7254a6186c7697e7b5675d3a377b7d1466bf43ac49b8e85ac1ac0",
+      "language": "zh",
+      "expected_text": "今天的天氣非常晴朗，我們決定到公園散步。微風吹過樹梢，孩子們在草地上玩耍，遠處傳來輕快的笑聲。這是一段用來測試語音合成品質和速度的中文文字，請用清楚自然的聲音朗讀。",
+      "transcript": "今天的天气非常晴朗,我们决定到公园散步。\n微风吹过树梢,孩子们在草地上玩耍,远处传来轻快的笑声。\n这是一段用来测试语音合成情质和速度的中文文字,请用清楚自然的声音朗读。",
+      "normalized_expected": [
+        "今",
+        "天",
+        "的",
+        "天",
+        "气",
+        "非",
+        "常",
+        "晴",
+        "朗",
+        "我",
+        "们",
+        "决",
+        "定",
+        "到",
+        "公",
+        "园",
+        "散",
+        "步",
+        "微",
+        "风",
+        "吹",
+        "过",
+        "树",
+        "梢",
+        "孩",
+        "子",
+        "们",
+        "在",
+        "草",
+        "地",
+        "上",
+        "玩",
+        "耍",
+        "远",
+        "处",
+        "传",
+        "来",
+        "轻",
+        "快",
+        "的",
+        "笑",
+        "声",
+        "这",
+        "是",
+        "一",
+        "段",
+        "用",
+        "来",
+        "测",
+        "试",
+        "语",
+        "音",
+        "合",
+        "成",
+        "品",
+        "质",
+        "和",
+        "速",
+        "度",
+        "的",
+        "中",
+        "文",
+        "文",
+        "字",
+        "请",
+        "用",
+        "清",
+        "楚",
+        "自",
+        "然",
+        "的",
+        "声",
+        "音",
+        "朗",
+        "读"
+      ],
+      "normalized_transcript": [
+        "今",
+        "天",
+        "的",
+        "天",
+        "气",
+        "非",
+        "常",
+        "晴",
+        "朗",
+        "我",
+        "们",
+        "决",
+        "定",
+        "到",
+        "公",
+        "园",
+        "散",
+        "步",
+        "微",
+        "风",
+        "吹",
+        "过",
+        "树",
+        "梢",
+        "孩",
+        "子",
+        "们",
+        "在",
+        "草",
+        "地",
+        "上",
+        "玩",
+        "耍",
+        "远",
+        "处",
+        "传",
+        "来",
+        "轻",
+        "快",
+        "的",
+        "笑",
+        "声",
+        "这",
+        "是",
+        "一",
+        "段",
+        "用",
+        "来",
+        "测",
+        "试",
+        "语",
+        "音",
+        "合",
+        "成",
+        "情",
+        "质",
+        "和",
+        "速",
+        "度",
+        "的",
+        "中",
+        "文",
+        "文",
+        "字",
+        "请",
+        "用",
+        "清",
+        "楚",
+        "自",
+        "然",
+        "的",
+        "声",
+        "音",
+        "朗",
+        "读"
+      ],
+      "edit_distance": 1,
+      "reference_units": 75,
+      "metric": "CER",
+      "disagreement_rate": 0.013333333333333334,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/mandarin-q3_k.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/mandarin-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:04,120"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 4120
+            },
+            "text": "今天的天气非常晴朗,我们决定到公园散步。"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:04,920",
+              "to": "00:00:10,680"
+            },
+            "offsets": {
+              "from": 4920,
+              "to": 10680
+            },
+            "text": "微风吹过树梢,孩子们在草地上玩耍,远处传来轻快的笑声。"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,440",
+              "to": "00:00:17,600"
+            },
+            "offsets": {
+              "from": 11440,
+              "to": 17600
+            },
+            "text": "这是一段用来测试语音合成情质和速度的中文文字,请用清楚自然的声音朗读。"
+          }
+        ]
+      }
+    },
+    "reference-q4_k": {
+      "wav_sha256": "11b1663da83c67e0b36994a023ff851b34fe53003577ddb939cb5a86c402b6f3",
+      "language": "en",
+      "expected_text": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+      "transcript": "the quick brown fox jumps over the lazy dog.\nWe are benchmarking the Breeze TTS2 model\non the Radeon 780M graphics card,\nmeasuring the real time factor of the full generation pipeline\nfrom the text encoder through the backbone\nand depth decoder.",
+      "normalized_expected": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts",
+        "two",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780",
+        "m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "normalized_transcript": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts2",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "edit_distance": 4,
+      "reference_units": 44,
+      "metric": "WER",
+      "disagreement_rate": 0.09090909090909091,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/reference-q4_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/reference-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,200"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3200
+            },
+            "text": " the quick brown fox jumps over the lazy dog."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,200",
+              "to": "00:00:05,920"
+            },
+            "offsets": {
+              "from": 3200,
+              "to": 5920
+            },
+            "text": " We are benchmarking the Breeze TTS2 model"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,920",
+              "to": "00:00:09,000"
+            },
+            "offsets": {
+              "from": 5920,
+              "to": 9000
+            },
+            "text": " on the Radeon 780M graphics card,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,000",
+              "to": "00:00:12,680"
+            },
+            "offsets": {
+              "from": 9000,
+              "to": 12680
+            },
+            "text": " measuring the real time factor of the full generation pipeline"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:12,680",
+              "to": "00:00:14,860"
+            },
+            "offsets": {
+              "from": 12680,
+              "to": 14860
+            },
+            "text": " from the text encoder through the backbone"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:14,860",
+              "to": "00:00:16,020"
+            },
+            "offsets": {
+              "from": 14860,
+              "to": 16020
+            },
+            "text": " and depth decoder."
+          }
+        ]
+      }
+    },
+    "reference-q3_k": {
+      "wav_sha256": "a0a02ae6e6ecc8f1102eddb95c66bf8586ed8362770591f89ca7635970bf3a4c",
+      "language": "en",
+      "expected_text": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+      "transcript": "The quick brown fox jumps over the lazy dog.\nWe are benchmarking the Breeze TTS2 model\non the Radeon 780M graphics card,\nmeasuring the real time factor\nof the full generation pipeline.\nFrom the text encoder through the backbone\nand depth decoder.",
+      "normalized_expected": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts",
+        "two",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780",
+        "m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "normalized_transcript": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts2",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "edit_distance": 4,
+      "reference_units": 44,
+      "metric": "WER",
+      "disagreement_rate": 0.09090909090909091,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/reference-q3_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/reference-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,360"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3360
+            },
+            "text": " The quick brown fox jumps over the lazy dog."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,360",
+              "to": "00:00:06,280"
+            },
+            "offsets": {
+              "from": 3360,
+              "to": 6280
+            },
+            "text": " We are benchmarking the Breeze TTS2 model"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:06,280",
+              "to": "00:00:09,320"
+            },
+            "offsets": {
+              "from": 6280,
+              "to": 9320
+            },
+            "text": " on the Radeon 780M graphics card,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,320",
+              "to": "00:00:11,000"
+            },
+            "offsets": {
+              "from": 9320,
+              "to": 11000
+            },
+            "text": " measuring the real time factor"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,000",
+              "to": "00:00:13,320"
+            },
+            "offsets": {
+              "from": 11000,
+              "to": 13320
+            },
+            "text": " of the full generation pipeline."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,320",
+              "to": "00:00:15,560"
+            },
+            "offsets": {
+              "from": 13320,
+              "to": 15560
+            },
+            "text": " From the text encoder through the backbone"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,560",
+              "to": "00:00:16,900"
+            },
+            "offsets": {
+              "from": 15560,
+              "to": 16900
+            },
+            "text": " and depth decoder."
+          }
+        ]
+      }
+    },
+    "heldout-en-q4_k": {
+      "wav_sha256": "dc9579ad4cdf50ce6a72a8dfbefebc6b58f78699cc0df0e6faac216384e753a8",
+      "language": "en",
+      "expected_text": "After the rain stopped, Mira carried three blue notebooks to the library. She left one beside the window, returned the others to the shelf, and quietly closed the door.",
+      "transcript": "After the rain stopped, Mirra carried three blue notebooks to the library.\nShe left one beside the window, returned the others to the shelf, and quietly closed the door.",
+      "normalized_expected": [
+        "after",
+        "the",
+        "rain",
+        "stopped",
+        "mira",
+        "carried",
+        "three",
+        "blue",
+        "notebooks",
+        "to",
+        "the",
+        "library",
+        "she",
+        "left",
+        "one",
+        "beside",
+        "the",
+        "window",
+        "returned",
+        "the",
+        "others",
+        "to",
+        "the",
+        "shelf",
+        "and",
+        "quietly",
+        "closed",
+        "the",
+        "door"
+      ],
+      "normalized_transcript": [
+        "after",
+        "the",
+        "rain",
+        "stopped",
+        "mirra",
+        "carried",
+        "three",
+        "blue",
+        "notebooks",
+        "to",
+        "the",
+        "library",
+        "she",
+        "left",
+        "one",
+        "beside",
+        "the",
+        "window",
+        "returned",
+        "the",
+        "others",
+        "to",
+        "the",
+        "shelf",
+        "and",
+        "quietly",
+        "closed",
+        "the",
+        "door"
+      ],
+      "edit_distance": 1,
+      "reference_units": 29,
+      "metric": "WER",
+      "disagreement_rate": 0.034482758620689655,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/heldout-en-q4_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/heldout-en-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:06,080"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 6080
+            },
+            "text": " After the rain stopped, Mirra carried three blue notebooks to the library."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:06,080",
+              "to": "00:00:12,680"
+            },
+            "offsets": {
+              "from": 6080,
+              "to": 12680
+            },
+            "text": " She left one beside the window, returned the others to the shelf, and quietly closed the door."
+          }
+        ]
+      }
+    },
+    "heldout-en-q3_k": {
+      "wav_sha256": "7e8572cc94b3cec3320bcaef7d4abaa277bdd02b4fb8ede7925020cca3e7cf62",
+      "language": "en",
+      "expected_text": "After the rain stopped, Mira carried three blue notebooks to the library. She left one beside the window, returned the others to the shelf, and quietly closed the door.",
+      "transcript": "After the rain stopped, Mira carried three blue notebooks to the library.\nShe left one beside the window, returned the others to the shelf, and quietly closed the\ndoor.",
+      "normalized_expected": [
+        "after",
+        "the",
+        "rain",
+        "stopped",
+        "mira",
+        "carried",
+        "three",
+        "blue",
+        "notebooks",
+        "to",
+        "the",
+        "library",
+        "she",
+        "left",
+        "one",
+        "beside",
+        "the",
+        "window",
+        "returned",
+        "the",
+        "others",
+        "to",
+        "the",
+        "shelf",
+        "and",
+        "quietly",
+        "closed",
+        "the",
+        "door"
+      ],
+      "normalized_transcript": [
+        "after",
+        "the",
+        "rain",
+        "stopped",
+        "mira",
+        "carried",
+        "three",
+        "blue",
+        "notebooks",
+        "to",
+        "the",
+        "library",
+        "she",
+        "left",
+        "one",
+        "beside",
+        "the",
+        "window",
+        "returned",
+        "the",
+        "others",
+        "to",
+        "the",
+        "shelf",
+        "and",
+        "quietly",
+        "closed",
+        "the",
+        "door"
+      ],
+      "edit_distance": 0,
+      "reference_units": 29,
+      "metric": "WER",
+      "disagreement_rate": 0.0,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/heldout-en-q3_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/heldout-en-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:04,800"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 4800
+            },
+            "text": " After the rain stopped, Mira carried three blue notebooks to the library."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:04,800",
+              "to": "00:00:09,120"
+            },
+            "offsets": {
+              "from": 4800,
+              "to": 9120
+            },
+            "text": " She left one beside the window, returned the others to the shelf, and quietly closed the"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,120",
+              "to": "00:00:09,480"
+            },
+            "offsets": {
+              "from": 9120,
+              "to": 9480
+            },
+            "text": " door."
+          }
+        ]
+      }
+    },
+    "cached-reference-q4_k": {
+      "wav_sha256": "11b1663da83c67e0b36994a023ff851b34fe53003577ddb939cb5a86c402b6f3",
+      "language": "en",
+      "expected_text": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+      "transcript": "the quick brown fox jumps over the lazy dog.\nWe are benchmarking the Breeze TTS2 model\non the Radeon 780M graphics card,\nmeasuring the real time factor of the full generation pipeline\nfrom the text encoder through the backbone\nand depth decoder.",
+      "normalized_expected": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts",
+        "two",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780",
+        "m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "normalized_transcript": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts2",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "edit_distance": 4,
+      "reference_units": 44,
+      "metric": "WER",
+      "disagreement_rate": 0.09090909090909091,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/cached-reference-q4_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/cached-reference-q4_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,200"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3200
+            },
+            "text": " the quick brown fox jumps over the lazy dog."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,200",
+              "to": "00:00:05,920"
+            },
+            "offsets": {
+              "from": 3200,
+              "to": 5920
+            },
+            "text": " We are benchmarking the Breeze TTS2 model"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,920",
+              "to": "00:00:09,000"
+            },
+            "offsets": {
+              "from": 5920,
+              "to": 9000
+            },
+            "text": " on the Radeon 780M graphics card,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,000",
+              "to": "00:00:12,680"
+            },
+            "offsets": {
+              "from": 9000,
+              "to": 12680
+            },
+            "text": " measuring the real time factor of the full generation pipeline"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:12,680",
+              "to": "00:00:14,860"
+            },
+            "offsets": {
+              "from": 12680,
+              "to": 14860
+            },
+            "text": " from the text encoder through the backbone"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:14,860",
+              "to": "00:00:16,020"
+            },
+            "offsets": {
+              "from": 14860,
+              "to": 16020
+            },
+            "text": " and depth decoder."
+          }
+        ]
+      }
+    },
+    "cached-reference-q3_k": {
+      "wav_sha256": "a0a02ae6e6ecc8f1102eddb95c66bf8586ed8362770591f89ca7635970bf3a4c",
+      "language": "en",
+      "expected_text": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+      "transcript": "The quick brown fox jumps over the lazy dog.\nWe are benchmarking the Breeze TTS2 model\non the Radeon 780M graphics card,\nmeasuring the real time factor\nof the full generation pipeline.\nFrom the text encoder through the backbone\nand depth decoder.",
+      "normalized_expected": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts",
+        "two",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780",
+        "m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "normalized_transcript": [
+        "the",
+        "quick",
+        "brown",
+        "fox",
+        "jumps",
+        "over",
+        "the",
+        "lazy",
+        "dog",
+        "we",
+        "are",
+        "benchmarking",
+        "the",
+        "breeze",
+        "tts2",
+        "model",
+        "on",
+        "the",
+        "radeon",
+        "780m",
+        "graphics",
+        "card",
+        "measuring",
+        "the",
+        "real",
+        "time",
+        "factor",
+        "of",
+        "the",
+        "full",
+        "generation",
+        "pipeline",
+        "from",
+        "the",
+        "text",
+        "encoder",
+        "through",
+        "the",
+        "backbone",
+        "and",
+        "depth",
+        "decoder"
+      ],
+      "edit_distance": 4,
+      "reference_units": 44,
+      "metric": "WER",
+      "disagreement_rate": 0.09090909090909091,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+        "-f",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/cached-reference-q3_k.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        ".beehive/agent/BREEZE-Q3-MATRIX/results/speech-probes/cached-reference-q3_k"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "small",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "text": {
+            "ctx": 448,
+            "state": 768,
+            "head": 12,
+            "layer": 12
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,360"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3360
+            },
+            "text": " The quick brown fox jumps over the lazy dog."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,360",
+              "to": "00:00:06,280"
+            },
+            "offsets": {
+              "from": 3360,
+              "to": 6280
+            },
+            "text": " We are benchmarking the Breeze TTS2 model"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:06,280",
+              "to": "00:00:09,320"
+            },
+            "offsets": {
+              "from": 6280,
+              "to": 9320
+            },
+            "text": " on the Radeon 780M graphics card,"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,320",
+              "to": "00:00:11,000"
+            },
+            "offsets": {
+              "from": 9320,
+              "to": 11000
+            },
+            "text": " measuring the real time factor"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,000",
+              "to": "00:00:13,320"
+            },
+            "offsets": {
+              "from": 11000,
+              "to": 13320
+            },
+            "text": " of the full generation pipeline."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,320",
+              "to": "00:00:15,560"
+            },
+            "offsets": {
+              "from": 13320,
+              "to": 15560
+            },
+            "text": " From the text encoder through the backbone"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:15,560",
+              "to": "00:00:16,900"
+            },
+            "offsets": {
+              "from": 15560,
+              "to": 16900
+            },
+            "text": " and depth decoder."
+          }
+        ]
+      }
+    }
+  },
+  "models": {
+    "asr_binary": {
+      "path": "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+      "sha256": "cd3fbfea58ab2d5ddc5b5e5ac745940ec0f07d66e5b7e80af758e9bc2c6b2286"
+    },
+    "asr_model": {
+      "path": "/tmp/breeze-quant-asr-20260906/models/ggml-small.bin",
+      "sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b"
+    },
+    "speaker_model": {
+      "path": "/tmp/breeze-speaker-eval-20260906/wespeaker_en_voxceleb_resnet34.onnx",
+      "sha256": "5ef208a9da1453335308a6b6f4e6dfbd7e183a38b604de0a57664f45d257fe94"
+    }
+  },
+  "versions": {
+    "numpy": "2.5.2",
+    "sherpa-onnx": "1.13.7",
+    "opencc-python-reimplemented": "0.1.7"
+  },
+  "normalization": "NFKC/lowercase; English alphanumeric words; Mandarin OpenCC t2s then alphanumeric characters.",
+  "limitations": [
+    "ASR disagreement includes recognizer errors, spelling and number formatting; not human WER.",
+    "No expected transcript is given to the recognizer as a prompt.",
+    "Speaker cosine is descriptive; no task-specific acceptance threshold is established.",
+    "The reference clip is synthetic speech, not a human speaker validation set.",
+    "Only first-repeat WAVs are scored; repeated identical audio is not independent quality evidence."
+  ],
+  "speaker": {
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "embedding_dim": 256,
+    "reference_self_cosine": 0.9999999999999999,
+    "q4_reference_cosine": 0.9805029130931691,
+    "q3_reference_cosine": 0.9753307664333847,
+    "q3_q4_cosine": 0.9682068809249141
+  }
+}

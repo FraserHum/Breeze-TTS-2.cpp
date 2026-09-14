@@ -4,10 +4,21 @@
 #include "breeze/sampling.h"
 
 #include <cstdint>
+#include <cstdio>
 #include <random>
+#include <string>
 #include <vector>
 
 namespace breeze {
+
+// Capture-only references.  Marking these existing graph nodes as outputs keeps
+// their allocator slots alive without adding graph operations.
+struct DepthCaptureRefs {
+    int layer = -1;
+    ggml_tensor * norm_input = nullptr;
+    ggml_tensor * swiglu_product = nullptr;
+    ggml_tensor * down_output = nullptr;
+};
 
 // one static compute graph for one depth step: built once in init with that step's
 // shapes (KV length, append offset, head slice, and the step 1 CFG concat) baked in,
@@ -23,6 +34,14 @@ struct DepthStepGraph {
     ggml_tensor * ff = nullptr;     // rope freq factors, constant
     ggml_tensor * mask = nullptr;   // [total, n_tok] f32 branch-causal
     ggml_tensor * logits = nullptr; // [vs, nb] f32 output, branch major
+    // fused graph only (BREEZE_DD_FUSED=1): all steps in one graph, codes sampled in-graph
+    ggml_tensor * codes = nullptr;  // [1, n_step] i32 sampled codes, one d2h read per frame
+    ggml_tensor * scale = nullptr;  // [1] f32 cfg scale, 2-branch in-graph merge only
+    ggml_tensor * inv_t = nullptr;      // [1] f32 inverse temperature, set per frame (fused gumbel)
+    std::vector<ggml_tensor *> noise_leaves;  // per-step [vs] f32 gumbel noise, set per frame
+    std::vector<ggml_tensor *> pos_leaves;   // per-step position leaves, set once after vbuffer reserve
+    std::vector<ggml_tensor *> mask_leaves;  // per-step mask leaves, set once after vbuffer reserve
+    std::vector<DepthCaptureRefs> capture_refs; // selected FFN nodes, capture mode only
 };
 
 // autoregressive residual decoder: predicts codebooks 1..num_codebooks-1 for one frame
@@ -39,11 +58,36 @@ struct DepthRunner {
     ggml_gallocr_t depth_alloc = nullptr; // dedicated: backbone/codec churn on m.backend.alloc would dangle these pointers
     size_t graph_cap = 0;
 
+    int n_step = 0;     // depth steps (num_codebooks - 1)
+    bool fused = false; // BREEZE_DD_FUSED=1: one chained graph, seeded gumbel-max in-graph sampling
+    DepthStepGraph fused_graph; // used only when fused
+    std::mt19937 fused_rng; // dedicated fused-path gumbel stream: seeded from the CLI --seed
+                             // (the same integer the step path's rng gets) but a separate stream,
+                             // so the same seed does NOT produce byte-identical wavs across paths
+    std::vector<float> noise_staging; // fused only: n_step * vs floats of gumbel noise per frame
+
     std::vector<int32_t> idx_staging;
     std::vector<int32_t> pos_staging;
     std::vector<float> mask_staging;
 
-    void init(BreezeModel & m, int n_branches);
+    // BREEZE_DEPTH_CAPTURE=<directory>: bounded, opt-in FFN activation capture.
+    // Optional comma-separated BREEZE_DEPTH_CAPTURE_FRAMES/LAYERS selections default to
+    // 0,7,15 and 0,5,11; LAYERS=all selects all 12 layers. MAX_BYTES defaults to 16 MiB.
+    bool capture_enabled = false;
+    std::string capture_dir;
+    FILE * capture_blob = nullptr;
+    FILE * capture_meta = nullptr;
+    int capture_frame = 0;
+    std::vector<int> capture_frames;
+    std::vector<int> capture_layers;
+    size_t capture_max_bytes = 0;
+    size_t capture_records = 0;
+    size_t capture_max_records = 0;
+    std::vector<float> capture_buf;
+
+    // seed is the CLI --seed integer (the same value the step path's rng gets); it seeds
+    // the dedicated fused-path gumbel stream
+    void init(BreezeModel & m, int n_branches, uint32_t seed);
     void free();
 
     // hiddens holds the backbone last hidden per branch (cond first, then uncond); returns cb1..cb_{n-1}.
@@ -54,5 +98,13 @@ struct DepthRunner {
                          const SampleParams * sp = nullptr,
                          const int * force = nullptr, int n_force = 0);
 };
+
+// opt-in per-phase timing of the last DepthRunner::run() call, armed by BREEZE_DEPTH_STEP_TIMING=1.
+// numerically inert: steady_clock reads and storage only, no graph ops, no RNG draws
+struct RtDepthTiming {
+    double stage_ms = 0.0, set_ms = 0.0, comp_ms = 0.0, d2h_ms = 0.0, sample_ms = 0.0;
+};
+bool rt_depth_timing_enabled();
+const RtDepthTiming & rt_depth_last();
 
 }

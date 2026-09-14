@@ -1,25 +1,88 @@
 #include "breeze/codec.h"
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <string>
 #include <vector>
 
 namespace breeze {
 namespace codec_detail {
 
+static bool env_default_on(const char * name) {
+    const char * e = std::getenv(name);
+    return !e || std::strcmp(e, "0") != 0;
+}
+
 ggml_tensor * conv1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b,
                             ggml_tensor * x, int stride, int dilation) {
     const int K = (int) w->ne[0];
     int pad = (K - 1) * dilation - (stride - 1);
     if (pad < 0) pad = 0;
-    ggml_tensor * xp = ggml_pad_ext(ctx, x, pad, 0, 0, 0, 0, 0, 0, 0);
-    ggml_tensor * y = ggml_conv_1d(ctx, w, xp, stride, 0, dilation);
+    if (!ggml_is_contiguous(x)) x = ggml_cont(ctx, x);
+    const int64_t n_out = (x->ne[0] + pad - (int64_t) dilation * (K - 1) - 1) / stride + 1;
+    ggml_tensor * y = ggml_conv_1d(ctx, w, x, stride, pad, dilation);
+    if (y->ne[0] != n_out) {
+        y = ggml_cont(ctx, ggml_view_2d(ctx, y, n_out, y->ne[1], y->nb[1], 0));
+    }
     if (b) y = ggml_add(ctx, y, ggml_reshape_2d(ctx, b, 1, b->ne[0]));
     return y;
 }
 
 ggml_tensor * convtr1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tensor * b,
                               ggml_tensor * x, int stride) {
-    ggml_tensor * y = ggml_conv_transpose_1d(ctx, w, x, stride, 0, 1);
+    if (!env_default_on("BREEZE_VOC_CONVT_MATMUL")) {
+        ggml_tensor * y = ggml_conv_transpose_1d(ctx, w, x, stride, 0, 1);
+        const int keep = (int) x->ne[0] * stride;
+        y = ggml_cont(ctx, ggml_view_2d(ctx, y, keep, y->ne[1], y->nb[1], 0));
+        if (b) y = ggml_add(ctx, y, ggml_reshape_2d(ctx, b, 1, b->ne[0]));
+        return y;
+    }
+    // Enabled by default (BREEZE_VOC_CONVT_MATMUL=0 opts out): decompose into per-tap batched
+    // matmuls plus the dedicated col2im_1d scatter. Mathematically identical to
+    // ggml_conv_transpose_1d (p0=0, d0=1): the reference kernel scatters
+    //     out[t, co] = sum_{l, k: t = l*stride + k} sum_ci w[k, co, ci] * x[l, ci]
+    // and col2im_1d gathers exactly
+    //     out[t, co] = sum_{l, k: t = l*stride + k} M[co*K + k, l]
+    // so M[co*K + k, l] = (w[k] @ x)[co, l] reproduces it. The Vulkan conv_transpose_1d
+    // kernel is barrier-bound on the 780M (86 ms/op, ~5-10% of peak); this route uses the
+    // matmul and col2im pipelines. Note: on coopmat2 devices the matmul runs with f16
+    // converted operands, so results are not bit-exact with the f32 reference.
+    const int64_t K = w->ne[0];      // kernel taps
+    const int64_t Cout = w->ne[1];   // output channels
+    const int64_t Cin = w->ne[2];    // input channels
+    const int64_t L = x->ne[0];      // input length
+
+    // the kernel arrives as [K, Cout, Cin] but the underlying buffer is [Cin, Cout, K]
+    // (K fastest, Cin slowest): w->nb = [4, 4*Cin, 4*Cin*Cout] expressed as [K,Cout,Cin]
+    // gives K stride 4, Cout stride 8, Cin stride 8192. A zero-copy view keeps Cin
+    // slowest (transposed -> mul_mat assert), so we physically copy it into a contiguous
+    // [Cin, Cout, K] (Cin fastest, K slowest = clean batched-matmul layout, batch stride
+    // = Cin*Cout*4). The single cont+permute does the full transpose in one pass.
+    ggml_tensor * wt = ggml_cont(ctx, ggml_permute(ctx, w, 2, 1, 0, 3)); // [Cin, Cout, K], Cin fastest, K batch
+    ggml_tensor * xt = ggml_cont(ctx, ggml_permute(ctx, x, 1, 0, 2, 3)); // [Cin, L], contiguous
+    ggml_tensor * xb = ggml_repeat_4d(ctx, xt, Cin, L, K, 1);            // [Cin, L, K]
+    if (std::getenv("BREEZE_VOC_CONVT_DBG")) {
+        fprintf(stderr, "[convt_dbg] w  type=%d ne=[%ld %ld %ld %ld] nb=[%zu %zu %zu %zu]\n",
+                (int) w->type, (long)w->ne[0],(long)w->ne[1],(long)w->ne[2],(long)w->ne[3],
+                w->nb[0],w->nb[1],w->nb[2],w->nb[3]);
+        fprintf(stderr, "[convt_dbg] wt type=%d ne=[%ld %ld %ld %ld] nb=[%zu %zu %zu %zu] transposed=%d\n",
+                (int) wt->type, (long)wt->ne[0],(long)wt->ne[1],(long)wt->ne[2],(long)wt->ne[3],
+                wt->nb[0],wt->nb[1],wt->nb[2],wt->nb[3], (int)ggml_is_transposed(wt));
+        fprintf(stderr, "[convt_dbg] xb type=%d ne=[%ld %ld %ld %ld] nb=[%zu %zu %zu %zu] transposed=%d\n",
+                (int) xb->type, (long)xb->ne[0],(long)xb->ne[1],(long)xb->ne[2],(long)xb->ne[3],
+                xb->nb[0],xb->nb[1],xb->nb[2],xb->nb[3], (int)ggml_is_transposed(xb));
+    }
+    ggml_tensor * y3 = ggml_mul_mat(ctx, wt, xb);                        // [Cout, L, K]
+    // permute so K is the slowest of {K, Cout}: [K, Cout, L]. reshape_2d re-reads the
+    // contiguous buffer with ne[0] fastest, so the (K,Cout) pair becomes co*K + k
+    // (channel-first) -- exactly the M[co*K + k, l] layout col2im_1d gathers. Using
+    // [Cout, K, L] here instead would flatten to k*Cout + co (kernel-first) and scatter
+    // every output to the wrong channel.
+    ggml_tensor * m3 = ggml_permute(ctx, y3, 1, 2, 0, 3);                // [K, Cout, L]
+    ggml_tensor * m2 = ggml_reshape_2d(ctx, ggml_cont(ctx, m3), Cout * K, L);
+    ggml_tensor * y = ggml_col2im_1d(ctx, m2, stride, (int) Cout, 0);    // [L*stride + K - 1, Cout]
+
     const int keep = (int) x->ne[0] * stride;
     y = ggml_cont(ctx, ggml_view_2d(ctx, y, keep, y->ne[1], y->nb[1], 0));
     if (b) y = ggml_add(ctx, y, ggml_reshape_2d(ctx, b, 1, b->ne[0]));
@@ -40,7 +103,8 @@ ggml_tensor * depthwise1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tenso
                                  ggml_tensor * x, int K) {
     const int64_t L = x->ne[0];
     const int64_t C = x->ne[1];
-    ggml_tensor * xp = ggml_pad_ext(ctx, x, K - 1, 0, 0, 0, 0, 0, 0, 0);
+    ggml_tensor * xp = ggml_pad_ext(ctx, x, 0, K - 1, 0, 0, 0, 0, 0, 0);
+    xp = ggml_roll(ctx, xp, K - 1, 0, 0, 0);
     ggml_tensor * acc = nullptr;
     for (int k = 0; k < K; k++) {
         ggml_tensor * seg = ggml_cont(ctx, ggml_view_2d(ctx, xp, L, C, xp->nb[1], (size_t) k * xp->nb[0]));

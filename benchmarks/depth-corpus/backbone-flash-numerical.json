@@ -1,0 +1,140 @@
+{
+  "task": "BREEZE-BB-FA",
+  "date": "2026-09-07",
+  "thresholds": {
+    "max_abs": 0.01,
+    "relative_l2": 0.001,
+    "relaxed": false
+  },
+  "model": {
+    "path_local": "/Users/fraser/.cache/breeze-models/depth-quant-controls/breeze-depth-blocks-q3_k.gguf",
+    "path_pod": "/tmp/breeze-depth-blocks-q3_k.gguf",
+    "sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+  },
+  "cpu": {
+    "build_command": "cmake -S . -B /tmp/breeze-bb-fa-build -DBREEZE_VULKAN=OFF -DBREEZE_BUILD_BB_CONTEXT_BENCH=ON -DBREEZE_BUILD_CLI=OFF -DBREEZE_BUILD_SERVER=OFF -DBREEZE_BUILD_SHARED=OFF && cmake --build /tmp/breeze-bb-fa-build --target backbone-context-bench -j4",
+    "primitive_compile_command": "/usr/bin/c++ -O2 -std=c++17 -Iinclude -Ithird_party/ggml/include .beehive/agent/BREEZE-BB-FA/attention_probe.cpp -L/tmp/breeze-bb-fa-build -lbreeze_core /tmp/breeze-bb-fa-build/third_party/ggml/src/libggml.0.22.0.dylib /tmp/breeze-bb-fa-build/third_party/ggml/src/libggml-cpu.0.22.0.dylib /tmp/breeze-bb-fa-build/third_party/ggml/src/ggml-blas/libggml-blas.0.22.0.dylib /tmp/breeze-bb-fa-build/third_party/ggml/src/ggml-metal/libggml-metal.0.22.0.dylib /tmp/breeze-bb-fa-build/third_party/ggml/src/libggml-base.0.22.0.dylib -Wl,-rpath,/tmp/breeze-bb-fa-build/third_party/ggml/src -Wl,-rpath,/tmp/breeze-bb-fa-build/third_party/ggml/src/ggml-blas -Wl,-rpath,/tmp/breeze-bb-fa-build/third_party/ggml/src/ggml-metal -o /tmp/breeze-bb-fa-attention-probe",
+    "primitive_command": "/tmp/breeze-bb-fa-attention-probe",
+    "primitive_return_code": 0,
+    "primitive_log": "attention-probe.log",
+    "primitive_cases": [
+      {
+        "name": "query_kv1",
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      },
+      {
+        "name": "prefill_q3_kv3",
+        "max_abs": 1.49011612e-08,
+        "relative_l2": 4.12664391e-08
+      },
+      {
+        "name": "query_context4",
+        "max_abs": 2.23517418e-08,
+        "relative_l2": 2.23709303e-07
+      },
+      {
+        "name": "prefill_q63_kv63",
+        "max_abs": 2.98023224e-08,
+        "relative_l2": 1.34340123e-07
+      },
+      {
+        "name": "query_context64",
+        "max_abs": 1.86264515e-08,
+        "relative_l2": 2.2209286e-07
+      }
+    ],
+    "model_ab_command": "/tmp/breeze-bb-fa-build/backbone-context-bench --model /Users/fraser/.cache/breeze-models/depth-quant-controls/breeze-depth-blocks-q3_k.gguf --backend cpu --context 4 --numerical-ab",
+    "model_ab_return_code": 7,
+    "model_ab_log": "cpu-ab.log",
+    "model_ab_observation": "finite=true, shapes=true, positions=true; prefill hidden max_abs=0.0524176359 relative_l2=0.0159838167, logits max_abs=0.100900888 relative_l2=0.0140722874; query logits max_abs reached 0.199326381 and relative_l2 0.0362246698"
+  },
+  "gpu": {
+    "pod": "hermes-voice/breezetts-dev",
+    "device": "AMD Radeon 780M Graphics (RADV PHOENIX)",
+    "longform_marker": "/tmp/breeze-longform/complete",
+    "copy_commands": [
+      "kubectl cp src/backbone.cpp hermes-voice/breezetts-dev:/tmp/breeze-bb-fa/src/backbone.cpp",
+      "kubectl cp tools/backbone_context_bench.cpp hermes-voice/breezetts-dev:/tmp/breeze-bb-fa/tools/backbone_context_bench.cpp",
+      "kubectl cp .beehive/agent/BREEZE-BB-FA/attention_probe.cpp hermes-voice/breezetts-dev:/tmp/breeze-bb-fa/attention_probe.cpp"
+    ],
+    "compile_commands": [
+      "kubectl exec -n hermes-voice breezetts-dev -- sh -c 'cd /tmp/breeze-bb-fa && /usr/bin/c++ -O3 -DNDEBUG -std=gnu++17 -fPIC -DGGML_BACKEND_SHARED -DGGML_SHARED -DGGML_USE_CPU -DGGML_USE_VULKAN -I/src/include -I/src/third_party/ggml/include -c src/backbone.cpp -o backbone.cpp.o'",
+      "kubectl exec -n hermes-voice breezetts-dev -- sh -c 'cd /tmp/breeze-bb-fa && /usr/bin/c++ -O3 -DNDEBUG -std=gnu++17 -DGGML_BACKEND_SHARED -DGGML_SHARED -DGGML_USE_CPU -DGGML_USE_VULKAN -I/src/include -I/src/third_party/ggml/include -c tools/backbone_context_bench.cpp -o backbone_context_bench.cpp.o && /usr/bin/c++ -O3 -DNDEBUG backbone_context_bench.cpp.o backbone.cpp.o -o backbone-context-bench -Wl,-rpath,/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan /src/build/libbreeze_core.a /src/build/third_party/ggml/src/libggml.so.0.22.0 /src/build/third_party/ggml/src/libggml-cpu.so.0.22.0 /src/build/third_party/ggml/src/ggml-vulkan/libggml-vulkan.so.0.22.0 /src/build/third_party/ggml/src/libggml-base.so.0.22.0'"
+    ],
+    "hashes": {
+      "src/backbone.cpp": "5156fe9add55168145dec5b474f580df213ea6202e28a3ea455ff947dc115bbd",
+      "tools/backbone_context_bench.cpp": "ca556b11a6b29366764ed5c27f0c05e9ee612dca64b4b2b5a100454cd5a81d1c",
+      "backbone.cpp.o": "54340cbd8dbb3e8d68eadc8f3f70696535567099f546392666a8fd688f647012",
+      "backbone-context-bench": "21215c4b3cec5fdf96adab16a4fe2e4873f5a6042559d88d48560a002088b059"
+    },
+    "baseline_cli_md5_before": "067a25764c424185bd684f60354852e0",
+    "runs": [
+      {
+        "context": 1,
+        "command": "/tmp/breeze-bb-fa/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1 --numerical-ab",
+        "return_code": 7,
+        "log": "gpu-context1.log",
+        "log_sha256": "304c2593fa004ce92de71cff35dc99f2dfec06f9ed17da70217fd98424f1edf7"
+      },
+      {
+        "context": 4,
+        "command": "/tmp/breeze-bb-fa/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 4 --numerical-ab",
+        "return_code": 7,
+        "log": "gpu-context4.log",
+        "log_sha256": "da101a690f1368cbdbee6e2de8a0849b7edf9270933ad94b827b836309f44b63"
+      },
+      {
+        "context": 64,
+        "command": "/tmp/breeze-bb-fa/backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 64 --numerical-ab",
+        "return_code": 7,
+        "log": "gpu-context64.log",
+        "log_sha256": "99c1863f755ed11505b62b8aee624e1fc2780496a56e0ec2da13c58b11e174b0"
+      }
+    ],
+    "baseline_cli_md5_after": "067a25764c424185bd684f60354852e0",
+    "release": {
+      "status": "released",
+      "running_candidate_processes": false
+    },
+    "environment_limitation": "Complete process environment was not archived; no throughput comparison relies on this diagnostic."
+  },
+  "cause": {
+    "classification": "full-model numerical gate failure; precise cause unresolved",
+    "mapping_evidence": "The tested CPU primitive graph agrees within 2.98e-08 max_abs. This finds no obvious permutation, GQA, mask or stride error in those cases; it does not prove full-model or Vulkan implementation correctness.",
+    "model_evidence": "The full 28-layer Q3 model fails the fixed gate on CPU and Vulkan while all outputs, shapes, and positions remain valid; drift grows through context and sequential cache use. The primitive uses F32 tensors, so it isolates the model failure from layout correctness but does not claim byte identity for quantized full-model reductions.",
+    "decision": "Reject current candidate under unchanged thresholds; no throughput/speech claim. Runtime/tool patch archived and restored."
+  },
+  "schema": "breeze-backbone-flash-rejection/v1",
+  "status": "rejected-before-throughput",
+  "raw_logs": {
+    "cpu-ab.log": {
+      "sha256": "9ccd01efc81760a64d99944d7db4fdd7aabb830ae4a557d8f57d98da260f2b38",
+      "text": "ab_prefill position=3 finite=true shapes=true positions=true hidden_max_abs=0.0524176359 hidden_relative_l2=0.0159838167 logits_max_abs=0.100900888 logits_relative_l2=0.0140722874 pass=false\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.101967663 hidden_relative_l2=0.0308438608 logits_max_abs=0.199326381 logits_relative_l2=0.0362246698 pass=false\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.0691916943 hidden_relative_l2=0.0187503499 logits_max_abs=0.152607203 logits_relative_l2=0.0335707129 pass=false\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.0395778418 hidden_relative_l2=0.0122594106 logits_max_abs=0.12879771 logits_relative_l2=0.0275131157 pass=false\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.0259457827 hidden_relative_l2=0.0089808792 logits_max_abs=0.0783245564 logits_relative_l2=0.0237299813 pass=false\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.0227635503 hidden_relative_l2=0.00671969348 logits_max_abs=0.0847043395 logits_relative_l2=0.0265249896 pass=false\nab_query position=9 finite=true shapes=true positions=true hidden_max_abs=0.0146901011 hidden_relative_l2=0.00528839356 logits_max_abs=0.0663098693 logits_relative_l2=0.0202674621 pass=false\nab_query position=10 finite=true shapes=true positions=true hidden_max_abs=0.0194764286 hidden_relative_l2=0.00533322904 logits_max_abs=0.0661826134 logits_relative_l2=0.0216393707 pass=false\nab_query position=11 finite=true shapes=true positions=true hidden_max_abs=0.0164383575 hidden_relative_l2=0.00503742454 logits_max_abs=0.0537601709 logits_relative_l2=0.0205083897 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\n"
+    },
+    "attention-probe.log": {
+      "sha256": "db9014ab7373999e567ef7a1c077e2803379d4c5d02cdc36d50700310cce4bd0",
+      "text": "case=query_kv1 shape=2048 finite=true max_abs=0 relative_l2=0\ncase=prefill_q3_kv3 shape=6144 finite=true max_abs=1.49011612e-08 relative_l2=4.12664391e-08\ncase=query_context4 shape=2048 finite=true max_abs=2.23517418e-08 relative_l2=2.23709303e-07\ncase=prefill_q63_kv63 shape=129024 finite=true max_abs=2.98023224e-08 relative_l2=1.34340123e-07\ncase=query_context64 shape=2048 finite=true max_abs=1.86264515e-08 relative_l2=2.2209286e-07\nreturn_code=0\n"
+    },
+    "gpu-context1.log": {
+      "sha256": "304c2593fa004ce92de71cff35dc99f2dfec06f9ed17da70217fd98424f1edf7",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill=skipped position=0\nab_query position=1 finite=true shapes=true positions=true hidden_max_abs=0.00247764587 hidden_relative_l2=0.000662511218 logits_max_abs=0.0154412985 logits_relative_l2=0.00514595413 pass=false\nab_query position=2 finite=true shapes=true positions=true hidden_max_abs=0.00750541687 hidden_relative_l2=0.000787495911 logits_max_abs=0.00496043265 logits_relative_l2=0.00178628868 pass=false\nab_query position=3 finite=true shapes=true positions=true hidden_max_abs=0.00712394714 hidden_relative_l2=0.000846091896 logits_max_abs=0.0158213377 logits_relative_l2=0.00532312805 pass=false\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.00233078003 hidden_relative_l2=0.000632575759 logits_max_abs=0.00455290079 logits_relative_l2=0.00181856417 pass=false\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.00221785158 hidden_relative_l2=0.0005846752 logits_max_abs=0.0139242411 logits_relative_l2=0.00520673455 pass=false\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.0015126653 hidden_relative_l2=0.000559883649 logits_max_abs=0.00361216068 logits_relative_l2=0.00148592263 pass=false\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.00357055664 hidden_relative_l2=0.000652514336 logits_max_abs=0.00392645597 logits_relative_l2=0.00156882281 pass=false\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.00193199888 hidden_relative_l2=0.000592046782 logits_max_abs=0.0343682766 logits_relative_l2=0.0120805095 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\nreturn_code=7\n"
+    },
+    "gpu-context4.log": {
+      "sha256": "da101a690f1368cbdbee6e2de8a0849b7edf9270933ad94b827b836309f44b63",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill position=3 finite=true shapes=true positions=true hidden_max_abs=0.125944793 hidden_relative_l2=0.0299551385 logits_max_abs=0.150602877 logits_relative_l2=0.0216065454 pass=false\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.143863678 hidden_relative_l2=0.0249040625 logits_max_abs=0.18561244 logits_relative_l2=0.0252842916 pass=false\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.139978409 hidden_relative_l2=0.0168911035 logits_max_abs=0.132368207 logits_relative_l2=0.0192689946 pass=false\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.0552959442 hidden_relative_l2=0.0130388995 logits_max_abs=0.0977790356 logits_relative_l2=0.02171485 pass=false\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.158910751 hidden_relative_l2=0.0132906017 logits_max_abs=0.0799388885 logits_relative_l2=0.0236304955 pass=false\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.0234394073 hidden_relative_l2=0.00724186262 logits_max_abs=0.0313999057 logits_relative_l2=0.00917968723 pass=false\nab_query position=9 finite=true shapes=true positions=true hidden_max_abs=0.0479240417 hidden_relative_l2=0.00648075315 logits_max_abs=0.0395019054 logits_relative_l2=0.0107253501 pass=false\nab_query position=10 finite=true shapes=true positions=true hidden_max_abs=0.0201181769 hidden_relative_l2=0.00597705422 logits_max_abs=0.040060848 logits_relative_l2=0.0114894659 pass=false\nab_query position=11 finite=true shapes=true positions=true hidden_max_abs=0.0467414856 hidden_relative_l2=0.00799024209 logits_max_abs=0.0409342051 logits_relative_l2=0.0130733234 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\nreturn_code=7\n"
+    },
+    "gpu-context64.log": {
+      "sha256": "99c1863f755ed11505b62b8aee624e1fc2780496a56e0ec2da13c58b11e174b0",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill position=63 finite=true shapes=true positions=true hidden_max_abs=0.0264648348 hidden_relative_l2=0.00766568902 logits_max_abs=0.0461785197 logits_relative_l2=0.0151029387 pass=false\nab_query position=64 finite=true shapes=true positions=true hidden_max_abs=0.0657052994 hidden_relative_l2=0.0184499084 logits_max_abs=0.149562836 logits_relative_l2=0.0185693792 pass=false\nab_query position=65 finite=true shapes=true positions=true hidden_max_abs=0.12992382 hidden_relative_l2=0.0159478227 logits_max_abs=0.121844769 logits_relative_l2=0.0149701696 pass=false\nab_query position=66 finite=true shapes=true positions=true hidden_max_abs=0.387643814 hidden_relative_l2=0.0291963984 logits_max_abs=0.171689153 logits_relative_l2=0.0247905294 pass=false\nab_query position=67 finite=true shapes=true positions=true hidden_max_abs=0.781842217 hidden_relative_l2=0.109253138 logits_max_abs=0.807219267 logits_relative_l2=0.0857425265 pass=false\nab_query position=68 finite=true shapes=true positions=true hidden_max_abs=0.175286114 hidden_relative_l2=0.0503045902 logits_max_abs=0.402420044 logits_relative_l2=0.0471095871 pass=false\nab_query position=69 finite=true shapes=true positions=true hidden_max_abs=0.209273338 hidden_relative_l2=0.0554077476 logits_max_abs=0.346440434 logits_relative_l2=0.0478107333 pass=false\nab_query position=70 finite=true shapes=true positions=true hidden_max_abs=0.165873528 hidden_relative_l2=0.0423387858 logits_max_abs=0.301829338 logits_relative_l2=0.0430979116 pass=false\nab_query position=71 finite=true shapes=true positions=true hidden_max_abs=0.126391888 hidden_relative_l2=0.0288272117 logits_max_abs=0.192530155 logits_relative_l2=0.0283821217 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\nreturn_code=7\n"
+    }
+  },
+  "primitive_source": "#include \"breeze/common.h\"\n\n#include <algorithm>\n#include <cmath>\n#include <cstdio>\n#include <vector>\n\nnamespace {\n\nconstexpr int kHeadDim = 128;\nconstexpr int kHeads = 16;\nconstexpr int kKvHeads = 8;\n\nstruct ProbeCase {\n    const char * name;\n    int n_q;\n    int n_kv;\n    int q_offset;\n};\n\nstatic float value(size_t i, float phase) {\n    return 0.2f * std::sin(static_cast<float>(i) * 0.017f + phase);\n}\n\nstatic bool compare(const std::vector<float> & reference, const std::vector<float> & candidate,\n                   double & max_abs, double & relative_l2) {\n    if (reference.size() != candidate.size()) return false;\n    double ref_l2 = 0.0;\n    double delta_l2 = 0.0;\n    max_abs = 0.0;\n    for (size_t i = 0; i < reference.size(); ++i) {\n        if (!std::isfinite(reference[i]) || !std::isfinite(candidate[i])) return false;\n        const double delta = static_cast<double>(candidate[i]) - reference[i];\n        max_abs = std::max(max_abs, std::abs(delta));\n        ref_l2 += static_cast<double>(reference[i]) * reference[i];\n        delta_l2 += delta * delta;\n    }\n    relative_l2 = std::sqrt(delta_l2) / std::max(std::sqrt(ref_l2), 1.0e-12);\n    return true;\n}\n\n} // namespace\n\nint main() {\n    const ProbeCase cases[] = {\n        {\"query_kv1\", 1, 1, 0},\n        {\"prefill_q3_kv3\", 3, 3, 0},\n        {\"query_context4\", 1, 4, 3},\n        {\"prefill_q63_kv63\", 63, 63, 0},\n        {\"query_context64\", 1, 64, 63},\n    };\n\n    breeze::Backend backend;\n    backend.init(false);\n    bool all_finite = true;\n    for (const ProbeCase & test : cases) {\n        breeze::Graph graph(8192);\n        std::vector<float> q_data(static_cast<size_t>(kHeadDim) * kHeads * test.n_q);\n        std::vector<float> k_data(static_cast<size_t>(kHeadDim) * kKvHeads * test.n_kv);\n        std::vector<float> v_data(static_cast<size_t>(kHeadDim) * kKvHeads * test.n_kv);\n        for (size_t i = 0; i < q_data.size(); ++i) q_data[i] = value(i, 0.1f);\n        for (size_t i = 0; i < k_data.size(); ++i) k_data[i] = value(i, 0.7f);\n        for (size_t i = 0; i < v_data.size(); ++i) v_data[i] = value(i, 1.3f);\n\n        ggml_tensor * q = graph.input_f32(q_data, kHeadDim, kHeads, test.n_q);\n        ggml_tensor * k = graph.input_f32(k_data, kHeadDim, kKvHeads, test.n_kv);\n        ggml_tensor * v = graph.input_f32(v_data, kHeadDim, kKvHeads, test.n_kv);\n        ggml_tensor * mask = graph.input_f32(\n            breeze::build_causal_mask(test.n_q, test.n_kv, test.q_offset, 0), test.n_kv, test.n_q);\n\n        ggml_tensor * reference = breeze::attention(\n            graph.ctx, q, k, v, mask, 1.0f / std::sqrt(static_cast<float>(kHeadDim)), kHeads, kKvHeads);\n        ggml_tensor * flash_mask = ggml_cast(graph.ctx, mask, GGML_TYPE_F16);\n        ggml_tensor * flash_q = ggml_permute(graph.ctx, q, 0, 2, 1, 3);\n        ggml_tensor * flash_k = ggml_permute(graph.ctx, k, 0, 2, 1, 3);\n        ggml_tensor * flash_v = ggml_permute(graph.ctx, v, 0, 2, 1, 3);\n        ggml_tensor * flash = ggml_flash_attn_ext(\n            graph.ctx, flash_q, flash_k, flash_v, flash_mask,\n            1.0f / std::sqrt(static_cast<float>(kHeadDim)), 0.0f, 0.0f);\n        ggml_flash_attn_ext_set_prec(flash, GGML_PREC_F32);\n        flash = ggml_reshape_2d(graph.ctx, flash, kHeadDim * kHeads, test.n_q);\n\n        graph.mark_output(reference);\n        graph.mark_output(flash);\n        graph.compute(backend, flash);\n        const std::vector<float> reference_data = breeze::tensor_to_f32(reference);\n        const std::vector<float> flash_data = breeze::tensor_to_f32(flash);\n        double max_abs = 0.0;\n        double relative_l2 = 0.0;\n        const bool finite = compare(reference_data, flash_data, max_abs, relative_l2);\n        all_finite = all_finite && finite;\n        std::printf(\"case=%s shape=%zu finite=%s max_abs=%.9g relative_l2=%.9g\\n\",\n                    test.name, reference_data.size(), finite ? \"true\" : \"false\", max_abs, relative_l2);\n    }\n    backend.free();\n    return all_finite ? 0 : 1;\n}\n",
+  "candidate_patch": {
+    "path": "benchmarks/depth-corpus/backbone-flash-candidate.patch",
+    "sha256": "ebb1940621d6f115478af21959d680d8ddd82aaa26a20a9fe5c9efd126f0e2a7",
+    "base_commit": "6b4c8dc",
+    "apply_command": "git apply --unidiff-zero benchmarks/depth-corpus/backbone-flash-candidate.patch",
+    "note": "Zero-context archive avoids whitespace-only context lines; source hashes identify exact tested source."
+  }
+}

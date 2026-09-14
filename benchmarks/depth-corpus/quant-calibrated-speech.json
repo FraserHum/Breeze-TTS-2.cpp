@@ -1,0 +1,1871 @@
+{
+  "schema": "breeze-calibrated-speech/v1",
+  "candidate_model": {
+    "label": "calibrated_q3_k_ffn_q4_k_attention",
+    "sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+    "pod_path": "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+    "receipt": "benchmarks/depth-corpus/quant-calibrated.json"
+  },
+  "samples": {
+    "cal-en-short-42": {
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "wav_sha256": "2713bd861632845620d17fba792bdfc6d225b63dea06d3a0f70d79d296176a7a",
+      "language": "en",
+      "expected_text": "The brass key rests beside the blue cup, and the kettle is cooling.",
+      "transcript": "The brass key rests beside the blue cup\nand the kettle is cooling.",
+      "normalized_expected": [
+        "the",
+        "brass",
+        "key",
+        "rests",
+        "beside",
+        "the",
+        "blue",
+        "cup",
+        "and",
+        "the",
+        "kettle",
+        "is",
+        "cooling"
+      ],
+      "normalized_transcript": [
+        "the",
+        "brass",
+        "key",
+        "rests",
+        "beside",
+        "the",
+        "blue",
+        "cup",
+        "and",
+        "the",
+        "kettle",
+        "is",
+        "cooling"
+      ],
+      "edit_distance": 0,
+      "reference_units": 13,
+      "metric": "WER",
+      "disagreement_rate": 0.0,
+      "audio_duration_s": 4.72,
+      "generation_elapsed_s": 5.878406047821045,
+      "generation_wall_ms": 4177.5,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+        "-f",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-en-short-42.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-en-short-42"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "medium",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "text": {
+            "ctx": 448,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:03,080"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 3080
+            },
+            "text": " The brass key rests beside the blue cup"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:03,080",
+              "to": "00:00:04,800"
+            },
+            "offsets": {
+              "from": 3080,
+              "to": 4800
+            },
+            "text": " and the kettle is cooling."
+          }
+        ]
+      }
+    },
+    "cal-zh-short-42": {
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "wav_sha256": "42b2406eb4e15f19ff3bf768356128a472f5f30dd209c0c49bda44cf42a9d34e",
+      "language": "zh",
+      "expected_text": "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。",
+      "transcript": "藍色茶杯旁放著一把黃銅鑰匙\n水廚正在慢慢冷卻",
+      "normalized_expected": [
+        "蓝",
+        "色",
+        "茶",
+        "杯",
+        "旁",
+        "放",
+        "著",
+        "一",
+        "把",
+        "黄",
+        "铜",
+        "钥",
+        "匙",
+        "水",
+        "壶",
+        "正",
+        "在",
+        "慢",
+        "慢",
+        "冷",
+        "却"
+      ],
+      "normalized_transcript": [
+        "蓝",
+        "色",
+        "茶",
+        "杯",
+        "旁",
+        "放",
+        "著",
+        "一",
+        "把",
+        "黄",
+        "铜",
+        "钥",
+        "匙",
+        "水",
+        "厨",
+        "正",
+        "在",
+        "慢",
+        "慢",
+        "冷",
+        "却"
+      ],
+      "edit_distance": 1,
+      "reference_units": 21,
+      "metric": "CER",
+      "disagreement_rate": 0.047619047619047616,
+      "audio_duration_s": 6.88,
+      "generation_elapsed_s": 7.181558847427368,
+      "generation_wall_ms": 6043.0,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+        "-f",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-zh-short-42.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-zh-short-42"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "medium",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "text": {
+            "ctx": 448,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:04,280"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 4280
+            },
+            "text": "藍色茶杯旁放著一把黃銅鑰匙"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:04,280",
+              "to": "00:00:06,760"
+            },
+            "offsets": {
+              "from": 4280,
+              "to": 6760
+            },
+            "text": "水廚正在慢慢冷卻"
+          }
+        ]
+      }
+    },
+    "cal-en-long-123": {
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "wav_sha256": "02d5e1d3495d43344c07a937d57d1c712bc9a40766af436fdcb9b58febd70ceb",
+      "language": "en",
+      "expected_text": "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations.",
+      "transcript": "On Tuesday evening, the Hill Observatory opened its workshop for a small repair class.\nVolunteers carried brass instruments from storage to the benches, where soft lamps lit every label.\nA meteorologist checked the barometers, while two apprentices cleaned salt from a weathervane brought in from the coast.\nNear the stairwell, an archivist unfolded star charts and copied each date into a new ledger.\nThe caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter.\nAt the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn.\nBefore the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio.\nThe group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet.\nTheir careful work left the old observatory ready for another season of patient observations.",
+      "normalized_expected": [
+        "on",
+        "tuesday",
+        "evening",
+        "the",
+        "hill",
+        "observatory",
+        "opened",
+        "its",
+        "workshop",
+        "for",
+        "a",
+        "small",
+        "repair",
+        "class",
+        "volunteers",
+        "carried",
+        "brass",
+        "instruments",
+        "from",
+        "storage",
+        "to",
+        "the",
+        "benches",
+        "where",
+        "soft",
+        "lamps",
+        "lit",
+        "every",
+        "label",
+        "a",
+        "meteorologist",
+        "checked",
+        "the",
+        "barometers",
+        "while",
+        "two",
+        "apprentices",
+        "cleaned",
+        "salt",
+        "from",
+        "a",
+        "weather",
+        "vane",
+        "brought",
+        "in",
+        "from",
+        "the",
+        "coast",
+        "near",
+        "the",
+        "stairwell",
+        "an",
+        "archivist",
+        "unfolded",
+        "star",
+        "charts",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "new",
+        "ledger",
+        "the",
+        "caretaker",
+        "measured",
+        "a",
+        "cracked",
+        "window",
+        "replaced",
+        "three",
+        "screws",
+        "and",
+        "marked",
+        "the",
+        "frame",
+        "for",
+        "tomorrow",
+        "s",
+        "carpenter",
+        "at",
+        "the",
+        "break",
+        "visitors",
+        "traded",
+        "stories",
+        "about",
+        "winter",
+        "skies",
+        "ferry",
+        "rides",
+        "and",
+        "the",
+        "first",
+        "time",
+        "they",
+        "saw",
+        "saturn",
+        "before",
+        "the",
+        "lesson",
+        "ended",
+        "inez",
+        "arranged",
+        "a",
+        "shelf",
+        "for",
+        "spare",
+        "lenses",
+        "and",
+        "wrote",
+        "a",
+        "clear",
+        "note",
+        "beside",
+        "the",
+        "emergency",
+        "radio",
+        "the",
+        "group",
+        "agreed",
+        "to",
+        "meet",
+        "again",
+        "after",
+        "sunrise",
+        "test",
+        "every",
+        "instrument",
+        "and",
+        "return",
+        "the",
+        "repaired",
+        "charts",
+        "to",
+        "the",
+        "archive",
+        "cabinet",
+        "their",
+        "careful",
+        "work",
+        "left",
+        "the",
+        "old",
+        "observatory",
+        "ready",
+        "for",
+        "another",
+        "season",
+        "of",
+        "patient",
+        "observations"
+      ],
+      "normalized_transcript": [
+        "on",
+        "tuesday",
+        "evening",
+        "the",
+        "hill",
+        "observatory",
+        "opened",
+        "its",
+        "workshop",
+        "for",
+        "a",
+        "small",
+        "repair",
+        "class",
+        "volunteers",
+        "carried",
+        "brass",
+        "instruments",
+        "from",
+        "storage",
+        "to",
+        "the",
+        "benches",
+        "where",
+        "soft",
+        "lamps",
+        "lit",
+        "every",
+        "label",
+        "a",
+        "meteorologist",
+        "checked",
+        "the",
+        "barometers",
+        "while",
+        "two",
+        "apprentices",
+        "cleaned",
+        "salt",
+        "from",
+        "a",
+        "weathervane",
+        "brought",
+        "in",
+        "from",
+        "the",
+        "coast",
+        "near",
+        "the",
+        "stairwell",
+        "an",
+        "archivist",
+        "unfolded",
+        "star",
+        "charts",
+        "and",
+        "copied",
+        "each",
+        "date",
+        "into",
+        "a",
+        "new",
+        "ledger",
+        "the",
+        "caretaker",
+        "measured",
+        "a",
+        "cracked",
+        "window",
+        "replaced",
+        "three",
+        "screws",
+        "and",
+        "marked",
+        "the",
+        "frame",
+        "for",
+        "tomorrow",
+        "s",
+        "carpenter",
+        "at",
+        "the",
+        "break",
+        "visitors",
+        "traded",
+        "stories",
+        "about",
+        "winter",
+        "skies",
+        "ferry",
+        "rides",
+        "and",
+        "the",
+        "first",
+        "time",
+        "they",
+        "saw",
+        "saturn",
+        "before",
+        "the",
+        "lesson",
+        "ended",
+        "inez",
+        "arranged",
+        "a",
+        "shelf",
+        "for",
+        "spare",
+        "lenses",
+        "and",
+        "wrote",
+        "a",
+        "clear",
+        "note",
+        "beside",
+        "the",
+        "emergency",
+        "radio",
+        "the",
+        "group",
+        "agreed",
+        "to",
+        "meet",
+        "again",
+        "after",
+        "sunrise",
+        "test",
+        "every",
+        "instrument",
+        "and",
+        "return",
+        "the",
+        "repaired",
+        "charts",
+        "to",
+        "the",
+        "archive",
+        "cabinet",
+        "their",
+        "careful",
+        "work",
+        "left",
+        "the",
+        "old",
+        "observatory",
+        "ready",
+        "for",
+        "another",
+        "season",
+        "of",
+        "patient",
+        "observations"
+      ],
+      "edit_distance": 2,
+      "reference_units": 153,
+      "metric": "WER",
+      "disagreement_rate": 0.013071895424836602,
+      "audio_duration_s": 55.04,
+      "generation_elapsed_s": 50.28661751747131,
+      "generation_wall_ms": 49159.7,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+        "-f",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-en-long-123.16k.wav",
+        "-l",
+        "en",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-en-long-123"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "medium",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "text": {
+            "ctx": 448,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+          "language": "en",
+          "translate": false
+        },
+        "result": {
+          "language": "en"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:06,000"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 6000
+            },
+            "text": " On Tuesday evening, the Hill Observatory opened its workshop for a small repair class."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:06,000",
+              "to": "00:00:11,000"
+            },
+            "offsets": {
+              "from": 6000,
+              "to": 11000
+            },
+            "text": " Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,000",
+              "to": "00:00:17,000"
+            },
+            "offsets": {
+              "from": 11000,
+              "to": 17000
+            },
+            "text": " A meteorologist checked the barometers, while two apprentices cleaned salt from a weathervane brought in from the coast."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:17,000",
+              "to": "00:00:24,000"
+            },
+            "offsets": {
+              "from": 17000,
+              "to": 24000
+            },
+            "text": " Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:24,000",
+              "to": "00:00:30,000"
+            },
+            "offsets": {
+              "from": 24000,
+              "to": 30000
+            },
+            "text": " The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:30,000",
+              "to": "00:00:37,000"
+            },
+            "offsets": {
+              "from": 30000,
+              "to": 37000
+            },
+            "text": " At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:37,000",
+              "to": "00:00:43,000"
+            },
+            "offsets": {
+              "from": 37000,
+              "to": 43000
+            },
+            "text": " Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:43,000",
+              "to": "00:00:50,000"
+            },
+            "offsets": {
+              "from": 43000,
+              "to": 50000
+            },
+            "text": " The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet."
+          },
+          {
+            "timestamps": {
+              "from": "00:00:50,000",
+              "to": "00:00:55,000"
+            },
+            "offsets": {
+              "from": 50000,
+              "to": 55000
+            },
+            "text": " Their careful work left the old observatory ready for another season of patient observations."
+          }
+        ]
+      }
+    },
+    "cal-zh-long-123": {
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "wav_sha256": "4d7f6cc397402aa355d490831fc4ea5f83868373e973ffebc94456a1c94dda73",
+      "language": "zh",
+      "expected_text": "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。",
+      "transcript": "傍晚山上的七巷站为社区开放一间小型修剪教室\n志工把黄铜仪器从储藏室搬到工作桌\n柔和的灯光照亮每张标签\n七巷员检查气压计\n两名学徒清理从海岸带回的风向标上的岩痕\n楼梯旁 挡印员摊开新图\n把每个日期抄进新的登记簿\n管理员两好裂开的窗框换上三枚螺丝\n并在木条上留下明天木匠要处理的位置\n休息时来访者谈起冬夜的天空\n渡船的旅程\n以及第一次看见土星的情景\n课程结束前\n宜安替备用镜片整理一个架子\n又在紧急无线店旁写下清楚的提醒\n大家约定日出后再见\n逐一测试仪器\n把修好的新图送回当宴库\n细心的合作\n让这座老七巷站\n准备好迎接下一季的观测工作\n他还把每项工具的归还时间\n写在黑板上\n提醒所有人保持走道畅通",
+      "normalized_expected": [
+        "傍",
+        "晚",
+        "山",
+        "上",
+        "的",
+        "气",
+        "象",
+        "站",
+        "为",
+        "社",
+        "区",
+        "开",
+        "放",
+        "一",
+        "间",
+        "小",
+        "型",
+        "修",
+        "缮",
+        "教",
+        "室",
+        "志",
+        "工",
+        "把",
+        "黄",
+        "铜",
+        "仪",
+        "器",
+        "从",
+        "储",
+        "藏",
+        "室",
+        "搬",
+        "到",
+        "工",
+        "作",
+        "桌",
+        "柔",
+        "和",
+        "的",
+        "灯",
+        "光",
+        "照",
+        "亮",
+        "每",
+        "张",
+        "标",
+        "签",
+        "气",
+        "象",
+        "员",
+        "检",
+        "查",
+        "气",
+        "压",
+        "计",
+        "两",
+        "名",
+        "学",
+        "徒",
+        "清",
+        "理",
+        "从",
+        "海",
+        "岸",
+        "带",
+        "回",
+        "的",
+        "风",
+        "向",
+        "标",
+        "上",
+        "的",
+        "盐",
+        "痕",
+        "楼",
+        "梯",
+        "旁",
+        "档",
+        "案",
+        "员",
+        "摊",
+        "开",
+        "星",
+        "图",
+        "把",
+        "每",
+        "个",
+        "日",
+        "期",
+        "抄",
+        "进",
+        "新",
+        "的",
+        "登",
+        "记",
+        "簿",
+        "管",
+        "理",
+        "员",
+        "量",
+        "好",
+        "裂",
+        "开",
+        "的",
+        "窗",
+        "框",
+        "换",
+        "上",
+        "三",
+        "枚",
+        "螺",
+        "丝",
+        "并",
+        "在",
+        "木",
+        "条",
+        "上",
+        "留",
+        "下",
+        "明",
+        "天",
+        "木",
+        "匠",
+        "要",
+        "处",
+        "理",
+        "的",
+        "位",
+        "置",
+        "休",
+        "息",
+        "时",
+        "来",
+        "访",
+        "者",
+        "谈",
+        "起",
+        "冬",
+        "夜",
+        "的",
+        "天",
+        "空",
+        "渡",
+        "船",
+        "的",
+        "旅",
+        "程",
+        "以",
+        "及",
+        "第",
+        "一",
+        "次",
+        "看",
+        "见",
+        "土",
+        "星",
+        "的",
+        "情",
+        "景",
+        "课",
+        "程",
+        "结",
+        "束",
+        "前",
+        "怡",
+        "安",
+        "替",
+        "备",
+        "用",
+        "镜",
+        "片",
+        "整",
+        "理",
+        "一",
+        "个",
+        "架",
+        "子",
+        "又",
+        "在",
+        "紧",
+        "急",
+        "无",
+        "线",
+        "电",
+        "旁",
+        "写",
+        "下",
+        "清",
+        "楚",
+        "的",
+        "提",
+        "醒",
+        "大",
+        "家",
+        "约",
+        "定",
+        "日",
+        "出",
+        "后",
+        "再",
+        "见",
+        "逐",
+        "一",
+        "测",
+        "试",
+        "仪",
+        "器",
+        "把",
+        "修",
+        "好",
+        "的",
+        "星",
+        "图",
+        "送",
+        "回",
+        "档",
+        "案",
+        "柜",
+        "细",
+        "心",
+        "的",
+        "合",
+        "作",
+        "让",
+        "这",
+        "座",
+        "老",
+        "气",
+        "象",
+        "站",
+        "准",
+        "备",
+        "好",
+        "迎",
+        "接",
+        "下",
+        "一",
+        "季",
+        "的",
+        "观",
+        "测",
+        "工",
+        "作",
+        "她",
+        "还",
+        "把",
+        "每",
+        "项",
+        "工",
+        "具",
+        "的",
+        "归",
+        "还",
+        "时",
+        "间",
+        "写",
+        "在",
+        "黑",
+        "板",
+        "上",
+        "提",
+        "醒",
+        "所",
+        "有",
+        "人",
+        "保",
+        "持",
+        "走",
+        "道",
+        "畅",
+        "通"
+      ],
+      "normalized_transcript": [
+        "傍",
+        "晚",
+        "山",
+        "上",
+        "的",
+        "七",
+        "巷",
+        "站",
+        "为",
+        "社",
+        "区",
+        "开",
+        "放",
+        "一",
+        "间",
+        "小",
+        "型",
+        "修",
+        "剪",
+        "教",
+        "室",
+        "志",
+        "工",
+        "把",
+        "黄",
+        "铜",
+        "仪",
+        "器",
+        "从",
+        "储",
+        "藏",
+        "室",
+        "搬",
+        "到",
+        "工",
+        "作",
+        "桌",
+        "柔",
+        "和",
+        "的",
+        "灯",
+        "光",
+        "照",
+        "亮",
+        "每",
+        "张",
+        "标",
+        "签",
+        "七",
+        "巷",
+        "员",
+        "检",
+        "查",
+        "气",
+        "压",
+        "计",
+        "两",
+        "名",
+        "学",
+        "徒",
+        "清",
+        "理",
+        "从",
+        "海",
+        "岸",
+        "带",
+        "回",
+        "的",
+        "风",
+        "向",
+        "标",
+        "上",
+        "的",
+        "岩",
+        "痕",
+        "楼",
+        "梯",
+        "旁",
+        "挡",
+        "印",
+        "员",
+        "摊",
+        "开",
+        "新",
+        "图",
+        "把",
+        "每",
+        "个",
+        "日",
+        "期",
+        "抄",
+        "进",
+        "新",
+        "的",
+        "登",
+        "记",
+        "簿",
+        "管",
+        "理",
+        "员",
+        "两",
+        "好",
+        "裂",
+        "开",
+        "的",
+        "窗",
+        "框",
+        "换",
+        "上",
+        "三",
+        "枚",
+        "螺",
+        "丝",
+        "并",
+        "在",
+        "木",
+        "条",
+        "上",
+        "留",
+        "下",
+        "明",
+        "天",
+        "木",
+        "匠",
+        "要",
+        "处",
+        "理",
+        "的",
+        "位",
+        "置",
+        "休",
+        "息",
+        "时",
+        "来",
+        "访",
+        "者",
+        "谈",
+        "起",
+        "冬",
+        "夜",
+        "的",
+        "天",
+        "空",
+        "渡",
+        "船",
+        "的",
+        "旅",
+        "程",
+        "以",
+        "及",
+        "第",
+        "一",
+        "次",
+        "看",
+        "见",
+        "土",
+        "星",
+        "的",
+        "情",
+        "景",
+        "课",
+        "程",
+        "结",
+        "束",
+        "前",
+        "宜",
+        "安",
+        "替",
+        "备",
+        "用",
+        "镜",
+        "片",
+        "整",
+        "理",
+        "一",
+        "个",
+        "架",
+        "子",
+        "又",
+        "在",
+        "紧",
+        "急",
+        "无",
+        "线",
+        "店",
+        "旁",
+        "写",
+        "下",
+        "清",
+        "楚",
+        "的",
+        "提",
+        "醒",
+        "大",
+        "家",
+        "约",
+        "定",
+        "日",
+        "出",
+        "后",
+        "再",
+        "见",
+        "逐",
+        "一",
+        "测",
+        "试",
+        "仪",
+        "器",
+        "把",
+        "修",
+        "好",
+        "的",
+        "新",
+        "图",
+        "送",
+        "回",
+        "当",
+        "宴",
+        "库",
+        "细",
+        "心",
+        "的",
+        "合",
+        "作",
+        "让",
+        "这",
+        "座",
+        "老",
+        "七",
+        "巷",
+        "站",
+        "准",
+        "备",
+        "好",
+        "迎",
+        "接",
+        "下",
+        "一",
+        "季",
+        "的",
+        "观",
+        "测",
+        "工",
+        "作",
+        "他",
+        "还",
+        "把",
+        "每",
+        "项",
+        "工",
+        "具",
+        "的",
+        "归",
+        "还",
+        "时",
+        "间",
+        "写",
+        "在",
+        "黑",
+        "板",
+        "上",
+        "提",
+        "醒",
+        "所",
+        "有",
+        "人",
+        "保",
+        "持",
+        "走",
+        "道",
+        "畅",
+        "通"
+      ],
+      "edit_distance": 19,
+      "reference_units": 272,
+      "metric": "CER",
+      "disagreement_rate": 0.06985294117647059,
+      "audio_duration_s": 62.88,
+      "generation_elapsed_s": 58.60453152656555,
+      "generation_wall_ms": 57383.3,
+      "command": [
+        "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+        "-m",
+        "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+        "-f",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-zh-long-123.16k.wav",
+        "-l",
+        "zh",
+        "-t",
+        "2",
+        "-nf",
+        "-tp",
+        "0",
+        "-otxt",
+        "-oj",
+        "-of",
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/asr/speech-probes/cal-zh-long-123"
+      ],
+      "raw_asr": {
+        "systeminfo": "WHISPER : VITISAI = 0 | COREML = 0 | OPENVINO = 0 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | ",
+        "model": {
+          "type": "medium",
+          "multilingual": true,
+          "vocab": 51865,
+          "audio": {
+            "ctx": 1500,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "text": {
+            "ctx": 448,
+            "state": 1024,
+            "head": 16,
+            "layer": 24
+          },
+          "mels": 80,
+          "ftype": 1
+        },
+        "params": {
+          "model": "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+          "language": "zh",
+          "translate": false
+        },
+        "result": {
+          "language": "zh"
+        },
+        "transcription": [
+          {
+            "timestamps": {
+              "from": "00:00:00,000",
+              "to": "00:00:04,400"
+            },
+            "offsets": {
+              "from": 0,
+              "to": 4400
+            },
+            "text": "傍晚山上的七巷站为社区开放一间小型修剪教室"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:05,000",
+              "to": "00:00:09,000"
+            },
+            "offsets": {
+              "from": 5000,
+              "to": 9000
+            },
+            "text": "志工把黄铜仪器从储藏室搬到工作桌"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:09,200",
+              "to": "00:00:11,600"
+            },
+            "offsets": {
+              "from": 9200,
+              "to": 11600
+            },
+            "text": "柔和的灯光照亮每张标签"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:11,600",
+              "to": "00:00:13,200"
+            },
+            "offsets": {
+              "from": 11600,
+              "to": 13200
+            },
+            "text": "七巷员检查气压计"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:13,600",
+              "to": "00:00:17,700"
+            },
+            "offsets": {
+              "from": 13600,
+              "to": 17700
+            },
+            "text": "两名学徒清理从海岸带回的风向标上的岩痕"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:18,000",
+              "to": "00:00:20,700"
+            },
+            "offsets": {
+              "from": 18000,
+              "to": 20700
+            },
+            "text": "楼梯旁 挡印员摊开新图"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:20,800",
+              "to": "00:00:23,100"
+            },
+            "offsets": {
+              "from": 20800,
+              "to": 23100
+            },
+            "text": "把每个日期抄进新的登记簿"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:23,400",
+              "to": "00:00:27,000"
+            },
+            "offsets": {
+              "from": 23400,
+              "to": 27000
+            },
+            "text": "管理员两好裂开的窗框换上三枚螺丝"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:27,200",
+              "to": "00:00:30,500"
+            },
+            "offsets": {
+              "from": 27200,
+              "to": 30500
+            },
+            "text": "并在木条上留下明天木匠要处理的位置"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:30,800",
+              "to": "00:00:33,600"
+            },
+            "offsets": {
+              "from": 30800,
+              "to": 33600
+            },
+            "text": "休息时来访者谈起冬夜的天空"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:33,800",
+              "to": "00:00:34,800"
+            },
+            "offsets": {
+              "from": 33800,
+              "to": 34800
+            },
+            "text": "渡船的旅程"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:35,000",
+              "to": "00:00:37,400"
+            },
+            "offsets": {
+              "from": 35000,
+              "to": 37400
+            },
+            "text": "以及第一次看见土星的情景"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:37,600",
+              "to": "00:00:38,700"
+            },
+            "offsets": {
+              "from": 37600,
+              "to": 38700
+            },
+            "text": "课程结束前"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:38,900",
+              "to": "00:00:41,500"
+            },
+            "offsets": {
+              "from": 38900,
+              "to": 41500
+            },
+            "text": "宜安替备用镜片整理一个架子"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:41,700",
+              "to": "00:00:44,800"
+            },
+            "offsets": {
+              "from": 41700,
+              "to": 44800
+            },
+            "text": "又在紧急无线店旁写下清楚的提醒"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:45,000",
+              "to": "00:00:46,800"
+            },
+            "offsets": {
+              "from": 45000,
+              "to": 46800
+            },
+            "text": "大家约定日出后再见"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:47,200",
+              "to": "00:00:48,400"
+            },
+            "offsets": {
+              "from": 47200,
+              "to": 48400
+            },
+            "text": "逐一测试仪器"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:48,700",
+              "to": "00:00:51,000"
+            },
+            "offsets": {
+              "from": 48700,
+              "to": 51000
+            },
+            "text": "把修好的新图送回当宴库"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:51,000",
+              "to": "00:00:52,100"
+            },
+            "offsets": {
+              "from": 51000,
+              "to": 52100
+            },
+            "text": "细心的合作"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:52,300",
+              "to": "00:00:53,600"
+            },
+            "offsets": {
+              "from": 52300,
+              "to": 53600
+            },
+            "text": "让这座老七巷站"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:53,800",
+              "to": "00:00:56,200"
+            },
+            "offsets": {
+              "from": 53800,
+              "to": 56200
+            },
+            "text": "准备好迎接下一季的观测工作"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:56,700",
+              "to": "00:00:59,000"
+            },
+            "offsets": {
+              "from": 56700,
+              "to": 59000
+            },
+            "text": "他还把每项工具的归还时间"
+          },
+          {
+            "timestamps": {
+              "from": "00:00:59,200",
+              "to": "00:01:00,300"
+            },
+            "offsets": {
+              "from": 59200,
+              "to": 60300
+            },
+            "text": "写在黑板上"
+          },
+          {
+            "timestamps": {
+              "from": "00:01:00,500",
+              "to": "00:01:02,900"
+            },
+            "offsets": {
+              "from": 60500,
+              "to": 62900
+            },
+            "text": "提醒所有人保持走道畅通"
+          }
+        ]
+      }
+    }
+  },
+  "tools": {
+    "asr_binary": {
+      "path": "/tmp/breeze-quant-asr-20260906/build/bin/whisper-cli",
+      "sha256": "cd3fbfea58ab2d5ddc5b5e5ac745940ec0f07d66e5b7e80af758e9bc2c6b2286"
+    },
+    "asr_model": {
+      "path": "/tmp/breeze-quant-asr-20260906/models/ggml-medium.bin",
+      "sha256": "6c14d5adee5f86394037b4e4e8b59f1673b6cee10e3cf0b11bbdbee79c156208"
+    },
+    "ffmpeg": "ffmpeg from PATH",
+    "helper": "benchmarks/quant_speech_780m.py tokens/distance/sha"
+  },
+  "versions": {
+    "numpy": "2.5.2",
+    "opencc-python-reimplemented": "0.1.7"
+  },
+  "comparison_controls": {
+    "q4_q3_source": "benchmarks/depth-corpus/language-quality-speech.json",
+    "selective_source": "benchmarks/depth-corpus/quant-selective-speech.json",
+    "timings": "non-contemporaneous Q4_K/Q3_K/selective controls; comparison only",
+    "labels": {
+      "candidate": "calibrated_q3_k_ffn_q4_k_attention",
+      "selective": "selective_q3_k_ffn_q4_k_attention",
+      "controls": [
+        "q4_k",
+        "q3_k"
+      ]
+    },
+    "samples": {
+      "cal-en-short-42": {
+        "q4_k": {
+          "wav_sha256": "8e6bd44b3daa66ddd2e6e593155cc90106802f64248da9e5342244ec722ba4e0",
+          "language": "en",
+          "edit_distance": 0,
+          "reference_units": 13,
+          "metric": "WER",
+          "disagreement_rate": 0.0,
+          "audio_duration_s": 3.84,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 3649.4
+        },
+        "q3_k": {
+          "wav_sha256": "92d1eef48cb7b386aa1e2e1655e0ab2d6b1ec816f55159dc9dd4739b1e8eb411",
+          "language": "en",
+          "edit_distance": 0,
+          "reference_units": 13,
+          "metric": "WER",
+          "disagreement_rate": 0.0,
+          "audio_duration_s": 3.84,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 3403.5
+        },
+        "selective_q3_k_ffn_q4_k_attention": {
+          "wav_sha256": "6fde221c559d91f1e20cb88dd2269ad2e1489e83b2454bd70514f50e719d52af",
+          "language": "en",
+          "edit_distance": 0,
+          "reference_units": 13,
+          "metric": "WER",
+          "disagreement_rate": 0.0,
+          "audio_duration_s": 6.16,
+          "generation_elapsed_s": 6.278731822967529,
+          "generation_wall_ms": 5117.9
+        }
+      },
+      "cal-zh-short-42": {
+        "q4_k": {
+          "wav_sha256": "33d8c18e913e79a605ee952d8d70027c2f2513c64e37c7153f3e1a87f2a197f8",
+          "language": "zh",
+          "edit_distance": 3,
+          "reference_units": 21,
+          "metric": "CER",
+          "disagreement_rate": 0.14285714285714285,
+          "audio_duration_s": 5.12,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 4767.4
+        },
+        "q3_k": {
+          "wav_sha256": "c2ab030488a43e573d5d1716a0b1a42ddf2a695aaac38b37cb3f3d7244790fa9",
+          "language": "zh",
+          "edit_distance": 3,
+          "reference_units": 21,
+          "metric": "CER",
+          "disagreement_rate": 0.14285714285714285,
+          "audio_duration_s": 4.56,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 3945.5
+        },
+        "selective_q3_k_ffn_q4_k_attention": {
+          "wav_sha256": "6930d808b6b0499d507e323d667a92d849e4a405a128a55c8b6f05ffeec29098",
+          "language": "zh",
+          "edit_distance": 2,
+          "reference_units": 21,
+          "metric": "CER",
+          "disagreement_rate": 0.09523809523809523,
+          "audio_duration_s": 5.28,
+          "generation_elapsed_s": 5.626441955566406,
+          "generation_wall_ms": 4471.3
+        }
+      },
+      "cal-en-long-123": {
+        "q4_k": {
+          "wav_sha256": "e1c0c1607aed294f82e6ca3bcee15e1fffbbc0792b39e935ad29bfd229abcd63",
+          "language": "en",
+          "edit_distance": 2,
+          "reference_units": 153,
+          "metric": "WER",
+          "disagreement_rate": 0.013071895424836602,
+          "audio_duration_s": 65.2,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 64821.6
+        },
+        "q3_k": {
+          "wav_sha256": "5de235ae14fb00362bb283464e4480f443299905735b8d03e27a51dcdd779a2c",
+          "language": "en",
+          "edit_distance": 4,
+          "reference_units": 153,
+          "metric": "WER",
+          "disagreement_rate": 0.026143790849673203,
+          "audio_duration_s": 60.16,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 53668.3
+        },
+        "selective_q3_k_ffn_q4_k_attention": {
+          "wav_sha256": "82a622e2ad40ea98c1fba99ccb26c2b8a13c9ebd27ebf6807da3318f99661608",
+          "language": "en",
+          "edit_distance": 0,
+          "reference_units": 153,
+          "metric": "WER",
+          "disagreement_rate": 0.0,
+          "audio_duration_s": 60.8,
+          "generation_elapsed_s": 55.65300965309143,
+          "generation_wall_ms": 54465.2
+        }
+      },
+      "cal-zh-long-123": {
+        "q4_k": {
+          "wav_sha256": "dd6fcee4ab9698fa48eb6ea11331431a602cf46793a8c8be221126871ffbed41",
+          "language": "zh",
+          "edit_distance": 21,
+          "reference_units": 272,
+          "metric": "CER",
+          "disagreement_rate": 0.07720588235294118,
+          "audio_duration_s": 65.36,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 65264.1
+        },
+        "q3_k": {
+          "wav_sha256": "18907d3acf12cc9a332eb927863ec71f62d4c2868744b4c056d4cb85e0fd792d",
+          "language": "zh",
+          "edit_distance": 14,
+          "reference_units": 272,
+          "metric": "CER",
+          "disagreement_rate": 0.051470588235294115,
+          "audio_duration_s": 64.48,
+          "generation_elapsed_s": null,
+          "generation_wall_ms": 58815.3
+        },
+        "selective_q3_k_ffn_q4_k_attention": {
+          "wav_sha256": "b16038f2ca206eb1a8ef323d63dfced9bd393bf861c97789764c75d801bbdc34",
+          "language": "zh",
+          "edit_distance": 16,
+          "reference_units": 272,
+          "metric": "CER",
+          "disagreement_rate": 0.058823529411764705,
+          "audio_duration_s": 56.72,
+          "generation_elapsed_s": 52.74296975135803,
+          "generation_wall_ms": 51550.2
+        }
+      }
+    },
+    "paired_metrics": {
+      "cal-en-short-42": {
+        "metric": "WER",
+        "reference_units": 13,
+        "audio_duration_s": {
+          "candidate": 4.72,
+          "q4_k": 3.84,
+          "q3_k": 3.84,
+          "selective_q3_k_ffn_q4_k_attention": 6.16
+        },
+        "disagreement_rate": {
+          "candidate": 0.0,
+          "q4_k": 0.0,
+          "q3_k": 0.0,
+          "selective_q3_k_ffn_q4_k_attention": 0.0
+        },
+        "candidate_minus_selective": 0.0,
+        "candidate_minus_q3_k": 0.0,
+        "candidate_minus_q4_k": 0.0
+      },
+      "cal-zh-short-42": {
+        "metric": "CER",
+        "reference_units": 21,
+        "audio_duration_s": {
+          "candidate": 6.88,
+          "q4_k": 5.12,
+          "q3_k": 4.56,
+          "selective_q3_k_ffn_q4_k_attention": 5.28
+        },
+        "disagreement_rate": {
+          "candidate": 0.047619047619047616,
+          "q4_k": 0.14285714285714285,
+          "q3_k": 0.14285714285714285,
+          "selective_q3_k_ffn_q4_k_attention": 0.09523809523809523
+        },
+        "candidate_minus_selective": -0.047619047619047616,
+        "candidate_minus_q3_k": -0.09523809523809523,
+        "candidate_minus_q4_k": -0.09523809523809523
+      },
+      "cal-en-long-123": {
+        "metric": "WER",
+        "reference_units": 153,
+        "audio_duration_s": {
+          "candidate": 55.04,
+          "q4_k": 65.2,
+          "q3_k": 60.16,
+          "selective_q3_k_ffn_q4_k_attention": 60.8
+        },
+        "disagreement_rate": {
+          "candidate": 0.013071895424836602,
+          "q4_k": 0.013071895424836602,
+          "q3_k": 0.026143790849673203,
+          "selective_q3_k_ffn_q4_k_attention": 0.0
+        },
+        "candidate_minus_selective": 0.013071895424836602,
+        "candidate_minus_q3_k": -0.013071895424836602,
+        "candidate_minus_q4_k": 0.0
+      },
+      "cal-zh-long-123": {
+        "metric": "CER",
+        "reference_units": 272,
+        "audio_duration_s": {
+          "candidate": 62.88,
+          "q4_k": 65.36,
+          "q3_k": 64.48,
+          "selective_q3_k_ffn_q4_k_attention": 56.72
+        },
+        "disagreement_rate": {
+          "candidate": 0.06985294117647059,
+          "q4_k": 0.07720588235294118,
+          "q3_k": 0.051470588235294115,
+          "selective_q3_k_ffn_q4_k_attention": 0.058823529411764705
+        },
+        "candidate_minus_selective": 0.011029411764705885,
+        "candidate_minus_q3_k": 0.018382352941176475,
+        "candidate_minus_q4_k": -0.00735294117647059
+      }
+    }
+  },
+  "summary": {
+    "sample_count": 4,
+    "languages": {
+      "en": 2,
+      "zh": 2
+    },
+    "asr_only_diagnostic": true
+  },
+  "limitations": [
+    "Whisper medium disagreement is a recognizer proxy, not human WER/CER or an acceptance gate.",
+    "No speaker embedding score was run for these design-voice calibration fixtures.",
+    "Only four calibration fixtures were scored; held-out evaluation was untouched.",
+    "Q4_K/Q3_K/selective comparisons are non-contemporaneous controls and are not causal quality evidence.",
+    "The paired WAV durations are reported for provenance; duration differences are not a quality metric."
+  ]
+}

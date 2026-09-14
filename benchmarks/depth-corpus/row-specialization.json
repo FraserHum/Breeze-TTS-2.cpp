@@ -1,0 +1,98 @@
+{
+  "source_base": "1a51559 plus default-off capture",
+  "ggml_base": "e7d634a",
+  "patch": "two-line existing integer K-quant NUM_ROWS specialization; all K-quant types, Q4_K model tested; no custom shader",
+  "binary": "f5e50e08f4ebdd482f4cba071a21cfb6fe1e0feab9f18ae9b61cf8f616f2fe85",
+  "variants": {
+    "rows1": {
+      "wall_ms": [
+        16234.8,
+        15989.9,
+        15973.9
+      ],
+      "audio_s": [
+        17.04,
+        17.04,
+        17.04
+      ],
+      "wall_rtf": [
+        0.9527464788732394,
+        0.9383744131455399,
+        0.9374354460093897
+      ],
+      "sha256": [
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+      ],
+      "depth_ms_per_frame": [
+        51.52,
+        51.34,
+        51.19
+      ],
+      "mean_wall_rtf": 0.9428521126760563
+    },
+    "rows2": {
+      "wall_ms": [
+        16752.8,
+        16315.8,
+        16483.5
+      ],
+      "audio_s": [
+        17.04,
+        17.04,
+        17.04
+      ],
+      "wall_rtf": [
+        0.9831455399061032,
+        0.9574999999999999,
+        0.9673415492957746
+      ],
+      "sha256": [
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+      ],
+      "depth_ms_per_frame": [
+        53.45,
+        52.47,
+        53.15
+      ],
+      "mean_wall_rtf": 0.9693290297339593
+    },
+    "rows4": {
+      "wall_ms": [
+        16667.0,
+        16388.7,
+        16508.2
+      ],
+      "audio_s": [
+        17.04,
+        17.04,
+        17.04
+      ],
+      "wall_rtf": [
+        0.9781103286384977,
+        0.9617781690140845,
+        0.9687910798122066
+      ],
+      "sha256": [
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+        "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+      ],
+      "depth_ms_per_frame": [
+        53.75,
+        53.13,
+        53.65
+      ],
+      "mean_wall_rtf": 0.9695598591549296
+    }
+  },
+  "decision": "Neither multi-row variant retained; both slower than same-binary one-row control.",
+  "restoration": {
+    "ggml_source_sha256": "78ddb01613ebd010879a9b72cdcaa173f30e40fc0c67b48c80908713ea792f70",
+    "current_capture_binary_md5": "067a25764c424185bd684f60354852e0",
+    "experimental_specialization_removed": true
+  }
+}

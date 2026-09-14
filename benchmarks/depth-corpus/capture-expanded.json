@@ -1,0 +1,182 @@
+{
+  "schema": "breeze-depth-capture-expanded/v1",
+  "status": "verified",
+  "scope": "capped unsplit teacher data only; not a complete speech-quality or timing acceptance run",
+  "source": {
+    "git_head": "6db00e054b47f090a60f4045e23ac0f4e5777e54",
+    "files": {
+      "src/depth_decoder.cpp": "ef32a7041c50a0c133f95189e65c45f77a1e61f689c606972bd09c40dfeca6d0",
+      "include/breeze/depth_decoder.h": "5db33d56d0500cef536c59ea3faedb11b831d491d4dd7a52c6890f59287235b9",
+      "tools/depth_capture_check.py": "0bb1fb791698b1b5aa5e9328a154b9ee56000965886ec5e1b0410a5cb8933af6"
+    },
+    "manifest": "benchmarks/depth-corpus/language-quality-manifest.json"
+  },
+  "parser_negative_checks": {
+    "binary": "build-cpu/breeze-cli",
+    "binary_sha256": "9d6a36eea59d60f80d140bc3deef647e3aeb4ead990f6d056290fd7443b1571a",
+    "runner": "python3 - <<'PY' (subprocess.run each case with timeout=120, require nonzero rc and expected stderr substring) PY",
+    "command_template": "env BREEZE_DD_FUSED=0 GGML_VK_DISABLE_FUSION=1 BREEZE_DEPTH_CAPTURE=<fresh-/tmp-dir> <selection-env> build-cpu/breeze-cli /Users/fraser/.cache/breeze-models/depth-quant-controls/breeze-depth-blocks-q4_k.gguf --cpu --seed 42 --max-new 1 --split-chars 0 --text parser-check --output <tmp-dir>.wav",
+    "cases": [
+      {"name": "negative-frame", "selection_env": "BREEZE_DEPTH_CAPTURE_FRAMES=-1", "result": "rejected", "returncode": -6, "stderr": "BREEZE_DEPTH_CAPTURE_FRAMES contains an invalid item"},
+      {"name": "duplicate-frame", "selection_env": "BREEZE_DEPTH_CAPTURE_FRAMES=0,7,7", "result": "rejected", "returncode": -6, "stderr": "duplicate item"},
+      {"name": "out-of-range-layer", "selection_env": "BREEZE_DEPTH_CAPTURE_LAYERS=12", "result": "rejected", "returncode": -6, "stderr": "BREEZE_DEPTH_CAPTURE_LAYERS contains an invalid item"},
+      {"name": "malformed-max-bytes", "selection_env": "BREEZE_DEPTH_CAPTURE_MAX_BYTES=64MBjunk", "result": "rejected", "returncode": -6, "stderr": "MAX_BYTES suffix"}
+    ]
+  },
+  "pod": {
+    "namespace": "hermes-voice",
+    "name": "breezetts-dev",
+    "quality_marker": "/tmp/breeze-language-quality-20260907/complete",
+    "quality_marker_verified_by_manager": true,
+    "gpu_released": true,
+    "idle_check": "kubectl -n hermes-voice exec breezetts-dev -- sh -lc 'ps -eo pid,args | grep -E \"breeze-cli|breeze-capture-expanded\" | grep -v grep || true'",
+    "production_integrity": {
+      "before": {
+        "/src/src/depth_decoder.cpp": "e90a2330ae55d09b7feddf7ccc6e92e9c110904dde2cc4fe89b9fa3d3313aaf2",
+        "/src/include/breeze/depth_decoder.h": "6c43e1e5b990280dd001d512569b0044484492f4f7f9721166ef445b1dbd421e",
+        "/src/build/breeze-cli": "d9eb3cb1f94ce53f56124b43997cf464bc04d28b8b4a86791fa3218e91ae2b5a",
+        "/src/build/libbreeze_core.a": "c6ae61fb746cdcbd17e002208a5fa869072f3b7028e5664da723f661b5ee788f"
+      },
+      "after": {
+        "/src/src/depth_decoder.cpp": "e90a2330ae55d09b7feddf7ccc6e92e9c110904dde2cc4fe89b9fa3d3313aaf2",
+        "/src/include/breeze/depth_decoder.h": "6c43e1e5b990280dd001d512569b0044484492f4f7f9721166ef445b1dbd421e",
+        "/src/build/breeze-cli": "d9eb3cb1f94ce53f56124b43997cf464bc04d28b8b4a86791fa3218e91ae2b5a",
+        "/src/build/libbreeze_core.a": "c6ae61fb746cdcbd17e002208a5fa869072f3b7028e5664da723f661b5ee788f"
+      },
+      "equal": true,
+      "candidate_paths": "/tmp/breeze-capture-expanded only"
+    }
+  },
+  "build": {
+    "isolated_root": "/tmp/breeze-capture-expanded",
+    "include_order": [
+      "/tmp/breeze-capture-expanded/include",
+      "/src/include",
+      "/src/third_party/ggml/src/../include"
+    ],
+    "commands": [
+      "/usr/bin/c++ -DGGML_BACKEND_SHARED -DGGML_SHARED -DGGML_USE_CPU -DGGML_USE_VULKAN -O3 -DNDEBUG -std=gnu++17 -fPIC -I/tmp/breeze-capture-expanded/include -I/src/include -I/src/third_party/ggml/src/../include -c /tmp/breeze-capture-expanded/src/depth_decoder.cpp -o /tmp/breeze-capture-expanded/obj/depth_decoder.cpp.o",
+      "/usr/bin/c++ -DGGML_BACKEND_SHARED -DGGML_SHARED -DGGML_USE_CPU -DGGML_USE_VULKAN -O3 -DNDEBUG -std=gnu++17 -fPIC -I/tmp/breeze-capture-expanded/include -I/src/include -I/src/third_party/ggml/src/../include -c /src/src/generation.cpp -o /tmp/breeze-capture-expanded/obj/generation.cpp.o",
+      "/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=/tmp/breeze-capture-expanded/candidate.link.d /src/build/CMakeFiles/breeze-cli.dir/apps/cli/main.cpp.o /tmp/breeze-capture-expanded/obj/depth_decoder.cpp.o /tmp/breeze-capture-expanded/obj/generation.cpp.o -o /tmp/breeze-capture-expanded/breeze-cli -Wl,-rpath,/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan /src/build/libbreeze_core.a /src/build/third_party/ggml/src/libggml.so.0.22.0 /src/build/third_party/ggml/src/libggml-cpu.so.0.22.0 /src/build/third_party/ggml/src/ggml-vulkan/libggml-vulkan.so.0.22.0 /src/build/third_party/ggml/src/libggml-base.so.0.22.0"
+    ],
+    "baseline_cli": {
+      "path": "/src/build/breeze-cli",
+      "md5": "067a25764c424185bd684f60354852e0",
+      "sha256": "d9eb3cb1f94ce53f56124b43997cf464bc04d28b8b4a86791fa3218e91ae2b5a"
+    },
+    "candidate_cli": {
+      "path": "/tmp/breeze-capture-expanded/breeze-cli",
+      "md5": "29c470cae4efd626d436edd0a369f2f5",
+      "sha256": "b6af5b85d555564a641e9933c238ce9104ec30c5c56dcfb0425782033b1431b0"
+    },
+    "objects": {
+      "depth_decoder.cpp.o": "b8355bb8712c25766fe29317fdb720ebe248b3cb26b86e8bf4829e267f8e91b1",
+      "generation.cpp.o": "c1985d8b7b521809dd8c0e9ab5abd71fac0591785b7e4ab037b7967e0f87531c"
+    },
+    "original_core_archive": "c6ae61fb746cdcbd17e002208a5fa869072f3b7028e5664da723f661b5ee788f"
+  },
+  "model": {
+    "path": "/tmp/breeze-depth-blocks-q4_k.gguf",
+    "sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d"
+  },
+  "capture": {
+    "frames": [0, 7, 15, 31, 63],
+    "layers": "all",
+    "max_bytes": 67108864,
+    "validator": "python3 tools/depth_capture_check.py --full <capture-dir>",
+    "local_root": "/tmp/breeze-capture-expanded-results.ho6vQz",
+    "fixtures": [
+      {
+        "id": "cal-en-long-123",
+        "language": "en",
+        "seed": 123,
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 80,
+        "split_chars": 0,
+        "capture_dir": "/tmp/breeze-capture-expanded-results.ho6vQz/cal-en-long-123/capture",
+        "blob_sha256": "ac8f27347675af1516c34f323ffe05474ea81e9d96732effbaea03bc9d302800",
+        "metadata_sha256": "ffe392981f193b490b718c7fc06f7322b54eaf754a3443536cc414b05ae9fc44",
+        "blob_bytes": 39362560,
+        "metadata_bytes": 754465,
+        "frames": [0, 7, 15, 31, 63],
+        "tensor_records": 2705,
+        "sampled_code_frames": 80,
+        "sampled_codes_sha256": "2477d131b003494d09c419c7d64086fb09492e2f0b2513d2faff837cf57394a0",
+        "wav_sha256": {
+          "old_off": "4dd538499f621226b1c7974979d9492aa1e68279deec74b14a231d31e58aa5e1",
+          "candidate_off": "4dd538499f621226b1c7974979d9492aa1e68279deec74b14a231d31e58aa5e1",
+          "candidate_on": "4dd538499f621226b1c7974979d9492aa1e68279deec74b14a231d31e58aa5e1"
+        }
+      },
+      {
+        "id": "cal-zh-long-123",
+        "language": "zh",
+        "seed": 123,
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 80,
+        "split_chars": 0,
+        "capture_dir": "/tmp/breeze-capture-expanded-results.ho6vQz/cal-zh-long-123/capture",
+        "blob_sha256": "be71a264123b22d32857a261e60a97727a0dfcf35d2b631243cb0a83f63404b0",
+        "metadata_sha256": "10ada3d1ef71f40faa6985dca226692898cd3adb328db2f74ebfdc1eac235ae1",
+        "blob_bytes": 39362560,
+        "metadata_bytes": 754480,
+        "frames": [0, 7, 15, 31, 63],
+        "tensor_records": 2705,
+        "sampled_code_frames": 80,
+        "sampled_codes_sha256": "8b1862238887e1c5153153091b4bdcddc2012a767b453f537440ff14a9257406",
+        "wav_sha256": {
+          "old_off": "b43ec22ddf148558ec6886e0b0e9719b8f56bc4657f16cb26a4d2d7c385128b1",
+          "candidate_off": "b43ec22ddf148558ec6886e0b0e9719b8f56bc4657f16cb26a4d2d7c385128b1",
+          "candidate_on": "b43ec22ddf148558ec6886e0b0e9719b8f56bc4657f16cb26a4d2d7c385128b1"
+        }
+      }
+    ]
+  },
+  "runtime_environment": {
+    "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+    "GGML_VK_DISABLE_FUSION": "1",
+    "BREEZE_DD_FUSED": "0",
+    "BREEZE_VOC_STATEFUL": "0",
+    "BREEZE_VOC_CONVT_MATMUL": "1",
+    "BREEZE_VOC_TRIM": "1",
+    "BREEZE_DEBUG_DEPTH_CODES": "1"
+  },
+  "runtime_runs": [
+    {
+      "fixture": "cal-en-long-123",
+      "text_source": "benchmarks/depth-corpus/language-quality-manifest.json#cal-en-long-123",
+      "common_argv": [
+        "<binary>", "/tmp/breeze-depth-blocks-q4_k.gguf", "--text",
+        "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations.",
+        "--instruction", "Speak clearly and naturally in English.", "--cfg-scale", "1.0",
+        "--seed", "123", "--chunk-first", "40", "--chunk-max", "40", "--max-new", "80",
+        "--split-chars", "0", "--repeat", "1", "--timings"
+      ],
+      "modes": [
+        {"name": "old-off", "binary": "/src/build/breeze-cli", "capture": false, "output": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/old-off.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/old-off.log", "log_sha256": "0c24390fc79d82fc79d0ddfe68ab3794b238b5355381a23c4eb37761ead9ef6e", "returncode": 0},
+        {"name": "candidate-off", "binary": "/tmp/breeze-capture-expanded/breeze-cli", "capture": false, "output": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/candidate-off.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/candidate-off.log", "log_sha256": "44be0fd9851b384b5506999f8590679213de0a77ce44f96732e12e65246f1557", "returncode": 0},
+        {"name": "candidate-on", "binary": "/tmp/breeze-capture-expanded/breeze-cli", "capture": true, "capture_env": {"BREEZE_DEPTH_CAPTURE_FRAMES": "0,7,15,31,63", "BREEZE_DEPTH_CAPTURE_LAYERS": "all", "BREEZE_DEPTH_CAPTURE_MAX_BYTES": "67108864"}, "output": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/candidate-on.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-en-long-123/candidate-on.log", "log_sha256": "ef11c38cdaa59c3b990875c28891b1a2898c4cdb417c3983e1d00e85d5d35dfa", "returncode": 0}
+      ]
+    },
+    {
+      "fixture": "cal-zh-long-123",
+      "text_source": "benchmarks/depth-corpus/language-quality-manifest.json#cal-zh-long-123",
+      "common_argv": [
+        "<binary>", "/tmp/breeze-depth-blocks-q4_k.gguf", "--text",
+        "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。",
+        "--instruction", "Speak clearly and naturally in Mandarin Chinese.", "--cfg-scale", "1.0",
+        "--seed", "123", "--chunk-first", "40", "--chunk-max", "40", "--max-new", "80",
+        "--split-chars", "0", "--repeat", "1", "--timings"
+      ],
+      "modes": [
+        {"name": "old-off", "binary": "/src/build/breeze-cli", "capture": false, "output": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/old-off.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/old-off.log", "log_sha256": "37f912f1940cc39073a37a19fccec03c0e10afba9f29559ddd03bea3ba53c93f", "returncode": 0},
+        {"name": "candidate-off", "binary": "/tmp/breeze-capture-expanded/breeze-cli", "capture": false, "output": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/candidate-off.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/candidate-off.log", "log_sha256": "eada8d180b88ca75ff2c2b318f8d8266ced7f634ead32946d2c636fc25d39d70", "returncode": 0},
+        {"name": "candidate-on", "binary": "/tmp/breeze-capture-expanded/breeze-cli", "capture": true, "capture_env": {"BREEZE_DEPTH_CAPTURE_FRAMES": "0,7,15,31,63", "BREEZE_DEPTH_CAPTURE_LAYERS": "all", "BREEZE_DEPTH_CAPTURE_MAX_BYTES": "67108864"}, "output": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/candidate-on.wav", "log": "/tmp/breeze-capture-expanded/runs/cal-zh-long-123/candidate-on.log", "log_sha256": "b10e28b58f80ec321be78aeecf3427ba148556e91d95361d4da70a96f708f26b", "returncode": 0}
+      ]
+    }
+  ],
+  "limitations": [
+    "The two fixtures are capped at 80 frames and use --split-chars 0; they are teacher calibration samples, not complete long-form quality cases.",
+    "Capture frame numbering is per DepthRunner/product part; multi-part runs require separate fresh capture directories and were not combined."
+  ]
+}

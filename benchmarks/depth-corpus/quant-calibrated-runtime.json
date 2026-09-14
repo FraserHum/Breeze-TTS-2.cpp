@@ -1,0 +1,1964 @@
+{
+  "schema": "breeze-calibrated-runtime/v1",
+  "status": "complete",
+  "run_dir": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results",
+  "pod": "hermes-voice/breezetts-dev",
+  "gpu_release": {
+    "marker": "/tmp/breeze-calibrated-run-20260907/complete",
+    "completed_cases": 4,
+    "released_before_local_asr": true,
+    "active_generation_process_after_run": false
+  },
+  "candidate_model": {
+    "label": "calibrated_q3_k_ffn_q4_k_attention",
+    "sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+    "pod_path": "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+    "receipt": "benchmarks/depth-corpus/quant-calibrated.json"
+  },
+  "comparison_controls": {
+    "source": "benchmarks/depth-corpus/language-quality-runtime.json",
+    "timings": "non-contemporaneous Q4_K/Q3_K controls; comparison only",
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "fixtures": {
+      "cal-en-short-42": {
+        "q4_k": {
+          "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 3649.4,
+            "wall_rtf": 0.9503645833333334,
+            "wall_rtf_reported": 0.95,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 54.8,
+              "backbone prefill": 62.1,
+              "first vocoder": 268.5,
+              "backbone decode": 647.5,
+              "depth decode": 2454.3,
+              "vocoder": 427.2
+            },
+            "stage_rtf": 0.949453125,
+            "decode_rtf": 0.9190104166666667,
+            "frames": 48,
+            "audio_s": 3.84,
+            "first_audio_ms": 2959.0,
+            "flushes": 2,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2959.5,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 3649.3,
+                "delivered_audio_s": 3.84
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 13.49,
+            "depth_decode_ms_per_frame": 51.13,
+            "vocoder_ms_per_frame": 8.9
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 240,
+            "frames": 48,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "8e6bd44b3daa66ddd2e6e593155cc90106802f64248da9e5342244ec722ba4e0"
+        },
+        "q3_k": {
+          "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 3403.5,
+            "wall_rtf": 0.886328125,
+            "wall_rtf_reported": 0.886,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 54.4,
+              "backbone prefill": 59.4,
+              "first vocoder": 278.4,
+              "backbone decode": 659.5,
+              "depth decode": 2188.9,
+              "vocoder": 438.6
+            },
+            "stage_rtf": 0.885625,
+            "decode_rtf": 0.8559895833333333,
+            "frames": 48,
+            "audio_s": 3.84,
+            "first_audio_ms": 2759.0,
+            "flushes": 2,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2758.6,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 3403.3,
+                "delivered_audio_s": 3.84
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 13.74,
+            "depth_decode_ms_per_frame": 45.6,
+            "vocoder_ms_per_frame": 9.14
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 240,
+            "frames": 48,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "92d1eef48cb7b386aa1e2e1655e0ab2d6b1ec816f55159dc9dd4739b1e8eb411"
+        }
+      },
+      "cal-zh-short-42": {
+        "q4_k": {
+          "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 4767.4,
+            "wall_rtf": 0.9311328124999999,
+            "wall_rtf_reported": 0.931,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 55.0,
+              "backbone prefill": 59.9,
+              "first vocoder": 273.0,
+              "backbone decode": 869.7,
+              "depth decode": 3236.0,
+              "vocoder": 543.4
+            },
+            "stage_rtf": 0.93046875,
+            "decode_rtf": 0.90802734375,
+            "frames": 64,
+            "audio_s": 5.12,
+            "first_audio_ms": 2947.0,
+            "flushes": 2,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2946.9,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 4767.3,
+                "delivered_audio_s": 5.12
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 13.59,
+            "depth_decode_ms_per_frame": 50.56,
+            "vocoder_ms_per_frame": 8.49
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 240,
+            "frames": 64,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "33d8c18e913e79a605ee952d8d70027c2f2513c64e37c7153f3e1a87f2a197f8"
+        },
+        "q3_k": {
+          "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 3945.5,
+            "wall_rtf": 0.8652412280701754,
+            "wall_rtf_reported": 0.865,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 55.3,
+              "backbone prefill": 59.3,
+              "first vocoder": 279.2,
+              "backbone decode": 785.0,
+              "depth decode": 2545.2,
+              "vocoder": 497.5
+            },
+            "stage_rtf": 0.8645394736842105,
+            "decode_rtf": 0.8394078947368421,
+            "frames": 57,
+            "audio_s": 4.56,
+            "first_audio_ms": 2732.0,
+            "flushes": 2,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2732.3,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 3945.4,
+                "delivered_audio_s": 4.56
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 13.77,
+            "depth_decode_ms_per_frame": 44.65,
+            "vocoder_ms_per_frame": 8.73
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 240,
+            "frames": 57,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "c2ab030488a43e573d5d1716a0b1a42ddf2a695aaac38b37cb3f3d7244790fa9"
+        }
+      },
+      "cal-en-long-123": {
+        "q4_k": {
+          "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 64821.6,
+            "wall_rtf": 0.9941963190184049,
+            "wall_rtf_reported": 0.994,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 240.9,
+              "backbone prefill": 665.3,
+              "first vocoder": 252.0,
+              "backbone decode": 14750.1,
+              "depth decode": 42006.0,
+              "vocoder": 7081.2
+            },
+            "stage_rtf": 0.9929984662576687,
+            "decode_rtf": 0.9790996932515338,
+            "frames": 815,
+            "audio_s": 65.2,
+            "first_audio_ms": 3133.0,
+            "flushes": 21,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 3133.3,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 6196.8,
+                "delivered_audio_s": 6.4
+              },
+              {
+                "index": 3,
+                "ready_ms": 9247.0,
+                "delivered_audio_s": 9.6
+              },
+              {
+                "index": 4,
+                "ready_ms": 12113.3,
+                "delivered_audio_s": 12.64
+              },
+              {
+                "index": 5,
+                "ready_ms": 15566.2,
+                "delivered_audio_s": 15.84
+              },
+              {
+                "index": 6,
+                "ready_ms": 18681.2,
+                "delivered_audio_s": 19.04
+              },
+              {
+                "index": 7,
+                "ready_ms": 21765.4,
+                "delivered_audio_s": 22.24
+              },
+              {
+                "index": 8,
+                "ready_ms": 24918.9,
+                "delivered_audio_s": 25.44
+              },
+              {
+                "index": 9,
+                "ready_ms": 28103.0,
+                "delivered_audio_s": 28.64
+              },
+              {
+                "index": 10,
+                "ready_ms": 31370.0,
+                "delivered_audio_s": 31.84
+              },
+              {
+                "index": 11,
+                "ready_ms": 34559.7,
+                "delivered_audio_s": 35.04
+              },
+              {
+                "index": 12,
+                "ready_ms": 37831.0,
+                "delivered_audio_s": 38.24
+              },
+              {
+                "index": 13,
+                "ready_ms": 41038.3,
+                "delivered_audio_s": 41.44
+              },
+              {
+                "index": 14,
+                "ready_ms": 44309.4,
+                "delivered_audio_s": 44.64
+              },
+              {
+                "index": 15,
+                "ready_ms": 47597.1,
+                "delivered_audio_s": 47.84
+              },
+              {
+                "index": 16,
+                "ready_ms": 50370.0,
+                "delivered_audio_s": 50.48
+              },
+              {
+                "index": 17,
+                "ready_ms": 53580.6,
+                "delivered_audio_s": 53.68
+              },
+              {
+                "index": 18,
+                "ready_ms": 56653.7,
+                "delivered_audio_s": 56.88
+              },
+              {
+                "index": 19,
+                "ready_ms": 59726.9,
+                "delivered_audio_s": 60.08
+              },
+              {
+                "index": 20,
+                "ready_ms": 62881.6,
+                "delivered_audio_s": 63.28
+              },
+              {
+                "index": 21,
+                "ready_ms": 64820.5,
+                "delivered_audio_s": 65.2
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 18.1,
+            "depth_decode_ms_per_frame": 51.54,
+            "vocoder_ms_per_frame": 8.69
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 1200,
+            "frames": 815,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "e1c0c1607aed294f82e6ca3bcee15e1fffbbc0792b39e935ad29bfd229abcd63"
+        },
+        "q3_k": {
+          "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 53668.3,
+            "wall_rtf": 0.8920927526595746,
+            "wall_rtf_reported": 0.892,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 245.3,
+              "backbone prefill": 648.5,
+              "first vocoder": 250.4,
+              "backbone decode": 13297.3,
+              "depth decode": 32742.9,
+              "vocoder": 6669.6
+            },
+            "stage_rtf": 0.8910172872340425,
+            "decode_rtf": 0.8761602393617022,
+            "frames": 752,
+            "audio_s": 60.16,
+            "first_audio_ms": 2787.0,
+            "flushes": 21,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2787.1,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 5439.4,
+                "delivered_audio_s": 6.4
+              },
+              {
+                "index": 3,
+                "ready_ms": 8128.0,
+                "delivered_audio_s": 9.6
+              },
+              {
+                "index": 4,
+                "ready_ms": 10135.6,
+                "delivered_audio_s": 11.92
+              },
+              {
+                "index": 5,
+                "ready_ms": 13196.3,
+                "delivered_audio_s": 15.12
+              },
+              {
+                "index": 6,
+                "ready_ms": 15936.0,
+                "delivered_audio_s": 18.32
+              },
+              {
+                "index": 7,
+                "ready_ms": 18769.9,
+                "delivered_audio_s": 21.52
+              },
+              {
+                "index": 8,
+                "ready_ms": 21614.3,
+                "delivered_audio_s": 24.72
+              },
+              {
+                "index": 9,
+                "ready_ms": 24428.9,
+                "delivered_audio_s": 27.92
+              },
+              {
+                "index": 10,
+                "ready_ms": 27361.3,
+                "delivered_audio_s": 31.12
+              },
+              {
+                "index": 11,
+                "ready_ms": 30294.9,
+                "delivered_audio_s": 34.32
+              },
+              {
+                "index": 12,
+                "ready_ms": 33206.5,
+                "delivered_audio_s": 37.52
+              },
+              {
+                "index": 13,
+                "ready_ms": 36114.6,
+                "delivered_audio_s": 40.72
+              },
+              {
+                "index": 14,
+                "ready_ms": 39102.6,
+                "delivered_audio_s": 43.92
+              },
+              {
+                "index": 15,
+                "ready_ms": 42070.6,
+                "delivered_audio_s": 47.12
+              },
+              {
+                "index": 16,
+                "ready_ms": 42351.1,
+                "delivered_audio_s": 47.28
+              },
+              {
+                "index": 17,
+                "ready_ms": 45232.8,
+                "delivered_audio_s": 50.48
+              },
+              {
+                "index": 18,
+                "ready_ms": 47968.4,
+                "delivered_audio_s": 53.68
+              },
+              {
+                "index": 19,
+                "ready_ms": 50724.6,
+                "delivered_audio_s": 56.88
+              },
+              {
+                "index": 20,
+                "ready_ms": 53472.1,
+                "delivered_audio_s": 60.08
+              },
+              {
+                "index": 21,
+                "ready_ms": 53668.1,
+                "delivered_audio_s": 60.16
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 17.68,
+            "depth_decode_ms_per_frame": 43.54,
+            "vocoder_ms_per_frame": 8.87
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 1200,
+            "frames": 752,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "5de235ae14fb00362bb283464e4480f443299905735b8d03e27a51dcdd779a2c"
+        }
+      },
+      "cal-zh-long-123": {
+        "q4_k": {
+          "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 65264.1,
+            "wall_rtf": 0.998532741738066,
+            "wall_rtf_reported": 0.999,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 280.7,
+              "backbone prefill": 692.4,
+              "first vocoder": 253.7,
+              "backbone decode": 15558.6,
+              "depth decode": 41543.4,
+              "vocoder": 7115.1
+            },
+            "stage_rtf": 0.9974020807833538,
+            "decode_rtf": 0.982513769889841,
+            "frames": 817,
+            "audio_s": 65.36,
+            "first_audio_ms": 3012.0,
+            "flushes": 22,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 3012.2,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 6020.7,
+                "delivered_audio_s": 6.4
+              },
+              {
+                "index": 3,
+                "ready_ms": 8964.5,
+                "delivered_audio_s": 9.6
+              },
+              {
+                "index": 4,
+                "ready_ms": 11233.9,
+                "delivered_audio_s": 12.0
+              },
+              {
+                "index": 5,
+                "ready_ms": 14707.9,
+                "delivered_audio_s": 15.2
+              },
+              {
+                "index": 6,
+                "ready_ms": 17775.3,
+                "delivered_audio_s": 18.4
+              },
+              {
+                "index": 7,
+                "ready_ms": 20862.8,
+                "delivered_audio_s": 21.6
+              },
+              {
+                "index": 8,
+                "ready_ms": 24036.0,
+                "delivered_audio_s": 24.8
+              },
+              {
+                "index": 9,
+                "ready_ms": 27162.9,
+                "delivered_audio_s": 28.0
+              },
+              {
+                "index": 10,
+                "ready_ms": 30426.6,
+                "delivered_audio_s": 31.2
+              },
+              {
+                "index": 11,
+                "ready_ms": 33664.7,
+                "delivered_audio_s": 34.4
+              },
+              {
+                "index": 12,
+                "ready_ms": 36913.2,
+                "delivered_audio_s": 37.6
+              },
+              {
+                "index": 13,
+                "ready_ms": 40141.6,
+                "delivered_audio_s": 40.8
+              },
+              {
+                "index": 14,
+                "ready_ms": 43453.1,
+                "delivered_audio_s": 44.0
+              },
+              {
+                "index": 15,
+                "ready_ms": 46752.1,
+                "delivered_audio_s": 47.2
+              },
+              {
+                "index": 16,
+                "ready_ms": 50092.0,
+                "delivered_audio_s": 50.4
+              },
+              {
+                "index": 17,
+                "ready_ms": 53497.7,
+                "delivered_audio_s": 53.6
+              },
+              {
+                "index": 18,
+                "ready_ms": 53967.7,
+                "delivered_audio_s": 53.92
+              },
+              {
+                "index": 19,
+                "ready_ms": 57199.2,
+                "delivered_audio_s": 57.12
+              },
+              {
+                "index": 20,
+                "ready_ms": 60316.2,
+                "delivered_audio_s": 60.32
+              },
+              {
+                "index": 21,
+                "ready_ms": 63400.6,
+                "delivered_audio_s": 63.52
+              },
+              {
+                "index": 22,
+                "ready_ms": 65263.9,
+                "delivered_audio_s": 65.36
+              }
+            ],
+            "max_playback_deficit_ms": 267.0,
+            "max_delivery_deficit_ms": 267.0,
+            "backbone_decode_ms_per_frame": 19.04,
+            "depth_decode_ms_per_frame": 50.85,
+            "vocoder_ms_per_frame": 8.71
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 1200,
+            "frames": 817,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "dd6fcee4ab9698fa48eb6ea11331431a602cf46793a8c8be221126871ffbed41"
+        },
+        "q3_k": {
+          "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+          "cli_md5": "067a25764c424185bd684f60354852e0",
+          "status": "complete-below-cap",
+          "timing": {
+            "repeat": 1,
+            "wall_ms": 58815.3,
+            "wall_rtf": 0.912147952853598,
+            "wall_rtf_reported": 0.912,
+            "stages_ms": {
+              "reference encode": 0.0,
+              "prompt build": 275.6,
+              "backbone prefill": 698.4,
+              "first vocoder": 250.0,
+              "backbone decode": 15265.2,
+              "depth decode": 35534.7,
+              "vocoder": 6977.7
+            },
+            "stage_rtf": 0.9111600496277914,
+            "decode_rtf": 0.8960545905707195,
+            "frames": 806,
+            "audio_s": 64.48,
+            "first_audio_ms": 2706.0,
+            "flushes": 21,
+            "flushes_ready": [
+              {
+                "index": 1,
+                "ready_ms": 2705.6,
+                "delivered_audio_s": 3.2
+              },
+              {
+                "index": 2,
+                "ready_ms": 5407.6,
+                "delivered_audio_s": 6.4
+              },
+              {
+                "index": 3,
+                "ready_ms": 8127.0,
+                "delivered_audio_s": 9.6
+              },
+              {
+                "index": 4,
+                "ready_ms": 10153.5,
+                "delivered_audio_s": 11.92
+              },
+              {
+                "index": 5,
+                "ready_ms": 13353.6,
+                "delivered_audio_s": 15.12
+              },
+              {
+                "index": 6,
+                "ready_ms": 16213.5,
+                "delivered_audio_s": 18.32
+              },
+              {
+                "index": 7,
+                "ready_ms": 19076.2,
+                "delivered_audio_s": 21.52
+              },
+              {
+                "index": 8,
+                "ready_ms": 21917.7,
+                "delivered_audio_s": 24.72
+              },
+              {
+                "index": 9,
+                "ready_ms": 24911.4,
+                "delivered_audio_s": 27.92
+              },
+              {
+                "index": 10,
+                "ready_ms": 27865.7,
+                "delivered_audio_s": 31.12
+              },
+              {
+                "index": 11,
+                "ready_ms": 30779.2,
+                "delivered_audio_s": 34.32
+              },
+              {
+                "index": 12,
+                "ready_ms": 33724.2,
+                "delivered_audio_s": 37.52
+              },
+              {
+                "index": 13,
+                "ready_ms": 36718.5,
+                "delivered_audio_s": 40.72
+              },
+              {
+                "index": 14,
+                "ready_ms": 39720.7,
+                "delivered_audio_s": 43.92
+              },
+              {
+                "index": 15,
+                "ready_ms": 42740.7,
+                "delivered_audio_s": 47.12
+              },
+              {
+                "index": 16,
+                "ready_ms": 45839.4,
+                "delivered_audio_s": 50.32
+              },
+              {
+                "index": 17,
+                "ready_ms": 48376.6,
+                "delivered_audio_s": 52.88
+              },
+              {
+                "index": 18,
+                "ready_ms": 51321.8,
+                "delivered_audio_s": 56.08
+              },
+              {
+                "index": 19,
+                "ready_ms": 54165.1,
+                "delivered_audio_s": 59.28
+              },
+              {
+                "index": 20,
+                "ready_ms": 56971.1,
+                "delivered_audio_s": 62.48
+              },
+              {
+                "index": 21,
+                "ready_ms": 58815.2,
+                "delivered_audio_s": 64.48
+              }
+            ],
+            "max_playback_deficit_ms": 0.0,
+            "max_delivery_deficit_ms": 0.0,
+            "backbone_decode_ms_per_frame": 18.94,
+            "depth_decode_ms_per_frame": 44.09,
+            "vocoder_ms_per_frame": 8.66
+          },
+          "termination": {
+            "status": "below-cap",
+            "cap_reached": false,
+            "max_new": 1200,
+            "frames": 806,
+            "complete_intended_text_verified": false
+          },
+          "wav_sha256": "18907d3acf12cc9a332eb927863ec71f62d4c2868744b4c056d4cb85e0fd792d"
+        }
+      }
+    }
+  },
+  "case_order": [
+    "cal-en-short-42",
+    "cal-zh-short-42",
+    "cal-en-long-123",
+    "cal-zh-long-123"
+  ],
+  "case_count": 4,
+  "generation_count": 4,
+  "preflight": {
+    "schema": "breeze-selective-runtime-preflight/v1",
+    "pod": "hermes-voice/breezetts-dev",
+    "cli_path": "/src/build/breeze-cli",
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "candidate_model_path": "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+    "candidate_model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+    "candidate_model_label": "calibrated_q3_k_ffn_q4_k_attention",
+    "baseline_control_model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "manifest_sha256": "30c7eccdb493f410d43d5fc530a23087e93984d592735c6cf9d5dc628234bbfb",
+    "environment": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1"
+    },
+    "removed_environment_keys": [],
+    "sampling": {
+      "request_overrides": {
+        "temperature": null,
+        "top_k": null,
+        "top_p": null,
+        "repetition_penalty": null
+      },
+      "resolved_by_model": {
+        "temperature": 0.8999999761581421,
+        "top_k": 50,
+        "top_p": 1.0,
+        "repetition_penalty": 1.100000023841858,
+        "depth_temperature": 0.8999999761581421,
+        "depth_top_k": 50,
+        "depth_top_p": 1.0
+      },
+      "source": "embedded GGUF sampling metadata; CLI sampling options omitted"
+    },
+    "capture": "off",
+    "profiling": "off",
+    "strict_fa": "off",
+    "bb_flash": "off",
+    "split": "--split-chars omitted; runtime default"
+  },
+  "manifest": {
+    "schema": "breeze-language-quality-manifest/v1",
+    "status": "ready-specification-no-capture",
+    "created": "2026-09-07",
+    "purpose": "Disjoint English/Mandarin calibration and evaluation inputs for long-form speech quality and depth calibration.",
+    "collection_status": "No audio, activation blob, or calibration data is included or claimed.",
+    "provenance": {
+      "existing_fixture_schema": "benchmarks/depth-corpus/manifest.json",
+      "existing_asr_schema": "breeze-quant-speech/v1",
+      "existing_splitter": "src/text_split.cpp",
+      "previous_longform_manifest": "benchmarks/depth-corpus/quant-longform.json",
+      "previous_capture_manifest": "benchmarks/depth-corpus/manifest.json",
+      "reference_limitation": "The only available reusable voice is a saved synthetic Q4_K artifact; no independent human reference recording is available."
+    },
+    "split_policy": {
+      "budget": 600,
+      "first_budget_without_reference": 200,
+      "first_budget_saved_voice": 0,
+      "cli_option": "omit --split-chars so the runtime default is exercised",
+      "long_fixture_requirement": "default splitter must produce more than one part and exact part concatenation must equal text",
+      "expected_long_parts": {
+        "cal-en-long-123": 3,
+        "cal-zh-long-123": 3,
+        "eval-en-long-42-voice": 2,
+        "eval-zh-long-42-voice": 2
+      }
+    },
+    "fixed_settings": {
+      "model_pair": [
+        "Q4_K",
+        "Q3_K"
+      ],
+      "backend": "Vulkan0",
+      "cfg_scale": 1.0,
+      "sampling": {
+        "request_overrides": "omit --temp, --top-k, --top-p, and --rep-penalty",
+        "resolution": "use each model's embedded GGUF sampling values; record the resolved values in the output receipt",
+        "source_receipt": "benchmarks/depth-corpus/quant-longform.json"
+      },
+      "chunk_first": 40,
+      "chunk_max": 40,
+      "max_new_short": 240,
+      "max_new_long": 1200,
+      "repeat": 1,
+      "instruction_by_language": {
+        "en": "Speak clearly and naturally in English.",
+        "zh": "Speak clearly and naturally in Mandarin Chinese."
+      },
+      "runtime_environment_capture_off": {
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+        "BREEZE_DD_FUSED": "0",
+        "BREEZE_VOC_STATEFUL": "0",
+        "BREEZE_VOC_CONVT_MATMUL": "1",
+        "BREEZE_VOC_TRIM": "1"
+      }
+    },
+    "saved_voice": {
+      "id": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "path": "/tmp/breeze-q3-cached/voices/matrix.breeze",
+      "sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "source_receipt": "benchmarks/depth-corpus/quant-longform.json",
+      "kind": "saved synthetic voice",
+      "independent_human_reference": false,
+      "missing_reference_action": "If this artifact is unavailable, stop the saved-voice cases; do not substitute generated audio or call it human reference coverage."
+    },
+    "fixtures": [
+      {
+        "id": "cal-en-short-42",
+        "split": "calibration",
+        "language": "en",
+        "kind": "short",
+        "seed": 42,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 240,
+        "weighted_chars": 67,
+        "text": "The brass key rests beside the blue cup, and the kettle is cooling."
+      },
+      {
+        "id": "cal-zh-short-42",
+        "split": "calibration",
+        "language": "zh",
+        "kind": "short",
+        "seed": 42,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 240,
+        "weighted_chars": 69,
+        "text": "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。"
+      },
+      {
+        "id": "cal-en-long-123",
+        "split": "calibration",
+        "language": "en",
+        "kind": "long-default-split",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 1200,
+        "weighted_chars": 953,
+        "expected_default_parts": 3,
+        "text": "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations."
+      },
+      {
+        "id": "cal-zh-long-123",
+        "split": "calibration",
+        "language": "zh",
+        "kind": "long-default-split",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 1200,
+        "weighted_chars": 891,
+        "expected_default_parts": 3,
+        "text": "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。"
+      },
+      {
+        "id": "eval-en-short-123",
+        "split": "evaluation",
+        "language": "en",
+        "kind": "short",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 240,
+        "weighted_chars": 67,
+        "text": "Leave the folded map on the hallway shelf before the lights go out."
+      },
+      {
+        "id": "eval-zh-short-123",
+        "split": "evaluation",
+        "language": "zh",
+        "kind": "short",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 240,
+        "weighted_chars": 63,
+        "text": "請在天黑以前把摺好的地圖放到走廊的架子上。"
+      },
+      {
+        "id": "eval-en-long-42-voice",
+        "split": "evaluation",
+        "language": "en",
+        "kind": "long-default-split-saved-voice",
+        "seed": 42,
+        "voice_mode": "saved",
+        "voice": "matrix",
+        "voices_dir": "/tmp/breeze-q3-cached/voices",
+        "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 1200,
+        "weighted_chars": 1014,
+        "expected_default_parts": 2,
+        "text": "At the riverside print studio, the evening crew prepared a new exhibit for the town. They lifted wooden type from shallow drawers and brushed dust from the lettering before arranging each line on a long table. A designer mixed blue ink, while a student tested paper made from mulberry bark and recorded the results in a notebook. Beside the press, the studio owner repaired a loose handle and counted the clean rollers needed for the morning class. Guests arrived with photographs of bridges, markets, and boats that had once crossed the river. During the pause, they compared the oldest labels and chose a calm corner for children to make their own small posters. Before everyone left, Noor checked the drying racks, dated the finished sheets, and wrote tomorrow's supply list on the noticeboard. The crew promised to return early, hang the prints in sequence, and leave enough space for visitors to move safely through the gallery. By nightfall, the bright paper gave the quiet building a new sense of direction."
+      },
+      {
+        "id": "eval-zh-long-42-voice",
+        "split": "evaluation",
+        "language": "zh",
+        "kind": "long-default-split-saved-voice",
+        "seed": 42,
+        "voice_mode": "saved",
+        "voice": "matrix",
+        "voices_dir": "/tmp/breeze-q3-cached/voices",
+        "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 1200,
+        "weighted_chars": 825,
+        "expected_default_parts": 2,
+        "text": "河畔的印刷工坊在夜裡準備一場新的城鎮展覽。工作人員從矮櫃取出木鉛字，先刷去字面灰塵，再把每一行文字排在長桌上。設計師調好藍色墨水，學生試用桑樹皮紙張，並把測試結果記在筆記本裡。印刷機旁，主人修理鬆動的把手，數好明早課程需要的乾淨滾筒。客人帶來橋梁、市集和曾經往返河上的船隻照片。休息時，大家比較最早的標籤，替孩子選定一個安靜角落，讓他們製作自己的小海報。眾人離開前，諾爾檢查晾紙架，為完成的紙張寫上日期，又把明天的物資清單貼在公告板上。工作人員約好提早回來，依序掛起印刷品，並為參觀者保留安全通道。夜色降臨時，明亮的紙張讓這座安靜的建築重新找到方向。"
+      }
+    ],
+    "asr_reporting": {
+      "schema": "breeze-quant-speech/v1",
+      "runner": "benchmarks/quant_speech_780m.py",
+      "runner_prerequisite": "The current runner infers zh only when fixture id == mandarin; add a small language-field lookup before running these IDs, and keep the explicit IDs/texts unchanged.",
+      "direct_execution": false,
+      "paired_samples": "For every fixture, emit <fixture-id>-q4_k and <fixture-id>-q3_k using the same text, language, instruction, seed, voice mode, and runtime settings.",
+      "normalization": "Reuse the runner: NFKC/lowercase; English alphanumeric words; Mandarin OpenCC t2s then alphanumeric characters.",
+      "metrics": {
+        "en": "WER-style token edit distance / reference units",
+        "zh": "CER-style character edit distance / reference units"
+      },
+      "report": "Record each Q4 and Q3 disagreement rate and the paired Q3-minus-Q4 delta per fixture; retain transcripts and WAV SHA256 values.",
+      "interpretation": "These are recognizer disagreements only. They are not human ground truth, human WER/CER, or an acceptance gate.",
+      "prompt_family_limit": "The new texts are disjoint from prior fixtures but retain a workshop/logistics narrative pattern; they do not establish broad prompt-family independence."
+    },
+    "capture": {
+      "calibration_model": "Q4_K deployment-shaped control; Q3_K is paired quality output, not a replacement calibration source.",
+      "current_restrictions": {
+        "fresh_empty_directory": "BREEZE_DEPTH_CAPTURE must point to a fresh empty directory; capture refuses reuse/overwrite.",
+        "fusion": "BREEZE_DD_FUSED=0; with Vulkan, GGML_VK_DISABLE_FUSION must be present before backend initialization.",
+        "backend_scope": "one or two branches only; current corpus uses one branch",
+        "model_shape": "12 layers and 15 depth steps required",
+        "generated_frames": "capture stops considering frames after the first 16",
+        "selected_frames": [
+          0,
+          7,
+          15
+        ],
+        "selected_layers": [
+          0,
+          5,
+          11
+        ],
+        "tensors": [
+          "backbone_hidden",
+          "ffn_norm_input",
+          "post_silu_times_up",
+          "ffn_down_output"
+        ],
+        "blob": "little-endian F32 activations.f32 plus JSONL metadata.jsonl; current validator limit is 16 MiB",
+        "parity": "compare capture-enabled and capture-disabled complete codes and WAV SHA256 before using activations"
+      },
+      "follow_up_instrumentation_minimum": [
+        "Parameterize the hard-coded layer/frame predicates in src/depth_decoder.cpp and validate declared selections in tools/depth_capture_check.py.",
+        "Allow selected frames beyond frame 15, including late positions such as 31 and 63, while retaining frame and step coordinates in metadata.",
+        "Stream or rotate selected all-layer outputs so all 12 layers and late frames do not exceed the current 16 MiB blob limit; keep the host F32 buffer reused.",
+        "Re-run capture-off parity for each changed selection before treating any output as calibration data."
+      ],
+      "not_collected": true
+    },
+    "blockers": [
+      "No independent human reference recording is available; the saved matrix voice is synthetic and Q4_K-derived.",
+      "No listening panel or human acceptance labels have been collected, so ASR disagreement cannot establish intelligibility, prosody, speaker identity, or deployment quality.",
+      "The current capture implementation omits layers 1-4 and 6-10 and all frames at or beyond 16; all-layer/late-frame calibration requires the follow-up instrumentation above.",
+      "No quality threshold or acceptance claim is declared by this manifest."
+    ],
+    "evaluation_order": [
+      "Run JSON, ID/text disjointness, and splitter checks; do not collect data if they fail.",
+      "Capture Q4_K calibration fixtures under the current restrictions, then compare capture-off and capture-on complete codes and WAV SHA256 and validate the capture blobs.",
+      "Run capture-off Q4_K and Q3_K paired generations for all eight fixtures with the fixed settings and preserve one WAV per pair.",
+      "Run the existing quant_speech_780m.py ASR probe and report paired Q4/Q3 disagreement rates, transcripts, hashes, and deltas as diagnostic evidence only.",
+      "Only after missing listening and human-reference blockers are resolved may a human quality/acceptance decision be made."
+    ]
+  },
+  "split_evidence": {
+    "cal-en-short-42": {
+      "command": [
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-LONGFORM/split_probe"
+      ],
+      "returncode": 1,
+      "actual_parts": 1,
+      "expected_parts": 1,
+      "first_budget": 200,
+      "concat_exact": true,
+      "pass": true,
+      "stdout": "parts=1 concat=ok first_budget=200\npart=1 bytes=67 weighted=67 text=\"The brass key rests beside the blue cup, and the kettle is cooling.\"\n",
+      "stderr": ""
+    },
+    "cal-zh-short-42": {
+      "command": [
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-LONGFORM/split_probe"
+      ],
+      "returncode": 1,
+      "actual_parts": 1,
+      "expected_parts": 1,
+      "first_budget": 200,
+      "concat_exact": true,
+      "pass": true,
+      "stdout": "parts=1 concat=ok first_budget=200\npart=1 bytes=69 weighted=69 text=\"藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。\"\n",
+      "stderr": ""
+    },
+    "cal-en-long-123": {
+      "command": [
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-LONGFORM/split_probe"
+      ],
+      "returncode": 0,
+      "actual_parts": 3,
+      "expected_parts": 3,
+      "first_budget": 200,
+      "concat_exact": true,
+      "pass": true,
+      "stdout": "parts=3 concat=ok first_budget=200\npart=1 bytes=186 weighted=186 text=\"On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label.\"\npart=2 bytes=549 weighted=549 text=\" A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio.\"\npart=3 bytes=218 weighted=218 text=\" The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations.\"\n",
+      "stderr": ""
+    },
+    "cal-zh-long-123": {
+      "command": [
+        "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-LONGFORM/split_probe"
+      ],
+      "returncode": 0,
+      "actual_parts": 3,
+      "expected_parts": 3,
+      "first_budget": 200,
+      "concat_exact": true,
+      "pass": true,
+      "stdout": "parts=3 concat=ok first_budget=200\npart=1 bytes=156 weighted=156 text=\"傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。\"\npart=2 bytes=567 weighted=567 text=\"氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。\"\npart=3 bytes=168 weighted=168 text=\"細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。\"\n",
+      "stderr": ""
+    }
+  },
+  "cases": {
+    "cal-en-short-42": {
+      "fixture": {
+        "id": "cal-en-short-42",
+        "split": "calibration",
+        "language": "en",
+        "kind": "short",
+        "seed": 42,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 240,
+        "weighted_chars": 67,
+        "text": "The brass key rests beside the blue cup, and the kettle is cooling."
+      },
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "rc": 0,
+      "timeout": false,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+        "--text",
+        "The brass key rests beside the blue cup, and the kettle is cooling.",
+        "--instruction",
+        "Speak clearly and naturally in English.",
+        "--cfg-scale",
+        "1.0",
+        "--seed",
+        "42",
+        "--chunk-first",
+        "40",
+        "--chunk-max",
+        "40",
+        "--max-new",
+        "240",
+        "--repeat",
+        "1",
+        "--timings",
+        "--output",
+        "/tmp/breeze-calibrated-run-20260907/cal-en-short-42.wav"
+      ],
+      "log_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-en-short-42.log",
+      "log_sha256": "2059f5f387ede38c20e0ec8c8eb5ada69019b45be444a7d5b560a4899711c141",
+      "model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "quality_run": true,
+      "speed_acceptance": "not assessed from one quality-pilot run",
+      "status": "complete-below-cap",
+      "quality_eligible": true,
+      "termination": {
+        "status": "below-cap",
+        "cap_reached": false,
+        "max_new": 240,
+        "frames": 59,
+        "complete_intended_text_verified": false
+      },
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 4177.5,
+        "wall_rtf": 0.8850635593220338,
+        "wall_rtf_reported": 0.885,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 58.7,
+          "backbone prefill": 59.7,
+          "first vocoder": 279.3,
+          "backbone decode": 795.7,
+          "depth decode": 2749.8,
+          "vocoder": 510.5
+        },
+        "stage_rtf": 0.8844067796610171,
+        "decode_rtf": 0.8593220338983051,
+        "frames": 59,
+        "audio_s": 4.72,
+        "first_audio_ms": 2797.0,
+        "flushes": 2,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 2797.3,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 4177.3,
+            "delivered_audio_s": 4.72
+          }
+        ],
+        "max_playback_deficit_ms": 0.0,
+        "max_delivery_deficit_ms": 0.0,
+        "backbone_decode_ms_per_frame": 13.49,
+        "depth_decode_ms_per_frame": 46.61,
+        "vocoder_ms_per_frame": 8.65
+      },
+      "wav_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-en-short-42.wav",
+      "wav_sha256": "2713bd861632845620d17fba792bdfc6d225b63dea06d3a0f70d79d296176a7a",
+      "wav_bytes": 226604,
+      "wav": {
+        "frames": 113280,
+        "duration_s": 4.72
+      },
+      "pod_result": {
+        "index": 1,
+        "name": "cal-en-short-42",
+        "fixture": "cal-en-short-42",
+        "language": "en",
+        "model": "calibrated_q3_k_ffn_q4_k_attention",
+        "command": [
+          "/src/build/breeze-cli",
+          "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+          "--text",
+          "The brass key rests beside the blue cup, and the kettle is cooling.",
+          "--instruction",
+          "Speak clearly and naturally in English.",
+          "--cfg-scale",
+          "1.0",
+          "--seed",
+          "42",
+          "--chunk-first",
+          "40",
+          "--chunk-max",
+          "40",
+          "--max-new",
+          "240",
+          "--repeat",
+          "1",
+          "--timings",
+          "--output",
+          "/tmp/breeze-calibrated-run-20260907/cal-en-short-42.wav"
+        ],
+        "rc": 0,
+        "timeout": false,
+        "elapsed_s": 5.878406047821045,
+        "status": "complete",
+        "expected_default_parts": 1,
+        "wav_bytes": 226604,
+        "wav_sha256": "2713bd861632845620d17fba792bdfc6d225b63dea06d3a0f70d79d296176a7a",
+        "wav": {
+          "frames": 113280,
+          "duration_s": 4.72
+        }
+      }
+    },
+    "cal-zh-short-42": {
+      "fixture": {
+        "id": "cal-zh-short-42",
+        "split": "calibration",
+        "language": "zh",
+        "kind": "short",
+        "seed": 42,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 240,
+        "weighted_chars": 69,
+        "text": "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。"
+      },
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "rc": 0,
+      "timeout": false,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+        "--text",
+        "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。",
+        "--instruction",
+        "Speak clearly and naturally in Mandarin Chinese.",
+        "--cfg-scale",
+        "1.0",
+        "--seed",
+        "42",
+        "--chunk-first",
+        "40",
+        "--chunk-max",
+        "40",
+        "--max-new",
+        "240",
+        "--repeat",
+        "1",
+        "--timings",
+        "--output",
+        "/tmp/breeze-calibrated-run-20260907/cal-zh-short-42.wav"
+      ],
+      "log_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-zh-short-42.log",
+      "log_sha256": "3d2728dc64b4cdf93b54afc181a1c4fa160558f7d75c2bbf512be40ca3703bf1",
+      "model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "quality_run": true,
+      "speed_acceptance": "not assessed from one quality-pilot run",
+      "status": "complete-below-cap",
+      "quality_eligible": true,
+      "termination": {
+        "status": "below-cap",
+        "cap_reached": false,
+        "max_new": 240,
+        "frames": 86,
+        "complete_intended_text_verified": false
+      },
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 6043.0,
+        "wall_rtf": 0.8783430232558139,
+        "wall_rtf_reported": 0.878,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 56.1,
+          "backbone prefill": 59.8,
+          "first vocoder": 281.9,
+          "backbone decode": 1179.5,
+          "depth decode": 3918.8,
+          "vocoder": 823.9
+        },
+        "stage_rtf": 0.8776308139534884,
+        "decode_rtf": 0.8607848837209302,
+        "frames": 86,
+        "audio_s": 6.88,
+        "first_audio_ms": 2737.0,
+        "flushes": 3,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 2737.2,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 5517.2,
+            "delivered_audio_s": 6.4
+          },
+          {
+            "index": 3,
+            "ready_ms": 6042.8,
+            "delivered_audio_s": 6.88
+          }
+        ],
+        "max_playback_deficit_ms": 0.0,
+        "max_delivery_deficit_ms": 0.0,
+        "backbone_decode_ms_per_frame": 13.72,
+        "depth_decode_ms_per_frame": 45.57,
+        "vocoder_ms_per_frame": 9.58
+      },
+      "wav_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-zh-short-42.wav",
+      "wav_sha256": "42b2406eb4e15f19ff3bf768356128a472f5f30dd209c0c49bda44cf42a9d34e",
+      "wav_bytes": 330284,
+      "wav": {
+        "frames": 165120,
+        "duration_s": 6.88
+      },
+      "pod_result": {
+        "index": 2,
+        "name": "cal-zh-short-42",
+        "fixture": "cal-zh-short-42",
+        "language": "zh",
+        "model": "calibrated_q3_k_ffn_q4_k_attention",
+        "command": [
+          "/src/build/breeze-cli",
+          "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+          "--text",
+          "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。",
+          "--instruction",
+          "Speak clearly and naturally in Mandarin Chinese.",
+          "--cfg-scale",
+          "1.0",
+          "--seed",
+          "42",
+          "--chunk-first",
+          "40",
+          "--chunk-max",
+          "40",
+          "--max-new",
+          "240",
+          "--repeat",
+          "1",
+          "--timings",
+          "--output",
+          "/tmp/breeze-calibrated-run-20260907/cal-zh-short-42.wav"
+        ],
+        "rc": 0,
+        "timeout": false,
+        "elapsed_s": 7.181558847427368,
+        "status": "complete",
+        "expected_default_parts": 1,
+        "wav_bytes": 330284,
+        "wav_sha256": "42b2406eb4e15f19ff3bf768356128a472f5f30dd209c0c49bda44cf42a9d34e",
+        "wav": {
+          "frames": 165120,
+          "duration_s": 6.88
+        }
+      }
+    },
+    "cal-en-long-123": {
+      "fixture": {
+        "id": "cal-en-long-123",
+        "split": "calibration",
+        "language": "en",
+        "kind": "long-default-split",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in English.",
+        "max_new": 1200,
+        "weighted_chars": 953,
+        "expected_default_parts": 3,
+        "text": "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations."
+      },
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "rc": 0,
+      "timeout": false,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+        "--text",
+        "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations.",
+        "--instruction",
+        "Speak clearly and naturally in English.",
+        "--cfg-scale",
+        "1.0",
+        "--seed",
+        "123",
+        "--chunk-first",
+        "40",
+        "--chunk-max",
+        "40",
+        "--max-new",
+        "1200",
+        "--repeat",
+        "1",
+        "--timings",
+        "--output",
+        "/tmp/breeze-calibrated-run-20260907/cal-en-long-123.wav"
+      ],
+      "log_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-en-long-123.log",
+      "log_sha256": "bdba0ed189560bd39b489fe581a8261724c6ec01468b28fce251443b4da67231",
+      "model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "quality_run": true,
+      "speed_acceptance": "not assessed from one quality-pilot run",
+      "status": "complete-below-cap",
+      "quality_eligible": true,
+      "termination": {
+        "status": "below-cap",
+        "cap_reached": false,
+        "max_new": 1200,
+        "frames": 688,
+        "complete_intended_text_verified": false
+      },
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 49159.7,
+        "wall_rtf": 0.8931631540697674,
+        "wall_rtf_reported": 0.893,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 239.9,
+          "backbone prefill": 670.4,
+          "first vocoder": 254.6,
+          "backbone decode": 11967.8,
+          "depth decode": 30206.8,
+          "vocoder": 5986.3
+        },
+        "stage_rtf": 0.8915552325581395,
+        "decode_rtf": 0.8750163517441861,
+        "frames": 688,
+        "audio_s": 55.04,
+        "first_audio_ms": 2727.0,
+        "flushes": 18,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 2727.3,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 5408.9,
+            "delivered_audio_s": 6.4
+          },
+          {
+            "index": 3,
+            "ready_ms": 8145.9,
+            "delivered_audio_s": 9.6
+          },
+          {
+            "index": 4,
+            "ready_ms": 9645.3,
+            "delivered_audio_s": 11.28
+          },
+          {
+            "index": 5,
+            "ready_ms": 12717.5,
+            "delivered_audio_s": 14.48
+          },
+          {
+            "index": 6,
+            "ready_ms": 15582.2,
+            "delivered_audio_s": 17.68
+          },
+          {
+            "index": 7,
+            "ready_ms": 18413.2,
+            "delivered_audio_s": 20.88
+          },
+          {
+            "index": 8,
+            "ready_ms": 21311.3,
+            "delivered_audio_s": 24.08
+          },
+          {
+            "index": 9,
+            "ready_ms": 24130.3,
+            "delivered_audio_s": 27.28
+          },
+          {
+            "index": 10,
+            "ready_ms": 26981.7,
+            "delivered_audio_s": 30.48
+          },
+          {
+            "index": 11,
+            "ready_ms": 29899.8,
+            "delivered_audio_s": 33.68
+          },
+          {
+            "index": 12,
+            "ready_ms": 32769.6,
+            "delivered_audio_s": 36.88
+          },
+          {
+            "index": 13,
+            "ready_ms": 35679.8,
+            "delivered_audio_s": 40.08
+          },
+          {
+            "index": 14,
+            "ready_ms": 38665.8,
+            "delivered_audio_s": 43.28
+          },
+          {
+            "index": 15,
+            "ready_ms": 41645.2,
+            "delivered_audio_s": 46.48
+          },
+          {
+            "index": 16,
+            "ready_ms": 44347.6,
+            "delivered_audio_s": 49.68
+          },
+          {
+            "index": 17,
+            "ready_ms": 47211.2,
+            "delivered_audio_s": 52.88
+          },
+          {
+            "index": 18,
+            "ready_ms": 49158.7,
+            "delivered_audio_s": 55.04
+          }
+        ],
+        "max_playback_deficit_ms": 0.0,
+        "max_delivery_deficit_ms": 0.0,
+        "backbone_decode_ms_per_frame": 17.4,
+        "depth_decode_ms_per_frame": 43.91,
+        "vocoder_ms_per_frame": 8.7
+      },
+      "wav_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-en-long-123.wav",
+      "wav_sha256": "02d5e1d3495d43344c07a937d57d1c712bc9a40766af436fdcb9b58febd70ceb",
+      "wav_bytes": 2641964,
+      "wav": {
+        "frames": 1320960,
+        "duration_s": 55.04
+      },
+      "pod_result": {
+        "index": 3,
+        "name": "cal-en-long-123",
+        "fixture": "cal-en-long-123",
+        "language": "en",
+        "model": "calibrated_q3_k_ffn_q4_k_attention",
+        "command": [
+          "/src/build/breeze-cli",
+          "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+          "--text",
+          "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations.",
+          "--instruction",
+          "Speak clearly and naturally in English.",
+          "--cfg-scale",
+          "1.0",
+          "--seed",
+          "123",
+          "--chunk-first",
+          "40",
+          "--chunk-max",
+          "40",
+          "--max-new",
+          "1200",
+          "--repeat",
+          "1",
+          "--timings",
+          "--output",
+          "/tmp/breeze-calibrated-run-20260907/cal-en-long-123.wav"
+        ],
+        "rc": 0,
+        "timeout": false,
+        "elapsed_s": 50.28661751747131,
+        "status": "complete",
+        "expected_default_parts": 3,
+        "wav_bytes": 2641964,
+        "wav_sha256": "02d5e1d3495d43344c07a937d57d1c712bc9a40766af436fdcb9b58febd70ceb",
+        "wav": {
+          "frames": 1320960,
+          "duration_s": 55.04
+        }
+      }
+    },
+    "cal-zh-long-123": {
+      "fixture": {
+        "id": "cal-zh-long-123",
+        "split": "calibration",
+        "language": "zh",
+        "kind": "long-default-split",
+        "seed": 123,
+        "voice_mode": "design",
+        "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+        "max_new": 1200,
+        "weighted_chars": 891,
+        "expected_default_parts": 3,
+        "text": "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。"
+      },
+      "model": "calibrated_q3_k_ffn_q4_k_attention",
+      "rc": 0,
+      "timeout": false,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+        "--text",
+        "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。",
+        "--instruction",
+        "Speak clearly and naturally in Mandarin Chinese.",
+        "--cfg-scale",
+        "1.0",
+        "--seed",
+        "123",
+        "--chunk-first",
+        "40",
+        "--chunk-max",
+        "40",
+        "--max-new",
+        "1200",
+        "--repeat",
+        "1",
+        "--timings",
+        "--output",
+        "/tmp/breeze-calibrated-run-20260907/cal-zh-long-123.wav"
+      ],
+      "log_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-zh-long-123.log",
+      "log_sha256": "457ba25bff0f9acd7dde6dccd4df7457d184ec032c5c8320aa2dc91884069511",
+      "model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "quality_run": true,
+      "speed_acceptance": "not assessed from one quality-pilot run",
+      "status": "complete-below-cap",
+      "quality_eligible": true,
+      "termination": {
+        "status": "below-cap",
+        "cap_reached": false,
+        "max_new": 1200,
+        "frames": 786,
+        "complete_intended_text_verified": false
+      },
+      "timing": {
+        "repeat": 1,
+        "wall_ms": 57383.3,
+        "wall_rtf": 0.9125842875318066,
+        "wall_rtf_reported": 0.913,
+        "stages_ms": {
+          "reference encode": 0.0,
+          "prompt build": 267.0,
+          "backbone prefill": 695.8,
+          "first vocoder": 250.9,
+          "backbone decode": 14729.0,
+          "depth decode": 34783.4,
+          "vocoder": 6845.7
+        },
+        "stage_rtf": 0.9115919211195929,
+        "decode_rtf": 0.8962802162849872,
+        "frames": 786,
+        "audio_s": 62.88,
+        "first_audio_ms": 2712.0,
+        "flushes": 21,
+        "flushes_ready": [
+          {
+            "index": 1,
+            "ready_ms": 2711.5,
+            "delivered_audio_s": 3.2
+          },
+          {
+            "index": 2,
+            "ready_ms": 5380.6,
+            "delivered_audio_s": 6.4
+          },
+          {
+            "index": 3,
+            "ready_ms": 8108.8,
+            "delivered_audio_s": 9.6
+          },
+          {
+            "index": 4,
+            "ready_ms": 9858.9,
+            "delivered_audio_s": 11.6
+          },
+          {
+            "index": 5,
+            "ready_ms": 13021.7,
+            "delivered_audio_s": 14.8
+          },
+          {
+            "index": 6,
+            "ready_ms": 15823.5,
+            "delivered_audio_s": 18.0
+          },
+          {
+            "index": 7,
+            "ready_ms": 18704.6,
+            "delivered_audio_s": 21.2
+          },
+          {
+            "index": 8,
+            "ready_ms": 21624.0,
+            "delivered_audio_s": 24.4
+          },
+          {
+            "index": 9,
+            "ready_ms": 24606.6,
+            "delivered_audio_s": 27.6
+          },
+          {
+            "index": 10,
+            "ready_ms": 27527.9,
+            "delivered_audio_s": 30.8
+          },
+          {
+            "index": 11,
+            "ready_ms": 30538.3,
+            "delivered_audio_s": 34.0
+          },
+          {
+            "index": 12,
+            "ready_ms": 33477.9,
+            "delivered_audio_s": 37.2
+          },
+          {
+            "index": 13,
+            "ready_ms": 36454.5,
+            "delivered_audio_s": 40.4
+          },
+          {
+            "index": 14,
+            "ready_ms": 39519.3,
+            "delivered_audio_s": 43.6
+          },
+          {
+            "index": 15,
+            "ready_ms": 42544.8,
+            "delivered_audio_s": 46.8
+          },
+          {
+            "index": 16,
+            "ready_ms": 45597.9,
+            "delivered_audio_s": 50.0
+          },
+          {
+            "index": 17,
+            "ready_ms": 46549.8,
+            "delivered_audio_s": 50.88
+          },
+          {
+            "index": 18,
+            "ready_ms": 49574.7,
+            "delivered_audio_s": 54.08
+          },
+          {
+            "index": 19,
+            "ready_ms": 52320.2,
+            "delivered_audio_s": 57.28
+          },
+          {
+            "index": 20,
+            "ready_ms": 55215.5,
+            "delivered_audio_s": 60.48
+          },
+          {
+            "index": 21,
+            "ready_ms": 57383.1,
+            "delivered_audio_s": 62.88
+          }
+        ],
+        "max_playback_deficit_ms": 0.0,
+        "max_delivery_deficit_ms": 0.0,
+        "backbone_decode_ms_per_frame": 18.74,
+        "depth_decode_ms_per_frame": 44.25,
+        "vocoder_ms_per_frame": 8.71
+      },
+      "wav_path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/pod-results/cal-zh-long-123.wav",
+      "wav_sha256": "4d7f6cc397402aa355d490831fc4ea5f83868373e973ffebc94456a1c94dda73",
+      "wav_bytes": 3018284,
+      "wav": {
+        "frames": 1509120,
+        "duration_s": 62.88
+      },
+      "pod_result": {
+        "index": 4,
+        "name": "cal-zh-long-123",
+        "fixture": "cal-zh-long-123",
+        "language": "zh",
+        "model": "calibrated_q3_k_ffn_q4_k_attention",
+        "command": [
+          "/src/build/breeze-cli",
+          "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+          "--text",
+          "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。",
+          "--instruction",
+          "Speak clearly and naturally in Mandarin Chinese.",
+          "--cfg-scale",
+          "1.0",
+          "--seed",
+          "123",
+          "--chunk-first",
+          "40",
+          "--chunk-max",
+          "40",
+          "--max-new",
+          "1200",
+          "--repeat",
+          "1",
+          "--timings",
+          "--output",
+          "/tmp/breeze-calibrated-run-20260907/cal-zh-long-123.wav"
+        ],
+        "rc": 0,
+        "timeout": false,
+        "elapsed_s": 58.60453152656555,
+        "status": "complete",
+        "expected_default_parts": 3,
+        "wav_bytes": 3018284,
+        "wav_sha256": "4d7f6cc397402aa355d490831fc4ea5f83868373e973ffebc94456a1c94dda73",
+        "wav": {
+          "frames": 1509120,
+          "duration_s": 62.88
+        }
+      }
+    }
+  },
+  "summary": {
+    "failed_cases": [],
+    "capped_cases": [],
+    "below_cap_cases": [
+      "cal-en-short-42",
+      "cal-zh-short-42",
+      "cal-en-long-123",
+      "cal-zh-long-123"
+    ],
+    "all_rc_zero": true,
+    "all_below_cap": true,
+    "quality_acceptance": "not assessed"
+  },
+  "limitations": [
+    "Each calibration case is one serial quality-pilot generation; warmed RTF acceptance is not assessed.",
+    "Below-cap termination does not verify that the intended text was spoken completely.",
+    "Q4_K/Q3_K timing comparisons are non-contemporaneous controls and are not causal performance evidence.",
+    "ASR disagreement is a diagnostic proxy, not human quality or an acceptance label.",
+    "Held-out evaluation fixtures were not run."
+  ],
+  "transfer": {
+    "schema": "breeze-calibrated-ffn-transfer/v1",
+    "recipe_path": ".beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/calibrated-transfer/transfer-recipe.json",
+    "recipe_sha256": "e0487fc35a944b7cc4adfbfeb18252a5158d1dec1f2929de606edf9c131d6d68",
+    "payload_path": ".beehive/agent/BREEZE-CALIBRATED-RUN/artifacts/calibrated-transfer/ffn-ranges.bin",
+    "payload_sha256": "1fca439ce8ed31db220005602f8f03e36a0424e4ddebe95ecf1619d8fa0ca6bd",
+    "payload_bytes": 129761280,
+    "payload_retained_after_apply": false,
+    "payload_retention_note": "Payload was removed after pod whole-file SHA verification to recover local disk for CPU ASR; recipe and hashes are retained.",
+    "base_model_sha256": "790d7527b579f4af128b65796e846d9f1ad313a84a068f750622b7c1acf5a1be",
+    "calibrated_model_sha256": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+    "range_count": 36,
+    "pod": "hermes-voice/breezetts-dev",
+    "pod_payload_path": "/tmp/breeze-calibrated-ffn-ranges.bin",
+    "pod_recipe_path": "/tmp/breeze-calibrated-transfer-recipe.json",
+    "pod_candidate_path": "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+    "pod_payload_sha256_verified": "1fca439ce8ed31db220005602f8f03e36a0424e4ddebe95ecf1619d8fa0ca6bd",
+    "pod_apply_marker": "TRANSFER_APPLIED c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d 129761280 36",
+    "atomic_rename": "/tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf.part -> /tmp/breeze-depth-ffn-q3_k-calibrated-attn-q4_k.gguf",
+    "whole_candidate_sha256_verified": "c5836c86c2a14c6b224f378b99ae289817c5d98335f3281d4f4cff41abf0a55d",
+    "base_preserved_sha256": "790d7527b579f4af128b65796e846d9f1ad313a84a068f750622b7c1acf5a1be"
+  }
+}

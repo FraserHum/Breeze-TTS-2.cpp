@@ -1,0 +1,258 @@
+{
+  "schema": "breeze-depth-corpus/v1",
+  "visibility": "manifest-committable-payload-private",
+  "created": "2026-09-06",
+  "purpose": "Bounded Q4_K depth FFN activation pilot; blobs remain outside the repository artifact set.",
+  "source": {
+    "base_commit": "1a5155943719ae985c8bef19bdbb2d83502bb80c",
+    "ggml_revision": "e7d634a0a457d37eb4d3b70a90d3cdf19bcd306d",
+    "model": {
+      "pod_path": "/models/breeze-tts-2-q4_k.gguf",
+      "local_cache_path": "~/.cache/breeze-models/breeze-tts-2-q4_k.gguf",
+      "sha256": "483418fbbb438f5f1c08dbe2b017e42db0f1d126765cd3f772d8622a30a4915c",
+      "quantization": "Q4_K"
+    },
+    "capture_source_receipt": ".beehive/agent/BREEZE-DEPTH-NEXT/capture-verified-source.json",
+    "initial_capture_source_receipt": ".beehive/agent/BREEZE-DEPTH-NEXT/capture-source.json",
+    "final_corpus_repeat_receipt": ".beehive/agent/BREEZE-DEPTH-NEXT/verified-corpus-receipt.json"
+  },
+  "capture": {
+    "protocol": 1,
+    "backend": "Vulkan0",
+    "fusion_disabled_required": true,
+    "required_environment": [
+      "GGML_VK_DISABLE_FUSION=1 (must be present before backend initialization)",
+      "BREEZE_DD_FUSED=0",
+      "BREEZE_DEPTH_CAPTURE=<fresh-empty-directory>"
+    ],
+    "generated_frames": 16,
+    "selected_frames": [
+      0,
+      7,
+      15
+    ],
+    "selected_layers": [
+      0,
+      5,
+      11
+    ],
+    "depth_steps": 15,
+    "branches": [
+      1,
+      2
+    ],
+    "blob_format": "little-endian F32",
+    "files": [
+      "activations.f32",
+      "metadata.jsonl"
+    ],
+    "max_blob_bytes": 16777216,
+    "final_cal_en_receipt": {
+      "receipt": ".beehive/agent/BREEZE-DEPTH-NEXT/final-capture-receipt.json",
+      "activations_sha256": "9bc2652be6ff3f57709c1b3312f11eccc538e55289982616c4ba042d7c32b29f",
+      "metadata_sha256": "632a89f6df7365cb801aeac378f5e4bea4c2f16d3676a01a7c063aae2fc9a1d5",
+      "wav_sha256": "4ce774edcd9d8dff45dded2cc490812af8909b8179816d0c67426c1928bd9b94",
+      "blob_repeat_exact": true
+    }
+  },
+  "reproduction": {
+    "build": "cmake --build build-cpu --target breeze-cli -j4",
+    "checker": "python3 tools/depth_capture_check.py --self-test",
+    "capture_check": "python3 tools/depth_capture_check.py --full <capture-dir>",
+    "screen_check": "/tmp/breeze-quality-venv/bin/python tools/depth_ffn_screen.py --self-test",
+    "gpu_command_template": "env -u GGML_VK_FORCE_MMVQ -u GGML_VK_DISABLE_MMVQ GGML_VK_ALLOW_GRAPHICS_QUEUE=1 GGML_VK_DISABLE_FUSION=1 BREEZE_DD_FUSED=0 BREEZE_DEBUG_DEPTH_CODES=1 BREEZE_VOC_STATEFUL=0 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_TRIM=1 BREEZE_DEPTH_CAPTURE=<capture-dir> /src/build/breeze-cli /models/breeze-tts-2-q4_k.gguf --text <text> --instruction 'Speak clearly and naturally.' --seed 42 --max-new 16 --timings --output <capture-wav>",
+    "baseline_template": "Use the same command with both BREEZE_DEPTH_CAPTURE and GGML_VK_DISABLE_FUSION omitted, matching the retained normal-fusion baseline; write a separate baseline WAV.",
+    "expected_checks": [
+      "header protocol/dimensions/backend and fusion_disabled requirement are recorded",
+      "selected frames/layers/steps are unique and complete",
+      "shape, token order, byte ranges, blob size, and F32 finiteness pass",
+      "complete cb0..cb15 codes are in [0,2050]",
+      "capture and baseline codes and WAV SHA256 are equal before offline screening"
+    ],
+    "screen_dependencies": "Existing local /tmp/breeze-quality-venv provides NumPy and gguf; use an equivalent environment elsewhere."
+  },
+  "samples": [
+    {
+      "id": "cal-en",
+      "split": "calibration",
+      "language": "en",
+      "text": "The quiet garden filled with birdsong as the morning sun warmed the stone path.",
+      "seed": 42,
+      "generated_frames": 16,
+      "selected_frames": [
+        0,
+        7,
+        15
+      ],
+      "layers": [
+        0,
+        5,
+        11
+      ],
+      "branches": 1,
+      "blob": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cal-en/activations.f32",
+        "bytes": 5922816,
+        "sha256": "9bc2652be6ff3f57709c1b3312f11eccc538e55289982616c4ba042d7c32b29f"
+      },
+      "metadata": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cal-en/metadata.jsonl",
+        "bytes": 113501,
+        "sha256": "84473dd83b7cc8307ba4be2400d02f7c7c66c6620c7259c813a83a60dd2ce6b0"
+      },
+      "baseline_wav_sha256": "4ce774edcd9d8dff45dded2cc490812af8909b8179816d0c67426c1928bd9b94",
+      "capture_wav_sha256": "4ce774edcd9d8dff45dded2cc490812af8909b8179816d0c67426c1928bd9b94",
+      "codes_equal": true,
+      "wav_equal": true
+    },
+    {
+      "id": "eval-en",
+      "split": "evaluation",
+      "language": "en",
+      "text": "Please put the blue notebook beside the window, then close the door gently.",
+      "seed": 42,
+      "generated_frames": 16,
+      "selected_frames": [
+        0,
+        7,
+        15
+      ],
+      "layers": [
+        0,
+        5,
+        11
+      ],
+      "branches": 1,
+      "blob": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/eval-en/activations.f32",
+        "bytes": 5922816,
+        "sha256": "f057f8ec0ba48dee6412ff9fd0b348d0a31d83d5d383219bc6a9a173f6e311f5"
+      },
+      "metadata": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/eval-en/metadata.jsonl",
+        "bytes": 113499,
+        "sha256": "aeeabe2a83e4972584cf39963b2b9eeea01621c127cea9617f6dae2ff191772a"
+      },
+      "baseline_wav_sha256": "ac9e466c19e6e3478556ee1d39fbc3e52dc88de83f78dac702eef87a6bfbe1be",
+      "capture_wav_sha256": "ac9e466c19e6e3478556ee1d39fbc3e52dc88de83f78dac702eef87a6bfbe1be",
+      "codes_equal": true,
+      "wav_equal": true
+    },
+    {
+      "id": "cal-zh",
+      "split": "calibration",
+      "language": "zh",
+      "text": "清晨的陽光照進花園，小鳥在樹枝上唱歌，空氣清新而安靜。",
+      "seed": 42,
+      "generated_frames": 16,
+      "selected_frames": [
+        0,
+        7,
+        15
+      ],
+      "layers": [
+        0,
+        5,
+        11
+      ],
+      "branches": 1,
+      "blob": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cal-zh/activations.f32",
+        "bytes": 5922816,
+        "sha256": "85705a761045400b81acf31640142feacd8caaee6bcff55f96ae1a177149612b"
+      },
+      "metadata": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cal-zh/metadata.jsonl",
+        "bytes": 113503,
+        "sha256": "f2f6b82bded547a96149a1914a584f0ca1fcc57f10f9d753018bdecc49343071"
+      },
+      "baseline_wav_sha256": "91d46615a8475b965c86ebb22284f27a2db2baf307f6932a5c18137254e7b76a",
+      "capture_wav_sha256": "91d46615a8475b965c86ebb22284f27a2db2baf307f6932a5c18137254e7b76a",
+      "codes_equal": true,
+      "wav_equal": true
+    },
+    {
+      "id": "eval-zh",
+      "split": "evaluation",
+      "language": "zh",
+      "text": "請把藍色的筆記本放在窗邊，然後輕輕地關上門。",
+      "seed": 42,
+      "generated_frames": 16,
+      "selected_frames": [
+        0,
+        7,
+        15
+      ],
+      "layers": [
+        0,
+        5,
+        11
+      ],
+      "branches": 1,
+      "blob": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/eval-zh/activations.f32",
+        "bytes": 5922816,
+        "sha256": "897ef06f8715bbfd5d333c0faae3e10457f558eb8e975291515f97369ce28e4b"
+      },
+      "metadata": {
+        "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/eval-zh/metadata.jsonl",
+        "bytes": 113504,
+        "sha256": "37e541586a59b9da40aeb0f5a8582a344b2341787ccef392a70fdad5184ce187"
+      },
+      "baseline_wav_sha256": "15ac37df092116d4cc038b2e2bc90984fd091b304efa837fe1a96238a212ecb2",
+      "capture_wav_sha256": "15ac37df092116d4cc038b2e2bc90984fd091b304efa837fe1a96238a212ecb2",
+      "codes_equal": true,
+      "wav_equal": true
+    }
+  ],
+  "branch_probe": {
+    "id": "cfg",
+    "branches": 2,
+    "cfg_scale": 1.5,
+    "generated_frames": 2,
+    "selected_frames": [
+      0
+    ],
+    "blob": {
+      "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cfg/activations.f32",
+      "bytes": 3948544,
+      "sha256": "38c31d718b9cff865e4765988f783fe0deb17b9146e6157ae34985193ed109df"
+    },
+    "metadata": {
+      "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures-verified/cfg/metadata.jsonl",
+      "bytes": 37856,
+      "sha256": "64dbfda5daf3b8aa9d4dcfcddf8691b395a9386d5062e36abd5dcb89dfcd237e"
+    },
+    "baseline_wav_sha256": "df7092878d6d40a7d8b676c51f4465670631bce0d2d7d447ea3eb405db36eecc",
+    "capture_wav_sha256": "df7092878d6d40a7d8b676c51f4465670631bce0d2d7d447ea3eb405db36eecc",
+    "codes_equal": true,
+    "wav_equal": true
+  },
+  "excluded": [
+    {
+      "id": "original-fusion-on-capture",
+      "path": ".beehive/agent/BREEZE-DEPTH-NEXT/captures/cal-en",
+      "blob_sha256": "6efad69bc4f90674dae577275dd9f8e0339a38b6f54ba0398c7496630e39f3cb",
+      "reason": "Partial output marking with Vulkan fusion enabled changed codes/WAV; retained only as a diagnostic failure, excluded from the corpus."
+    }
+  ],
+  "deferred": [
+    "codec latent and downstream waveform intermediates",
+    "floating-master comparison and training",
+    "production compression or kernel changes",
+    "branch counts beyond the bounded one/two-branch probe"
+  ],
+  "binary_receipt": {
+    "md5": "067a25764c424185bd684f60354852e0",
+    "sha256": "d9eb3cb1f94ce53f56124b43997cf464bc04d28b8b4a86791fa3218e91ae2b5a",
+    "source": ".beehive/agent/BREEZE-DEPTH-NEXT/verified-corpus-receipt.json",
+    "status": "final current-source capture binary; experimental backend specialization removed"
+  },
+  "numerical_provenance_check": {
+    "source": ".beehive/agent/BREEZE-DEPTH-NEXT/gate-product-check.json",
+    "comparisons": 18,
+    "coverage": "layers0/5/11, steps1/7/15, frame0, onebranch and CFG2; normalized FFN input through dequantized gate/up and SiLU product",
+    "max_relative_mse": 0.0007158630178309977,
+    "interpretation": "Indexing sanity vs dequantized FP32 calculation; backend activation quantization changes arithmetic, not a speech quality gate."
+  }
+}

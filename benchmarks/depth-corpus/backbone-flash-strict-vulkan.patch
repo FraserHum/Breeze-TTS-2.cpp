@@ -1,0 +1,175 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index 8cb21d36..05c7683e 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -50,6 +50,8 @@ typedef struct VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV {
+ 
+ #include <algorithm>
+ #include <cmath>
++#include <cstdlib>
++#include <cstring>
+ #include <iomanip>
+ #include <iostream>
+ #include <tuple>
+@@ -564,14 +566,15 @@ struct vk_fa_pipeline_state {
+     uint32_t workgroup_size, subgroup_size;
+     bool aligned;
+     bool f32acc;
++    bool strict_f32;
+     uint32_t flags;
+     uint32_t limit_occupancy_shmem;
+     ggml_type k_type;
+     ggml_type v_type;
+ 
+     bool operator<(const vk_fa_pipeline_state &b) const {
+-        return std::tie(HSK, HSV, Br, Bc, D_split, row_split, shmem_staging, path, workgroup_size, subgroup_size, aligned, f32acc, flags, limit_occupancy_shmem, k_type, v_type) <
+-               std::tie(b.HSK, b.HSV, b.Br, b.Bc, b.D_split, b.row_split, b.shmem_staging, b.path, b.workgroup_size, b.subgroup_size, b.aligned, b.f32acc, b.flags, b.limit_occupancy_shmem, b.k_type, b.v_type);
++        return std::tie(HSK, HSV, Br, Bc, D_split, row_split, shmem_staging, path, workgroup_size, subgroup_size, aligned, f32acc, strict_f32, flags, limit_occupancy_shmem, k_type, v_type) <
++               std::tie(b.HSK, b.HSV, b.Br, b.Bc, b.D_split, b.row_split, b.shmem_staging, b.path, b.workgroup_size, b.subgroup_size, b.aligned, b.f32acc, b.strict_f32, b.flags, b.limit_occupancy_shmem, b.k_type, b.v_type);
+     }
+ };
+ 
+@@ -3760,10 +3763,10 @@ struct vk_fa_tuning_params {
+     }
+ };
+ 
+-static bool ggml_vk_flash_attn_scalar_shmem_support(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool f32acc, ggml_type k_type, ggml_type v_type);
++static bool ggml_vk_flash_attn_scalar_shmem_support(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool f32acc, bool strict_f32, ggml_type k_type, ggml_type v_type);
+ static bool ggml_vk_flash_attn_coopmat_shmem_support(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool f32acc, ggml_type k_type = GGML_TYPE_F16, ggml_type v_type = GGML_TYPE_F16);
+ 
+-static vk_fa_tuning_params get_fa_tuning_params_scalar(const vk_device& device, uint32_t hsk, uint32_t hsv, uint32_t n_rows, uint32_t n_kv, ggml_type k_type, ggml_type v_type, bool f32acc) {
++static vk_fa_tuning_params get_fa_tuning_params_scalar(const vk_device& device, uint32_t hsk, uint32_t hsv, uint32_t n_rows, uint32_t n_kv, ggml_type k_type, ggml_type v_type, bool f32acc, bool strict_f32) {
+ 
+     vk_fa_tuning_params result{};
+     result.path = FA_SCALAR;
+@@ -3815,7 +3818,7 @@ static vk_fa_tuning_params get_fa_tuning_params_scalar(const vk_device& device,
+ 
+     result.shmem_staging = (device->vendor_id == VK_VENDOR_ID_NVIDIA && hsk < 256 && hsv < 256) ? 1 : 0;
+ 
+-    if (!reduce_block_rows && !ggml_vk_flash_attn_scalar_shmem_support(device, result, hsk, hsv, f32acc, k_type, v_type)) {
++    if (!reduce_block_rows && !ggml_vk_flash_attn_scalar_shmem_support(device, result, hsk, hsv, f32acc, strict_f32, k_type, v_type)) {
+         result.block_rows /= 2;
+     }
+ 
+@@ -3897,7 +3900,11 @@ static vk_fa_tuning_params get_fa_tuning_params_coopmat2(const vk_device& device
+     return result;
+ }
+ 
+-static vk_fa_tuning_params get_fa_tuning_params(const vk_device& device, uint32_t hsk, uint32_t hsv, uint32_t n_rows, uint32_t n_kv, ggml_type k_type, ggml_type v_type, bool f32acc) {
++static vk_fa_tuning_params get_fa_tuning_params(const vk_device& device, uint32_t hsk, uint32_t hsv, uint32_t n_rows, uint32_t n_kv, ggml_type k_type, ggml_type v_type, bool f32acc, bool strict_f32) {
++    if (strict_f32) {
++        return get_fa_tuning_params_scalar(device, hsk, hsv, n_rows, n_kv, k_type, v_type, f32acc, true);
++    }
++
+     FaCodePath path = device->coopmat2 ? FA_COOPMAT2 :
+                       device->coopmat1_fa_support ? FA_COOPMAT1 : FA_SCALAR;
+ 
+@@ -3931,7 +3938,7 @@ static vk_fa_tuning_params get_fa_tuning_params(const vk_device& device, uint32_
+ 
+     switch (path) {
+     case FA_SCALAR:
+-        return get_fa_tuning_params_scalar(device, hsk, hsv, n_rows, n_kv, k_type, v_type, f32acc);
++        return get_fa_tuning_params_scalar(device, hsk, hsv, n_rows, n_kv, k_type, v_type, f32acc, false);
+     case FA_COOPMAT1:
+         return get_fa_tuning_params_coopmat1(device, hsk, hsv, n_rows, n_kv, k_type, v_type, f32acc);
+     case FA_COOPMAT2:
+@@ -3941,7 +3948,7 @@ static vk_fa_tuning_params get_fa_tuning_params(const vk_device& device, uint32_
+     }
+ }
+ 
+-static vk_fa_pipeline_state get_fa_pipeline_state(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool aligned, bool f32acc,
++static vk_fa_pipeline_state get_fa_pipeline_state(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool aligned, bool f32acc, bool strict_f32,
+                                                   bool use_mask, bool use_mask_opt, bool use_logit_softcap, ggml_type k_type, ggml_type v_type) {
+     const bool old_amd_windows = device->vendor_id == VK_VENDOR_ID_AMD && device->driver_id == vk::DriverId::eAmdProprietary &&
+                                  (device->architecture == AMD_GCN || device->architecture == AMD_RDNA1 || device->architecture == AMD_RDNA2);
+@@ -3953,7 +3960,7 @@ static vk_fa_pipeline_state get_fa_pipeline_state(const vk_device& device, const
+ 
+     const uint32_t subgroup_size = params.disable_subgroups ? 0 : params.subgroup_size;
+ 
+-    return vk_fa_pipeline_state{hsk, hsv, params.block_rows, params.block_cols, params.d_split, params.row_split, params.shmem_staging, params.path, params.workgroup_size, subgroup_size, aligned, f32acc, flags, params.limit_occupancy_shmem, k_type, v_type};
++    return vk_fa_pipeline_state{hsk, hsv, params.block_rows, params.block_cols, params.d_split, params.row_split, params.shmem_staging, params.path, params.workgroup_size, subgroup_size, aligned, f32acc, strict_f32, flags, params.limit_occupancy_shmem, k_type, v_type};
+ }
+ 
+ // Bytes per buffer block for the FaBlockBytesK/V spec constants. F32 is fed as
+@@ -4526,6 +4533,8 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
+ 
+     // FA scalar has two SPIR-V modules (MMQ vs non-MMQ); FA cm1 has one. K/V
+     // quant type is selected at runtime via the FaTypeK / FaTypeV spec constants.
++    // Strict F32 uses the already-generated true-F32 body without changing the
++    // device-wide fp16 capability or the default per-operation path.
+ 
+     for (auto &fa : device->pipeline_flash_attn_f32_f16) {
+         if (fa.first.path != FA_SCALAR) continue;
+@@ -4541,7 +4550,11 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
+         const void * spv_data = nullptr;
+         size_t spv_size = 0;
+         const char *name = nullptr;
+-        if (bf16_kv) {
++        if (fa.first.strict_f32) {
++            spv_data = flash_attn_f32_f16_fp32_data;
++            spv_size = flash_attn_f32_f16_fp32_len;
++            name = aligned ? "flash_attn_f32_strict_aligned" : "flash_attn_f32_strict";
++        } else if (bf16_kv) {
+             spv_data = flash_attn_f32_f16_fp32_data;
+             spv_size = flash_attn_f32_f16_fp32_len;
+             name = aligned ? "flash_attn_f32_bf16_aligned" : "flash_attn_f32_bf16";
+@@ -10779,7 +10792,7 @@ static void ggml_vk_mul_mat_id(ggml_backend_vk_context * ctx, vk_context& subctx
+     }
+ }
+ 
+-static bool ggml_vk_flash_attn_scalar_shmem_support(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool f32acc, ggml_type k_type, ggml_type v_type) {
++static bool ggml_vk_flash_attn_scalar_shmem_support(const vk_device& device, const vk_fa_tuning_params& params, uint32_t hsk, uint32_t hsv, bool f32acc, bool strict_f32, ggml_type k_type, ggml_type v_type) {
+     GGML_UNUSED(f32acc);
+     // Needs to be kept up to date on shader changes
+     const uint32_t wg_size = params.workgroup_size;
+@@ -10787,7 +10800,7 @@ static bool ggml_vk_flash_attn_scalar_shmem_support(const vk_device& device, con
+     const uint32_t Bc = params.block_cols;
+ 
+     // BF16 uses the fp32 shader (FLOAT_TYPE=float)
+-    const uint32_t float_type_size = (device->fp16 && k_type != GGML_TYPE_BF16) ? sizeof(ggml_fp16_t) : sizeof(float);
++    const uint32_t float_type_size = (strict_f32 || !device->fp16 || k_type == GGML_TYPE_BF16) ? sizeof(float) : sizeof(ggml_fp16_t);
+ 
+     const bool mmq = ggml_vk_fa_scalar_uses_mmq(device, k_type, v_type);
+ 
+@@ -10935,7 +10948,13 @@ static void ggml_vk_flash_attn(ggml_backend_vk_context * ctx, vk_context& subctx
+     uint32_t workgroups_y = (uint32_t)neq2;
+     uint32_t workgroups_z = (uint32_t)neq3;
+ 
+-    const bool f32acc = !ctx->device->fp16 || dst->op_params[3] == GGML_PREC_F32 || k->type == GGML_TYPE_BF16;
++    const bool explicit_f32 = dst->op_params[3] == GGML_PREC_F32;
++    const char * strict_env = std::getenv("GGML_VK_FA_STRICT_F32");
++    const bool strict_f32 = strict_env != nullptr && std::strcmp(strict_env, "1") == 0 &&
++                            explicit_f32 && q->type == GGML_TYPE_F32 &&
++                            k->type == GGML_TYPE_F32 && v->type == GGML_TYPE_F32 &&
++                            dst->type == GGML_TYPE_F32;
++    const bool f32acc = !ctx->device->fp16 || explicit_f32 || k->type == GGML_TYPE_BF16;
+ 
+     // dequant K/V once into an f16 scratch, reordered KV layout so FA can read without a stride
+     auto is_dense_kv_cache = [](const ggml_tensor * t) {
+@@ -10962,7 +10981,7 @@ static void ggml_vk_flash_attn(ggml_backend_vk_context * ctx, vk_context& subctx
+ 
+     // For scalar/coopmat1 FA, we can use the "large" size to accommodate qga.
+     // For coopmat2 FA, we always use the small size (which is still pretty large for gqa).
+-    vk_fa_tuning_params tuning_params = get_fa_tuning_params(ctx->device, HSK, HSV, 512, KV, k_type_eff, v_type_eff, f32acc);
++    vk_fa_tuning_params tuning_params = get_fa_tuning_params(ctx->device, HSK, HSV, 512, KV, k_type_eff, v_type_eff, f32acc, strict_f32);
+     const uint32_t max_gqa = std::min(tuning_params.block_rows, 32u);
+ 
+     if (N <= 8 && qk_ratio > 1 && qk_ratio <= max_gqa &&
+@@ -10975,7 +10994,7 @@ static void ggml_vk_flash_attn(ggml_backend_vk_context * ctx, vk_context& subctx
+         workgroups_y /= gqa_ratio;
+     }
+ 
+-    tuning_params = get_fa_tuning_params(ctx->device, HSK, HSV, N, KV, k_type_eff, v_type_eff, f32acc);
++    tuning_params = get_fa_tuning_params(ctx->device, HSK, HSV, N, KV, k_type_eff, v_type_eff, f32acc, strict_f32);
+ 
+     const uint32_t q_stride = (uint32_t)(nbq1 / ggml_type_size(q->type));
+     uint32_t k_stride = (uint32_t)(nbk1 / ggml_type_size(k->type));
+@@ -11025,7 +11044,7 @@ static void ggml_vk_flash_attn(ggml_backend_vk_context * ctx, vk_context& subctx
+     // Only use mask opt when the mask is fairly large. This hasn't been tuned extensively.
+     bool use_mask_opt = mask && nem1 >= 32 && nem0 * nem1 > 32768 && nem0 >= tuning_params.block_cols * 16
+                         && (ctx->device->architecture != vk_device_architecture::AMD_GCN || HSK > 256 || HSV > 256);
+-    vk_fa_pipeline_state fa_pipeline_state = get_fa_pipeline_state(ctx->device, tuning_params, HSK, HSV, aligned, f32acc,
++    vk_fa_pipeline_state fa_pipeline_state = get_fa_pipeline_state(ctx->device, tuning_params, HSK, HSV, aligned, f32acc, strict_f32,
+                                                                    mask != nullptr, use_mask_opt, logit_softcap != 0, k_type_eff, v_type_eff);
+ 
+     vk_pipeline pipeline = nullptr;

@@ -1,0 +1,3578 @@
+{
+  "schema": "breeze-quant-matrix/v1",
+  "run_dir": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-LONGFORM/results",
+  "provenance": {
+    "manifest": {
+      "schema": "breeze-q3-matrix/v1",
+      "seed": 42,
+      "repeats": 4,
+      "warmup_repeats": 1,
+      "split_policy": {
+        "budget": 600,
+        "first_budget_without_reference": 200,
+        "source": "src/text_split.cpp",
+        "cli_option": "omitted (runtime default)"
+      },
+      "fixtures": [
+        {
+          "id": "english",
+          "text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+          "weighted_chars": 885,
+          "max_new": 1200,
+          "kind": "natural-complete-default-split"
+        },
+        {
+          "id": "mandarin",
+          "text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+          "weighted_chars": 783,
+          "max_new": 1200,
+          "kind": "natural-complete-default-split"
+        },
+        {
+          "id": "saved-voice-en",
+          "text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+          "weighted_chars": 858,
+          "max_new": 1200,
+          "kind": "natural-complete-default-split-saved-voice",
+          "voice": "matrix",
+          "voices_dir": "/tmp/breeze-q3-cached/voices",
+          "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c"
+        }
+      ],
+      "gates": {
+        "performance": "Each complete default-split workload must have warmed sample p50 and p95 wall RTF <=0.8, zero delivery deficit, and first audio no slower than matched Q4_K; warmed sample n=3 is descriptive only.",
+        "repeatability": "Four byte-identical WAVs within each case.",
+        "termination": "Every natural fixture must remain below max_new=1200 for every resident repeat; total frames are below the cap, while complete intended text is assessed separately.",
+        "split": "Each fixture must produce more than one exact part at budget 600, first budget 200 without a reference, and concatenation must equal the original text.",
+        "quality": "No quality acceptance is inferred from throughput; saved-voice reference suffix quality is not validated by this benchmark."
+      },
+      "reference_limitation": "The reused reference and saved voice are generated Q4_K artifacts, not independent human speaker validation recordings.",
+      "model_hashes": {
+        "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+        "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+      },
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+    },
+    "preflight": {
+      "model_hashes": {
+        "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+        "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+      },
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "env": {
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+        "BREEZE_DD_FUSED": "0",
+        "BREEZE_VOC_STATEFUL": "0",
+        "BREEZE_VOC_CONVT_MATMUL": "1",
+        "BREEZE_VOC_TRIM": "1"
+      }
+    },
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "manifest_preflight_match": {
+      "cli_md5": true,
+      "model_hashes": true
+    }
+  },
+  "manifest": {
+    "schema": "breeze-q3-matrix/v1",
+    "seed": 42,
+    "repeats": 4,
+    "warmup_repeats": 1,
+    "split_policy": {
+      "budget": 600,
+      "first_budget_without_reference": 200,
+      "source": "src/text_split.cpp",
+      "cli_option": "omitted (runtime default)"
+    },
+    "fixtures": [
+      {
+        "id": "english",
+        "text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+        "weighted_chars": 885,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      {
+        "id": "mandarin",
+        "text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "weighted_chars": 783,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      {
+        "id": "saved-voice-en",
+        "text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+        "weighted_chars": 858,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split-saved-voice",
+        "voice": "matrix",
+        "voices_dir": "/tmp/breeze-q3-cached/voices",
+        "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c"
+      }
+    ],
+    "gates": {
+      "performance": "Each complete default-split workload must have warmed sample p50 and p95 wall RTF <=0.8, zero delivery deficit, and first audio no slower than matched Q4_K; warmed sample n=3 is descriptive only.",
+      "repeatability": "Four byte-identical WAVs within each case.",
+      "termination": "Every natural fixture must remain below max_new=1200 for every resident repeat; total frames are below the cap, while complete intended text is assessed separately.",
+      "split": "Each fixture must produce more than one exact part at budget 600, first budget 200 without a reference, and concatenation must equal the original text.",
+      "quality": "No quality acceptance is inferred from throughput; saved-voice reference suffix quality is not validated by this benchmark."
+    },
+    "reference_limitation": "The reused reference and saved voice are generated Q4_K artifacts, not independent human speaker validation recordings.",
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e"
+  },
+  "preflight": {
+    "model_hashes": {
+      "q4_k": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "q3_k": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    },
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "reference_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+    "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+    "env": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1"
+    }
+  },
+  "cases": {
+    "english-q4_k": {
+      "fixture": {
+        "id": "english",
+        "text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+        "weighted_chars": 885,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      "model": "q4_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q4_k.gguf",
+        "--text",
+        "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/english-q4_k.wav"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3011.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6025.6 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9077.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10697.7 delivered_audio_s=11.28\n\ngenerated 11.28 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=14132.3 delivered_audio_s=14.48\n\ngenerated 14.48 s  flush 6 ready_ms=17189.3 delivered_audio_s=17.68\n\ngenerated 17.68 s  flush 7 ready_ms=20275.1 delivered_audio_s=20.88\n\ngenerated 20.88 s  flush 8 ready_ms=23403.2 delivered_audio_s=24.08\n\ngenerated 24.08 s  flush 9 ready_ms=26498.3 delivered_audio_s=27.28\n\ngenerated 27.28 s  flush 10 ready_ms=29601.4 delivered_audio_s=30.48\n\ngenerated 30.48 s  flush 11 ready_ms=32788.7 delivered_audio_s=33.68\n\ngenerated 33.68 s  flush 12 ready_ms=35942.4 delivered_audio_s=36.88\n\ngenerated 36.88 s  flush 13 ready_ms=39209.8 delivered_audio_s=40.08\n\ngenerated 40.08 s  flush 14 ready_ms=42462.2 delivered_audio_s=43.28\n\ngenerated 43.28 s  flush 15 ready_ms=45847.0 delivered_audio_s=46.48\n\ngenerated 46.48 s  flush 16 ready_ms=48032.4 delivered_audio_s=48.56\n\ngenerated 48.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=51197.2 delivered_audio_s=51.76\n\ngenerated 51.76 s  flush 18 ready_ms=54222.9 delivered_audio_s=54.96\n\ngenerated 54.96 s  flush 19 ready_ms=56300.9 delivered_audio_s=57.12\n\ngenerated 57.12 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     56301.1 ms (wall RTF 0.986)\ntime to first audio 3012 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         241.7 ms\n  backbone prefill     637.0 ms\n  first vocoder        251.2 ms  (40 frames)\n  backbone decode    12579.6 ms  (17.62 ms/frame)\n  depth decode       36493.3 ms  (51.11 ms/frame)\n  vocoder             6282.8 ms  (8.80 ms/frame)\n  714 frames, 57.12 s audio\nwrote /tmp/breeze-longform/english-q4_k.wav (57.12 s)\n  flush 1 ready_ms=2855.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5776.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8702.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10301.3 delivered_audio_s=11.28\n\ngenerated 11.28 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=13733.3 delivered_audio_s=14.48\n\ngenerated 14.48 s  flush 6 ready_ms=16783.7 delivered_audio_s=17.68\n\ngenerated 17.68 s  flush 7 ready_ms=19880.5 delivered_audio_s=20.88\n\ngenerated 20.88 s  flush 8 ready_ms=22949.8 delivered_audio_s=24.08\n\ngenerated 24.08 s  flush 9 ready_ms=26068.7 delivered_audio_s=27.28\n\ngenerated 27.28 s  flush 10 ready_ms=29167.9 delivered_audio_s=30.48\n\ngenerated 30.48 s  flush 11 ready_ms=32272.3 delivered_audio_s=33.68\n\ngenerated 33.68 s  flush 12 ready_ms=35427.3 delivered_audio_s=36.88\n\ngenerated 36.88 s  flush 13 ready_ms=38654.2 delivered_audio_s=40.08\n\ngenerated 40.08 s  flush 14 ready_ms=41846.9 delivered_audio_s=43.28\n\ngenerated 43.28 s  flush 15 ready_ms=45177.1 delivered_audio_s=46.48\n\ngenerated 46.48 s  flush 16 ready_ms=47424.1 delivered_audio_s=48.56\n\ngenerated 48.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=50612.0 delivered_audio_s=51.76\n\ngenerated 51.76 s  flush 18 ready_ms=53587.4 delivered_audio_s=54.96\n\ngenerated 54.96 s  flush 19 ready_ms=55699.4 delivered_audio_s=57.12\n\ngenerated 57.12 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     55699.5 ms (wall RTF 0.975)\ntime to first audio 2855 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         189.6 ms\n  backbone prefill     601.2 ms\n  first vocoder        256.0 ms  (40 frames)\n  backbone decode    12431.2 ms  (17.41 ms/frame)\n  depth decode       36234.3 ms  (50.75 ms/frame)\n  vocoder             6183.7 ms  (8.66 ms/frame)\n  714 frames, 57.12 s audio\nwrote /tmp/breeze-longform/english-q4_k.repeat-2.wav (57.12 s)\n  flush 1 ready_ms=2886.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5776.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8688.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10340.9 delivered_audio_s=11.28\n\ngenerated 11.28 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=13695.2 delivered_audio_s=14.48\n\ngenerated 14.48 s  flush 6 ready_ms=16810.4 delivered_audio_s=17.68\n\ngenerated 17.68 s  flush 7 ready_ms=19881.1 delivered_audio_s=20.88\n\ngenerated 20.88 s  flush 8 ready_ms=23025.9 delivered_audio_s=24.08\n\ngenerated 24.08 s  flush 9 ready_ms=26110.8 delivered_audio_s=27.28\n\ngenerated 27.28 s  flush 10 ready_ms=29222.5 delivered_audio_s=30.48\n\ngenerated 30.48 s  flush 11 ready_ms=32420.6 delivered_audio_s=33.68\n\ngenerated 33.68 s  flush 12 ready_ms=35574.7 delivered_audio_s=36.88\n\ngenerated 36.88 s  flush 13 ready_ms=38748.0 delivered_audio_s=40.08\n\ngenerated 40.08 s  flush 14 ready_ms=42024.8 delivered_audio_s=43.28\n\ngenerated 43.28 s  flush 15 ready_ms=45274.2 delivered_audio_s=46.48\n\ngenerated 46.48 s  flush 16 ready_ms=47570.5 delivered_audio_s=48.56\n\ngenerated 48.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=50761.2 delivered_audio_s=51.76\n\ngenerated 51.76 s  flush 18 ready_ms=53810.3 delivered_audio_s=54.96\n\ngenerated 54.96 s  flush 19 ready_ms=55884.9 delivered_audio_s=57.12\n\ngenerated 57.12 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     55885.1 ms (wall RTF 0.978)\ntime to first audio 2887 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         189.5 ms\n  backbone prefill     607.5 ms\n  first vocoder        256.4 ms  (40 frames)\n  backbone decode    12424.5 ms  (17.40 ms/frame)\n  depth decode       36347.8 ms  (50.91 ms/frame)\n  vocoder             6257.5 ms  (8.76 ms/frame)\n  714 frames, 57.12 s audio\nwrote /tmp/breeze-longform/english-q4_k.repeat-3.wav (57.12 s)\n  flush 1 ready_ms=2858.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5804.6 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8730.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10350.2 delivered_audio_s=11.28\n\ngenerated 11.28 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=13698.2 delivered_audio_s=14.48\n\ngenerated 14.48 s  flush 6 ready_ms=16751.2 delivered_audio_s=17.68\n\ngenerated 17.68 s  flush 7 ready_ms=19800.0 delivered_audio_s=20.88\n\ngenerated 20.88 s  flush 8 ready_ms=22985.1 delivered_audio_s=24.08\n\ngenerated 24.08 s  flush 9 ready_ms=26129.8 delivered_audio_s=27.28\n\ngenerated 27.28 s  flush 10 ready_ms=29263.4 delivered_audio_s=30.48\n\ngenerated 30.48 s  flush 11 ready_ms=32388.2 delivered_audio_s=33.68\n\ngenerated 33.68 s  flush 12 ready_ms=35580.2 delivered_audio_s=36.88\n\ngenerated 36.88 s  flush 13 ready_ms=38743.0 delivered_audio_s=40.08\n\ngenerated 40.08 s  flush 14 ready_ms=41964.0 delivered_audio_s=43.28\n\ngenerated 43.28 s  flush 15 ready_ms=45254.0 delivered_audio_s=46.48\n\ngenerated 46.48 s  flush 16 ready_ms=47441.5 delivered_audio_s=48.56\n\ngenerated 48.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=50583.2 delivered_audio_s=51.76\n\ngenerated 51.76 s  flush 18 ready_ms=53694.4 delivered_audio_s=54.96\n\ngenerated 54.96 s  flush 19 ready_ms=55825.2 delivered_audio_s=57.12\n\ngenerated 57.12 s\ngeneration wall     55825.4 ms (wall RTF 0.977)\ntime to first audio 2858 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         186.0 ms\n  backbone prefill     598.4 ms\n  first vocoder        255.3 ms  (40 frames)\n  backbone decode    12415.3 ms  (17.39 ms/frame)\n  depth decode       36379.6 ms  (50.95 ms/frame)\n  vocoder             6185.0 ms  (8.66 ms/frame)\n  714 frames, 57.12 s audio\nwrote /tmp/breeze-longform/english-q4_k.repeat-4.wav (57.12 s)\n",
+      "log_sha256": "122e1858c21c0b7d1235ca94b29295b7ecb16b91421509c1ca46bec23f19dd2a",
+      "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 56301.1,
+          "wall_rtf": 0.9856635154061625,
+          "wall_rtf_reported": 0.986,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 241.7,
+            "backbone prefill": 637.0,
+            "first vocoder": 251.2,
+            "backbone decode": 12579.6,
+            "depth decode": 36493.3,
+            "vocoder": 6282.8
+          },
+          "stage_rtf": 0.9844957983193278,
+          "decode_rtf": 0.9691123949579833,
+          "frames": 714,
+          "audio_s": 57.12,
+          "first_audio_ms": 3012.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3011.6,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6025.6,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 9077.9,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 10697.7,
+              "delivered_audio_s": 11.28
+            },
+            {
+              "index": 5,
+              "ready_ms": 14132.3,
+              "delivered_audio_s": 14.48
+            },
+            {
+              "index": 6,
+              "ready_ms": 17189.3,
+              "delivered_audio_s": 17.68
+            },
+            {
+              "index": 7,
+              "ready_ms": 20275.1,
+              "delivered_audio_s": 20.88
+            },
+            {
+              "index": 8,
+              "ready_ms": 23403.2,
+              "delivered_audio_s": 24.08
+            },
+            {
+              "index": 9,
+              "ready_ms": 26498.3,
+              "delivered_audio_s": 27.28
+            },
+            {
+              "index": 10,
+              "ready_ms": 29601.4,
+              "delivered_audio_s": 30.48
+            },
+            {
+              "index": 11,
+              "ready_ms": 32788.7,
+              "delivered_audio_s": 33.68
+            },
+            {
+              "index": 12,
+              "ready_ms": 35942.4,
+              "delivered_audio_s": 36.88
+            },
+            {
+              "index": 13,
+              "ready_ms": 39209.8,
+              "delivered_audio_s": 40.08
+            },
+            {
+              "index": 14,
+              "ready_ms": 42462.2,
+              "delivered_audio_s": 43.28
+            },
+            {
+              "index": 15,
+              "ready_ms": 45847.0,
+              "delivered_audio_s": 46.48
+            },
+            {
+              "index": 16,
+              "ready_ms": 48032.4,
+              "delivered_audio_s": 48.56
+            },
+            {
+              "index": 17,
+              "ready_ms": 51197.2,
+              "delivered_audio_s": 51.76
+            },
+            {
+              "index": 18,
+              "ready_ms": 54222.9,
+              "delivered_audio_s": 54.96
+            },
+            {
+              "index": 19,
+              "ready_ms": 56300.9,
+              "delivered_audio_s": 57.12
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.62,
+          "depth_decode_ms_per_frame": 51.11,
+          "vocoder_ms_per_frame": 8.8,
+          "wav": "english-q4_k.wav",
+          "sha256": "9fc34a09853c6607f86a67a480ee9799c57406c536aebad0f460a52075f34109",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 57.12
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 55699.5,
+          "wall_rtf": 0.9751313025210084,
+          "wall_rtf_reported": 0.975,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 189.6,
+            "backbone prefill": 601.2,
+            "first vocoder": 256.0,
+            "backbone decode": 12431.2,
+            "depth decode": 36234.3,
+            "vocoder": 6183.7
+          },
+          "stage_rtf": 0.9740896358543417,
+          "decode_rtf": 0.9602450980392158,
+          "frames": 714,
+          "audio_s": 57.12,
+          "first_audio_ms": 2855.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2855.4,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5776.9,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8702.5,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 10301.3,
+              "delivered_audio_s": 11.28
+            },
+            {
+              "index": 5,
+              "ready_ms": 13733.3,
+              "delivered_audio_s": 14.48
+            },
+            {
+              "index": 6,
+              "ready_ms": 16783.7,
+              "delivered_audio_s": 17.68
+            },
+            {
+              "index": 7,
+              "ready_ms": 19880.5,
+              "delivered_audio_s": 20.88
+            },
+            {
+              "index": 8,
+              "ready_ms": 22949.8,
+              "delivered_audio_s": 24.08
+            },
+            {
+              "index": 9,
+              "ready_ms": 26068.7,
+              "delivered_audio_s": 27.28
+            },
+            {
+              "index": 10,
+              "ready_ms": 29167.9,
+              "delivered_audio_s": 30.48
+            },
+            {
+              "index": 11,
+              "ready_ms": 32272.3,
+              "delivered_audio_s": 33.68
+            },
+            {
+              "index": 12,
+              "ready_ms": 35427.3,
+              "delivered_audio_s": 36.88
+            },
+            {
+              "index": 13,
+              "ready_ms": 38654.2,
+              "delivered_audio_s": 40.08
+            },
+            {
+              "index": 14,
+              "ready_ms": 41846.9,
+              "delivered_audio_s": 43.28
+            },
+            {
+              "index": 15,
+              "ready_ms": 45177.1,
+              "delivered_audio_s": 46.48
+            },
+            {
+              "index": 16,
+              "ready_ms": 47424.1,
+              "delivered_audio_s": 48.56
+            },
+            {
+              "index": 17,
+              "ready_ms": 50612.0,
+              "delivered_audio_s": 51.76
+            },
+            {
+              "index": 18,
+              "ready_ms": 53587.4,
+              "delivered_audio_s": 54.96
+            },
+            {
+              "index": 19,
+              "ready_ms": 55699.4,
+              "delivered_audio_s": 57.12
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.41,
+          "depth_decode_ms_per_frame": 50.75,
+          "vocoder_ms_per_frame": 8.66,
+          "wav": "english-q4_k.repeat-2.wav",
+          "sha256": "9fc34a09853c6607f86a67a480ee9799c57406c536aebad0f460a52075f34109",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 57.12
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 55885.1,
+          "wall_rtf": 0.9783806022408963,
+          "wall_rtf_reported": 0.978,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 189.5,
+            "backbone prefill": 607.5,
+            "first vocoder": 256.4,
+            "backbone decode": 12424.5,
+            "depth decode": 36347.8,
+            "vocoder": 6257.5
+          },
+          "stage_rtf": 0.9773599439775911,
+          "decode_rtf": 0.9634068627450981,
+          "frames": 714,
+          "audio_s": 57.12,
+          "first_audio_ms": 2887.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2886.8,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5776.0,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8688.2,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 10340.9,
+              "delivered_audio_s": 11.28
+            },
+            {
+              "index": 5,
+              "ready_ms": 13695.2,
+              "delivered_audio_s": 14.48
+            },
+            {
+              "index": 6,
+              "ready_ms": 16810.4,
+              "delivered_audio_s": 17.68
+            },
+            {
+              "index": 7,
+              "ready_ms": 19881.1,
+              "delivered_audio_s": 20.88
+            },
+            {
+              "index": 8,
+              "ready_ms": 23025.9,
+              "delivered_audio_s": 24.08
+            },
+            {
+              "index": 9,
+              "ready_ms": 26110.8,
+              "delivered_audio_s": 27.28
+            },
+            {
+              "index": 10,
+              "ready_ms": 29222.5,
+              "delivered_audio_s": 30.48
+            },
+            {
+              "index": 11,
+              "ready_ms": 32420.6,
+              "delivered_audio_s": 33.68
+            },
+            {
+              "index": 12,
+              "ready_ms": 35574.7,
+              "delivered_audio_s": 36.88
+            },
+            {
+              "index": 13,
+              "ready_ms": 38748.0,
+              "delivered_audio_s": 40.08
+            },
+            {
+              "index": 14,
+              "ready_ms": 42024.8,
+              "delivered_audio_s": 43.28
+            },
+            {
+              "index": 15,
+              "ready_ms": 45274.2,
+              "delivered_audio_s": 46.48
+            },
+            {
+              "index": 16,
+              "ready_ms": 47570.5,
+              "delivered_audio_s": 48.56
+            },
+            {
+              "index": 17,
+              "ready_ms": 50761.2,
+              "delivered_audio_s": 51.76
+            },
+            {
+              "index": 18,
+              "ready_ms": 53810.3,
+              "delivered_audio_s": 54.96
+            },
+            {
+              "index": 19,
+              "ready_ms": 55884.9,
+              "delivered_audio_s": 57.12
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.4,
+          "depth_decode_ms_per_frame": 50.91,
+          "vocoder_ms_per_frame": 8.76,
+          "wav": "english-q4_k.repeat-3.wav",
+          "sha256": "9fc34a09853c6607f86a67a480ee9799c57406c536aebad0f460a52075f34109",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 57.12
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 55825.4,
+          "wall_rtf": 0.9773354341736695,
+          "wall_rtf_reported": 0.977,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 186.0,
+            "backbone prefill": 598.4,
+            "first vocoder": 255.3,
+            "backbone decode": 12415.3,
+            "depth decode": 36379.6,
+            "vocoder": 6185.0
+          },
+          "stage_rtf": 0.9762657563025209,
+          "decode_rtf": 0.9625332633053221,
+          "frames": 714,
+          "audio_s": 57.12,
+          "first_audio_ms": 2858.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2858.4,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5804.6,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8730.4,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 10350.2,
+              "delivered_audio_s": 11.28
+            },
+            {
+              "index": 5,
+              "ready_ms": 13698.2,
+              "delivered_audio_s": 14.48
+            },
+            {
+              "index": 6,
+              "ready_ms": 16751.2,
+              "delivered_audio_s": 17.68
+            },
+            {
+              "index": 7,
+              "ready_ms": 19800.0,
+              "delivered_audio_s": 20.88
+            },
+            {
+              "index": 8,
+              "ready_ms": 22985.1,
+              "delivered_audio_s": 24.08
+            },
+            {
+              "index": 9,
+              "ready_ms": 26129.8,
+              "delivered_audio_s": 27.28
+            },
+            {
+              "index": 10,
+              "ready_ms": 29263.4,
+              "delivered_audio_s": 30.48
+            },
+            {
+              "index": 11,
+              "ready_ms": 32388.2,
+              "delivered_audio_s": 33.68
+            },
+            {
+              "index": 12,
+              "ready_ms": 35580.2,
+              "delivered_audio_s": 36.88
+            },
+            {
+              "index": 13,
+              "ready_ms": 38743.0,
+              "delivered_audio_s": 40.08
+            },
+            {
+              "index": 14,
+              "ready_ms": 41964.0,
+              "delivered_audio_s": 43.28
+            },
+            {
+              "index": 15,
+              "ready_ms": 45254.0,
+              "delivered_audio_s": 46.48
+            },
+            {
+              "index": 16,
+              "ready_ms": 47441.5,
+              "delivered_audio_s": 48.56
+            },
+            {
+              "index": 17,
+              "ready_ms": 50583.2,
+              "delivered_audio_s": 51.76
+            },
+            {
+              "index": 18,
+              "ready_ms": 53694.4,
+              "delivered_audio_s": 54.96
+            },
+            {
+              "index": 19,
+              "ready_ms": 55825.2,
+              "delivered_audio_s": 57.12
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.39,
+          "depth_decode_ms_per_frame": 50.95,
+          "vocoder_ms_per_frame": 8.66,
+          "wav": "english-q4_k.repeat-4.wav",
+          "sha256": "9fc34a09853c6607f86a67a480ee9799c57406c536aebad0f460a52075f34109",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 57.12
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.9769491129785247,
+      "warm_p50_rtf": 0.9773354341736695,
+      "warm_sample_p50_rtf": 0.9773354341736695,
+      "warm_sample_p95_rtf": 0.9782760854341737,
+      "termination": {
+        "kind": "natural-complete-default-split",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          714,
+          714,
+          714,
+          714
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": true,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    },
+    "english-q3_k": {
+      "fixture": {
+        "id": "english",
+        "text": "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+        "weighted_chars": 885,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      "model": "q3_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q3_k.gguf",
+        "--text",
+        "At sunrise, the coastal library opened its doors for a week of community work. Volunteers carried boxes through the reading room, where tall windows warmed the tables. One team repaired damaged books and photographed their covers, while a retired teacher sorted harbour letters and students copied names from a faded register. Near the entrance, a carpenter tightened chairs and built a stand for local newspapers; by midday, strangers shared memories of storms, concerts, and friends who had moved away. In the afternoon, they arranged a children’s reading corner and a quiet desk for language learners. Before closing, Mara listed the remaining work: mend the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. The volunteers agreed to return on Saturday with better tools and more books, because patient work had made the building useful again.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/english-q3_k.wav"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q3_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2680.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5348.6 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8065.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=9225.6 delivered_audio_s=10.88\n\ngenerated 10.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=12275.8 delivered_audio_s=14.08\n\ngenerated 14.08 s  flush 6 ready_ms=15038.5 delivered_audio_s=17.28\n\ngenerated 17.28 s  flush 7 ready_ms=17880.4 delivered_audio_s=20.48\n\ngenerated 20.48 s  flush 8 ready_ms=20692.6 delivered_audio_s=23.68\n\ngenerated 23.68 s  flush 9 ready_ms=23613.4 delivered_audio_s=26.88\n\ngenerated 26.88 s  flush 10 ready_ms=26519.7 delivered_audio_s=30.08\n\ngenerated 30.08 s  flush 11 ready_ms=29457.7 delivered_audio_s=33.28\n\ngenerated 33.28 s  flush 12 ready_ms=32347.6 delivered_audio_s=36.48\n\ngenerated 36.48 s  flush 13 ready_ms=35256.2 delivered_audio_s=39.68\n\ngenerated 39.68 s  flush 14 ready_ms=38245.2 delivered_audio_s=42.88\n\ngenerated 42.88 s  flush 15 ready_ms=41215.9 delivered_audio_s=46.08\n\ngenerated 46.08 s  flush 16 ready_ms=44195.9 delivered_audio_s=49.28\n\ngenerated 49.28 s  flush 17 ready_ms=46438.0 delivered_audio_s=51.52\n\ngenerated 51.52 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=49316.5 delivered_audio_s=54.72\n\ngenerated 54.72 s  flush 19 ready_ms=52003.0 delivered_audio_s=57.92\n\ngenerated 57.92 s  flush 20 ready_ms=53007.5 delivered_audio_s=58.88\n\ngenerated 58.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     53007.7 ms (wall RTF 0.900)\ntime to first audio 2680 ms over 20 flushes\n  reference encode       0.0 ms\n  prompt build         233.9 ms\n  backbone prefill     631.0 ms\n  first vocoder        250.6 ms  (40 frames)\n  backbone decode    13379.1 ms  (18.18 ms/frame)\n  depth decode       32237.9 ms  (43.80 ms/frame)\n  vocoder             6456.2 ms  (8.77 ms/frame)\n  736 frames, 58.88 s audio\nwrote /tmp/breeze-longform/english-q3_k.wav (58.88 s)\n  flush 1 ready_ms=2626.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5332.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8004.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=9141.6 delivered_audio_s=10.88\n\ngenerated 10.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=12180.3 delivered_audio_s=14.08\n\ngenerated 14.08 s  flush 6 ready_ms=15007.1 delivered_audio_s=17.28\n\ngenerated 17.28 s  flush 7 ready_ms=17776.0 delivered_audio_s=20.48\n\ngenerated 20.48 s  flush 8 ready_ms=20549.7 delivered_audio_s=23.68\n\ngenerated 23.68 s  flush 9 ready_ms=23402.4 delivered_audio_s=26.88\n\ngenerated 26.88 s  flush 10 ready_ms=26292.2 delivered_audio_s=30.08\n\ngenerated 30.08 s  flush 11 ready_ms=29151.9 delivered_audio_s=33.28\n\ngenerated 33.28 s  flush 12 ready_ms=32149.8 delivered_audio_s=36.48\n\ngenerated 36.48 s  flush 13 ready_ms=35119.8 delivered_audio_s=39.68\n\ngenerated 39.68 s  flush 14 ready_ms=38060.3 delivered_audio_s=42.88\n\ngenerated 42.88 s  flush 15 ready_ms=41003.4 delivered_audio_s=46.08\n\ngenerated 46.08 s  flush 16 ready_ms=44035.8 delivered_audio_s=49.28\n\ngenerated 49.28 s  flush 17 ready_ms=46196.7 delivered_audio_s=51.52\n\ngenerated 51.52 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=49070.1 delivered_audio_s=54.72\n\ngenerated 54.72 s  flush 19 ready_ms=51785.3 delivered_audio_s=57.92\n\ngenerated 57.92 s  flush 20 ready_ms=52746.1 delivered_audio_s=58.88\n\ngenerated 58.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     52746.3 ms (wall RTF 0.896)\ntime to first audio 2626 ms over 20 flushes\n  reference encode       0.0 ms\n  prompt build         185.9 ms\n  backbone prefill     598.2 ms\n  first vocoder        267.7 ms  (40 frames)\n  backbone decode    13227.2 ms  (17.97 ms/frame)\n  depth decode       32227.9 ms  (43.79 ms/frame)\n  vocoder             6446.8 ms  (8.76 ms/frame)\n  736 frames, 58.88 s audio\nwrote /tmp/breeze-longform/english-q3_k.repeat-2.wav (58.88 s)\n  flush 1 ready_ms=2656.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5309.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8105.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=9265.2 delivered_audio_s=10.88\n\ngenerated 10.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=12421.2 delivered_audio_s=14.08\n\ngenerated 14.08 s  flush 6 ready_ms=15269.6 delivered_audio_s=17.28\n\ngenerated 17.28 s  flush 7 ready_ms=18030.9 delivered_audio_s=20.48\n\ngenerated 20.48 s  flush 8 ready_ms=20852.4 delivered_audio_s=23.68\n\ngenerated 23.68 s  flush 9 ready_ms=23676.1 delivered_audio_s=26.88\n\ngenerated 26.88 s  flush 10 ready_ms=26501.3 delivered_audio_s=30.08\n\ngenerated 30.08 s  flush 11 ready_ms=29342.0 delivered_audio_s=33.28\n\ngenerated 33.28 s  flush 12 ready_ms=32278.8 delivered_audio_s=36.48\n\ngenerated 36.48 s  flush 13 ready_ms=35170.1 delivered_audio_s=39.68\n\ngenerated 39.68 s  flush 14 ready_ms=38210.7 delivered_audio_s=42.88\n\ngenerated 42.88 s  flush 15 ready_ms=41201.8 delivered_audio_s=46.08\n\ngenerated 46.08 s  flush 16 ready_ms=44258.7 delivered_audio_s=49.28\n\ngenerated 49.28 s  flush 17 ready_ms=46418.0 delivered_audio_s=51.52\n\ngenerated 51.52 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=49296.1 delivered_audio_s=54.72\n\ngenerated 54.72 s  flush 19 ready_ms=52053.6 delivered_audio_s=57.92\n\ngenerated 57.92 s  flush 20 ready_ms=52955.9 delivered_audio_s=58.88\n\ngenerated 58.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     52956.1 ms (wall RTF 0.899)\ntime to first audio 2657 ms over 20 flushes\n  reference encode       0.0 ms\n  prompt build         192.6 ms\n  backbone prefill     596.2 ms\n  first vocoder        253.3 ms  (40 frames)\n  backbone decode    13228.8 ms  (17.97 ms/frame)\n  depth decode       32466.1 ms  (44.11 ms/frame)\n  vocoder             6412.8 ms  (8.71 ms/frame)\n  736 frames, 58.88 s audio\nwrote /tmp/breeze-longform/english-q3_k.repeat-3.wav (58.88 s)\n  flush 1 ready_ms=2599.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5233.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=7942.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=9098.6 delivered_audio_s=10.88\n\ngenerated 10.88 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 5 ready_ms=12137.6 delivered_audio_s=14.08\n\ngenerated 14.08 s  flush 6 ready_ms=14998.1 delivered_audio_s=17.28\n\ngenerated 17.28 s  flush 7 ready_ms=17809.8 delivered_audio_s=20.48\n\ngenerated 20.48 s  flush 8 ready_ms=20688.4 delivered_audio_s=23.68\n\ngenerated 23.68 s  flush 9 ready_ms=23480.3 delivered_audio_s=26.88\n\ngenerated 26.88 s  flush 10 ready_ms=26307.0 delivered_audio_s=30.08\n\ngenerated 30.08 s  flush 11 ready_ms=29213.7 delivered_audio_s=33.28\n\ngenerated 33.28 s  flush 12 ready_ms=32076.6 delivered_audio_s=36.48\n\ngenerated 36.48 s  flush 13 ready_ms=34956.7 delivered_audio_s=39.68\n\ngenerated 39.68 s  flush 14 ready_ms=37944.4 delivered_audio_s=42.88\n\ngenerated 42.88 s  flush 15 ready_ms=40908.8 delivered_audio_s=46.08\n\ngenerated 46.08 s  flush 16 ready_ms=43938.6 delivered_audio_s=49.28\n\ngenerated 49.28 s  flush 17 ready_ms=46179.6 delivered_audio_s=51.52\n\ngenerated 51.52 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=49129.3 delivered_audio_s=54.72\n\ngenerated 54.72 s  flush 19 ready_ms=51877.6 delivered_audio_s=57.92\n\ngenerated 57.92 s  flush 20 ready_ms=52782.0 delivered_audio_s=58.88\n\ngenerated 58.88 s\ngeneration wall     52782.2 ms (wall RTF 0.896)\ntime to first audio 2599 ms over 20 flushes\n  reference encode       0.0 ms\n  prompt build         188.5 ms\n  backbone prefill     591.7 ms\n  first vocoder        253.7 ms  (40 frames)\n  backbone decode    13227.1 ms  (17.97 ms/frame)\n  depth decode       32260.1 ms  (43.83 ms/frame)\n  vocoder             6455.4 ms  (8.77 ms/frame)\n  736 frames, 58.88 s audio\nwrote /tmp/breeze-longform/english-q3_k.repeat-4.wav (58.88 s)\n",
+      "log_sha256": "d41f7c8196a6bbe7b55d3ffe53d83482fae4010c0853c56876c7c9b4dd5b9c6d",
+      "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 53007.7,
+          "wall_rtf": 0.9002666440217391,
+          "wall_rtf_reported": 0.9,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 233.9,
+            "backbone prefill": 631.0,
+            "first vocoder": 250.6,
+            "backbone decode": 13379.1,
+            "depth decode": 32237.9,
+            "vocoder": 6456.2
+          },
+          "stage_rtf": 0.8990845788043478,
+          "decode_rtf": 0.8843953804347827,
+          "frames": 736,
+          "audio_s": 58.88,
+          "first_audio_ms": 2680.0,
+          "flushes": 20,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2680.4,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5348.6,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8065.5,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 9225.6,
+              "delivered_audio_s": 10.88
+            },
+            {
+              "index": 5,
+              "ready_ms": 12275.8,
+              "delivered_audio_s": 14.08
+            },
+            {
+              "index": 6,
+              "ready_ms": 15038.5,
+              "delivered_audio_s": 17.28
+            },
+            {
+              "index": 7,
+              "ready_ms": 17880.4,
+              "delivered_audio_s": 20.48
+            },
+            {
+              "index": 8,
+              "ready_ms": 20692.6,
+              "delivered_audio_s": 23.68
+            },
+            {
+              "index": 9,
+              "ready_ms": 23613.4,
+              "delivered_audio_s": 26.88
+            },
+            {
+              "index": 10,
+              "ready_ms": 26519.7,
+              "delivered_audio_s": 30.08
+            },
+            {
+              "index": 11,
+              "ready_ms": 29457.7,
+              "delivered_audio_s": 33.28
+            },
+            {
+              "index": 12,
+              "ready_ms": 32347.6,
+              "delivered_audio_s": 36.48
+            },
+            {
+              "index": 13,
+              "ready_ms": 35256.2,
+              "delivered_audio_s": 39.68
+            },
+            {
+              "index": 14,
+              "ready_ms": 38245.2,
+              "delivered_audio_s": 42.88
+            },
+            {
+              "index": 15,
+              "ready_ms": 41215.9,
+              "delivered_audio_s": 46.08
+            },
+            {
+              "index": 16,
+              "ready_ms": 44195.9,
+              "delivered_audio_s": 49.28
+            },
+            {
+              "index": 17,
+              "ready_ms": 46438.0,
+              "delivered_audio_s": 51.52
+            },
+            {
+              "index": 18,
+              "ready_ms": 49316.5,
+              "delivered_audio_s": 54.72
+            },
+            {
+              "index": 19,
+              "ready_ms": 52003.0,
+              "delivered_audio_s": 57.92
+            },
+            {
+              "index": 20,
+              "ready_ms": 53007.5,
+              "delivered_audio_s": 58.88
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 18.18,
+          "depth_decode_ms_per_frame": 43.8,
+          "vocoder_ms_per_frame": 8.77,
+          "wav": "english-q3_k.wav",
+          "sha256": "e0e8aeefa8ca0e12bc85296211a05d26a32068f215ce834cc4249e8642582076",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.88
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 52746.3,
+          "wall_rtf": 0.8958271059782609,
+          "wall_rtf_reported": 0.896,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 185.9,
+            "backbone prefill": 598.2,
+            "first vocoder": 267.7,
+            "backbone decode": 13227.2,
+            "depth decode": 32227.9,
+            "vocoder": 6446.8
+          },
+          "stage_rtf": 0.8948029891304348,
+          "decode_rtf": 0.8814860733695652,
+          "frames": 736,
+          "audio_s": 58.88,
+          "first_audio_ms": 2626.0,
+          "flushes": 20,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2626.0,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5332.8,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8004.6,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 9141.6,
+              "delivered_audio_s": 10.88
+            },
+            {
+              "index": 5,
+              "ready_ms": 12180.3,
+              "delivered_audio_s": 14.08
+            },
+            {
+              "index": 6,
+              "ready_ms": 15007.1,
+              "delivered_audio_s": 17.28
+            },
+            {
+              "index": 7,
+              "ready_ms": 17776.0,
+              "delivered_audio_s": 20.48
+            },
+            {
+              "index": 8,
+              "ready_ms": 20549.7,
+              "delivered_audio_s": 23.68
+            },
+            {
+              "index": 9,
+              "ready_ms": 23402.4,
+              "delivered_audio_s": 26.88
+            },
+            {
+              "index": 10,
+              "ready_ms": 26292.2,
+              "delivered_audio_s": 30.08
+            },
+            {
+              "index": 11,
+              "ready_ms": 29151.9,
+              "delivered_audio_s": 33.28
+            },
+            {
+              "index": 12,
+              "ready_ms": 32149.8,
+              "delivered_audio_s": 36.48
+            },
+            {
+              "index": 13,
+              "ready_ms": 35119.8,
+              "delivered_audio_s": 39.68
+            },
+            {
+              "index": 14,
+              "ready_ms": 38060.3,
+              "delivered_audio_s": 42.88
+            },
+            {
+              "index": 15,
+              "ready_ms": 41003.4,
+              "delivered_audio_s": 46.08
+            },
+            {
+              "index": 16,
+              "ready_ms": 44035.8,
+              "delivered_audio_s": 49.28
+            },
+            {
+              "index": 17,
+              "ready_ms": 46196.7,
+              "delivered_audio_s": 51.52
+            },
+            {
+              "index": 18,
+              "ready_ms": 49070.1,
+              "delivered_audio_s": 54.72
+            },
+            {
+              "index": 19,
+              "ready_ms": 51785.3,
+              "delivered_audio_s": 57.92
+            },
+            {
+              "index": 20,
+              "ready_ms": 52746.1,
+              "delivered_audio_s": 58.88
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.97,
+          "depth_decode_ms_per_frame": 43.79,
+          "vocoder_ms_per_frame": 8.76,
+          "wav": "english-q3_k.repeat-2.wav",
+          "sha256": "e0e8aeefa8ca0e12bc85296211a05d26a32068f215ce834cc4249e8642582076",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.88
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 52956.1,
+          "wall_rtf": 0.8993902853260869,
+          "wall_rtf_reported": 0.899,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 192.6,
+            "backbone prefill": 596.2,
+            "first vocoder": 253.3,
+            "backbone decode": 13228.8,
+            "depth decode": 32466.1,
+            "vocoder": 6412.8
+          },
+          "stage_rtf": 0.8983780570652173,
+          "decode_rtf": 0.8849813179347825,
+          "frames": 736,
+          "audio_s": 58.88,
+          "first_audio_ms": 2657.0,
+          "flushes": 20,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2656.8,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5309.8,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8105.8,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 9265.2,
+              "delivered_audio_s": 10.88
+            },
+            {
+              "index": 5,
+              "ready_ms": 12421.2,
+              "delivered_audio_s": 14.08
+            },
+            {
+              "index": 6,
+              "ready_ms": 15269.6,
+              "delivered_audio_s": 17.28
+            },
+            {
+              "index": 7,
+              "ready_ms": 18030.9,
+              "delivered_audio_s": 20.48
+            },
+            {
+              "index": 8,
+              "ready_ms": 20852.4,
+              "delivered_audio_s": 23.68
+            },
+            {
+              "index": 9,
+              "ready_ms": 23676.1,
+              "delivered_audio_s": 26.88
+            },
+            {
+              "index": 10,
+              "ready_ms": 26501.3,
+              "delivered_audio_s": 30.08
+            },
+            {
+              "index": 11,
+              "ready_ms": 29342.0,
+              "delivered_audio_s": 33.28
+            },
+            {
+              "index": 12,
+              "ready_ms": 32278.8,
+              "delivered_audio_s": 36.48
+            },
+            {
+              "index": 13,
+              "ready_ms": 35170.1,
+              "delivered_audio_s": 39.68
+            },
+            {
+              "index": 14,
+              "ready_ms": 38210.7,
+              "delivered_audio_s": 42.88
+            },
+            {
+              "index": 15,
+              "ready_ms": 41201.8,
+              "delivered_audio_s": 46.08
+            },
+            {
+              "index": 16,
+              "ready_ms": 44258.7,
+              "delivered_audio_s": 49.28
+            },
+            {
+              "index": 17,
+              "ready_ms": 46418.0,
+              "delivered_audio_s": 51.52
+            },
+            {
+              "index": 18,
+              "ready_ms": 49296.1,
+              "delivered_audio_s": 54.72
+            },
+            {
+              "index": 19,
+              "ready_ms": 52053.6,
+              "delivered_audio_s": 57.92
+            },
+            {
+              "index": 20,
+              "ready_ms": 52955.9,
+              "delivered_audio_s": 58.88
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.97,
+          "depth_decode_ms_per_frame": 44.11,
+          "vocoder_ms_per_frame": 8.71,
+          "wav": "english-q3_k.repeat-3.wav",
+          "sha256": "e0e8aeefa8ca0e12bc85296211a05d26a32068f215ce834cc4249e8642582076",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.88
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 52782.2,
+          "wall_rtf": 0.8964368206521739,
+          "wall_rtf_reported": 0.896,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 188.5,
+            "backbone prefill": 591.7,
+            "first vocoder": 253.7,
+            "backbone decode": 13227.1,
+            "depth decode": 32260.1,
+            "vocoder": 6455.4
+          },
+          "stage_rtf": 0.8954279891304348,
+          "decode_rtf": 0.8821773097826087,
+          "frames": 736,
+          "audio_s": 58.88,
+          "first_audio_ms": 2599.0,
+          "flushes": 20,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2599.0,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5233.7,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 7942.6,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 9098.6,
+              "delivered_audio_s": 10.88
+            },
+            {
+              "index": 5,
+              "ready_ms": 12137.6,
+              "delivered_audio_s": 14.08
+            },
+            {
+              "index": 6,
+              "ready_ms": 14998.1,
+              "delivered_audio_s": 17.28
+            },
+            {
+              "index": 7,
+              "ready_ms": 17809.8,
+              "delivered_audio_s": 20.48
+            },
+            {
+              "index": 8,
+              "ready_ms": 20688.4,
+              "delivered_audio_s": 23.68
+            },
+            {
+              "index": 9,
+              "ready_ms": 23480.3,
+              "delivered_audio_s": 26.88
+            },
+            {
+              "index": 10,
+              "ready_ms": 26307.0,
+              "delivered_audio_s": 30.08
+            },
+            {
+              "index": 11,
+              "ready_ms": 29213.7,
+              "delivered_audio_s": 33.28
+            },
+            {
+              "index": 12,
+              "ready_ms": 32076.6,
+              "delivered_audio_s": 36.48
+            },
+            {
+              "index": 13,
+              "ready_ms": 34956.7,
+              "delivered_audio_s": 39.68
+            },
+            {
+              "index": 14,
+              "ready_ms": 37944.4,
+              "delivered_audio_s": 42.88
+            },
+            {
+              "index": 15,
+              "ready_ms": 40908.8,
+              "delivered_audio_s": 46.08
+            },
+            {
+              "index": 16,
+              "ready_ms": 43938.6,
+              "delivered_audio_s": 49.28
+            },
+            {
+              "index": 17,
+              "ready_ms": 46179.6,
+              "delivered_audio_s": 51.52
+            },
+            {
+              "index": 18,
+              "ready_ms": 49129.3,
+              "delivered_audio_s": 54.72
+            },
+            {
+              "index": 19,
+              "ready_ms": 51877.6,
+              "delivered_audio_s": 57.92
+            },
+            {
+              "index": 20,
+              "ready_ms": 52782.0,
+              "delivered_audio_s": 58.88
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 17.97,
+          "depth_decode_ms_per_frame": 43.83,
+          "vocoder_ms_per_frame": 8.77,
+          "wav": "english-q3_k.repeat-4.wav",
+          "sha256": "e0e8aeefa8ca0e12bc85296211a05d26a32068f215ce834cc4249e8642582076",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.88
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.8972180706521738,
+      "warm_p50_rtf": 0.8964368206521739,
+      "warm_sample_p50_rtf": 0.8964368206521739,
+      "warm_sample_p95_rtf": 0.8990949388586955,
+      "termination": {
+        "kind": "natural-complete-default-split",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          736,
+          736,
+          736,
+          736
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": true,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    },
+    "mandarin-q4_k": {
+      "fixture": {
+        "id": "mandarin",
+        "text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "weighted_chars": 783,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      "model": "q4_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q4_k.gguf",
+        "--text",
+        "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/mandarin-q4_k.wav"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2983.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6062.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=6331.0 delivered_audio_s=6.56\n\ngenerated 6.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9852.5 delivered_audio_s=9.76\n\ngenerated 9.76 s  flush 5 ready_ms=12903.6 delivered_audio_s=12.96\n\ngenerated 12.96 s  flush 6 ready_ms=15976.0 delivered_audio_s=16.16\n\ngenerated 16.16 s  flush 7 ready_ms=19116.4 delivered_audio_s=19.36\n\ngenerated 19.36 s  flush 8 ready_ms=22205.4 delivered_audio_s=22.56\n\ngenerated 22.56 s  flush 9 ready_ms=25319.6 delivered_audio_s=25.76\n\ngenerated 25.76 s  flush 10 ready_ms=28526.0 delivered_audio_s=28.96\n\ngenerated 28.96 s  flush 11 ready_ms=31683.9 delivered_audio_s=32.16\n\ngenerated 32.16 s  flush 12 ready_ms=34982.7 delivered_audio_s=35.36\n\ngenerated 35.36 s  flush 13 ready_ms=38220.8 delivered_audio_s=38.56\n\ngenerated 38.56 s  flush 14 ready_ms=41529.9 delivered_audio_s=41.76\n\ngenerated 41.76 s  flush 15 ready_ms=44835.0 delivered_audio_s=44.96\n\ngenerated 44.96 s  flush 16 ready_ms=48187.2 delivered_audio_s=48.16\n\ngenerated 48.16 s  flush 17 ready_ms=50507.0 delivered_audio_s=50.32\n\ngenerated 50.32 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=53613.5 delivered_audio_s=53.52\n\ngenerated 53.52 s  flush 19 ready_ms=55811.4 delivered_audio_s=55.84\n\ngenerated 55.84 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     55811.6 ms (wall RTF 0.999)\ntime to first audio 2984 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         251.4 ms\n  backbone prefill     604.9 ms\n  first vocoder        253.5 ms  (40 frames)\n  backbone decode    13035.1 ms  (18.67 ms/frame)\n  depth decode       35758.8 ms  (51.23 ms/frame)\n  vocoder             6093.4 ms  (8.73 ms/frame)\n  698 frames, 55.84 s audio\nwrote /tmp/breeze-longform/mandarin-q4_k.wav (55.84 s)\n  flush 1 ready_ms=2965.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5887.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=6159.0 delivered_audio_s=6.56\n\ngenerated 6.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9656.5 delivered_audio_s=9.76\n\ngenerated 9.76 s  flush 5 ready_ms=12745.8 delivered_audio_s=12.96\n\ngenerated 12.96 s  flush 6 ready_ms=15856.7 delivered_audio_s=16.16\n\ngenerated 16.16 s  flush 7 ready_ms=18923.0 delivered_audio_s=19.36\n\ngenerated 19.36 s  flush 8 ready_ms=22055.4 delivered_audio_s=22.56\n\ngenerated 22.56 s  flush 9 ready_ms=25164.1 delivered_audio_s=25.76\n\ngenerated 25.76 s  flush 10 ready_ms=28294.9 delivered_audio_s=28.96\n\ngenerated 28.96 s  flush 11 ready_ms=31500.5 delivered_audio_s=32.16\n\ngenerated 32.16 s  flush 12 ready_ms=34699.8 delivered_audio_s=35.36\n\ngenerated 35.36 s  flush 13 ready_ms=37999.4 delivered_audio_s=38.56\n\ngenerated 38.56 s  flush 14 ready_ms=41283.4 delivered_audio_s=41.76\n\ngenerated 41.76 s  flush 15 ready_ms=44645.6 delivered_audio_s=44.96\n\ngenerated 44.96 s  flush 16 ready_ms=47943.4 delivered_audio_s=48.16\n\ngenerated 48.16 s  flush 17 ready_ms=50267.0 delivered_audio_s=50.32\n\ngenerated 50.32 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=53404.6 delivered_audio_s=53.52\n\ngenerated 53.52 s  flush 19 ready_ms=55585.0 delivered_audio_s=55.84\n\ngenerated 55.84 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     55585.2 ms (wall RTF 0.995)\ntime to first audio 2966 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         215.3 ms\n  backbone prefill     571.8 ms\n  first vocoder        257.3 ms  (40 frames)\n  backbone decode    12919.9 ms  (18.51 ms/frame)\n  depth decode       35693.0 ms  (51.14 ms/frame)\n  vocoder             6124.9 ms  (8.77 ms/frame)\n  698 frames, 55.84 s audio\nwrote /tmp/breeze-longform/mandarin-q4_k.repeat-2.wav (55.84 s)\n  flush 1 ready_ms=2883.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5852.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=6132.1 delivered_audio_s=6.56\n\ngenerated 6.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9480.5 delivered_audio_s=9.76\n\ngenerated 9.76 s  flush 5 ready_ms=12605.1 delivered_audio_s=12.96\n\ngenerated 12.96 s  flush 6 ready_ms=15694.3 delivered_audio_s=16.16\n\ngenerated 16.16 s  flush 7 ready_ms=18845.8 delivered_audio_s=19.36\n\ngenerated 19.36 s  flush 8 ready_ms=21936.3 delivered_audio_s=22.56\n\ngenerated 22.56 s  flush 9 ready_ms=25050.8 delivered_audio_s=25.76\n\ngenerated 25.76 s  flush 10 ready_ms=28207.6 delivered_audio_s=28.96\n\ngenerated 28.96 s  flush 11 ready_ms=31376.2 delivered_audio_s=32.16\n\ngenerated 32.16 s  flush 12 ready_ms=34552.4 delivered_audio_s=35.36\n\ngenerated 35.36 s  flush 13 ready_ms=37805.3 delivered_audio_s=38.56\n\ngenerated 38.56 s  flush 14 ready_ms=41030.8 delivered_audio_s=41.76\n\ngenerated 41.76 s  flush 15 ready_ms=44406.7 delivered_audio_s=44.96\n\ngenerated 44.96 s  flush 16 ready_ms=47773.9 delivered_audio_s=48.16\n\ngenerated 48.16 s  flush 17 ready_ms=50113.6 delivered_audio_s=50.32\n\ngenerated 50.32 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=53197.0 delivered_audio_s=53.52\n\ngenerated 53.52 s  flush 19 ready_ms=55426.9 delivered_audio_s=55.84\n\ngenerated 55.84 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     55427.1 ms (wall RTF 0.993)\ntime to first audio 2883 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         198.4 ms\n  backbone prefill     565.7 ms\n  first vocoder        251.9 ms  (40 frames)\n  backbone decode    12924.2 ms  (18.52 ms/frame)\n  depth decode       35612.4 ms  (51.02 ms/frame)\n  vocoder             6068.4 ms  (8.69 ms/frame)\n  698 frames, 55.84 s audio\nwrote /tmp/breeze-longform/mandarin-q4_k.repeat-3.wav (55.84 s)\n  flush 1 ready_ms=2896.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5808.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=6080.8 delivered_audio_s=6.56\n\ngenerated 6.56 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9472.6 delivered_audio_s=9.76\n\ngenerated 9.76 s  flush 5 ready_ms=12551.7 delivered_audio_s=12.96\n\ngenerated 12.96 s  flush 6 ready_ms=15613.5 delivered_audio_s=16.16\n\ngenerated 16.16 s  flush 7 ready_ms=18798.7 delivered_audio_s=19.36\n\ngenerated 19.36 s  flush 8 ready_ms=21964.6 delivered_audio_s=22.56\n\ngenerated 22.56 s  flush 9 ready_ms=25109.1 delivered_audio_s=25.76\n\ngenerated 25.76 s  flush 10 ready_ms=28245.6 delivered_audio_s=28.96\n\ngenerated 28.96 s  flush 11 ready_ms=31461.6 delivered_audio_s=32.16\n\ngenerated 32.16 s  flush 12 ready_ms=34637.6 delivered_audio_s=35.36\n\ngenerated 35.36 s  flush 13 ready_ms=37846.2 delivered_audio_s=38.56\n\ngenerated 38.56 s  flush 14 ready_ms=41148.3 delivered_audio_s=41.76\n\ngenerated 41.76 s  flush 15 ready_ms=44422.0 delivered_audio_s=44.96\n\ngenerated 44.96 s  flush 16 ready_ms=47847.5 delivered_audio_s=48.16\n\ngenerated 48.16 s  flush 17 ready_ms=50225.4 delivered_audio_s=50.32\n\ngenerated 50.32 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 18 ready_ms=53396.5 delivered_audio_s=53.52\n\ngenerated 53.52 s  flush 19 ready_ms=55583.5 delivered_audio_s=55.84\n\ngenerated 55.84 s\ngeneration wall     55583.6 ms (wall RTF 0.995)\ntime to first audio 2896 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         199.2 ms\n  backbone prefill     570.1 ms\n  first vocoder        257.7 ms  (40 frames)\n  backbone decode    12929.5 ms  (18.52 ms/frame)\n  depth decode       35788.2 ms  (51.27 ms/frame)\n  vocoder             6038.0 ms  (8.65 ms/frame)\n  698 frames, 55.84 s audio\nwrote /tmp/breeze-longform/mandarin-q4_k.repeat-4.wav (55.84 s)\n",
+      "log_sha256": "fe0a83a1834666d7d3f343bbb09ee0fd79208dc6f9704a437e1f63c94517d014",
+      "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 55811.6,
+          "wall_rtf": 0.9994914040114613,
+          "wall_rtf_reported": 0.999,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 251.4,
+            "backbone prefill": 604.9,
+            "first vocoder": 253.5,
+            "backbone decode": 13035.1,
+            "depth decode": 35758.8,
+            "vocoder": 6093.4
+          },
+          "stage_rtf": 0.9982736389684814,
+          "decode_rtf": 0.9829387535816619,
+          "frames": 698,
+          "audio_s": 55.84,
+          "first_audio_ms": 2984.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2983.7,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6062.8,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 6331.0,
+              "delivered_audio_s": 6.56
+            },
+            {
+              "index": 4,
+              "ready_ms": 9852.5,
+              "delivered_audio_s": 9.76
+            },
+            {
+              "index": 5,
+              "ready_ms": 12903.6,
+              "delivered_audio_s": 12.96
+            },
+            {
+              "index": 6,
+              "ready_ms": 15976.0,
+              "delivered_audio_s": 16.16
+            },
+            {
+              "index": 7,
+              "ready_ms": 19116.4,
+              "delivered_audio_s": 19.36
+            },
+            {
+              "index": 8,
+              "ready_ms": 22205.4,
+              "delivered_audio_s": 22.56
+            },
+            {
+              "index": 9,
+              "ready_ms": 25319.6,
+              "delivered_audio_s": 25.76
+            },
+            {
+              "index": 10,
+              "ready_ms": 28526.0,
+              "delivered_audio_s": 28.96
+            },
+            {
+              "index": 11,
+              "ready_ms": 31683.9,
+              "delivered_audio_s": 32.16
+            },
+            {
+              "index": 12,
+              "ready_ms": 34982.7,
+              "delivered_audio_s": 35.36
+            },
+            {
+              "index": 13,
+              "ready_ms": 38220.8,
+              "delivered_audio_s": 38.56
+            },
+            {
+              "index": 14,
+              "ready_ms": 41529.9,
+              "delivered_audio_s": 41.76
+            },
+            {
+              "index": 15,
+              "ready_ms": 44835.0,
+              "delivered_audio_s": 44.96
+            },
+            {
+              "index": 16,
+              "ready_ms": 48187.2,
+              "delivered_audio_s": 48.16
+            },
+            {
+              "index": 17,
+              "ready_ms": 50507.0,
+              "delivered_audio_s": 50.32
+            },
+            {
+              "index": 18,
+              "ready_ms": 53613.5,
+              "delivered_audio_s": 53.52
+            },
+            {
+              "index": 19,
+              "ready_ms": 55811.4,
+              "delivered_audio_s": 55.84
+            }
+          ],
+          "max_playback_deficit_ms": 309.8000000000029,
+          "max_delivery_deficit_ms": 309.8000000000029,
+          "backbone_decode_ms_per_frame": 18.67,
+          "depth_decode_ms_per_frame": 51.23,
+          "vocoder_ms_per_frame": 8.73,
+          "wav": "mandarin-q4_k.wav",
+          "sha256": "f274957eb8e154f746f9e7ca154c3379ceeafe02a444ad1b176bbf57ca557d27",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 55.84
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 55585.2,
+          "wall_rtf": 0.9954369627507162,
+          "wall_rtf_reported": 0.995,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 215.3,
+            "backbone prefill": 571.8,
+            "first vocoder": 257.3,
+            "backbone decode": 12919.9,
+            "depth decode": 35693.0,
+            "vocoder": 6124.9
+          },
+          "stage_rtf": 0.9943570916905444,
+          "decode_rtf": 0.9802614613180516,
+          "frames": 698,
+          "audio_s": 55.84,
+          "first_audio_ms": 2966.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2965.6,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5887.9,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 6159.0,
+              "delivered_audio_s": 6.56
+            },
+            {
+              "index": 4,
+              "ready_ms": 9656.5,
+              "delivered_audio_s": 9.76
+            },
+            {
+              "index": 5,
+              "ready_ms": 12745.8,
+              "delivered_audio_s": 12.96
+            },
+            {
+              "index": 6,
+              "ready_ms": 15856.7,
+              "delivered_audio_s": 16.16
+            },
+            {
+              "index": 7,
+              "ready_ms": 18923.0,
+              "delivered_audio_s": 19.36
+            },
+            {
+              "index": 8,
+              "ready_ms": 22055.4,
+              "delivered_audio_s": 22.56
+            },
+            {
+              "index": 9,
+              "ready_ms": 25164.1,
+              "delivered_audio_s": 25.76
+            },
+            {
+              "index": 10,
+              "ready_ms": 28294.9,
+              "delivered_audio_s": 28.96
+            },
+            {
+              "index": 11,
+              "ready_ms": 31500.5,
+              "delivered_audio_s": 32.16
+            },
+            {
+              "index": 12,
+              "ready_ms": 34699.8,
+              "delivered_audio_s": 35.36
+            },
+            {
+              "index": 13,
+              "ready_ms": 37999.4,
+              "delivered_audio_s": 38.56
+            },
+            {
+              "index": 14,
+              "ready_ms": 41283.4,
+              "delivered_audio_s": 41.76
+            },
+            {
+              "index": 15,
+              "ready_ms": 44645.6,
+              "delivered_audio_s": 44.96
+            },
+            {
+              "index": 16,
+              "ready_ms": 47943.4,
+              "delivered_audio_s": 48.16
+            },
+            {
+              "index": 17,
+              "ready_ms": 50267.0,
+              "delivered_audio_s": 50.32
+            },
+            {
+              "index": 18,
+              "ready_ms": 53404.6,
+              "delivered_audio_s": 53.52
+            },
+            {
+              "index": 19,
+              "ready_ms": 55585.0,
+              "delivered_audio_s": 55.84
+            }
+          ],
+          "max_playback_deficit_ms": 130.89999999999964,
+          "max_delivery_deficit_ms": 130.89999999999964,
+          "backbone_decode_ms_per_frame": 18.51,
+          "depth_decode_ms_per_frame": 51.14,
+          "vocoder_ms_per_frame": 8.77,
+          "wav": "mandarin-q4_k.repeat-2.wav",
+          "sha256": "f274957eb8e154f746f9e7ca154c3379ceeafe02a444ad1b176bbf57ca557d27",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 55.84
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 55427.1,
+          "wall_rtf": 0.9926056590257879,
+          "wall_rtf_reported": 0.993,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 198.4,
+            "backbone prefill": 565.7,
+            "first vocoder": 251.9,
+            "backbone decode": 12924.2,
+            "depth decode": 35612.4,
+            "vocoder": 6068.4
+          },
+          "stage_rtf": 0.9915669770773639,
+          "decode_rtf": 0.9778832378223495,
+          "frames": 698,
+          "audio_s": 55.84,
+          "first_audio_ms": 2883.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2883.2,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5852.8,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 6132.1,
+              "delivered_audio_s": 6.56
+            },
+            {
+              "index": 4,
+              "ready_ms": 9480.5,
+              "delivered_audio_s": 9.76
+            },
+            {
+              "index": 5,
+              "ready_ms": 12605.1,
+              "delivered_audio_s": 12.96
+            },
+            {
+              "index": 6,
+              "ready_ms": 15694.3,
+              "delivered_audio_s": 16.16
+            },
+            {
+              "index": 7,
+              "ready_ms": 18845.8,
+              "delivered_audio_s": 19.36
+            },
+            {
+              "index": 8,
+              "ready_ms": 21936.3,
+              "delivered_audio_s": 22.56
+            },
+            {
+              "index": 9,
+              "ready_ms": 25050.8,
+              "delivered_audio_s": 25.76
+            },
+            {
+              "index": 10,
+              "ready_ms": 28207.6,
+              "delivered_audio_s": 28.96
+            },
+            {
+              "index": 11,
+              "ready_ms": 31376.2,
+              "delivered_audio_s": 32.16
+            },
+            {
+              "index": 12,
+              "ready_ms": 34552.4,
+              "delivered_audio_s": 35.36
+            },
+            {
+              "index": 13,
+              "ready_ms": 37805.3,
+              "delivered_audio_s": 38.56
+            },
+            {
+              "index": 14,
+              "ready_ms": 41030.8,
+              "delivered_audio_s": 41.76
+            },
+            {
+              "index": 15,
+              "ready_ms": 44406.7,
+              "delivered_audio_s": 44.96
+            },
+            {
+              "index": 16,
+              "ready_ms": 47773.9,
+              "delivered_audio_s": 48.16
+            },
+            {
+              "index": 17,
+              "ready_ms": 50113.6,
+              "delivered_audio_s": 50.32
+            },
+            {
+              "index": 18,
+              "ready_ms": 53197.0,
+              "delivered_audio_s": 53.52
+            },
+            {
+              "index": 19,
+              "ready_ms": 55426.9,
+              "delivered_audio_s": 55.84
+            }
+          ],
+          "max_playback_deficit_ms": 37.30000000000018,
+          "max_delivery_deficit_ms": 37.30000000000018,
+          "backbone_decode_ms_per_frame": 18.52,
+          "depth_decode_ms_per_frame": 51.02,
+          "vocoder_ms_per_frame": 8.69,
+          "wav": "mandarin-q4_k.repeat-3.wav",
+          "sha256": "f274957eb8e154f746f9e7ca154c3379ceeafe02a444ad1b176bbf57ca557d27",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 55.84
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 55583.6,
+          "wall_rtf": 0.9954083094555873,
+          "wall_rtf_reported": 0.995,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 199.2,
+            "backbone prefill": 570.1,
+            "first vocoder": 257.7,
+            "backbone decode": 12929.5,
+            "depth decode": 35788.2,
+            "vocoder": 6038.0
+          },
+          "stage_rtf": 0.99435888252149,
+          "decode_rtf": 0.9805820200573065,
+          "frames": 698,
+          "audio_s": 55.84,
+          "first_audio_ms": 2896.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2896.5,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5808.9,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 6080.8,
+              "delivered_audio_s": 6.56
+            },
+            {
+              "index": 4,
+              "ready_ms": 9472.6,
+              "delivered_audio_s": 9.76
+            },
+            {
+              "index": 5,
+              "ready_ms": 12551.7,
+              "delivered_audio_s": 12.96
+            },
+            {
+              "index": 6,
+              "ready_ms": 15613.5,
+              "delivered_audio_s": 16.16
+            },
+            {
+              "index": 7,
+              "ready_ms": 18798.7,
+              "delivered_audio_s": 19.36
+            },
+            {
+              "index": 8,
+              "ready_ms": 21964.6,
+              "delivered_audio_s": 22.56
+            },
+            {
+              "index": 9,
+              "ready_ms": 25109.1,
+              "delivered_audio_s": 25.76
+            },
+            {
+              "index": 10,
+              "ready_ms": 28245.6,
+              "delivered_audio_s": 28.96
+            },
+            {
+              "index": 11,
+              "ready_ms": 31461.6,
+              "delivered_audio_s": 32.16
+            },
+            {
+              "index": 12,
+              "ready_ms": 34637.6,
+              "delivered_audio_s": 35.36
+            },
+            {
+              "index": 13,
+              "ready_ms": 37846.2,
+              "delivered_audio_s": 38.56
+            },
+            {
+              "index": 14,
+              "ready_ms": 41148.3,
+              "delivered_audio_s": 41.76
+            },
+            {
+              "index": 15,
+              "ready_ms": 44422.0,
+              "delivered_audio_s": 44.96
+            },
+            {
+              "index": 16,
+              "ready_ms": 47847.5,
+              "delivered_audio_s": 48.16
+            },
+            {
+              "index": 17,
+              "ready_ms": 50225.4,
+              "delivered_audio_s": 50.32
+            },
+            {
+              "index": 18,
+              "ready_ms": 53396.5,
+              "delivered_audio_s": 53.52
+            },
+            {
+              "index": 19,
+              "ready_ms": 55583.5,
+              "delivered_audio_s": 55.84
+            }
+          ],
+          "max_playback_deficit_ms": 180.0,
+          "max_delivery_deficit_ms": 180.0,
+          "backbone_decode_ms_per_frame": 18.52,
+          "depth_decode_ms_per_frame": 51.27,
+          "vocoder_ms_per_frame": 8.65,
+          "wav": "mandarin-q4_k.repeat-4.wav",
+          "sha256": "f274957eb8e154f746f9e7ca154c3379ceeafe02a444ad1b176bbf57ca557d27",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 55.84
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.9944836437440305,
+      "warm_p50_rtf": 0.9954083094555873,
+      "warm_sample_p50_rtf": 0.9954083094555873,
+      "warm_sample_p95_rtf": 0.9954340974212034,
+      "termination": {
+        "kind": "natural-complete-default-split",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          698,
+          698,
+          698,
+          698
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": false,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    },
+    "mandarin-q3_k": {
+      "fixture": {
+        "id": "mandarin",
+        "text": "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "weighted_chars": 783,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split"
+      },
+      "model": "q3_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q3_k.gguf",
+        "--text",
+        "清晨，海邊的圖書館為社區工作週打開大門，大家帶著箱子和筆記本走進閱覽室。高大的窗戶讓陽光落在桌面上，志工整理書架，也歡迎帶來地圖和故事的鄰居。第一組人員修補受損書籍，退休老師整理港口信件，學生抄錄名冊姓名。入口旁，木匠修好椅子，收起螺絲，還為地方報紙做了小架子。中午時，人們分享暴風雨、音樂會、遠行，以及搬到外地朋友的回憶。下午，大家布置兒童閱讀角，留下一張安靜的桌子給學習新語言的人。閉館前，瑪拉檢查燈光，記下要修理的時鐘、完成的目錄、重新粉刷的招牌和安全坡道。志工約好星期六再回來，因為耐心合作讓這座建築重新有了用處。",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/mandarin-q3_k.wav"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q3_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2740.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5401.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=5971.2 delivered_audio_s=6.96\n\ngenerated 6.96 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9072.1 delivered_audio_s=10.16\n\ngenerated 10.16 s  flush 5 ready_ms=11859.5 delivered_audio_s=13.36\n\ngenerated 13.36 s  flush 6 ready_ms=14685.6 delivered_audio_s=16.56\n\ngenerated 16.56 s  flush 7 ready_ms=17530.3 delivered_audio_s=19.76\n\ngenerated 19.76 s  flush 8 ready_ms=20459.1 delivered_audio_s=22.96\n\ngenerated 22.96 s  flush 9 ready_ms=23347.7 delivered_audio_s=26.16\n\ngenerated 26.16 s  flush 10 ready_ms=26260.2 delivered_audio_s=29.36\n\ngenerated 29.36 s  flush 11 ready_ms=29137.3 delivered_audio_s=32.56\n\ngenerated 32.56 s  flush 12 ready_ms=32072.2 delivered_audio_s=35.76\n\ngenerated 35.76 s  flush 13 ready_ms=35043.8 delivered_audio_s=38.96\n\ngenerated 38.96 s  flush 14 ready_ms=38061.5 delivered_audio_s=42.16\n\ngenerated 42.16 s  flush 15 ready_ms=41067.8 delivered_audio_s=45.36\n\ngenerated 45.36 s  flush 16 ready_ms=43616.0 delivered_audio_s=47.92\n\ngenerated 47.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=46437.7 delivered_audio_s=51.12\n\ngenerated 51.12 s  flush 18 ready_ms=48429.3 delivered_audio_s=53.44\n\ngenerated 53.44 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     48429.5 ms (wall RTF 0.906)\ntime to first audio 2740 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         241.5 ms\n  backbone prefill     602.5 ms\n  first vocoder        261.2 ms  (40 frames)\n  backbone decode    12316.1 ms  (18.44 ms/frame)\n  depth decode       29357.8 ms  (43.95 ms/frame)\n  vocoder             5849.3 ms  (8.76 ms/frame)\n  668 frames, 53.44 s audio\nwrote /tmp/breeze-longform/mandarin-q3_k.wav (53.44 s)\n  flush 1 ready_ms=2712.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5404.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=5983.5 delivered_audio_s=6.96\n\ngenerated 6.96 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9078.4 delivered_audio_s=10.16\n\ngenerated 10.16 s  flush 5 ready_ms=11819.7 delivered_audio_s=13.36\n\ngenerated 13.36 s  flush 6 ready_ms=14634.2 delivered_audio_s=16.56\n\ngenerated 16.56 s  flush 7 ready_ms=17400.8 delivered_audio_s=19.76\n\ngenerated 19.76 s  flush 8 ready_ms=20182.1 delivered_audio_s=22.96\n\ngenerated 22.96 s  flush 9 ready_ms=22995.1 delivered_audio_s=26.16\n\ngenerated 26.16 s  flush 10 ready_ms=25882.9 delivered_audio_s=29.36\n\ngenerated 29.36 s  flush 11 ready_ms=28735.6 delivered_audio_s=32.56\n\ngenerated 32.56 s  flush 12 ready_ms=31765.6 delivered_audio_s=35.76\n\ngenerated 35.76 s  flush 13 ready_ms=34710.0 delivered_audio_s=38.96\n\ngenerated 38.96 s  flush 14 ready_ms=37744.5 delivered_audio_s=42.16\n\ngenerated 42.16 s  flush 15 ready_ms=40707.3 delivered_audio_s=45.36\n\ngenerated 45.36 s  flush 16 ready_ms=43158.7 delivered_audio_s=47.92\n\ngenerated 47.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=46011.5 delivered_audio_s=51.12\n\ngenerated 51.12 s  flush 18 ready_ms=47991.6 delivered_audio_s=53.44\n\ngenerated 53.44 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     47991.8 ms (wall RTF 0.898)\ntime to first audio 2713 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         194.2 ms\n  backbone prefill     577.7 ms\n  first vocoder        256.3 ms  (40 frames)\n  backbone decode    12183.1 ms  (18.24 ms/frame)\n  depth decode       29215.2 ms  (43.74 ms/frame)\n  vocoder             5762.4 ms  (8.63 ms/frame)\n  668 frames, 53.44 s audio\nwrote /tmp/breeze-longform/mandarin-q3_k.repeat-2.wav (53.44 s)\n  flush 1 ready_ms=2600.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5222.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=5824.1 delivered_audio_s=6.96\n\ngenerated 6.96 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=8892.8 delivered_audio_s=10.16\n\ngenerated 10.16 s  flush 5 ready_ms=11612.3 delivered_audio_s=13.36\n\ngenerated 13.36 s  flush 6 ready_ms=14515.0 delivered_audio_s=16.56\n\ngenerated 16.56 s  flush 7 ready_ms=17349.4 delivered_audio_s=19.76\n\ngenerated 19.76 s  flush 8 ready_ms=20197.6 delivered_audio_s=22.96\n\ngenerated 22.96 s  flush 9 ready_ms=23011.8 delivered_audio_s=26.16\n\ngenerated 26.16 s  flush 10 ready_ms=25871.5 delivered_audio_s=29.36\n\ngenerated 29.36 s  flush 11 ready_ms=28742.8 delivered_audio_s=32.56\n\ngenerated 32.56 s  flush 12 ready_ms=31620.4 delivered_audio_s=35.76\n\ngenerated 35.76 s  flush 13 ready_ms=34534.3 delivered_audio_s=38.96\n\ngenerated 38.96 s  flush 14 ready_ms=37541.4 delivered_audio_s=42.16\n\ngenerated 42.16 s  flush 15 ready_ms=40513.0 delivered_audio_s=45.36\n\ngenerated 45.36 s  flush 16 ready_ms=43078.3 delivered_audio_s=47.92\n\ngenerated 47.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=45932.2 delivered_audio_s=51.12\n\ngenerated 51.12 s  flush 18 ready_ms=47988.4 delivered_audio_s=53.44\n\ngenerated 53.44 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     47988.6 ms (wall RTF 0.898)\ntime to first audio 2600 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         195.2 ms\n  backbone prefill     575.1 ms\n  first vocoder        256.0 ms  (40 frames)\n  backbone decode    12192.6 ms  (18.25 ms/frame)\n  depth decode       29197.1 ms  (43.71 ms/frame)\n  vocoder             5770.8 ms  (8.64 ms/frame)\n  668 frames, 53.44 s audio\nwrote /tmp/breeze-longform/mandarin-q3_k.repeat-3.wav (53.44 s)\n  flush 1 ready_ms=2667.9 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5312.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=5887.7 delivered_audio_s=6.96\n\ngenerated 6.96 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 4 ready_ms=9019.3 delivered_audio_s=10.16\n\ngenerated 10.16 s  flush 5 ready_ms=11767.2 delivered_audio_s=13.36\n\ngenerated 13.36 s  flush 6 ready_ms=14535.0 delivered_audio_s=16.56\n\ngenerated 16.56 s  flush 7 ready_ms=17347.2 delivered_audio_s=19.76\n\ngenerated 19.76 s  flush 8 ready_ms=20218.0 delivered_audio_s=22.96\n\ngenerated 22.96 s  flush 9 ready_ms=23102.5 delivered_audio_s=26.16\n\ngenerated 26.16 s  flush 10 ready_ms=26081.2 delivered_audio_s=29.36\n\ngenerated 29.36 s  flush 11 ready_ms=28989.4 delivered_audio_s=32.56\n\ngenerated 32.56 s  flush 12 ready_ms=31964.1 delivered_audio_s=35.76\n\ngenerated 35.76 s  flush 13 ready_ms=34878.9 delivered_audio_s=38.96\n\ngenerated 38.96 s  flush 14 ready_ms=37866.0 delivered_audio_s=42.16\n\ngenerated 42.16 s  flush 15 ready_ms=40867.6 delivered_audio_s=45.36\n\ngenerated 45.36 s  flush 16 ready_ms=43319.3 delivered_audio_s=47.92\n\ngenerated 47.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 17 ready_ms=46128.3 delivered_audio_s=51.12\n\ngenerated 51.12 s  flush 18 ready_ms=48164.2 delivered_audio_s=53.44\n\ngenerated 53.44 s\ngeneration wall     48164.4 ms (wall RTF 0.901)\ntime to first audio 2668 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         195.7 ms\n  backbone prefill     562.1 ms\n  first vocoder        258.1 ms  (40 frames)\n  backbone decode    12193.7 ms  (18.25 ms/frame)\n  depth decode       29359.5 ms  (43.95 ms/frame)\n  vocoder             5794.5 ms  (8.67 ms/frame)\n  668 frames, 53.44 s audio\nwrote /tmp/breeze-longform/mandarin-q3_k.repeat-4.wav (53.44 s)\n",
+      "log_sha256": "cd45f1392c2bf30665a7c67e83738b397e263c5c65d95a542be074bcf39ff40c",
+      "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 48429.5,
+          "wall_rtf": 0.9062406437125748,
+          "wall_rtf_reported": 0.906,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 241.5,
+            "backbone prefill": 602.5,
+            "first vocoder": 261.2,
+            "backbone decode": 12316.1,
+            "depth decode": 29357.8,
+            "vocoder": 5849.3
+          },
+          "stage_rtf": 0.9050748502994012,
+          "decode_rtf": 0.8892814371257485,
+          "frames": 668,
+          "audio_s": 53.44,
+          "first_audio_ms": 2740.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2740.5,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5401.0,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 5971.2,
+              "delivered_audio_s": 6.96
+            },
+            {
+              "index": 4,
+              "ready_ms": 9072.1,
+              "delivered_audio_s": 10.16
+            },
+            {
+              "index": 5,
+              "ready_ms": 11859.5,
+              "delivered_audio_s": 13.36
+            },
+            {
+              "index": 6,
+              "ready_ms": 14685.6,
+              "delivered_audio_s": 16.56
+            },
+            {
+              "index": 7,
+              "ready_ms": 17530.3,
+              "delivered_audio_s": 19.76
+            },
+            {
+              "index": 8,
+              "ready_ms": 20459.1,
+              "delivered_audio_s": 22.96
+            },
+            {
+              "index": 9,
+              "ready_ms": 23347.7,
+              "delivered_audio_s": 26.16
+            },
+            {
+              "index": 10,
+              "ready_ms": 26260.2,
+              "delivered_audio_s": 29.36
+            },
+            {
+              "index": 11,
+              "ready_ms": 29137.3,
+              "delivered_audio_s": 32.56
+            },
+            {
+              "index": 12,
+              "ready_ms": 32072.2,
+              "delivered_audio_s": 35.76
+            },
+            {
+              "index": 13,
+              "ready_ms": 35043.8,
+              "delivered_audio_s": 38.96
+            },
+            {
+              "index": 14,
+              "ready_ms": 38061.5,
+              "delivered_audio_s": 42.16
+            },
+            {
+              "index": 15,
+              "ready_ms": 41067.8,
+              "delivered_audio_s": 45.36
+            },
+            {
+              "index": 16,
+              "ready_ms": 43616.0,
+              "delivered_audio_s": 47.92
+            },
+            {
+              "index": 17,
+              "ready_ms": 46437.7,
+              "delivered_audio_s": 51.12
+            },
+            {
+              "index": 18,
+              "ready_ms": 48429.3,
+              "delivered_audio_s": 53.44
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 18.44,
+          "depth_decode_ms_per_frame": 43.95,
+          "vocoder_ms_per_frame": 8.76,
+          "wav": "mandarin-q3_k.wav",
+          "sha256": "5b8e4564f0cb231e194d621b299dbc29009ba5cdf3cbd021b56a5443bf4d7b88",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 53.44
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 47991.8,
+          "wall_rtf": 0.8980501497005988,
+          "wall_rtf_reported": 0.898,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 194.2,
+            "backbone prefill": 577.7,
+            "first vocoder": 256.3,
+            "backbone decode": 12183.1,
+            "depth decode": 29215.2,
+            "vocoder": 5762.4
+          },
+          "stage_rtf": 0.896942365269461,
+          "decode_rtf": 0.8824981287425149,
+          "frames": 668,
+          "audio_s": 53.44,
+          "first_audio_ms": 2713.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2712.8,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5404.4,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 5983.5,
+              "delivered_audio_s": 6.96
+            },
+            {
+              "index": 4,
+              "ready_ms": 9078.4,
+              "delivered_audio_s": 10.16
+            },
+            {
+              "index": 5,
+              "ready_ms": 11819.7,
+              "delivered_audio_s": 13.36
+            },
+            {
+              "index": 6,
+              "ready_ms": 14634.2,
+              "delivered_audio_s": 16.56
+            },
+            {
+              "index": 7,
+              "ready_ms": 17400.8,
+              "delivered_audio_s": 19.76
+            },
+            {
+              "index": 8,
+              "ready_ms": 20182.1,
+              "delivered_audio_s": 22.96
+            },
+            {
+              "index": 9,
+              "ready_ms": 22995.1,
+              "delivered_audio_s": 26.16
+            },
+            {
+              "index": 10,
+              "ready_ms": 25882.9,
+              "delivered_audio_s": 29.36
+            },
+            {
+              "index": 11,
+              "ready_ms": 28735.6,
+              "delivered_audio_s": 32.56
+            },
+            {
+              "index": 12,
+              "ready_ms": 31765.6,
+              "delivered_audio_s": 35.76
+            },
+            {
+              "index": 13,
+              "ready_ms": 34710.0,
+              "delivered_audio_s": 38.96
+            },
+            {
+              "index": 14,
+              "ready_ms": 37744.5,
+              "delivered_audio_s": 42.16
+            },
+            {
+              "index": 15,
+              "ready_ms": 40707.3,
+              "delivered_audio_s": 45.36
+            },
+            {
+              "index": 16,
+              "ready_ms": 43158.7,
+              "delivered_audio_s": 47.92
+            },
+            {
+              "index": 17,
+              "ready_ms": 46011.5,
+              "delivered_audio_s": 51.12
+            },
+            {
+              "index": 18,
+              "ready_ms": 47991.6,
+              "delivered_audio_s": 53.44
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 18.24,
+          "depth_decode_ms_per_frame": 43.74,
+          "vocoder_ms_per_frame": 8.63,
+          "wav": "mandarin-q3_k.repeat-2.wav",
+          "sha256": "5b8e4564f0cb231e194d621b299dbc29009ba5cdf3cbd021b56a5443bf4d7b88",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 53.44
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 47988.6,
+          "wall_rtf": 0.8979902694610779,
+          "wall_rtf_reported": 0.898,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 195.2,
+            "backbone prefill": 575.1,
+            "first vocoder": 256.0,
+            "backbone decode": 12192.6,
+            "depth decode": 29197.1,
+            "vocoder": 5770.8
+          },
+          "stage_rtf": 0.8969086826347304,
+          "decode_rtf": 0.882494386227545,
+          "frames": 668,
+          "audio_s": 53.44,
+          "first_audio_ms": 2600.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2600.1,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5222.1,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 5824.1,
+              "delivered_audio_s": 6.96
+            },
+            {
+              "index": 4,
+              "ready_ms": 8892.8,
+              "delivered_audio_s": 10.16
+            },
+            {
+              "index": 5,
+              "ready_ms": 11612.3,
+              "delivered_audio_s": 13.36
+            },
+            {
+              "index": 6,
+              "ready_ms": 14515.0,
+              "delivered_audio_s": 16.56
+            },
+            {
+              "index": 7,
+              "ready_ms": 17349.4,
+              "delivered_audio_s": 19.76
+            },
+            {
+              "index": 8,
+              "ready_ms": 20197.6,
+              "delivered_audio_s": 22.96
+            },
+            {
+              "index": 9,
+              "ready_ms": 23011.8,
+              "delivered_audio_s": 26.16
+            },
+            {
+              "index": 10,
+              "ready_ms": 25871.5,
+              "delivered_audio_s": 29.36
+            },
+            {
+              "index": 11,
+              "ready_ms": 28742.8,
+              "delivered_audio_s": 32.56
+            },
+            {
+              "index": 12,
+              "ready_ms": 31620.4,
+              "delivered_audio_s": 35.76
+            },
+            {
+              "index": 13,
+              "ready_ms": 34534.3,
+              "delivered_audio_s": 38.96
+            },
+            {
+              "index": 14,
+              "ready_ms": 37541.4,
+              "delivered_audio_s": 42.16
+            },
+            {
+              "index": 15,
+              "ready_ms": 40513.0,
+              "delivered_audio_s": 45.36
+            },
+            {
+              "index": 16,
+              "ready_ms": 43078.3,
+              "delivered_audio_s": 47.92
+            },
+            {
+              "index": 17,
+              "ready_ms": 45932.2,
+              "delivered_audio_s": 51.12
+            },
+            {
+              "index": 18,
+              "ready_ms": 47988.4,
+              "delivered_audio_s": 53.44
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 18.25,
+          "depth_decode_ms_per_frame": 43.71,
+          "vocoder_ms_per_frame": 8.64,
+          "wav": "mandarin-q3_k.repeat-3.wav",
+          "sha256": "5b8e4564f0cb231e194d621b299dbc29009ba5cdf3cbd021b56a5443bf4d7b88",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 53.44
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 48164.4,
+          "wall_rtf": 0.9012799401197605,
+          "wall_rtf_reported": 0.901,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 195.7,
+            "backbone prefill": 562.1,
+            "first vocoder": 258.1,
+            "backbone decode": 12193.7,
+            "depth decode": 29359.5,
+            "vocoder": 5794.5
+          },
+          "stage_rtf": 0.9001777694610779,
+          "decode_rtf": 0.8859973802395209,
+          "frames": 668,
+          "audio_s": 53.44,
+          "first_audio_ms": 2668.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2667.9,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5312.0,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 5887.7,
+              "delivered_audio_s": 6.96
+            },
+            {
+              "index": 4,
+              "ready_ms": 9019.3,
+              "delivered_audio_s": 10.16
+            },
+            {
+              "index": 5,
+              "ready_ms": 11767.2,
+              "delivered_audio_s": 13.36
+            },
+            {
+              "index": 6,
+              "ready_ms": 14535.0,
+              "delivered_audio_s": 16.56
+            },
+            {
+              "index": 7,
+              "ready_ms": 17347.2,
+              "delivered_audio_s": 19.76
+            },
+            {
+              "index": 8,
+              "ready_ms": 20218.0,
+              "delivered_audio_s": 22.96
+            },
+            {
+              "index": 9,
+              "ready_ms": 23102.5,
+              "delivered_audio_s": 26.16
+            },
+            {
+              "index": 10,
+              "ready_ms": 26081.2,
+              "delivered_audio_s": 29.36
+            },
+            {
+              "index": 11,
+              "ready_ms": 28989.4,
+              "delivered_audio_s": 32.56
+            },
+            {
+              "index": 12,
+              "ready_ms": 31964.1,
+              "delivered_audio_s": 35.76
+            },
+            {
+              "index": 13,
+              "ready_ms": 34878.9,
+              "delivered_audio_s": 38.96
+            },
+            {
+              "index": 14,
+              "ready_ms": 37866.0,
+              "delivered_audio_s": 42.16
+            },
+            {
+              "index": 15,
+              "ready_ms": 40867.6,
+              "delivered_audio_s": 45.36
+            },
+            {
+              "index": 16,
+              "ready_ms": 43319.3,
+              "delivered_audio_s": 47.92
+            },
+            {
+              "index": 17,
+              "ready_ms": 46128.3,
+              "delivered_audio_s": 51.12
+            },
+            {
+              "index": 18,
+              "ready_ms": 48164.2,
+              "delivered_audio_s": 53.44
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 18.25,
+          "depth_decode_ms_per_frame": 43.95,
+          "vocoder_ms_per_frame": 8.67,
+          "wav": "mandarin-q3_k.repeat-4.wav",
+          "sha256": "5b8e4564f0cb231e194d621b299dbc29009ba5cdf3cbd021b56a5443bf4d7b88",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 53.44
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.8991067864271457,
+      "warm_p50_rtf": 0.8980501497005988,
+      "warm_sample_p50_rtf": 0.8980501497005988,
+      "warm_sample_p95_rtf": 0.9009569610778444,
+      "termination": {
+        "kind": "natural-complete-default-split",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          668,
+          668,
+          668,
+          668
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": true,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    },
+    "saved-voice-en-q4_k": {
+      "fixture": {
+        "id": "saved-voice-en",
+        "text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+        "weighted_chars": 858,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split-saved-voice",
+        "voice": "matrix",
+        "voices_dir": "/tmp/breeze-q3-cached/voices",
+        "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c"
+      },
+      "model": "q4_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q4_k.gguf",
+        "--text",
+        "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/saved-voice-en-q4_k.wav",
+        "--voice",
+        "matrix",
+        "--voices-dir",
+        "/tmp/breeze-q3-cached/voices"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3353.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6453.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9578.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12778.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15922.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=19234.5 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=22475.4 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=25775.3 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=29033.5 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=32428.6 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=35746.1 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=39100.9 delivered_audio_s=38.40\n\ngenerated 38.40 s  flush 13 ready_ms=40815.1 delivered_audio_s=39.92\n\ngenerated 39.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 14 ready_ms=43925.9 delivered_audio_s=43.12\n\ngenerated 43.12 s  flush 15 ready_ms=47025.4 delivered_audio_s=46.32\n\ngenerated 46.32 s  flush 16 ready_ms=50225.9 delivered_audio_s=49.52\n\ngenerated 49.52 s  flush 17 ready_ms=53393.7 delivered_audio_s=52.72\n\ngenerated 52.72 s  flush 18 ready_ms=56534.0 delivered_audio_s=55.92\n\ngenerated 55.92 s  flush 19 ready_ms=59010.9 delivered_audio_s=58.40\n\ngenerated 58.40 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     59011.8 ms (wall RTF 1.010)\ntime to first audio 3354 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         155.2 ms\n  backbone prefill     246.9 ms\n  first vocoder        274.1 ms  (40 frames)\n  backbone decode    14736.6 ms  (20.19 ms/frame)\n  depth decode       37386.9 ms  (51.21 ms/frame)\n  vocoder             6427.6 ms  (8.80 ms/frame)\n  730 frames, 58.40 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q4_k.wav (58.40 s)\n  flush 1 ready_ms=3245.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6317.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9423.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12588.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15746.0 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=18977.5 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=22242.1 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=25628.6 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=28878.3 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=32214.5 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=35556.1 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=38905.3 delivered_audio_s=38.40\n\ngenerated 38.40 s  flush 13 ready_ms=40600.6 delivered_audio_s=39.92\n\ngenerated 39.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 14 ready_ms=43700.3 delivered_audio_s=43.12\n\ngenerated 43.12 s  flush 15 ready_ms=46741.3 delivered_audio_s=46.32\n\ngenerated 46.32 s  flush 16 ready_ms=49919.3 delivered_audio_s=49.52\n\ngenerated 49.52 s  flush 17 ready_ms=53042.0 delivered_audio_s=52.72\n\ngenerated 52.72 s  flush 18 ready_ms=56210.9 delivered_audio_s=55.92\n\ngenerated 55.92 s  flush 19 ready_ms=58683.7 delivered_audio_s=58.40\n\ngenerated 58.40 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     58684.4 ms (wall RTF 1.005)\ntime to first audio 3246 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         104.4 ms\n  backbone prefill     231.3 ms\n  first vocoder        257.1 ms  (40 frames)\n  backbone decode    14636.5 ms  (20.05 ms/frame)\n  depth decode       37248.3 ms  (51.03 ms/frame)\n  vocoder             6413.1 ms  (8.79 ms/frame)\n  730 frames, 58.40 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q4_k.repeat-2.wav (58.40 s)\n  flush 1 ready_ms=3205.9 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6333.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9428.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12553.0 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15747.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=18904.7 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=22207.4 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=25491.0 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=28786.4 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=32067.6 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=35461.8 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=38814.8 delivered_audio_s=38.40\n\ngenerated 38.40 s  flush 13 ready_ms=40510.7 delivered_audio_s=39.92\n\ngenerated 39.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 14 ready_ms=43573.3 delivered_audio_s=43.12\n\ngenerated 43.12 s  flush 15 ready_ms=46649.3 delivered_audio_s=46.32\n\ngenerated 46.32 s  flush 16 ready_ms=49708.5 delivered_audio_s=49.52\n\ngenerated 49.52 s  flush 17 ready_ms=52899.3 delivered_audio_s=52.72\n\ngenerated 52.72 s  flush 18 ready_ms=56092.5 delivered_audio_s=55.92\n\ngenerated 55.92 s  flush 19 ready_ms=58563.3 delivered_audio_s=58.40\n\ngenerated 58.40 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     58564.2 ms (wall RTF 1.003)\ntime to first audio 3206 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         105.2 ms\n  backbone prefill     227.9 ms\n  first vocoder        267.8 ms  (40 frames)\n  backbone decode    14592.5 ms  (19.99 ms/frame)\n  depth decode       37243.9 ms  (51.02 ms/frame)\n  vocoder             6344.3 ms  (8.69 ms/frame)\n  730 frames, 58.40 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q4_k.repeat-3.wav (58.40 s)\n  flush 1 ready_ms=3195.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6330.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9426.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12538.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15736.0 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=18903.3 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=22223.8 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=25487.0 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=28820.5 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=32106.7 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=35482.0 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=38874.2 delivered_audio_s=38.40\n\ngenerated 38.40 s  flush 13 ready_ms=40615.8 delivered_audio_s=39.92\n\ngenerated 39.92 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 14 ready_ms=43652.6 delivered_audio_s=43.12\n\ngenerated 43.12 s  flush 15 ready_ms=46765.7 delivered_audio_s=46.32\n\ngenerated 46.32 s  flush 16 ready_ms=49850.7 delivered_audio_s=49.52\n\ngenerated 49.52 s  flush 17 ready_ms=53048.9 delivered_audio_s=52.72\n\ngenerated 52.72 s  flush 18 ready_ms=56195.8 delivered_audio_s=55.92\n\ngenerated 55.92 s  flush 19 ready_ms=58746.0 delivered_audio_s=58.40\n\ngenerated 58.40 s\ngeneration wall     58746.9 ms (wall RTF 1.006)\ntime to first audio 3196 ms over 19 flushes\n  reference encode       0.0 ms\n  prompt build         106.7 ms\n  backbone prefill     228.4 ms\n  first vocoder        255.9 ms  (40 frames)\n  backbone decode    14642.1 ms  (20.06 ms/frame)\n  depth decode       37373.2 ms  (51.20 ms/frame)\n  vocoder             6345.8 ms  (8.69 ms/frame)\n  730 frames, 58.40 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q4_k.repeat-4.wav (58.40 s)\n",
+      "log_sha256": "84b81927b74437d1182c5a593b5a2ed918dc43c121d7b6cac2d262e554d9a54a",
+      "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 59011.8,
+          "wall_rtf": 1.0104760273972604,
+          "wall_rtf_reported": 1.01,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 155.2,
+            "backbone prefill": 246.9,
+            "first vocoder": 274.1,
+            "backbone decode": 14736.6,
+            "depth decode": 37386.9,
+            "vocoder": 6427.6
+          },
+          "stage_rtf": 1.009472602739726,
+          "decode_rtf": 1.0025873287671234,
+          "frames": 730,
+          "audio_s": 58.4,
+          "first_audio_ms": 3354.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3353.6,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6453.9,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 9578.1,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 12778.4,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 15922.2,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 19234.5,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 22475.4,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 25775.3,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 29033.5,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 32428.6,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 35746.1,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 39100.9,
+              "delivered_audio_s": 38.4
+            },
+            {
+              "index": 13,
+              "ready_ms": 40815.1,
+              "delivered_audio_s": 39.92
+            },
+            {
+              "index": 14,
+              "ready_ms": 43925.9,
+              "delivered_audio_s": 43.12
+            },
+            {
+              "index": 15,
+              "ready_ms": 47025.4,
+              "delivered_audio_s": 46.32
+            },
+            {
+              "index": 16,
+              "ready_ms": 50225.9,
+              "delivered_audio_s": 49.52
+            },
+            {
+              "index": 17,
+              "ready_ms": 53393.7,
+              "delivered_audio_s": 52.72
+            },
+            {
+              "index": 18,
+              "ready_ms": 56534.0,
+              "delivered_audio_s": 55.92
+            },
+            {
+              "index": 19,
+              "ready_ms": 59010.9,
+              "delivered_audio_s": 58.4
+            }
+          ],
+          "max_playback_deficit_ms": 652.3000000000029,
+          "max_delivery_deficit_ms": 652.3000000000029,
+          "backbone_decode_ms_per_frame": 20.19,
+          "depth_decode_ms_per_frame": 51.21,
+          "vocoder_ms_per_frame": 8.8,
+          "wav": "saved-voice-en-q4_k.wav",
+          "sha256": "beb5dfec52234c6b7c61f7732e20c7bb85e86ac022a643be7c99f4c2079d7960",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.4
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 58684.4,
+          "wall_rtf": 1.0048698630136987,
+          "wall_rtf_reported": 1.005,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 104.4,
+            "backbone prefill": 231.3,
+            "first vocoder": 257.1,
+            "backbone decode": 14636.5,
+            "depth decode": 37248.3,
+            "vocoder": 6413.1
+          },
+          "stage_rtf": 1.004,
+          "decode_rtf": 0.9982517123287672,
+          "frames": 730,
+          "audio_s": 58.4,
+          "first_audio_ms": 3246.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3245.6,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6317.0,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 9423.0,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 12588.4,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 15746.0,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 18977.5,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 22242.1,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 25628.6,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 28878.3,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 32214.5,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 35556.1,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 38905.3,
+              "delivered_audio_s": 38.4
+            },
+            {
+              "index": 13,
+              "ready_ms": 40600.6,
+              "delivered_audio_s": 39.92
+            },
+            {
+              "index": 14,
+              "ready_ms": 43700.3,
+              "delivered_audio_s": 43.12
+            },
+            {
+              "index": 15,
+              "ready_ms": 46741.3,
+              "delivered_audio_s": 46.32
+            },
+            {
+              "index": 16,
+              "ready_ms": 49919.3,
+              "delivered_audio_s": 49.52
+            },
+            {
+              "index": 17,
+              "ready_ms": 53042.0,
+              "delivered_audio_s": 52.72
+            },
+            {
+              "index": 18,
+              "ready_ms": 56210.9,
+              "delivered_audio_s": 55.92
+            },
+            {
+              "index": 19,
+              "ready_ms": 58683.7,
+              "delivered_audio_s": 58.4
+            }
+          ],
+          "max_playback_deficit_ms": 534.7000000000044,
+          "max_delivery_deficit_ms": 534.7000000000044,
+          "backbone_decode_ms_per_frame": 20.05,
+          "depth_decode_ms_per_frame": 51.03,
+          "vocoder_ms_per_frame": 8.79,
+          "wav": "saved-voice-en-q4_k.repeat-2.wav",
+          "sha256": "beb5dfec52234c6b7c61f7732e20c7bb85e86ac022a643be7c99f4c2079d7960",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.4
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 58564.2,
+          "wall_rtf": 1.0028116438356165,
+          "wall_rtf_reported": 1.003,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 105.2,
+            "backbone prefill": 227.9,
+            "first vocoder": 267.8,
+            "backbone decode": 14592.5,
+            "depth decode": 37243.9,
+            "vocoder": 6344.3
+          },
+          "stage_rtf": 1.0019486301369864,
+          "decode_rtf": 0.9962448630136987,
+          "frames": 730,
+          "audio_s": 58.4,
+          "first_audio_ms": 3206.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3205.9,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6333.5,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 9428.1,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 12553.0,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 15747.2,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 18904.7,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 22207.4,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 25491.0,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 28786.4,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 32067.6,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 35461.8,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 38814.8,
+              "delivered_audio_s": 38.4
+            },
+            {
+              "index": 13,
+              "ready_ms": 40510.7,
+              "delivered_audio_s": 39.92
+            },
+            {
+              "index": 14,
+              "ready_ms": 43573.3,
+              "delivered_audio_s": 43.12
+            },
+            {
+              "index": 15,
+              "ready_ms": 46649.3,
+              "delivered_audio_s": 46.32
+            },
+            {
+              "index": 16,
+              "ready_ms": 49708.5,
+              "delivered_audio_s": 49.52
+            },
+            {
+              "index": 17,
+              "ready_ms": 52899.3,
+              "delivered_audio_s": 52.72
+            },
+            {
+              "index": 18,
+              "ready_ms": 56092.5,
+              "delivered_audio_s": 55.92
+            },
+            {
+              "index": 19,
+              "ready_ms": 58563.3,
+              "delivered_audio_s": 58.4
+            }
+          ],
+          "max_playback_deficit_ms": 447.40000000000146,
+          "max_delivery_deficit_ms": 447.40000000000146,
+          "backbone_decode_ms_per_frame": 19.99,
+          "depth_decode_ms_per_frame": 51.02,
+          "vocoder_ms_per_frame": 8.69,
+          "wav": "saved-voice-en-q4_k.repeat-3.wav",
+          "sha256": "beb5dfec52234c6b7c61f7732e20c7bb85e86ac022a643be7c99f4c2079d7960",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.4
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 58746.9,
+          "wall_rtf": 1.0059400684931508,
+          "wall_rtf_reported": 1.006,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 106.7,
+            "backbone prefill": 228.4,
+            "first vocoder": 255.9,
+            "backbone decode": 14642.1,
+            "depth decode": 37373.2,
+            "vocoder": 6345.8
+          },
+          "stage_rtf": 1.005071917808219,
+          "decode_rtf": 0.999333904109589,
+          "frames": 730,
+          "audio_s": 58.4,
+          "first_audio_ms": 3196.0,
+          "flushes": 19,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3195.7,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 6330.2,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 9426.8,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 12538.2,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 15736.0,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 18903.3,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 22223.8,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 25487.0,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 28820.5,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 32106.7,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 35482.0,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 38874.2,
+              "delivered_audio_s": 38.4
+            },
+            {
+              "index": 13,
+              "ready_ms": 40615.8,
+              "delivered_audio_s": 39.92
+            },
+            {
+              "index": 14,
+              "ready_ms": 43652.6,
+              "delivered_audio_s": 43.12
+            },
+            {
+              "index": 15,
+              "ready_ms": 46765.7,
+              "delivered_audio_s": 46.32
+            },
+            {
+              "index": 16,
+              "ready_ms": 49850.7,
+              "delivered_audio_s": 49.52
+            },
+            {
+              "index": 17,
+              "ready_ms": 53048.9,
+              "delivered_audio_s": 52.72
+            },
+            {
+              "index": 18,
+              "ready_ms": 56195.8,
+              "delivered_audio_s": 55.92
+            },
+            {
+              "index": 19,
+              "ready_ms": 58746.0,
+              "delivered_audio_s": 58.4
+            }
+          ],
+          "max_playback_deficit_ms": 536.9000000000015,
+          "max_delivery_deficit_ms": 536.9000000000015,
+          "backbone_decode_ms_per_frame": 20.06,
+          "depth_decode_ms_per_frame": 51.2,
+          "vocoder_ms_per_frame": 8.69,
+          "wav": "saved-voice-en-q4_k.repeat-4.wav",
+          "sha256": "beb5dfec52234c6b7c61f7732e20c7bb85e86ac022a643be7c99f4c2079d7960",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 58.4
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 1.0045405251141553,
+      "warm_p50_rtf": 1.0048698630136987,
+      "warm_sample_p50_rtf": 1.0048698630136987,
+      "warm_sample_p95_rtf": 1.0058330479452056,
+      "termination": {
+        "kind": "natural-complete-default-split-saved-voice",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          730,
+          730,
+          730,
+          730
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": false,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    },
+    "saved-voice-en-q3_k": {
+      "fixture": {
+        "id": "saved-voice-en",
+        "text": "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+        "weighted_chars": 858,
+        "max_new": 1200,
+        "kind": "natural-complete-default-split-saved-voice",
+        "voice": "matrix",
+        "voices_dir": "/tmp/breeze-q3-cached/voices",
+        "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c"
+      },
+      "model": "q3_k",
+      "rc": 0,
+      "command": [
+        "/src/build/breeze-cli",
+        "/tmp/breeze-depth-blocks-q3_k.gguf",
+        "--text",
+        "At sunrise, the neighbourhood museum opened for a careful day of shared work. Volunteers moved boxes through the hall, cleaned display cases, and labelled objects from the basement. Mara welcomed families with maps and notebooks, while an old clock marked the hours above the desk. The first group sorted railway photographs and copied each date into a fresh register. A retired engineer explained older tools, while two students measured cases so a new shelf would not block the windows. At midday, neighbours shared soup and stories about departures, reunions, and journeys that changed direction. Before closing, Mara listed four requests: repair the clock, finish the catalogue, repaint the sign, and ask the council about a safer ramp. Everyone agreed to return with better tools and more photographs, because patient work had given the museum a future.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "4",
+        "--timings",
+        "--max-new",
+        "1200",
+        "--output",
+        "/tmp/breeze-longform/saved-voice-en-q3_k.wav",
+        "--voice",
+        "matrix",
+        "--voices-dir",
+        "/tmp/breeze-q3-cached/voices"
+      ],
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q3_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3044.9 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5922.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8754.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11617.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14539.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17431.7 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=20478.1 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=23456.3 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=26522.8 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=29513.7 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=32548.7 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=34430.3 delivered_audio_s=37.04\n\ngenerated 37.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 13 ready_ms=37197.1 delivered_audio_s=40.24\n\ngenerated 40.24 s  flush 14 ready_ms=39950.3 delivered_audio_s=43.44\n\ngenerated 43.44 s  flush 15 ready_ms=42731.3 delivered_audio_s=46.64\n\ngenerated 46.64 s  flush 16 ready_ms=45580.2 delivered_audio_s=49.84\n\ngenerated 49.84 s  flush 17 ready_ms=48397.1 delivered_audio_s=53.04\n\ngenerated 53.04 s  flush 18 ready_ms=50032.5 delivered_audio_s=54.72\n\ngenerated 54.72 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     50033.8 ms (wall RTF 0.914)\ntime to first audio 3045 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         156.3 ms\n  backbone prefill     250.6 ms\n  first vocoder        288.7 ms  (40 frames)\n  backbone decode    13596.2 ms  (19.88 ms/frame)\n  depth decode       29909.8 ms  (43.73 ms/frame)\n  vocoder             6061.5 ms  (8.86 ms/frame)\n  684 frames, 54.72 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q3_k.wav (54.72 s)\n  flush 1 ready_ms=2956.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5825.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8630.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11464.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14357.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17234.0 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=20120.3 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=23101.7 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=26096.7 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=29078.8 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=32218.5 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=34106.0 delivered_audio_s=37.04\n\ngenerated 37.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 13 ready_ms=36965.4 delivered_audio_s=40.24\n\ngenerated 40.24 s  flush 14 ready_ms=39731.1 delivered_audio_s=43.44\n\ngenerated 43.44 s  flush 15 ready_ms=42520.9 delivered_audio_s=46.64\n\ngenerated 46.64 s  flush 16 ready_ms=45371.9 delivered_audio_s=49.84\n\ngenerated 49.84 s  flush 17 ready_ms=48190.9 delivered_audio_s=53.04\n\ngenerated 53.04 s  flush 18 ready_ms=49760.7 delivered_audio_s=54.72\n\ngenerated 54.72 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     49761.6 ms (wall RTF 0.909)\ntime to first audio 2957 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         105.6 ms\n  backbone prefill     235.4 ms\n  first vocoder        270.0 ms  (40 frames)\n  backbone decode    13486.6 ms  (19.72 ms/frame)\n  depth decode       29904.6 ms  (43.72 ms/frame)\n  vocoder             5978.4 ms  (8.74 ms/frame)\n  684 frames, 54.72 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q3_k.repeat-2.wav (54.72 s)\n  flush 1 ready_ms=2902.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5766.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8648.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11615.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14508.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17444.9 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=20334.4 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=23295.9 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=26287.6 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=29276.7 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=32298.5 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=34205.3 delivered_audio_s=37.04\n\ngenerated 37.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 13 ready_ms=36966.4 delivered_audio_s=40.24\n\ngenerated 40.24 s  flush 14 ready_ms=39766.7 delivered_audio_s=43.44\n\ngenerated 43.44 s  flush 15 ready_ms=42677.7 delivered_audio_s=46.64\n\ngenerated 46.64 s  flush 16 ready_ms=45569.9 delivered_audio_s=49.84\n\ngenerated 49.84 s  flush 17 ready_ms=48488.4 delivered_audio_s=53.04\n\ngenerated 53.04 s  flush 18 ready_ms=50045.9 delivered_audio_s=54.72\n\ngenerated 54.72 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     50046.7 ms (wall RTF 0.915)\ntime to first audio 2903 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         105.9 ms\n  backbone prefill     227.9 ms\n  first vocoder        256.8 ms  (40 frames)\n  backbone decode    13540.6 ms  (19.80 ms/frame)\n  depth decode       30169.8 ms  (44.11 ms/frame)\n  vocoder             5954.8 ms  (8.71 ms/frame)\n  684 frames, 54.72 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q3_k.repeat-3.wav (54.72 s)\n  flush 1 ready_ms=2908.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5762.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8579.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11413.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14317.9 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17193.6 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=20214.0 delivered_audio_s=22.40\n\ngenerated 22.40 s  flush 8 ready_ms=23186.5 delivered_audio_s=25.60\n\ngenerated 25.60 s  flush 9 ready_ms=26222.5 delivered_audio_s=28.80\n\ngenerated 28.80 s  flush 10 ready_ms=29238.7 delivered_audio_s=32.00\n\ngenerated 32.00 s  flush 11 ready_ms=32282.1 delivered_audio_s=35.20\n\ngenerated 35.20 s  flush 12 ready_ms=34166.0 delivered_audio_s=37.04\n\ngenerated 37.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n  flush 13 ready_ms=36905.0 delivered_audio_s=40.24\n\ngenerated 40.24 s  flush 14 ready_ms=39676.3 delivered_audio_s=43.44\n\ngenerated 43.44 s  flush 15 ready_ms=42457.2 delivered_audio_s=46.64\n\ngenerated 46.64 s  flush 16 ready_ms=45308.9 delivered_audio_s=49.84\n\ngenerated 49.84 s  flush 17 ready_ms=48141.9 delivered_audio_s=53.04\n\ngenerated 53.04 s  flush 18 ready_ms=49719.9 delivered_audio_s=54.72\n\ngenerated 54.72 s\ngeneration wall     49720.8 ms (wall RTF 0.909)\ntime to first audio 2908 ms over 18 flushes\n  reference encode       0.0 ms\n  prompt build         104.0 ms\n  backbone prefill     228.8 ms\n  first vocoder        255.7 ms  (40 frames)\n  backbone decode    13471.3 ms  (19.69 ms/frame)\n  depth decode       29850.8 ms  (43.64 ms/frame)\n  vocoder             6017.1 ms  (8.80 ms/frame)\n  684 frames, 54.72 s audio\nwrote /tmp/breeze-longform/saved-voice-en-q3_k.repeat-4.wav (54.72 s)\n",
+      "log_sha256": "fa7b5506f9d6e400201b787606297d84a6dc229a547224cd0ef4001026ac3199",
+      "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50",
+      "cli_md5": "067a25764c424185bd684f60354852e0",
+      "runs": [
+        {
+          "repeat": 1,
+          "wall_ms": 50033.8,
+          "wall_rtf": 0.9143603801169591,
+          "wall_rtf_reported": 0.914,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 156.3,
+            "backbone prefill": 250.6,
+            "first vocoder": 288.7,
+            "backbone decode": 13596.2,
+            "depth decode": 29909.8,
+            "vocoder": 6061.5
+          },
+          "stage_rtf": 0.9132748538011696,
+          "decode_rtf": 0.9058388157894737,
+          "frames": 684,
+          "audio_s": 54.72,
+          "first_audio_ms": 3045.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 3044.9,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5922.9,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8754.8,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 11617.4,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 14539.1,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 17431.7,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 20478.1,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 23456.3,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 26522.8,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 29513.7,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 32548.7,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 34430.3,
+              "delivered_audio_s": 37.04
+            },
+            {
+              "index": 13,
+              "ready_ms": 37197.1,
+              "delivered_audio_s": 40.24
+            },
+            {
+              "index": 14,
+              "ready_ms": 39950.3,
+              "delivered_audio_s": 43.44
+            },
+            {
+              "index": 15,
+              "ready_ms": 42731.3,
+              "delivered_audio_s": 46.64
+            },
+            {
+              "index": 16,
+              "ready_ms": 45580.2,
+              "delivered_audio_s": 49.84
+            },
+            {
+              "index": 17,
+              "ready_ms": 48397.1,
+              "delivered_audio_s": 53.04
+            },
+            {
+              "index": 18,
+              "ready_ms": 50032.5,
+              "delivered_audio_s": 54.72
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 19.88,
+          "depth_decode_ms_per_frame": 43.73,
+          "vocoder_ms_per_frame": 8.86,
+          "wav": "saved-voice-en-q3_k.wav",
+          "sha256": "ff7483144830d0be70c76699cdd77cc48fe73f89123ce53e375c1a23eeba96ff",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 54.72
+        },
+        {
+          "repeat": 2,
+          "wall_ms": 49761.6,
+          "wall_rtf": 0.9093859649122806,
+          "wall_rtf_reported": 0.909,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 105.6,
+            "backbone prefill": 235.4,
+            "first vocoder": 270.0,
+            "backbone decode": 13486.6,
+            "depth decode": 29904.6,
+            "vocoder": 5978.4
+          },
+          "stage_rtf": 0.908453947368421,
+          "decode_rtf": 0.9022222222222221,
+          "frames": 684,
+          "audio_s": 54.72,
+          "first_audio_ms": 2957.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2956.7,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5825.1,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8630.3,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 11464.9,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 14357.5,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 17234.0,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 20120.3,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 23101.7,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 26096.7,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 29078.8,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 32218.5,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 34106.0,
+              "delivered_audio_s": 37.04
+            },
+            {
+              "index": 13,
+              "ready_ms": 36965.4,
+              "delivered_audio_s": 40.24
+            },
+            {
+              "index": 14,
+              "ready_ms": 39731.1,
+              "delivered_audio_s": 43.44
+            },
+            {
+              "index": 15,
+              "ready_ms": 42520.9,
+              "delivered_audio_s": 46.64
+            },
+            {
+              "index": 16,
+              "ready_ms": 45371.9,
+              "delivered_audio_s": 49.84
+            },
+            {
+              "index": 17,
+              "ready_ms": 48190.9,
+              "delivered_audio_s": 53.04
+            },
+            {
+              "index": 18,
+              "ready_ms": 49760.7,
+              "delivered_audio_s": 54.72
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 19.72,
+          "depth_decode_ms_per_frame": 43.72,
+          "vocoder_ms_per_frame": 8.74,
+          "wav": "saved-voice-en-q3_k.repeat-2.wav",
+          "sha256": "ff7483144830d0be70c76699cdd77cc48fe73f89123ce53e375c1a23eeba96ff",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 54.72
+        },
+        {
+          "repeat": 3,
+          "wall_ms": 50046.7,
+          "wall_rtf": 0.9145961257309941,
+          "wall_rtf_reported": 0.915,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 105.9,
+            "backbone prefill": 227.9,
+            "first vocoder": 256.8,
+            "backbone decode": 13540.6,
+            "depth decode": 30169.8,
+            "vocoder": 5954.8
+          },
+          "stage_rtf": 0.9137244152046784,
+          "decode_rtf": 0.9076242690058479,
+          "frames": 684,
+          "audio_s": 54.72,
+          "first_audio_ms": 2903.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2902.7,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5766.8,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8648.4,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 11615.7,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 14508.4,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 17444.9,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 20334.4,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 23295.9,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 26287.6,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 29276.7,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 32298.5,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 34205.3,
+              "delivered_audio_s": 37.04
+            },
+            {
+              "index": 13,
+              "ready_ms": 36966.4,
+              "delivered_audio_s": 40.24
+            },
+            {
+              "index": 14,
+              "ready_ms": 39766.7,
+              "delivered_audio_s": 43.44
+            },
+            {
+              "index": 15,
+              "ready_ms": 42677.7,
+              "delivered_audio_s": 46.64
+            },
+            {
+              "index": 16,
+              "ready_ms": 45569.9,
+              "delivered_audio_s": 49.84
+            },
+            {
+              "index": 17,
+              "ready_ms": 48488.4,
+              "delivered_audio_s": 53.04
+            },
+            {
+              "index": 18,
+              "ready_ms": 50045.9,
+              "delivered_audio_s": 54.72
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 19.8,
+          "depth_decode_ms_per_frame": 44.11,
+          "vocoder_ms_per_frame": 8.71,
+          "wav": "saved-voice-en-q3_k.repeat-3.wav",
+          "sha256": "ff7483144830d0be70c76699cdd77cc48fe73f89123ce53e375c1a23eeba96ff",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 54.72
+        },
+        {
+          "repeat": 4,
+          "wall_ms": 49720.8,
+          "wall_rtf": 0.9086403508771931,
+          "wall_rtf_reported": 0.909,
+          "stages_ms": {
+            "reference encode": 0.0,
+            "prompt build": 104.0,
+            "backbone prefill": 228.8,
+            "first vocoder": 255.7,
+            "backbone decode": 13471.3,
+            "depth decode": 29850.8,
+            "vocoder": 6017.1
+          },
+          "stage_rtf": 0.9077485380116959,
+          "decode_rtf": 0.9016666666666666,
+          "frames": 684,
+          "audio_s": 54.72,
+          "first_audio_ms": 2908.0,
+          "flushes": 18,
+          "flushes_ready": [
+            {
+              "index": 1,
+              "ready_ms": 2908.3,
+              "delivered_audio_s": 3.2
+            },
+            {
+              "index": 2,
+              "ready_ms": 5762.1,
+              "delivered_audio_s": 6.4
+            },
+            {
+              "index": 3,
+              "ready_ms": 8579.9,
+              "delivered_audio_s": 9.6
+            },
+            {
+              "index": 4,
+              "ready_ms": 11413.8,
+              "delivered_audio_s": 12.8
+            },
+            {
+              "index": 5,
+              "ready_ms": 14317.9,
+              "delivered_audio_s": 16.0
+            },
+            {
+              "index": 6,
+              "ready_ms": 17193.6,
+              "delivered_audio_s": 19.2
+            },
+            {
+              "index": 7,
+              "ready_ms": 20214.0,
+              "delivered_audio_s": 22.4
+            },
+            {
+              "index": 8,
+              "ready_ms": 23186.5,
+              "delivered_audio_s": 25.6
+            },
+            {
+              "index": 9,
+              "ready_ms": 26222.5,
+              "delivered_audio_s": 28.8
+            },
+            {
+              "index": 10,
+              "ready_ms": 29238.7,
+              "delivered_audio_s": 32.0
+            },
+            {
+              "index": 11,
+              "ready_ms": 32282.1,
+              "delivered_audio_s": 35.2
+            },
+            {
+              "index": 12,
+              "ready_ms": 34166.0,
+              "delivered_audio_s": 37.04
+            },
+            {
+              "index": 13,
+              "ready_ms": 36905.0,
+              "delivered_audio_s": 40.24
+            },
+            {
+              "index": 14,
+              "ready_ms": 39676.3,
+              "delivered_audio_s": 43.44
+            },
+            {
+              "index": 15,
+              "ready_ms": 42457.2,
+              "delivered_audio_s": 46.64
+            },
+            {
+              "index": 16,
+              "ready_ms": 45308.9,
+              "delivered_audio_s": 49.84
+            },
+            {
+              "index": 17,
+              "ready_ms": 48141.9,
+              "delivered_audio_s": 53.04
+            },
+            {
+              "index": 18,
+              "ready_ms": 49719.9,
+              "delivered_audio_s": 54.72
+            }
+          ],
+          "max_playback_deficit_ms": 0.0,
+          "max_delivery_deficit_ms": 0.0,
+          "backbone_decode_ms_per_frame": 19.69,
+          "depth_decode_ms_per_frame": 43.64,
+          "vocoder_ms_per_frame": 8.8,
+          "wav": "saved-voice-en-q3_k.repeat-4.wav",
+          "sha256": "ff7483144830d0be70c76699cdd77cc48fe73f89123ce53e375c1a23eeba96ff",
+          "wav_sample_rate": 24000,
+          "wav_duration_s": 54.72
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.9108741471734892,
+      "warm_p50_rtf": 0.9093859649122806,
+      "warm_sample_p50_rtf": 0.9093859649122806,
+      "warm_sample_p95_rtf": 0.9140751096491228,
+      "termination": {
+        "kind": "natural-complete-default-split-saved-voice",
+        "max_new": 1200,
+        "cap_reached": false,
+        "status": "below-cap",
+        "expected": "below_cap",
+        "pass": true,
+        "frames": [
+          684,
+          684,
+          684,
+          684
+        ]
+      },
+      "gates": {
+        "rtf": false,
+        "delivery": true,
+        "first_audio_warm_mean": true,
+        "repeatability": true,
+        "termination": true
+      }
+    }
+  },
+  "repeat_count": 4,
+  "case_count": 6,
+  "quality_method": "Cached SpeechMOS v1.2.0 utmos22_strong: skipped; descriptive only",
+  "gate_verdict": {
+    "performance": "fail",
+    "quality": "inconclusive",
+    "target_achieved": false
+  },
+  "utmos": {
+    "status": "skipped",
+    "descriptive_only": true
+  },
+  "quality": {
+    "utmos": {
+      "status": "skipped",
+      "descriptive_only": true
+    },
+    "acceptance": "not assessed"
+  },
+  "limitations": [
+    "UTMOS is descriptive only and supplies no speech acceptance decision.",
+    "No ASR intelligibility or speaker-similarity claim is included."
+  ]
+}

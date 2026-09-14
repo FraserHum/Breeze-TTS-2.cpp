@@ -1,6 +1,8 @@
 # CLI
 
-`breeze-cli` runs one request and writes a WAV file.
+`breeze-cli` runs one request and writes a WAV file. Use `--repeat N` for a
+resident benchmark: the model and codec stay loaded while the same seeded
+request runs N times.
 
 ```
 breeze-cli <model.gguf> --text <text> [options]
@@ -25,19 +27,47 @@ breeze-cli <model.gguf> --text <text> [options]
 | `--max-new <n>` | model default (750) | Frame cap. One frame is 80 ms. |
 | `--split-chars <n>` | `600` | Split long text into pieces of about this many characters. `0` generates in one pass. |
 | `--output <wav>` | `output.wav` | Output path. |
-| `--chunk-first <n>` | `4` | Frames in the first streamed chunk. |
-| `--chunk-max <n>` | `25` | Frames the chunk ramps up to. |
+| `--chunk-first <n>` | `40` | Frames in the first streamed chunk. |
+| `--chunk-max <n>` | `40` | Frames the chunk ramps up to. |
+| `--repeat <n>` | `1` | Resident generation repeats. The first repeated output keeps `--output`; later outputs add `.repeat-N` before the extension. |
 | `--timings` | off | Print a stage by stage latency breakdown. |
 | `--cpu` | off | Force the CPU backend. |
 | `-h`, `--help` | | Print usage. |
 
 Progress prints as `generated N.NN s` while the audio streams in.
 
+## Vocoder optimizations
+
+Transposed-convolution matmul is enabled by default. Set
+`BREEZE_VOC_CONVT_MATMUL=0` to use the original convolution kernel; only the
+exact value `0` disables the optimization. This applies to the CLI, server and
+library. Seeded repeat runs remain reproducible, but the optimized waveform
+is not byte-identical to the original kernel.
+
+`BREEZE_VOC_STATEFUL=1` enables experimental cached streaming. It remains off
+by default because it misses the established waveform-equivalence gate.
+Post-transformer convolution tail trimming is enabled by default; it keeps the
+full quantizer, dpre and transformer window, then retains only the proven causal
+history before each new audio chunk. Set `BREEZE_VOC_TRIM=0` to disable it.
+`BREEZE_DD_FUSED=1` also remains experimental: it changes the sampling/RNG path
+and does not implement depth top-p filtering. See the
+[780M quality and performance measurements](../benchmarks/audio-cpp-780m.md).
+
 ## Latency
 
-`--timings` reports where the time goes:
+`--timings` reports where the time goes. Generation wall time starts after the
+model and codec are loaded and stops when generation returns, so it excludes
+model loading and WAV writing. Wall RTF is generation wall seconds divided by
+the delivered audio seconds. Each flush also reports its absolute elapsed
+milliseconds from the generation start and the cumulative audio duration; the
+two values show whether playback would have underrun.
 
 ```
+  flush 1 ready_ms=364.2 delivered_audio_s=0.32
+  flush 2 ready_ms=6359.8 delivered_audio_s=6.40
+  ...
+  flush 7 ready_ms=17195.4 delivered_audio_s=9.28
+generation wall     17195.4 ms (wall RTF 1.853)
 time to first audio 364 ms over 7 flushes
   reference encode       0.0 ms
   prompt build          28.3 ms
@@ -53,10 +83,10 @@ The depth decoder dominates because it runs 15 sequential single token passes
 per frame, each needing its own GPU round trip. Everything else is small by
 comparison.
 
-Audio is flushed in growing chunks, starting at 4 frames so playback can begin
-early and growing to 25 frames so the vocoder stays efficient. That keeps time
-to first audio near 350 ms while generation as a whole runs comfortably faster
-than realtime.
+The current defaults flush 40-frame chunks (3.2 seconds of audio). Smaller
+`--chunk-first` values start playback sooner, with a throughput tradeoff.
+The example above uses an earlier 4-frame first chunk; timings depend on the
+hardware, model and chunk settings.
 
 `--chunk-first` and `--chunk-max` tune that ramp, and pairing them with
 `--timings` is the easiest way to find good values for a given device before
@@ -64,6 +94,11 @@ passing the same numbers to `breeze-server`. Raising `--chunk-max` mostly buys
 back vocoder time, since every flush re-decodes a fixed window of left context
 that gets discarded. See [server.md](server.md) for the measurements and for
 what the client has to do with the result.
+
+With `--repeat N`, output paths are `out.wav`, `out.repeat-2.wav`, and so on;
+the model remains resident and every run starts from the same request and
+seed. With the default `--repeat 1`, the original `--output` path and output
+messages are unchanged.
 
 ## Recipes
 

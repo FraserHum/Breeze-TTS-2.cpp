@@ -1,0 +1,238 @@
+{
+  "schema": "breeze-language-quality-manifest/v1",
+  "status": "ready-specification-no-capture",
+  "created": "2026-09-07",
+  "purpose": "Disjoint English/Mandarin calibration and evaluation inputs for long-form speech quality and depth calibration.",
+  "collection_status": "No audio, activation blob, or calibration data is included or claimed.",
+  "provenance": {
+    "existing_fixture_schema": "benchmarks/depth-corpus/manifest.json",
+    "existing_asr_schema": "breeze-quant-speech/v1",
+    "existing_splitter": "src/text_split.cpp",
+    "previous_longform_manifest": "benchmarks/depth-corpus/quant-longform.json",
+    "previous_capture_manifest": "benchmarks/depth-corpus/manifest.json",
+    "reference_limitation": "The only available reusable voice is a saved synthetic Q4_K artifact; no independent human reference recording is available."
+  },
+  "split_policy": {
+    "budget": 600,
+    "first_budget_without_reference": 200,
+    "first_budget_saved_voice": 0,
+    "cli_option": "omit --split-chars so the runtime default is exercised",
+    "long_fixture_requirement": "default splitter must produce more than one part and exact part concatenation must equal text",
+    "expected_long_parts": {
+      "cal-en-long-123": 3,
+      "cal-zh-long-123": 3,
+      "eval-en-long-42-voice": 2,
+      "eval-zh-long-42-voice": 2
+    }
+  },
+  "fixed_settings": {
+    "model_pair": [
+      "Q4_K",
+      "Q3_K"
+    ],
+    "backend": "Vulkan0",
+    "cfg_scale": 1.0,
+    "sampling": {
+      "request_overrides": "omit --temp, --top-k, --top-p, and --rep-penalty",
+      "resolution": "use each model's embedded GGUF sampling values; record the resolved values in the output receipt",
+      "source_receipt": "benchmarks/depth-corpus/quant-longform.json"
+    },
+    "chunk_first": 40,
+    "chunk_max": 40,
+    "max_new_short": 240,
+    "max_new_long": 1200,
+    "repeat": 1,
+    "instruction_by_language": {
+      "en": "Speak clearly and naturally in English.",
+      "zh": "Speak clearly and naturally in Mandarin Chinese."
+    },
+    "runtime_environment_capture_off": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1"
+    }
+  },
+  "saved_voice": {
+    "id": "matrix",
+    "voices_dir": "/tmp/breeze-q3-cached/voices",
+    "path": "/tmp/breeze-q3-cached/voices/matrix.breeze",
+    "sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+    "source_receipt": "benchmarks/depth-corpus/quant-longform.json",
+    "kind": "saved synthetic voice",
+    "independent_human_reference": false,
+    "missing_reference_action": "If this artifact is unavailable, stop the saved-voice cases; do not substitute generated audio or call it human reference coverage."
+  },
+  "fixtures": [
+    {
+      "id": "cal-en-short-42",
+      "split": "calibration",
+      "language": "en",
+      "kind": "short",
+      "seed": 42,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 240,
+      "weighted_chars": 67,
+      "text": "The brass key rests beside the blue cup, and the kettle is cooling."
+    },
+    {
+      "id": "cal-zh-short-42",
+      "split": "calibration",
+      "language": "zh",
+      "kind": "short",
+      "seed": 42,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 240,
+      "weighted_chars": 69,
+      "text": "藍色茶杯旁放著一把黃銅鑰匙，水壺正在慢慢冷卻。"
+    },
+    {
+      "id": "cal-en-long-123",
+      "split": "calibration",
+      "language": "en",
+      "kind": "long-default-split",
+      "seed": 123,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 1200,
+      "weighted_chars": 953,
+      "expected_default_parts": 3,
+      "text": "On Tuesday evening, the hill observatory opened its workshop for a small repair class. Volunteers carried brass instruments from storage to the benches, where soft lamps lit every label. A meteorologist checked the barometers, while two apprentices cleaned salt from a weather vane brought in from the coast. Near the stairwell, an archivist unfolded star charts and copied each date into a new ledger. The caretaker measured a cracked window, replaced three screws, and marked the frame for tomorrow's carpenter. At the break, visitors traded stories about winter skies, ferry rides, and the first time they saw Saturn. Before the lesson ended, Inez arranged a shelf for spare lenses and wrote a clear note beside the emergency radio. The group agreed to meet again after sunrise, test every instrument, and return the repaired charts to the archive cabinet. Their careful work left the old observatory ready for another season of patient observations."
+    },
+    {
+      "id": "cal-zh-long-123",
+      "split": "calibration",
+      "language": "zh",
+      "kind": "long-default-split",
+      "seed": 123,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 1200,
+      "weighted_chars": 891,
+      "expected_default_parts": 3,
+      "text": "傍晚，山上的氣象站為社區開放一間小型修繕教室。志工把黃銅儀器從儲藏室搬到工作桌，柔和的燈光照亮每張標籤。氣象員檢查氣壓計，兩名學徒清理從海岸帶回的風向標上的鹽痕。樓梯旁，檔案員攤開星圖，把每個日期抄進新的登記簿。管理員量好裂開的窗框，換上三枚螺絲，並在木條上留下明天木匠要處理的位置。休息時，來訪者談起冬夜的天空、渡船的旅程，以及第一次看見土星的情景。課程結束前，怡安替備用鏡片整理一個架子，又在緊急無線電旁寫下清楚的提醒。大家約定日出後再見，逐一測試儀器，把修好的星圖送回檔案櫃。細心的合作讓這座老氣象站準備好迎接下一季的觀測工作。她還把每項工具的歸還時間寫在黑板上，提醒所有人保持走道暢通。"
+    },
+    {
+      "id": "eval-en-short-123",
+      "split": "evaluation",
+      "language": "en",
+      "kind": "short",
+      "seed": 123,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 240,
+      "weighted_chars": 67,
+      "text": "Leave the folded map on the hallway shelf before the lights go out."
+    },
+    {
+      "id": "eval-zh-short-123",
+      "split": "evaluation",
+      "language": "zh",
+      "kind": "short",
+      "seed": 123,
+      "voice_mode": "design",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 240,
+      "weighted_chars": 63,
+      "text": "請在天黑以前把摺好的地圖放到走廊的架子上。"
+    },
+    {
+      "id": "eval-en-long-42-voice",
+      "split": "evaluation",
+      "language": "en",
+      "kind": "long-default-split-saved-voice",
+      "seed": 42,
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 1200,
+      "weighted_chars": 1014,
+      "expected_default_parts": 2,
+      "text": "At the riverside print studio, the evening crew prepared a new exhibit for the town. They lifted wooden type from shallow drawers and brushed dust from the lettering before arranging each line on a long table. A designer mixed blue ink, while a student tested paper made from mulberry bark and recorded the results in a notebook. Beside the press, the studio owner repaired a loose handle and counted the clean rollers needed for the morning class. Guests arrived with photographs of bridges, markets, and boats that had once crossed the river. During the pause, they compared the oldest labels and chose a calm corner for children to make their own small posters. Before everyone left, Noor checked the drying racks, dated the finished sheets, and wrote tomorrow's supply list on the noticeboard. The crew promised to return early, hang the prints in sequence, and leave enough space for visitors to move safely through the gallery. By nightfall, the bright paper gave the quiet building a new sense of direction."
+    },
+    {
+      "id": "eval-zh-long-42-voice",
+      "split": "evaluation",
+      "language": "zh",
+      "kind": "long-default-split-saved-voice",
+      "seed": 42,
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 1200,
+      "weighted_chars": 825,
+      "expected_default_parts": 2,
+      "text": "河畔的印刷工坊在夜裡準備一場新的城鎮展覽。工作人員從矮櫃取出木鉛字，先刷去字面灰塵，再把每一行文字排在長桌上。設計師調好藍色墨水，學生試用桑樹皮紙張，並把測試結果記在筆記本裡。印刷機旁，主人修理鬆動的把手，數好明早課程需要的乾淨滾筒。客人帶來橋梁、市集和曾經往返河上的船隻照片。休息時，大家比較最早的標籤，替孩子選定一個安靜角落，讓他們製作自己的小海報。眾人離開前，諾爾檢查晾紙架，為完成的紙張寫上日期，又把明天的物資清單貼在公告板上。工作人員約好提早回來，依序掛起印刷品，並為參觀者保留安全通道。夜色降臨時，明亮的紙張讓這座安靜的建築重新找到方向。"
+    }
+  ],
+  "asr_reporting": {
+    "schema": "breeze-quant-speech/v1",
+    "runner": "benchmarks/quant_speech_780m.py",
+    "runner_prerequisite": "The current runner infers zh only when fixture id == mandarin; add a small language-field lookup before running these IDs, and keep the explicit IDs/texts unchanged.",
+    "direct_execution": false,
+    "paired_samples": "For every fixture, emit <fixture-id>-q4_k and <fixture-id>-q3_k using the same text, language, instruction, seed, voice mode, and runtime settings.",
+    "normalization": "Reuse the runner: NFKC/lowercase; English alphanumeric words; Mandarin OpenCC t2s then alphanumeric characters.",
+    "metrics": {
+      "en": "WER-style token edit distance / reference units",
+      "zh": "CER-style character edit distance / reference units"
+    },
+    "report": "Record each Q4 and Q3 disagreement rate and the paired Q3-minus-Q4 delta per fixture; retain transcripts and WAV SHA256 values.",
+    "interpretation": "These are recognizer disagreements only. They are not human ground truth, human WER/CER, or an acceptance gate.",
+    "prompt_family_limit": "The new texts are disjoint from prior fixtures but retain a workshop/logistics narrative pattern; they do not establish broad prompt-family independence."
+  },
+  "capture": {
+    "calibration_model": "Q4_K deployment-shaped control; Q3_K is paired quality output, not a replacement calibration source.",
+    "current_restrictions": {
+      "fresh_empty_directory": "BREEZE_DEPTH_CAPTURE must point to a fresh empty directory; capture refuses reuse/overwrite.",
+      "fusion": "BREEZE_DD_FUSED=0; with Vulkan, GGML_VK_DISABLE_FUSION must be present before backend initialization.",
+      "backend_scope": "one or two branches only; current corpus uses one branch",
+      "model_shape": "12 layers and 15 depth steps required",
+      "generated_frames": "capture stops considering frames after the first 16",
+      "selected_frames": [
+        0,
+        7,
+        15
+      ],
+      "selected_layers": [
+        0,
+        5,
+        11
+      ],
+      "tensors": [
+        "backbone_hidden",
+        "ffn_norm_input",
+        "post_silu_times_up",
+        "ffn_down_output"
+      ],
+      "blob": "little-endian F32 activations.f32 plus JSONL metadata.jsonl; current validator limit is 16 MiB",
+      "parity": "compare capture-enabled and capture-disabled complete codes and WAV SHA256 before using activations"
+    },
+    "follow_up_instrumentation_minimum": [
+      "Parameterize the hard-coded layer/frame predicates in src/depth_decoder.cpp and validate declared selections in tools/depth_capture_check.py.",
+      "Allow selected frames beyond frame 15, including late positions such as 31 and 63, while retaining frame and step coordinates in metadata.",
+      "Stream or rotate selected all-layer outputs so all 12 layers and late frames do not exceed the current 16 MiB blob limit; keep the host F32 buffer reused.",
+      "Re-run capture-off parity for each changed selection before treating any output as calibration data."
+    ],
+    "not_collected": true
+  },
+  "blockers": [
+    "No independent human reference recording is available; the saved matrix voice is synthetic and Q4_K-derived.",
+    "No listening panel or human acceptance labels have been collected, so ASR disagreement cannot establish intelligibility, prosody, speaker identity, or deployment quality.",
+    "The current capture implementation omits layers 1-4 and 6-10 and all frames at or beyond 16; all-layer/late-frame calibration requires the follow-up instrumentation above.",
+    "No quality threshold or acceptance claim is declared by this manifest."
+  ],
+  "evaluation_order": [
+    "Run JSON, ID/text disjointness, and splitter checks; do not collect data if they fail.",
+    "Capture Q4_K calibration fixtures under the current restrictions, then compare capture-off and capture-on complete codes and WAV SHA256 and validate the capture blobs.",
+    "Run capture-off Q4_K and Q3_K paired generations for all eight fixtures with the fixed settings and preserve one WAV per pair.",
+    "Run the existing quant_speech_780m.py ASR probe and report paired Q4/Q3 disagreement rates, transcripts, hashes, and deltas as diagnostic evidence only.",
+    "Only after missing listening and human-reference blockers are resolved may a human quality/acceptance decision be made."
+  ]
+}

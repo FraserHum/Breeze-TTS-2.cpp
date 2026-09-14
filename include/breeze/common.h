@@ -53,6 +53,10 @@ struct Graph {
     ggml_tensor * input_i32(const std::vector<int32_t> & data, int ne0, int ne1 = 1);
     ggml_tensor * input_f32(const std::vector<float> & data, int ne0, int ne1 = 1, int ne2 = 1);
     void write(ggml_tensor * node) { extra_roots.push_back(node); }
+    // build t into the graph and mark it as an output so its buffer survives compute:
+    // gallocr reuses every non-output buffer and never frees output buffers, so this is what
+    // keeps t readable after g.compute (needed for post-compute readbacks like the stateful ring)
+    void mark_output(ggml_tensor * t) { ggml_set_output(t); extra_roots.push_back(t); }
 
     void compute(Backend & be, ggml_tensor * out);
 };

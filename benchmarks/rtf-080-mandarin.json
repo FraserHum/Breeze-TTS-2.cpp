@@ -1,0 +1,56 @@
+{
+  "binary_md5": "195f6d858dacb3221f7f753321d118b0",
+  "source": {
+    "control": ".beehive/agent/BREEZE-RTF-080-IMPL/mandarin-control.json",
+    "trim": ".beehive/agent/BREEZE-RTF-080-IMPL/mandarin-trim.json",
+    "control_command": ".beehive/agent/BREEZE-RTF-080-IMPL/mandarin-control.command.json",
+    "trim_command": ".beehive/agent/BREEZE-RTF-080-IMPL/mandarin-trim.command.json"
+  },
+  "quant": "q4_k",
+  "frames": 209,
+  "audio_s": 16.72,
+  "control": {
+    "trim_env": "BREEZE_VOC_TRIM=0",
+    "runs": 3,
+    "wall_rtf": [
+      1.0711064593301438,
+      1.0695933014354067,
+      1.0683552631578948
+    ],
+    "mean_wall_rtf": 1.0696850079744817,
+    "mean_wall_ms": 17885.133333333335,
+    "first_audio_mean_ms": 3082.0,
+    "playback_deficit_ms": [
+      720.3,
+      803.6,
+      810.3
+    ],
+    "sha256": "1cb3157b35e31f5a2bd753bcbfed6f4ce97632b443c980e1ebd771e33a760be8"
+  },
+  "trim": {
+    "trim_env": "unset (default)",
+    "runs": 3,
+    "wall_rtf": [
+      0.9659150717703351,
+      0.9496949760765551,
+      0.956848086124402
+    ],
+    "mean_wall_rtf": 0.9574860446570974,
+    "mean_wall_ms": 16009.166666666668,
+    "first_audio_mean_ms": 3050.6666666666665,
+    "max_playback_deficit_ms": 0,
+    "sha256": "1cb3157b35e31f5a2bd753bcbfed6f4ce97632b443c980e1ebd771e33a760be8"
+  },
+  "delta": {
+    "mean_wall_ms": 1875.966666666669,
+    "wall_ms_per_frame": 8.97591706539076,
+    "output_sha_equal": true
+  },
+  "scope": "Same seeded Mandarin request; output equality is exact for this prompt. No new PESQ or UTMOS score.",
+  "prompt": {
+    "text": "今天的天氣非常晴朗，我們決定到公園散步。微風吹過樹梢，孩子們在草地上玩耍，遠處傳來輕快的笑聲。這是一段用來測試語音合成品質和速度的中文文字，請用清楚自然的聲音朗讀。",
+    "instruction": "Speak clearly and naturally.",
+    "seed": 42,
+    "repeat": 3
+  }
+}

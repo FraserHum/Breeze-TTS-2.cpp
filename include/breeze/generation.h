@@ -35,8 +35,8 @@ struct GenRequest {
     float repetition_penalty = 0.0f;
     int max_new_tokens = 0; // 0 uses the model default
     // frames per streamed chunk, ramping from first to max. set both the same for a fixed size
-    int chunk_first = 4;
-    int chunk_max = 25;
+    int chunk_first = 40;
+    int chunk_max = 40;
     // long text is generated in pieces of about this many characters, 0 keeps it in one pass.
     // the model loses track of the text somewhere past a minute of audio, so pieces stay under that
     int split_chars = 600;
@@ -79,6 +79,9 @@ using AudioCallback = std::function<bool(const float * samples, int n)>;
 struct GenTimings {
     double encode_ref = 0, prompt = 0, prefill = 0, backbone = 0, depth = 0, vocoder = 0;
     double first_audio = 0, first_vocoder = 0;
+    // backbone/depth wall time accumulated at the moment of the first flush. with encode_ref,
+    // prompt, prefill and first_vocoder they add up to time-to-first-audio (BREEZE_TTA_BREAKDOWN)
+    double bb_first = 0, depth_first = 0;
     int frames = 0, flushes = 0, first_frames = 0;
 };
 

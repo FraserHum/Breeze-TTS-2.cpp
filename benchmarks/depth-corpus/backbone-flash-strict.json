@@ -1,0 +1,543 @@
+{
+  "schema": "breeze-backbone-flash-strict/v1",
+  "task": "BREEZE-FA-STRICT",
+  "date": "2026-09-07",
+  "status": "rejected-before-speech-performance",
+  "decision": "Reject strict-F32 candidate under unchanged numerical thresholds; do not run speech or throughput probes.",
+  "thresholds": {
+    "max_abs": 0.01,
+    "relative_l2": 0.001,
+    "relaxed": false
+  },
+  "model": {
+    "path_pod": "/tmp/breeze-depth-blocks-q3_k.gguf",
+    "sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+  },
+  "candidate": {
+    "env": "GGML_VK_FA_STRICT_F32=1",
+    "eligibility": "explicit GGML_PREC_F32 with F32 Q/K/V/output; scalar FA only; existing true-F32-body SPIR-V",
+    "local_source_sha256": {
+      "third_party/ggml/src/ggml-vulkan/ggml-vulkan.cpp": "795f3d8bd0a4f7ac014b307db3516ead5ecc46f0573c3e9041a48c2856cb1f66",
+      "src/backbone.cpp": "5156fe9add55168145dec5b474f580df213ea6202e28a3ea455ff947dc115bbd",
+      "tools/backbone_context_bench.cpp": "ca556b11a6b29366764ed5c27f0c05e9ee612dca64b4b2b5a100454cd5a81d1c"
+    },
+    "isolated_sha256": {
+      "ggml-vulkan.cpp.o": "21d908eaf3acb83cb03a0659ea4b1f6e71c4c67a46c351ca48c02427450cb97e",
+      "libggml-vulkan.so.0.22.0": "cb5e2e6f64b80a02b93393ffdb019d0133e812998218cf4a690a8f49d046c162",
+      "backbone.cpp.o": "54340cbd8dbb3e8d68eadc8f3f70696535567099f546392666a8fd688f647012",
+      "backbone_context_bench.cpp.o": "219844f3b8b53a204a279ab0ba83215123e2a280c9a51a11f5bb973ce7634427",
+      "backbone-context-bench": "908a6c176d60fdc73aec452d2ee31dfa8bbabe74d46da7d3eebb3c59d9f714dc"
+    },
+    "generated_shader_sha256": {
+      "ggml-vulkan-shaders.hpp": "cf882571a18c4eb62cb10f8b9cd324abcafc6075d67d2cf873c7e50b96c48ae8",
+      "flash_attn_f32_f16_fp32.spv": "69c403bae74ce23a191b15b5f29c6d8a8a21f6432c5b8b421d450325c0cc1c94",
+      "flash_attn.comp.cpp.o": "22150d3b82fd710352b2a2bc6d7d5c6f050531c5410d496fbc425195e6aa728b",
+      "flash_attn_cm1.comp.cpp.o": "395b1c8dbf27d210067b8eaa6918489c0ed49ada4cb534f0c7a3e36f7bc61426",
+      "flash_attn_cm2.comp.cpp.o": "23aecd882b91e0fc8612b28effa0020ae10ee737b3f760da8dba763b1c3e5680"
+    },
+    "rejected_patch": {
+      "path": "benchmarks/depth-corpus/backbone-flash-strict-vulkan.patch",
+      "sha256": "3c392b3fd10a4f11161b23d940b0199965b9f606948cf563d3bf0ca3a3bd5d00",
+      "status": "archived-before-source-revert"
+    }
+  },
+  "pod": {
+    "namespace": "hermes-voice",
+    "name": "breezetts-dev",
+    "device": "AMD Radeon 780M Graphics (RADV PHOENIX)",
+    "isolated_workdir": "/tmp/breeze-fa-strict",
+    "ldd_backend": "/tmp/breeze-fa-strict/libggml-vulkan.so.0",
+    "ldd_verified": true,
+    "production_baseline": {
+      "breeze-cli_md5_before": "067a25764c424185bd684f60354852e0",
+      "breeze-cli_md5_after": "067a25764c424185bd684f60354852e0",
+      "ggml-vulkan.cpp_sha256": "78ddb01613ebd010879a9b72cdcaa173f30e40fc0c67b48c80908713ea792f70",
+      "src/backbone.cpp_sha256": "e06248cca9f4f77a45e9c4c3fef0a8a74b568411e0672afb735538b5383862e5",
+      "tools/backbone_context_bench.cpp": "absent_before_and_after"
+    },
+    "running_probe_processes_after_batch": []
+  },
+  "commands": {
+    "backend_compile": "cd /tmp/breeze-fa-strict && /usr/bin/c++ -DGGML_BACKEND_BUILD -DGGML_BACKEND_SHARED -DGGML_SCHED_MAX_COPIES=4 -DGGML_SHARED -DGGML_VULKAN_BFLOAT16_GLSLC_SUPPORT -DGGML_VULKAN_COOPMAT2_GLSLC_SUPPORT -DGGML_VULKAN_COOPMAT_GLSLC_SUPPORT -DGGML_VULKAN_FLOAT_E4M3_GLSLC_SUPPORT -DGGML_VULKAN_INTEGER_DOT_GLSLC_SUPPORT -D_GNU_SOURCE -D_XOPEN_SOURCE=600 -Dggml_vulkan_EXPORTS -I/src/third_party/ggml/src/ggml-vulkan/.. -I/src/build/third_party/ggml/src/ggml-vulkan -I/src/third_party/ggml/src/../include -O3 -DNDEBUG -std=gnu++17 -fPIC -Wmissing-declarations -Wmissing-noreturn -Wall -Wextra -Wpedantic -Wcast-qual -Wno-unused-function -Wno-array-bounds -Wextra-semi -c ggml-vulkan.cpp -o CMakeFiles/ggml-vulkan.dir/ggml-vulkan.cpp.o",
+    "backend_link": "cd /tmp/breeze-fa-strict && /usr/bin/c++ -fPIC -O3 -DNDEBUG -shared -Wl,--dependency-file=/tmp/breeze-fa-strict/link.d -Wl,-soname,libggml-vulkan.so.0 -o /tmp/breeze-fa-strict/libggml-vulkan.so.0.22.0 CMakeFiles/ggml-vulkan.dir/ggml-vulkan.cpp.o $(find /src/build/third_party/ggml/src/ggml-vulkan/CMakeFiles/ggml-vulkan.dir -maxdepth 1 -type f -name \"*.o\" ! -name \"ggml-vulkan.cpp.o\") -Wl,-rpath,/tmp/breeze-fa-strict:/src/build/third_party/ggml/src /src/build/third_party/ggml/src/libggml-base.so.0.22.0 /usr/lib/x86_64-linux-gnu/libvulkan.so",
+    "probe_link": "cd /tmp/breeze-fa-strict && /usr/bin/c++ -O3 -DNDEBUG backbone_context_bench.cpp.o backbone.cpp.o -o backbone-context-bench -Wl,-rpath,/tmp/breeze-fa-strict:/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan /src/build/libbreeze_core.a /src/build/third_party/ggml/src/libggml.so.0.22.0 /src/build/third_party/ggml/src/libggml-cpu.so.0.22.0 /tmp/breeze-fa-strict/libggml-vulkan.so.0.22.0 /src/build/third_party/ggml/src/libggml-base.so.0.22.0",
+    "control_context1": "LD_LIBRARY_PATH=/tmp/breeze-fa-strict:/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan GGML_VK_FA_STRICT_F32=0 ./backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context 1 --numerical-ab",
+    "strict_contexts": "LD_LIBRARY_PATH=/tmp/breeze-fa-strict:/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan GGML_VK_FA_STRICT_F32=1 ./backbone-context-bench --model /tmp/breeze-depth-blocks-q3_k.gguf --backend gpu --context {1,4,64} --numerical-ab",
+    "ldd": "ldd /tmp/breeze-fa-strict/backbone-context-bench"
+  },
+  "control_strict0_context1": {
+    "return_code": 7,
+    "pass": false,
+    "log": {
+      "path": ".beehive/agent/BREEZE-FA-STRICT/artifacts/default-context1.log",
+      "sha256": "3e2e9adc9545667054a05e4063085c670da657405845bbd5ab7fb2ad72255ff6",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill=skipped position=0\nab_query position=1 finite=true shapes=true positions=true hidden_max_abs=0.00247764587 hidden_relative_l2=0.000662511218 logits_max_abs=0.0154412985 logits_relative_l2=0.00514595413 pass=false\nab_query position=2 finite=true shapes=true positions=true hidden_max_abs=0.00750541687 hidden_relative_l2=0.000787495911 logits_max_abs=0.00496043265 logits_relative_l2=0.00178628868 pass=false\nab_query position=3 finite=true shapes=true positions=true hidden_max_abs=0.00712394714 hidden_relative_l2=0.000846091896 logits_max_abs=0.0158213377 logits_relative_l2=0.00532312805 pass=false\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.00233078003 hidden_relative_l2=0.000632575759 logits_max_abs=0.00455290079 logits_relative_l2=0.00181856417 pass=false\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.00221785158 hidden_relative_l2=0.0005846752 logits_max_abs=0.0139242411 logits_relative_l2=0.00520673455 pass=false\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.0015126653 hidden_relative_l2=0.000559883649 logits_max_abs=0.00361216068 logits_relative_l2=0.00148592263 pass=false\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.00357055664 hidden_relative_l2=0.000652514336 logits_max_abs=0.00392645597 logits_relative_l2=0.00156882281 pass=false\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.00193199888 hidden_relative_l2=0.000592046782 logits_max_abs=0.0343682766 logits_relative_l2=0.0120805095 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\n",
+      "records": [
+        {
+          "label": "query",
+          "position": 1,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00247764587,
+          "hidden_relative_l2": 0.000662511218,
+          "logits_max_abs": 0.0154412985,
+          "logits_relative_l2": 0.00514595413,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 2,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00750541687,
+          "hidden_relative_l2": 0.000787495911,
+          "logits_max_abs": 0.00496043265,
+          "logits_relative_l2": 0.00178628868,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 3,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00712394714,
+          "hidden_relative_l2": 0.000846091896,
+          "logits_max_abs": 0.0158213377,
+          "logits_relative_l2": 0.00532312805,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 4,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00233078003,
+          "hidden_relative_l2": 0.000632575759,
+          "logits_max_abs": 0.00455290079,
+          "logits_relative_l2": 0.00181856417,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 5,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00221785158,
+          "hidden_relative_l2": 0.0005846752,
+          "logits_max_abs": 0.0139242411,
+          "logits_relative_l2": 0.00520673455,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 6,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0015126653,
+          "hidden_relative_l2": 0.000559883649,
+          "logits_max_abs": 0.00361216068,
+          "logits_relative_l2": 0.00148592263,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 7,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00357055664,
+          "hidden_relative_l2": 0.000652514336,
+          "logits_max_abs": 0.00392645597,
+          "logits_relative_l2": 0.00156882281,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 8,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00193199888,
+          "hidden_relative_l2": 0.000592046782,
+          "logits_max_abs": 0.0343682766,
+          "logits_relative_l2": 0.0120805095,
+          "pass": false
+        }
+      ],
+      "summary": {
+        "max_abs_tolerance": 0.01,
+        "relative_l2_tolerance": 0.001,
+        "pass": false,
+        "return_code": 7
+      }
+    },
+    "rc_file": ".beehive/agent/BREEZE-FA-STRICT/artifacts/default-context1.rc"
+  },
+  "strict_runs": {
+    "1": {
+      "path": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context1.log",
+      "sha256": "6c0d429056cce997b0b0cbe55415d2e64f998e894857c8d736fdbaea4f580297",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill=skipped position=0\nab_query position=1 finite=true shapes=true positions=true hidden_max_abs=0 hidden_relative_l2=0 logits_max_abs=0 logits_relative_l2=0 pass=true\nab_query position=2 finite=true shapes=true positions=true hidden_max_abs=0 hidden_relative_l2=0 logits_max_abs=0 logits_relative_l2=0 pass=true\nab_query position=3 finite=true shapes=true positions=true hidden_max_abs=0.000350475311 hidden_relative_l2=0.000124011874 logits_max_abs=0.00182437897 logits_relative_l2=0.000709734459 pass=true\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.000726446509 hidden_relative_l2=0.000203648573 logits_max_abs=0.0022110939 logits_relative_l2=0.000834417034 pass=true\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.000569071621 hidden_relative_l2=0.000204326151 logits_max_abs=0.00218641758 logits_relative_l2=0.000861777842 pass=true\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.000505644828 hidden_relative_l2=0.000145714645 logits_max_abs=0.00193919986 logits_relative_l2=0.000800554419 pass=true\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.000929057598 hidden_relative_l2=0.000229459457 logits_max_abs=0.00252634287 logits_relative_l2=0.000896752354 pass=true\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.00118910894 hidden_relative_l2=0.000296926822 logits_max_abs=0.0180987716 logits_relative_l2=0.00747097078 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\n",
+      "records": [
+        {
+          "label": "query",
+          "position": 1,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0,
+          "hidden_relative_l2": 0.0,
+          "logits_max_abs": 0.0,
+          "logits_relative_l2": 0.0,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 2,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0,
+          "hidden_relative_l2": 0.0,
+          "logits_max_abs": 0.0,
+          "logits_relative_l2": 0.0,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 3,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.000350475311,
+          "hidden_relative_l2": 0.000124011874,
+          "logits_max_abs": 0.00182437897,
+          "logits_relative_l2": 0.000709734459,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 4,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.000726446509,
+          "hidden_relative_l2": 0.000203648573,
+          "logits_max_abs": 0.0022110939,
+          "logits_relative_l2": 0.000834417034,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 5,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.000569071621,
+          "hidden_relative_l2": 0.000204326151,
+          "logits_max_abs": 0.00218641758,
+          "logits_relative_l2": 0.000861777842,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 6,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.000505644828,
+          "hidden_relative_l2": 0.000145714645,
+          "logits_max_abs": 0.00193919986,
+          "logits_relative_l2": 0.000800554419,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 7,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.000929057598,
+          "hidden_relative_l2": 0.000229459457,
+          "logits_max_abs": 0.00252634287,
+          "logits_relative_l2": 0.000896752354,
+          "pass": true
+        },
+        {
+          "label": "query",
+          "position": 8,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.00118910894,
+          "hidden_relative_l2": 0.000296926822,
+          "logits_max_abs": 0.0180987716,
+          "logits_relative_l2": 0.00747097078,
+          "pass": false
+        }
+      ],
+      "summary": {
+        "max_abs_tolerance": 0.01,
+        "relative_l2_tolerance": 0.001,
+        "pass": false,
+        "return_code": 7
+      },
+      "rc_file": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context1.rc"
+    },
+    "4": {
+      "path": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context4.log",
+      "sha256": "da1d3e7377cd4b9c91e7af66b1e4c988a0b976618fd25d7c249f444d9d7c78a8",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill position=3 finite=true shapes=true positions=true hidden_max_abs=0.124624789 hidden_relative_l2=0.038572333 logits_max_abs=0.257628113 logits_relative_l2=0.0284172699 pass=false\nab_query position=4 finite=true shapes=true positions=true hidden_max_abs=0.0826420188 hidden_relative_l2=0.02207394 logits_max_abs=0.144679546 logits_relative_l2=0.0283784643 pass=false\nab_query position=5 finite=true shapes=true positions=true hidden_max_abs=0.0470505357 hidden_relative_l2=0.0152003056 logits_max_abs=0.106618941 logits_relative_l2=0.0205808621 pass=false\nab_query position=6 finite=true shapes=true positions=true hidden_max_abs=0.0361999273 hidden_relative_l2=0.0120765777 logits_max_abs=0.0862236023 logits_relative_l2=0.0190572425 pass=false\nab_query position=7 finite=true shapes=true positions=true hidden_max_abs=0.0460129976 hidden_relative_l2=0.0111739643 logits_max_abs=0.064702332 logits_relative_l2=0.0169657623 pass=false\nab_query position=8 finite=true shapes=true positions=true hidden_max_abs=0.0272885263 hidden_relative_l2=0.00858841587 logits_max_abs=0.0384323597 logits_relative_l2=0.0101203705 pass=false\nab_query position=9 finite=true shapes=true positions=true hidden_max_abs=0.0285606384 hidden_relative_l2=0.00752929006 logits_max_abs=0.037540257 logits_relative_l2=0.0117151212 pass=false\nab_query position=10 finite=true shapes=true positions=true hidden_max_abs=0.0223322958 hidden_relative_l2=0.00756473843 logits_max_abs=0.0371464193 logits_relative_l2=0.0134884721 pass=false\nab_query position=11 finite=true shapes=true positions=true hidden_max_abs=0.0262470245 hidden_relative_l2=0.00760863704 logits_max_abs=0.0434727073 logits_relative_l2=0.0124682941 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\n",
+      "records": [
+        {
+          "label": "prefill",
+          "position": 3,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.124624789,
+          "hidden_relative_l2": 0.038572333,
+          "logits_max_abs": 0.257628113,
+          "logits_relative_l2": 0.0284172699,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 4,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0826420188,
+          "hidden_relative_l2": 0.02207394,
+          "logits_max_abs": 0.144679546,
+          "logits_relative_l2": 0.0283784643,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 5,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0470505357,
+          "hidden_relative_l2": 0.0152003056,
+          "logits_max_abs": 0.106618941,
+          "logits_relative_l2": 0.0205808621,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 6,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0361999273,
+          "hidden_relative_l2": 0.0120765777,
+          "logits_max_abs": 0.0862236023,
+          "logits_relative_l2": 0.0190572425,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 7,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0460129976,
+          "hidden_relative_l2": 0.0111739643,
+          "logits_max_abs": 0.064702332,
+          "logits_relative_l2": 0.0169657623,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 8,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0272885263,
+          "hidden_relative_l2": 0.00858841587,
+          "logits_max_abs": 0.0384323597,
+          "logits_relative_l2": 0.0101203705,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 9,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0285606384,
+          "hidden_relative_l2": 0.00752929006,
+          "logits_max_abs": 0.037540257,
+          "logits_relative_l2": 0.0117151212,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 10,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0223322958,
+          "hidden_relative_l2": 0.00756473843,
+          "logits_max_abs": 0.0371464193,
+          "logits_relative_l2": 0.0134884721,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 11,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0262470245,
+          "hidden_relative_l2": 0.00760863704,
+          "logits_max_abs": 0.0434727073,
+          "logits_relative_l2": 0.0124682941,
+          "pass": false
+        }
+      ],
+      "summary": {
+        "max_abs_tolerance": 0.01,
+        "relative_l2_tolerance": 0.001,
+        "pass": false,
+        "return_code": 7
+      },
+      "rc_file": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context4.rc"
+    },
+    "64": {
+      "path": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context64.log",
+      "sha256": "662b6a00924b0777074d05efaf200a6fad5da12cf7054e41318932b7ba4ce9d9",
+      "text": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nab_prefill position=63 finite=true shapes=true positions=true hidden_max_abs=0.0223897994 hidden_relative_l2=0.00700293016 logits_max_abs=0.0467679501 logits_relative_l2=0.0143467882 pass=false\nab_query position=64 finite=true shapes=true positions=true hidden_max_abs=0.17926383 hidden_relative_l2=0.0191623737 logits_max_abs=0.126105011 logits_relative_l2=0.0195580713 pass=false\nab_query position=65 finite=true shapes=true positions=true hidden_max_abs=0.0648559332 hidden_relative_l2=0.0181047203 logits_max_abs=0.112297267 logits_relative_l2=0.0158147093 pass=false\nab_query position=66 finite=true shapes=true positions=true hidden_max_abs=0.558972359 hidden_relative_l2=0.0376188743 logits_max_abs=0.32008934 logits_relative_l2=0.0370557 pass=false\nab_query position=67 finite=true shapes=true positions=true hidden_max_abs=0.13698554 hidden_relative_l2=0.0364408833 logits_max_abs=0.226218224 logits_relative_l2=0.0261017211 pass=false\nab_query position=68 finite=true shapes=true positions=true hidden_max_abs=0.163120031 hidden_relative_l2=0.0459844453 logits_max_abs=0.364434123 logits_relative_l2=0.038792465 pass=false\nab_query position=69 finite=true shapes=true positions=true hidden_max_abs=0.186724901 hidden_relative_l2=0.0536461904 logits_max_abs=0.548107505 logits_relative_l2=0.0498839283 pass=false\nab_query position=70 finite=true shapes=true positions=true hidden_max_abs=0.161118031 hidden_relative_l2=0.0443106642 logits_max_abs=0.275988936 logits_relative_l2=0.0412820644 pass=false\nab_query position=71 finite=true shapes=true positions=true hidden_max_abs=0.0939869881 hidden_relative_l2=0.0316265206 logits_max_abs=0.195432663 logits_relative_l2=0.0295319617 pass=false\nnumerical_ab=true max_abs_tolerance=0.01 relative_l2_tolerance=0.001 pass=false\ncommand terminated with exit code 7\n",
+      "records": [
+        {
+          "label": "prefill",
+          "position": 63,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0223897994,
+          "hidden_relative_l2": 0.00700293016,
+          "logits_max_abs": 0.0467679501,
+          "logits_relative_l2": 0.0143467882,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 64,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.17926383,
+          "hidden_relative_l2": 0.0191623737,
+          "logits_max_abs": 0.126105011,
+          "logits_relative_l2": 0.0195580713,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 65,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0648559332,
+          "hidden_relative_l2": 0.0181047203,
+          "logits_max_abs": 0.112297267,
+          "logits_relative_l2": 0.0158147093,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 66,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.558972359,
+          "hidden_relative_l2": 0.0376188743,
+          "logits_max_abs": 0.32008934,
+          "logits_relative_l2": 0.0370557,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 67,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.13698554,
+          "hidden_relative_l2": 0.0364408833,
+          "logits_max_abs": 0.226218224,
+          "logits_relative_l2": 0.0261017211,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 68,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.163120031,
+          "hidden_relative_l2": 0.0459844453,
+          "logits_max_abs": 0.364434123,
+          "logits_relative_l2": 0.038792465,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 69,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.186724901,
+          "hidden_relative_l2": 0.0536461904,
+          "logits_max_abs": 0.548107505,
+          "logits_relative_l2": 0.0498839283,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 70,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.161118031,
+          "hidden_relative_l2": 0.0443106642,
+          "logits_max_abs": 0.275988936,
+          "logits_relative_l2": 0.0412820644,
+          "pass": false
+        },
+        {
+          "label": "query",
+          "position": 71,
+          "finite": true,
+          "shapes": true,
+          "positions": true,
+          "hidden_max_abs": 0.0939869881,
+          "hidden_relative_l2": 0.0316265206,
+          "logits_max_abs": 0.195432663,
+          "logits_relative_l2": 0.0295319617,
+          "pass": false
+        }
+      ],
+      "summary": {
+        "max_abs_tolerance": 0.01,
+        "relative_l2_tolerance": 0.001,
+        "pass": false,
+        "return_code": 7
+      },
+      "rc_file": ".beehive/agent/BREEZE-FA-STRICT/artifacts/strict-context64.rc"
+    }
+  },
+  "release": {
+    "gpu_released": true,
+    "speech_or_performance_followup": false,
+    "reason": "strict numerical gate failed at all requested contexts"
+  }
+}

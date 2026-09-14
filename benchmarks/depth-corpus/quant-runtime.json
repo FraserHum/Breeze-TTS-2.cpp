@@ -1,0 +1,249 @@
+{
+  "cases": {
+    "baseline": {
+      "rc": 0,
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2952.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6002.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9000.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11991.5 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14960.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16027.9 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16028.1 ms (wall RTF 0.941)\ntime to first audio 2952 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.5 ms\n  backbone prefill      74.3 ms\n  first vocoder        262.8 ms  (40 frames)\n  backbone decode     3128.4 ms  (14.69 ms/frame)\n  depth decode       10843.4 ms  (50.91 ms/frame)\n  vocoder             1899.0 ms  (8.92 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/quant-baseline.wav (17.04 s)\n  flush 1 ready_ms=2926.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5831.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8753.7 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11732.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14682.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15740.7 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15740.9 ms (wall RTF 0.924)\ntime to first audio 2926 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.4 ms\n  backbone prefill      52.8 ms\n  first vocoder        255.4 ms  (40 frames)\n  backbone decode     3074.1 ms  (14.43 ms/frame)\n  depth decode       10718.8 ms  (50.32 ms/frame)\n  vocoder             1857.4 ms  (8.72 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/quant-baseline.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2979.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5938.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8933.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11879.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14860.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15941.1 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15941.3 ms (wall RTF 0.936)\ntime to first audio 2979 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          30.9 ms\n  backbone prefill      52.8 ms\n  first vocoder        259.2 ms  (40 frames)\n  backbone decode     3091.3 ms  (14.51 ms/frame)\n  depth decode       10895.3 ms  (51.15 ms/frame)\n  vocoder             1864.5 ms  (8.75 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/quant-baseline.repeat-3.wav (17.04 s)\n  flush 1 ready_ms=2880.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5827.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8784.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11831.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14855.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15975.9 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15976.1 ms (wall RTF 0.938)\ntime to first audio 2880 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          33.6 ms\n  backbone prefill      58.9 ms\n  first vocoder        252.9 ms  (40 frames)\n  backbone decode     3103.1 ms  (14.57 ms/frame)\n  depth decode       10880.5 ms  (51.08 ms/frame)\n  vocoder             1893.3 ms  (8.89 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/quant-baseline.repeat-4.wav (17.04 s)\n",
+      "runs": [
+        {
+          "wall_ms": 16028.1,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9406161971830986,
+          "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "utmos": 4.551379203796387,
+          "backbone_decode_ms_per_frame": 14.687323943661973,
+          "depth_decode_ms_per_frame": 50.90798122065728,
+          "vocoder_ms_per_frame": 8.915492957746478,
+          "first_audio_ms": 2952.0
+        },
+        {
+          "wall_ms": 15740.9,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9237617370892018,
+          "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "utmos": 4.551379203796387,
+          "backbone_decode_ms_per_frame": 14.432394366197183,
+          "depth_decode_ms_per_frame": 50.323004694835674,
+          "vocoder_ms_per_frame": 8.72018779342723,
+          "first_audio_ms": 2926.0
+        },
+        {
+          "wall_ms": 15941.3,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9355223004694835,
+          "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "utmos": 4.551379203796387,
+          "backbone_decode_ms_per_frame": 14.513145539906104,
+          "depth_decode_ms_per_frame": 51.15164319248826,
+          "vocoder_ms_per_frame": 8.753521126760564,
+          "first_audio_ms": 2979.0
+        },
+        {
+          "wall_ms": 15976.1,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9375645539906103,
+          "sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e",
+          "utmos": 4.551379203796387,
+          "backbone_decode_ms_per_frame": 14.568544600938967,
+          "depth_decode_ms_per_frame": 51.082159624413144,
+          "vocoder_ms_per_frame": 8.888732394366198,
+          "first_audio_ms": 2880.0
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.9322828638497652,
+      "warm_p50_rtf": 0.9355223004694835,
+      "warm_sample_p95_rtf": 0.9373603286384976,
+      "model_sha256": "483418fbbb438f5f1c08dbe2b017e42db0f1d126765cd3f772d8622a30a4915c"
+    },
+    "q4_k": {
+      "rc": 0,
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3007.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6003.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9055.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12055.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14731.6 delivered_audio_s=15.60\n\ngenerated 15.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     14731.8 ms (wall RTF 0.944)\ntime to first audio 3007 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          78.3 ms\n  backbone prefill      73.4 ms\n  first vocoder        271.4 ms  (40 frames)\n  backbone decode     2842.3 ms  (14.58 ms/frame)\n  depth decode       10019.8 ms  (51.38 ms/frame)\n  vocoder             1711.9 ms  (8.78 ms/frame)\n  195 frames, 15.60 s audio\nwrote /tmp/quant-q4_k.wav (15.60 s)\n  flush 1 ready_ms=2973.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5913.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8970.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11992.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14700.6 delivered_audio_s=15.60\n\ngenerated 15.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     14700.7 ms (wall RTF 0.942)\ntime to first audio 2974 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          30.8 ms\n  backbone prefill      52.7 ms\n  first vocoder        263.6 ms  (40 frames)\n  backbone decode     2817.3 ms  (14.45 ms/frame)\n  depth decode       10131.1 ms  (51.95 ms/frame)\n  vocoder             1662.7 ms  (8.53 ms/frame)\n  195 frames, 15.60 s audio\nwrote /tmp/quant-q4_k.repeat-2.wav (15.60 s)\n  flush 1 ready_ms=2911.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5863.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8880.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11858.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14519.0 delivered_audio_s=15.60\n\ngenerated 15.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     14519.2 ms (wall RTF 0.931)\ntime to first audio 2912 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          33.2 ms\n  backbone prefill      53.8 ms\n  first vocoder        256.2 ms  (40 frames)\n  backbone decode     2780.5 ms  (14.26 ms/frame)\n  depth decode       10003.2 ms  (51.30 ms/frame)\n  vocoder             1642.1 ms  (8.42 ms/frame)\n  195 frames, 15.60 s audio\nwrote /tmp/quant-q4_k.repeat-3.wav (15.60 s)\n  flush 1 ready_ms=2959.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5906.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8880.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11967.5 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14719.7 delivered_audio_s=15.60\n\ngenerated 15.60 s\ngeneration wall     14719.9 ms (wall RTF 0.944)\ntime to first audio 2960 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          30.5 ms\n  backbone prefill      53.2 ms\n  first vocoder        254.0 ms  (40 frames)\n  backbone decode     2830.7 ms  (14.52 ms/frame)\n  depth decode       10156.9 ms  (52.09 ms/frame)\n  vocoder             1642.8 ms  (8.42 ms/frame)\n  195 frames, 15.60 s audio\nwrote /tmp/quant-q4_k.repeat-4.wav (15.60 s)\n",
+      "runs": [
+        {
+          "wall_ms": 14731.8,
+          "frames": 195,
+          "audio_s": 15.6,
+          "wall_rtf": 0.9443461538461538,
+          "sha256": "9f0887e17b58fe40a37ec297920a86319ae96b2028dc43cdf8c5c1604a9c6de1",
+          "utmos": 4.500011444091797,
+          "backbone_decode_ms_per_frame": 14.575897435897437,
+          "depth_decode_ms_per_frame": 51.38358974358974,
+          "vocoder_ms_per_frame": 8.77897435897436,
+          "first_audio_ms": 3007.0
+        },
+        {
+          "wall_ms": 14700.7,
+          "frames": 195,
+          "audio_s": 15.6,
+          "wall_rtf": 0.9423525641025642,
+          "sha256": "9f0887e17b58fe40a37ec297920a86319ae96b2028dc43cdf8c5c1604a9c6de1",
+          "utmos": 4.500011444091797,
+          "backbone_decode_ms_per_frame": 14.447692307692309,
+          "depth_decode_ms_per_frame": 51.954358974358975,
+          "vocoder_ms_per_frame": 8.526666666666667,
+          "first_audio_ms": 2974.0
+        },
+        {
+          "wall_ms": 14519.2,
+          "frames": 195,
+          "audio_s": 15.6,
+          "wall_rtf": 0.9307179487179488,
+          "sha256": "9f0887e17b58fe40a37ec297920a86319ae96b2028dc43cdf8c5c1604a9c6de1",
+          "utmos": 4.500011444091797,
+          "backbone_decode_ms_per_frame": 14.25897435897436,
+          "depth_decode_ms_per_frame": 51.298461538461545,
+          "vocoder_ms_per_frame": 8.42102564102564,
+          "first_audio_ms": 2912.0
+        },
+        {
+          "wall_ms": 14719.9,
+          "frames": 195,
+          "audio_s": 15.6,
+          "wall_rtf": 0.9435833333333333,
+          "sha256": "9f0887e17b58fe40a37ec297920a86319ae96b2028dc43cdf8c5c1604a9c6de1",
+          "utmos": 4.500011444091797,
+          "backbone_decode_ms_per_frame": 14.516410256410255,
+          "depth_decode_ms_per_frame": 52.086666666666666,
+          "vocoder_ms_per_frame": 8.424615384615384,
+          "first_audio_ms": 2960.0
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.9388846153846154,
+      "warm_p50_rtf": 0.9423525641025642,
+      "warm_sample_p95_rtf": 0.9434602564102564,
+      "model_sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d"
+    },
+    "q3_k": {
+      "rc": 0,
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /tmp/breeze-depth-blocks-q3_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2820.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5477.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8278.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11006.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=13807.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16497.6 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=16944.8 delivered_audio_s=19.60\n\ngenerated 19.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16945.0 ms (wall RTF 0.865)\ntime to first audio 2819 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          76.7 ms\n  backbone prefill      73.2 ms\n  first vocoder        264.7 ms  (40 frames)\n  backbone decode     3655.5 ms  (14.92 ms/frame)\n  depth decode       10925.2 ms  (44.59 ms/frame)\n  vocoder             2206.4 ms  (9.01 ms/frame)\n  245 frames, 19.60 s audio\nwrote /tmp/quant-q3_k.wav (19.60 s)\n  flush 1 ready_ms=2593.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5294.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=7929.7 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10576.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=13291.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16012.4 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=16468.2 delivered_audio_s=19.60\n\ngenerated 19.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16468.4 ms (wall RTF 0.840)\ntime to first audio 2593 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          31.2 ms\n  backbone prefill      52.6 ms\n  first vocoder        255.4 ms  (40 frames)\n  backbone decode     3581.6 ms  (14.62 ms/frame)\n  depth decode       10630.8 ms  (43.39 ms/frame)\n  vocoder             2164.7 ms  (8.84 ms/frame)\n  245 frames, 19.60 s audio\nwrote /tmp/quant-q3_k.repeat-2.wav (19.60 s)\n  flush 1 ready_ms=2588.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5357.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8045.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10766.5 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=13459.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16177.6 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=16655.9 delivered_audio_s=19.60\n\ngenerated 19.60 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16656.1 ms (wall RTF 0.850)\ntime to first audio 2588 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          33.1 ms\n  backbone prefill      54.5 ms\n  first vocoder        251.1 ms  (40 frames)\n  backbone decode     3611.3 ms  (14.74 ms/frame)\n  depth decode       10792.7 ms  (44.05 ms/frame)\n  vocoder             2157.0 ms  (8.80 ms/frame)\n  245 frames, 19.60 s audio\nwrote /tmp/quant-q3_k.repeat-3.wav (19.60 s)\n  flush 1 ready_ms=2615.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5229.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=7865.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=10583.0 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=13278.7 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15976.5 delivered_audio_s=19.20\n\ngenerated 19.20 s  flush 7 ready_ms=16435.4 delivered_audio_s=19.60\n\ngenerated 19.60 s\ngeneration wall     16435.6 ms (wall RTF 0.839)\ntime to first audio 2615 ms over 7 flushes\n  reference encode       0.0 ms\n  prompt build          32.5 ms\n  backbone prefill      55.7 ms\n  first vocoder        253.7 ms  (40 frames)\n  backbone decode     3573.5 ms  (14.59 ms/frame)\n  depth decode       10620.6 ms  (43.35 ms/frame)\n  vocoder             2146.1 ms  (8.76 ms/frame)\n  245 frames, 19.60 s audio\nwrote /tmp/quant-q3_k.repeat-4.wav (19.60 s)\n",
+      "runs": [
+        {
+          "wall_ms": 16945.0,
+          "frames": 245,
+          "audio_s": 19.6,
+          "wall_rtf": 0.8645408163265306,
+          "sha256": "0deee72ca588fff9796cba0c448eb9035b084faccf81dda6b090402fba5d87b7",
+          "utmos": 4.538095951080322,
+          "backbone_decode_ms_per_frame": 14.920408163265305,
+          "depth_decode_ms_per_frame": 44.592653061224496,
+          "vocoder_ms_per_frame": 9.005714285714285,
+          "first_audio_ms": 2819.0
+        },
+        {
+          "wall_ms": 16468.4,
+          "frames": 245,
+          "audio_s": 19.6,
+          "wall_rtf": 0.8402244897959185,
+          "sha256": "0deee72ca588fff9796cba0c448eb9035b084faccf81dda6b090402fba5d87b7",
+          "utmos": 4.538095951080322,
+          "backbone_decode_ms_per_frame": 14.618775510204081,
+          "depth_decode_ms_per_frame": 43.391020408163264,
+          "vocoder_ms_per_frame": 8.835510204081633,
+          "first_audio_ms": 2593.0
+        },
+        {
+          "wall_ms": 16656.1,
+          "frames": 245,
+          "audio_s": 19.6,
+          "wall_rtf": 0.8498010204081632,
+          "sha256": "0deee72ca588fff9796cba0c448eb9035b084faccf81dda6b090402fba5d87b7",
+          "utmos": 4.538095951080322,
+          "backbone_decode_ms_per_frame": 14.74,
+          "depth_decode_ms_per_frame": 44.05183673469388,
+          "vocoder_ms_per_frame": 8.80408163265306,
+          "first_audio_ms": 2588.0
+        },
+        {
+          "wall_ms": 16435.6,
+          "frames": 245,
+          "audio_s": 19.6,
+          "wall_rtf": 0.8385510204081632,
+          "sha256": "0deee72ca588fff9796cba0c448eb9035b084faccf81dda6b090402fba5d87b7",
+          "utmos": 4.538095951080322,
+          "backbone_decode_ms_per_frame": 14.585714285714285,
+          "depth_decode_ms_per_frame": 43.34938775510204,
+          "vocoder_ms_per_frame": 8.759591836734694,
+          "first_audio_ms": 2615.0
+        }
+      ],
+      "repeatable": true,
+      "warm_mean_rtf": 0.842858843537415,
+      "warm_p50_rtf": 0.8402244897959185,
+      "warm_sample_p95_rtf": 0.8488433673469387,
+      "model_sha256": "65349eb6a24ca760b558e302b465c703c6fbbbca5a2fe2dd034aaee1d925fd50"
+    }
+  },
+  "quality_method": "Cached SpeechMOS v1.2.0 utmos22_strong; one prompt only, no quality acceptance",
+  "checkpoint_sha256": "38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff",
+  "warmup_policy": "Exclude first of four resident repeats; retain all raw runs",
+  "projected_errors": [
+    {
+      "format": "q4_k",
+      "layer": 0,
+      "heldout_rel_mse": 0.0010880751435850087,
+      "rows": 96
+    },
+    {
+      "format": "q4_k",
+      "layer": 5,
+      "heldout_rel_mse": 0.0038575581269275202,
+      "rows": 96
+    },
+    {
+      "format": "q4_k",
+      "layer": 11,
+      "heldout_rel_mse": 0.0010356421097629822,
+      "rows": 96
+    },
+    {
+      "format": "q3_k",
+      "layer": 0,
+      "heldout_rel_mse": 0.004978838549977209,
+      "rows": 96
+    },
+    {
+      "format": "q3_k",
+      "layer": 5,
+      "heldout_rel_mse": 0.016753739691844294,
+      "rows": 96
+    },
+    {
+      "format": "q3_k",
+      "layer": 11,
+      "heldout_rel_mse": 0.004552480487780006,
+      "rows": 96
+    }
+  ],
+  "limitations": [
+    "Different frame counts and sampling trajectories; not a matched-shape kernel benchmark.",
+    "No reference-voice, Mandarin, long-form, intelligibility or speaker-similarity acceptance.",
+    "Mixed-format Q3_K depth, not an unchanged Q4_K engine speedup."
+  ],
+  "setup": {
+    "seed": 42,
+    "instruction": "Speak clearly and naturally.",
+    "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+    "pod": "hermes-voice/breezetts-dev",
+    "device": "Radeon 780M, RADV PHOENIX",
+    "cli_md5": "067a25764c424185bd684f60354852e0",
+    "source_commit": "a41f3d3",
+    "environment": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1"
+    },
+    "unset": [
+      "GGML_VK_DISABLE_FUSION",
+      "GGML_VK_FORCE_MMVQ",
+      "GGML_VK_DISABLE_MMVQ"
+    ],
+    "max_new": "400 for rebuilt controls; default for original baseline. All terminated below both caps.",
+    "note": "No builds or other GPU jobs overlapped generation; bulk model copies happened between cases."
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "schema": "breeze-final-workload-manifest/v1",
+  "status": "ready-specification-no-capture",
+  "created": "2026-09-07",
+  "purpose": "Untouched final acceptance workloads for candidate comparison after selection is frozen.",
+  "collection_status": "No audio, model output, activation data, acceptance result, or quality claim is included.",
+  "provenance": {
+    "prior_fixture_sources": [
+      "benchmarks/depth-corpus/language-quality-manifest.json",
+      "benchmarks/depth-corpus/manifest.json",
+      ".beehive/agent/BREEZE-LONGFORM/manifest.json"
+    ],
+    "runtime_receipts_to_read_before_collection": [
+      "benchmarks/depth-corpus/language-quality-runtime.json",
+      "benchmarks/depth-corpus/quant-longform.json",
+      "benchmarks/depth-corpus/quant-longform-speech.json"
+    ],
+    "splitter": "src/text_split.cpp via .beehive/agent/BREEZE-LONGFORM/split_probe",
+    "performance_context": "docs/research/default-split-longform.md and docs/research/depth-quant-matrix.md",
+    "candidate_freeze": "Freeze candidate model identity/hash, CLI/source revision, runtime flags, and sampling before any final workload generation."
+  },
+  "workload_policy": {
+    "fixture_count": 9,
+    "design_fixture_count": 6,
+    "saved_voice_fixture_count": 3,
+    "design_coverage": "English and Mandarin at short, medium, and long target durations.",
+    "saved_voice_coverage": "Short English, medium Mandarin, long English; lengths alternate language where present.",
+    "text_policy": "Every text is new and exact-string disjoint from prior calibration/evaluation fixture texts.",
+    "language_instruction_policy": "Use the matching explicit English or Mandarin instruction; never use a foreign-language instruction.",
+    "split_policy": {
+      "cli_option": "omit --split-chars; exercise the production default splitter",
+      "budget": 600,
+      "first_budget_without_reference": 200,
+      "first_budget_saved_voice": 0,
+      "concatenation": "Require exact part concatenation to equal the manifest text.",
+      "one_part_probe_exit": "The existing split_probe returns 1 for a valid one-part result; concat=ok and parts count are authoritative.",
+      "no_runtime_inference": "If the runtime log lacks per-part completion markers, record them as missing rather than inferring boundaries or per-part timing."
+    },
+    "duration_buckets": [
+      {
+        "id": "short",
+        "target_audio_s": 10,
+        "max_new": 400,
+        "purpose": "Short request and first-audio behavior."
+      },
+      {
+        "id": "medium",
+        "target_audio_s": 30,
+        "max_new": 800,
+        "purpose": "Typical multi-sentence request without the long-form cap."
+      },
+      {
+        "id": "long",
+        "target_audio_s": 60,
+        "max_new": 1600,
+        "purpose": "Complete default-split long-form request."
+      }
+    ]
+  },
+  "fixed_settings": {
+    "backend": "Vulkan0",
+    "cfg_scale": 1.0,
+    "chunk_first": 40,
+    "chunk_max": 40,
+    "repeat": 4,
+    "repeat_semantics": {
+      "resident_process": true,
+      "warmup_repeat": 1,
+      "timed_repeats": [2, 3, 4],
+      "summary_excludes": [1],
+      "report_all_repeats": true,
+      "reason": "Match the existing parser's resident --repeat 4 semantics: first run is explicit warmup, three later runs are timed."
+    },
+    "sampling": {
+      "request_overrides": {
+        "temperature": null,
+        "top_k": null,
+        "top_p": null,
+        "repetition_penalty": null,
+        "depth_temperature": null,
+        "depth_top_k": null,
+        "depth_top_p": null
+      },
+      "resolution": "Use each model's embedded GGUF sampling values and record them in the run receipt.",
+      "control_values_seen": {
+        "temperature": 0.8999999761581421,
+        "top_k": 50,
+        "top_p": 1.0,
+        "repetition_penalty": 1.100000023841858,
+        "depth_temperature": 0.8999999761581421,
+        "depth_top_k": 50,
+        "depth_top_p": 1.0
+      },
+      "source": "Existing Q4_K/Q3_K runtime preflight receipts; verify candidate and Q4 values before collection."
+    },
+    "runtime_environment": {
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+      "BREEZE_DD_FUSED": "0",
+      "BREEZE_VOC_STATEFUL": "0",
+      "BREEZE_VOC_CONVT_MATMUL": "1",
+      "BREEZE_VOC_TRIM": "1",
+      "capture": "off",
+      "profiling": "off",
+      "strict_fa": "off",
+      "bb_flash": "off",
+      "GGML_VK_DISABLE_FUSION": "omit for the normal quality/runtime path"
+    },
+    "output_format": {
+      "sample_rate_hz": 24000,
+      "channels": 1,
+      "sample_width_bytes": 2,
+      "required_checks": [
+        "WAV format and duration agree with timing log.",
+        "Every run records SHA-256, return code, timeout, command, log hash, duration, and termination.",
+        "A cap hit remains in the receipt as a failure; no case is excluded or rewritten."
+      ]
+    }
+  },
+  "voice_controls": {
+    "design": {
+      "voice_mode": "design",
+      "label": "design_voice_from_instruction",
+      "reference_available": false
+    },
+    "matrix": {
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "path": "/tmp/breeze-q3-cached/voices/matrix.breeze",
+      "sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "label": "synthetic_reference_not_human",
+      "source": "benchmarks/depth-corpus/language-quality-manifest.json",
+      "independent_human_reference": false
+    }
+  },
+  "fixtures": [
+    {
+      "id": "final-design-en-short-42",
+      "split": "heldout-final",
+      "language": "en",
+      "length_bucket": "short",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 400,
+      "target_audio_s": 10,
+      "weighted_chars": 86,
+      "expected_default_parts": 1,
+      "text": "The red kite climbed above the schoolyard while rain clouds gathered beyond the roofs."
+    },
+    {
+      "id": "final-design-en-medium-123",
+      "split": "heldout-final",
+      "language": "en",
+      "length_bucket": "medium",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 123,
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 800,
+      "target_audio_s": 30,
+      "weighted_chars": 420,
+      "expected_default_parts": 1,
+      "text": "At the edge of the plateau, a field biologist followed a narrow stream through waist-high grass. She counted dragonflies, sketched the shapes of stones, and tied a strip of orange cloth to a fallen branch. A sudden shower darkened the soil, so she sheltered beneath a cedar and listened to frogs begin their evening chorus. When the clouds lifted, she marked the water level and carried her notes back toward the valley."
+    },
+    {
+      "id": "final-design-en-long-42",
+      "split": "heldout-final",
+      "language": "en",
+      "length_bucket": "long",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 1600,
+      "target_audio_s": 60,
+      "weighted_chars": 1009,
+      "expected_default_parts": 3,
+      "text": "On a rainy Saturday, the old cinema opened its doors for an afternoon of silent films. A projectionist tested the lamp, brushed dust from the reels, and listened for a steady hum inside the booth. In the lobby, a pianist arranged a stack of yellow music sheets beside a worn upright piano. Children chose seats near the aisle while grandparents compared memories of actors whose names had faded from the posters. Halfway through the programme, a brief power cut turned the screen black, but nobody hurried outside. The pianist played a quiet melody until the lights returned, and the audience applauded when the moonlit scene appeared again. During the interval, volunteers served tea, counted the remaining tickets, and opened a side window to cool the crowded room. The final reel showed a train crossing a snowy bridge, followed by a hand-painted title card thanking every visitor. At closing time, the projectionist wound the film into its metal case and left one small lamp glowing above the empty seats."
+    },
+    {
+      "id": "final-design-zh-short-42",
+      "split": "heldout-final",
+      "language": "zh",
+      "length_bucket": "short",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 400,
+      "target_audio_s": 10,
+      "weighted_chars": 99,
+      "expected_default_parts": 1,
+      "text": "午後的風掠過操場，紅色風箏越過屋頂，孩子們抬頭看著遠方聚起的雨雲。"
+    },
+    {
+      "id": "final-design-zh-medium-123",
+      "split": "heldout-final",
+      "language": "zh",
+      "length_bucket": "medium",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 123,
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 800,
+      "target_audio_s": 30,
+      "weighted_chars": 342,
+      "expected_default_parts": 1,
+      "text": "山坡上的小溪穿過高草，研究員沿著水邊記下蜻蜓的數量，也描畫被雨水磨亮的石頭。她在倒下的樹枝上繫了一條橙色布帶，方便晚些時候找回原路。午後忽然落雨，她躲在杉樹下聽青蛙開始鳴叫。雲層散開後，她量好水位，把筆記收進袋子，慢慢走回山谷。"
+    },
+    {
+      "id": "final-design-zh-long-42",
+      "split": "heldout-final",
+      "language": "zh",
+      "length_bucket": "long",
+      "kind": "natural-complete-default-split",
+      "voice_mode": "design",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 1600,
+      "target_audio_s": 60,
+      "weighted_chars": 816,
+      "expected_default_parts": 3,
+      "text": "星期六午後，老戲院放映一場默片選集。放映員先測試燈光，擦去膠卷上的灰塵，又仔細聽著放映機平穩的聲音。大廳裡，鋼琴師把黃色樂譜放在一架磨舊的直立鋼琴旁。孩子們挑選靠近走道的座位，長輩則談起海報上那些名字已經褪色的演員。影片播到一半時，短暫停電讓銀幕變黑，但觀眾沒有急著離開。鋼琴師彈起柔和的旋律，直到燈光重新亮起，月下的畫面再次出現時，全場響起掌聲。休息期間，志工端來熱茶，數好剩下的票券，並打開側窗讓擁擠的廳堂通風。最後一卷影片拍著火車越過積雪的橋，接著出現手繪字幕，向每位觀眾致謝。散場時，放映員把膠卷收進金屬盒，只在空座位上方留下一盞小燈。"
+    },
+    {
+      "id": "final-matrix-en-short-42",
+      "split": "heldout-final",
+      "language": "en",
+      "length_bucket": "short",
+      "kind": "natural-complete-default-split-saved-voice",
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "reference_label": "synthetic_reference_not_human",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 400,
+      "target_audio_s": 10,
+      "weighted_chars": 70,
+      "expected_default_parts": 1,
+      "text": "At dusk, the porch bell rang once as a swallow crossed the quiet yard."
+    },
+    {
+      "id": "final-matrix-zh-medium-123",
+      "split": "heldout-final",
+      "language": "zh",
+      "length_bucket": "medium",
+      "kind": "natural-complete-default-split-saved-voice",
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "reference_label": "synthetic_reference_not_human",
+      "seed": 123,
+      "instruction": "Speak clearly and naturally in Mandarin Chinese.",
+      "max_new": 800,
+      "target_audio_s": 30,
+      "weighted_chars": 297,
+      "expected_default_parts": 1,
+      "text": "午後，山谷裡的鐘聲穿過薄霧，牧羊人沿著石牆尋找一隻走失的小羊。他在蕨葉旁發現新鮮的腳印，便放慢腳步，聽見遠處溪水拍打圓石。夕陽穿過雲隙時，小羊從矮樹後探出頭來，牧羊人抱起牠，沿著熟悉的小路回到屋旁。"
+    },
+    {
+      "id": "final-matrix-en-long-42",
+      "split": "heldout-final",
+      "language": "en",
+      "length_bucket": "long",
+      "kind": "natural-complete-default-split-saved-voice",
+      "voice_mode": "saved",
+      "voice": "matrix",
+      "voices_dir": "/tmp/breeze-q3-cached/voices",
+      "voice_sha256": "cebec8255ff778491c23d3283691f824f9ba5b7a8c7a66600ceaeda1701ea39c",
+      "reference_label": "synthetic_reference_not_human",
+      "seed": 42,
+      "instruction": "Speak clearly and naturally in English.",
+      "max_new": 1600,
+      "target_audio_s": 60,
+      "weighted_chars": 1038,
+      "expected_default_parts": 2,
+      "text": "During the winter fair, a baker filled the village hall with the smell of orange peel and warm bread. She folded dough on a wooden board while a neighbour painted small signs for each loaf. Near the stove, two cousins tested a new recipe with rye, honey, and crushed walnuts, writing every change in a notebook. Musicians arrived before noon and tuned a violin beneath the stairway, while children made paper stars from old calendars. When the first trays cooled, visitors sampled the crusts and argued cheerfully about which spice should be added next. A sudden gust rattled the shutters, so someone tied them back with blue ribbon and placed a candle near the entrance. By evening, the tables held rolls, pies, seed cakes, and a basket reserved for people who could not attend. The baker saved one small loaf for the night watchman, who had kept the ovens warm during the storm. Before the hall closed, everyone swept flour from the floor, packed the remaining bread, and left the recipe book open to the page they had written together."
+    }
+  ],
+  "measurement_protocol": {
+    "selection_order": [
+      "Freeze candidate and Q4 control identity, hashes, source revision, and settings.",
+      "Run every fixture with the exact manifest text, instruction, seed, voice, split policy, and cap.",
+      "Keep the first resident repeat as an explicit warmup; summarize repeats 2-4 and report repeat 1 too.",
+      "Run the same nine fixtures for candidate and Q4 with no post-hoc text, seed, voice, cap, or sampling changes."
+    ],
+    "runtime_metrics": {
+      "wall_rtf": "generation wall milliseconds / (1000 * emitted audio seconds)",
+      "stage_rtf": "sum of reported stage milliseconds excluding first-vocoder diagnostic / (1000 * emitted audio seconds)",
+      "first_audio_ms": "timing log time-to-first-audio for each repeat",
+      "delivery_deficit_ms": "maximum flush readiness deficit after initial playback buffering, as parsed from delivered_audio_s; not an audio-device underrun measurement",
+      "p50": "median of repeats 2-4",
+      "p95": "inclusive 95th percentile of repeats 2-4, matching statistics.quantiles(values, n=20, method='inclusive')[18]; descriptive over three timed samples, not a population-tail guarantee",
+      "part_timing": "Record per-part values only when the runtime emits stable markers; otherwise record missing."
+    },
+    "quality_records": {
+      "asr": "Record Whisper normalized WER for English and CER for Mandarin, transcripts, commands, durations, and WAV hashes.",
+      "speaker": "Record speaker cosine only where a fixed synthetic matrix reference is available; label it synthetic and descriptive.",
+      "mos_proxy": "Record the existing MOS/UTMOS proxy and checkpoint provenance when run; it is descriptive only.",
+      "human_listening": "Paired human listening against the Q4 control is required before quality or deployment acceptance; automated proxies cannot replace listening evidence."
+    },
+    "failure_recording": "Retain every nonzero return code, timeout, cap hit, malformed WAV, hash mismatch, split mismatch, and delivery deficit in the receipt; do not exclude bad cases."
+  },
+  "acceptance_gates": {
+    "runtime": {
+      "scope": "Apply the numeric runtime gates to the selected candidate on every one of the nine workloads; run and report Q4 on the same workloads as the control.",
+      "wall_rtf_p50_max": 0.8,
+      "wall_rtf_p95_max": 0.8,
+      "first_audio_goal_max_ms": 3100,
+      "first_audio_evaluation": "Every timed repeat must be at or below the existing approximately 3.1 s goal; report the exact per-repeat values.",
+      "delivery_deficit_max_ms": 0,
+      "termination": "Every timed repeat must finish below max_new; any cap hit is a recorded gate failure, not an excluded sample.",
+      "repeatability": "All four repeats report valid timing/WAV/hash receipts; repeatability is recorded, not silently assumed.",
+      "q4_control": "Q4 is a paired quality and performance control whose values must be measured and reported; the candidate .8 runtime verdict is not applied to Q4, so a slower Q4 baseline does not invalidate a faster candidate."
+    },
+    "comparison": {
+      "candidate_vs_q4": "Use identical text, language instruction, seed, voice mode/path/hash, split settings, cap, environment, and sampling request for each paired fixture.",
+      "candidate_selection": "Candidate selection is frozen before this held-out generation; no fitting, tuning, threshold changes, or fixture rewriting may use these results.",
+      "quality": "ASR, speaker, and MOS proxies are required records where applicable but none alone is a quality pass; paired human listening against Q4 remains required. Independent human references may add context but are not a new gate for this manifest."
+    },
+    "integrity": {
+      "text_disjointness": "Exact text strings must have zero intersection with all prior fixture sources.",
+      "split": "Every fixture must match expected_default_parts and concat=ok from the existing splitter probe.",
+      "voice": "Saved matrix path and SHA must match the fixed synthetic reference control; missing voice stops saved-voice cases.",
+      "data_claim": "This manifest is an input specification only and cannot be marked accepted from static text or projected durations."
+    }
+  },
+  "verification": {
+    "required_commands": [
+      "python3 -m json.tool benchmarks/depth-corpus/final-workload-manifest.json >/dev/null",
+      "python3 - <<'PY'  # load this manifest, assert 9 unique IDs/texts, 6 design + 3 saved voices, en/zh x short/medium/long, seeds {42,123}, exact instruction mapping, and no text intersection with prior sources PY",
+      "git diff --check"
+    ],
+    "split_probe_commands": "Run .beehive/agent/BREEZE-LONGFORM/split_probe with the manifest text; add 'reference' for saved voice. Assert parts, concat=ok, first_budget, and expected return convention.",
+    "runtime_receipt_verifier": "Use the existing benchmarks/quant_matrix_780m.py parser/verification shape after collection; no new runtime framework is required.",
+    "audio_collection": "No collection or generation has been run for this specification."
+  },
+  "limitations": [
+    "Target durations are planning buckets only until actual runs record emitted WAV durations; text must not be truncated or rewritten after candidate results are observed.",
+    "The saved matrix voice is synthetic and Q4_K-derived; it is not a human reference recording.",
+    "Default splitting can produce multiple parts, while current logs may expose only aggregate timing; missing per-part evidence stays missing.",
+    "A zero parsed delivery deficit is not evidence about an audio device, driver, or listener experience.",
+    "ASR, speaker cosine, and MOS proxies cannot establish intelligibility, prosody, speaker identity, or deployment quality without paired human listening against Q4.",
+    "The new texts expand prompt coverage but do not by themselves establish broad linguistic or prompt-family independence."
+  ]
+}
