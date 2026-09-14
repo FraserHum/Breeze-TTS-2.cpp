@@ -84,6 +84,41 @@ Final gate behavior:
 - `BREEZE_VOC_CONVT_MATMUL`: **on unless exactly `0`**.
 - `BREEZE_VOC_STATEFUL`: **off**, enable experimentally with `1`.
 - `BREEZE_DD_FUSED`: **off**, enable experimentally with `1`.
+- `BREEZE_PACK_WEIGHTS`: **on unless exactly `0`** (zero numerical divergence, eliminated 176 GEMMs/frame).
+
+## Ported audio.cpp Improvements (Weight Packing & Chunked SEANet)
+
+Following an audit of closed/merged PRs in `audio.cpp` (notably PR #393 and PR #431), two key optimizations were ported to `Breeze-TTS-2.cpp`:
+
+1. **In-Memory Weight Packing & Native Fused SwiGLU**:
+   - Concatenates Q, K, V projections into a single batched `attn_qkv` GEMM and Gate + Up projections into `ffn_gate_up`.
+   - Executes Gate/Up via native fused `ggml_swiglu` kernel, bypassing intermediate buffer allocations and copies.
+   - Performed transparently on model load (or via offline GGUF conversion with `--pack-weights`).
+   - Bit-exact numerical equivalence: $\text{Correlation} = 1.000000$, $\text{Max Diff} = 0.0$, $\text{SNR} = \infty\text{ dB}$.
+   - Pushes standard Q4_K generation **below 1.0 Real-Time Factor** on the AMD Radeon 780M without quality concessions.
+
+2. **Chunked SEANet Speech Encoder**:
+   - Windows input audio into 120,000-sample segments (5.0s) with 9,600-sample overlap.
+   - Bounds encoder VRAM to $O(1)$ constant memory regardless of reference audio duration.
+   - Verified on 68.16s audio clip: processed in 5.8s wall time (>11.7× realtime encoding speed).
+
+### Measured 780M Performance (Ryzen 7 8845HS / Radeon 780M, RADV PHOENIX, Vulkan)
+
+| Quant | Mode / Chunking | Frames / Audio | Wall Time | Decode RTF | Stage RTF | First Audio (TTFT) | Repeatability |
+|---|---|---|---:|---:|---:|---:|---|
+| **q4_k** | Standard (40/40) | 213 / 17.04s | 15.78–15.98s | **0.9159–0.9276** | **0.9251–0.9367** | 2,946–3,029ms | Bit-exact (`4c87908d13bc...`) |
+| **q4_k** | Low Latency (4/25) | 213 / 17.04s | 16.52s | **0.9600** | **0.9688** | **577ms** | Byte-identical stream |
+| **q8_0** | Standard (40/40) | 202 / 16.16s | 23.36–23.60s | **1.4330–1.4490** | **1.4429–1.4589** | 4,601–4,643ms | Bit-exact (`9aa67ce4bcaf...`) |
+| **q8_0** | Low Latency (4/25) | 202 / 16.16s | 24.12s | **1.4815** | **1.4910** | **709ms** | Byte-identical stream |
+
+### Stage Breakdown Comparison (Mean ms/frame)
+
+| Configuration / Quant | Backbone Decode | Depth Decode | Vocoder | Total Decode Frame Cost |
+|---|---:|---:|---:|---:|
+| Baseline matmul (q4_k) | 15.12 ms/f | 52.34 ms/f | 17.98 ms/f | 85.44 ms/f |
+| **Packed + Fused SwiGLU (q4_k)** | **14.54 ms/f** | **49.85 ms/f** | **8.88 ms/f** | **73.27 ms/f** |
+| Baseline matmul (q8_0) | 23.58 ms/f | 84.52 ms/f | 18.84 ms/f | 126.94 ms/f |
+| **Packed + Fused SwiGLU (q8_0)** | **22.75 ms/f** | **82.39 ms/f** | **9.30 ms/f** | **114.44 ms/f** |
 
 ## Model-side trial
 
