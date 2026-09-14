@@ -1,0 +1,175 @@
+{
+  "purpose": "User-requested delivery-tag listening pair; no performance acceptance claim",
+  "cases": [
+    {
+      "label": "calliope-tags-cfg2-q3-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--cfg-scale",
+        "2",
+        "--repeat",
+        "2",
+        "--timings",
+        "--output",
+        "/tmp/refresh-calliope-tags-cfg2-q3-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /src/build/breeze-cli",
+      "source": "e97d6f2609f11804fc926ff36d3087a10fc7a5eb",
+      "runs": [
+        {
+          "wall_ms": 14623.8,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.2105794701986754,
+          "first_audio_ms": 4507.0,
+          "stages_ms": {
+            "backbone decode": 4906.1,
+            "depth decode": 7488.6,
+            "vocoder": 1305.1
+          }
+        },
+        {
+          "wall_ms": 14234.5,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1783526490066225,
+          "first_audio_ms": 4188.0,
+          "stages_ms": {
+            "backbone decode": 4866.7,
+            "depth decode": 7360.0,
+            "vocoder": 1252.4
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-calliope-tags-cfg2-q3-a.wav\n52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-calliope-tags-cfg2-q3-a.repeat-2.wav\n",
+      "log_sha256": "83d47f8d41cece764571d34b4a2ac9f056bec8ec000904fa38d13d0be1d01d10",
+      "local_audio": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALLIOPE-TAGS-20260915/audio/calliope-tags-q3.wav"
+    },
+    {
+      "label": "calliope-tags-cfg2-iq2-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-iq2-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--cfg-scale",
+        "2",
+        "--repeat",
+        "2",
+        "--timings",
+        "--output",
+        "/tmp/refresh-calliope-tags-cfg2-iq2-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /src/build/breeze-cli",
+      "source": "e97d6f2609f11804fc926ff36d3087a10fc7a5eb",
+      "runs": [
+        {
+          "wall_ms": 15267.6,
+          "frames": 155,
+          "audio_s": 12.4,
+          "wall_rtf": 1.231258064516129,
+          "first_audio_ms": 4588.0,
+          "stages_ms": {
+            "backbone decode": 5103.1,
+            "depth decode": 7992.6,
+            "vocoder": 1336.9
+          }
+        },
+        {
+          "wall_ms": 14798.2,
+          "frames": 155,
+          "audio_s": 12.4,
+          "wall_rtf": 1.1934032258064518,
+          "first_audio_ms": 4183.0,
+          "stages_ms": {
+            "backbone decode": 5055.8,
+            "depth decode": 7694.1,
+            "vocoder": 1277.4
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "811cb96501506a3de854b70a21c91c359e85112c6dca0ab671464bef292c3ab9  /tmp/refresh-calliope-tags-cfg2-iq2-a.wav\n811cb96501506a3de854b70a21c91c359e85112c6dca0ab671464bef292c3ab9  /tmp/refresh-calliope-tags-cfg2-iq2-a.repeat-2.wav\n",
+      "log_sha256": "520bd2dd1880de8133141d7962914aaa7174cf092cf953598cb9d9b26f6cf49f",
+      "local_audio": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/.beehive/agent/BREEZE-CALLIOPE-TAGS-20260915/audio/calliope-tags-iq2.wav"
+    }
+  ],
+  "guidance": 2,
+  "tags": [
+    "(sigh)",
+    "(laugh)"
+  ],
+  "production_changed": false,
+  "reference_sha256": "331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8",
+  "runner": "import hashlib,json,os,pathlib,re,subprocess,sys,time\nroot=pathlib.Path(__file__).resolve().parent\nprefix=['kubectl','-n','hermes-voice','exec','breezetts-dev','--']\ntext='The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.'\ntext=os.environ.get('BREEZE_BENCH_TEXT',text)\nlabel=sys.argv[1]; pack=sys.argv[2]; repeat=sys.argv[3] if len(sys.argv)>3 else '3'\ncmd=prefix+['env','-u','GGML_VK_TEST_PACKED_Q4_MMVQ','-u','GGML_VK_DISABLE_FUSION','-u','GGML_VK_FORCE_MMVQ','-u','GGML_VK_DISABLE_MMVQ','-u','GGML_VK_PERF_LOGGER','GGML_VK_ALLOW_GRAPHICS_QUEUE=1','BREEZE_PACK_WEIGHTS='+pack,'BREEZE_VOC_TRIM=1','BREEZE_VOC_CONVT_MATMUL=1','BREEZE_VOC_STATEFUL=0','BREEZE_DD_FUSED=0','/src/build/breeze-cli',('/tmp/breeze-current-ffn-iq2-calibrated.gguf' if '-iq2-' in label else '/tmp/breeze-current-ffn-q3-calibrated.gguf'),'--text',text,'--instruction','Speak clearly and naturally.','--seed','42','--cfg-scale','2','--repeat',repeat,'--timings','--output','/tmp/refresh-'+label+'.wav']\ncmd.insert(cmd.index('/src/build/breeze-cli'),'BREEZE_V_CACHE_TRANSPOSED=0')\nif len(sys.argv)>4: cmd += ['--voice',sys.argv[4],'--voices-dir','/tmp/voices']\np=subprocess.run(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=300)\n(root/(label+'.log')).write_text(p.stdout)\nrows=[]\nfor part in p.stdout.split('generation wall')[1:]:\n wall=float(re.search(r'^\\s+([\\d.]+) ms',part)[1]); frames,duration=re.search(r'(\\d+) frames, ([\\d.]+) s audio',part).groups()\n first=float(re.search(r'time to first audio\\s+([\\d.]+)',part)[1]); stages={k:float(re.search(r'^\\s*'+k+r'\\s+([\\d.]+) ms',part,re.M)[1]) for k in ['backbone decode','depth decode','vocoder']}\n rows.append({'wall_ms':wall,'frames':int(frames),'audio_s':float(duration),'wall_rtf':wall/1000/float(duration),'first_audio_ms':first,'stages_ms':stages})\npaths=['/tmp/refresh-'+label+('' if n==1 else '.repeat-'+str(n))+'.wav' for n in range(1,int(repeat)+1)]\nhashes=subprocess.run(prefix+['sha256sum']+paths,capture_output=True,text=True)\nrecord={'label':label,'command':cmd,'returncode':p.returncode,'binary_md5':subprocess.check_output(prefix+['md5sum','/src/build/breeze-cli'],text=True).strip(),'source':os.environ.get('BREEZE_BENCH_SOURCE') or subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'runs':rows,'warmup':1,'wav_sha256':hashes.stdout,'log_sha256':hashlib.sha256(p.stdout.encode()).hexdigest()}\n(root/(label+'.json')).write_text(json.dumps(record,indent=2)+'\\n')\nprint(json.dumps(record),flush=True)\nif p.returncode or len(rows)!=int(repeat) or hashes.returncode:sys.exit(1)\n"
+}
