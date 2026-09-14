@@ -1,0 +1,15 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index 8cb21d36..95d7f6b5 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -9561,6 +9561,10 @@ static bool ggml_vk_should_use_mmvq(const vk_device& device, uint32_t m, uint32_
+             return true;
+         }
+     case VK_VENDOR_ID_AMD:
++        if (src0_type == GGML_TYPE_Q4_K && m == 16384 && n == 1 && k == 1024 &&
++            getenv("GGML_VK_TEST_PACKED_Q4_MMVQ") != nullptr) {
++            return true;
++        }
+         if (k < 2048) {
+             return false;
+         }

@@ -1,0 +1,874 @@
+{
+  "date": "2026-09-14/15 Pacific/Auckland",
+  "hardware": "queenbee AMD Radeon 780M, RADV PHOENIX, Vulkan0",
+  "microbench_source": "960e5df2dd072607439044ca2fe501c3d15e5bc3",
+  "microbench_ggml": "e7d634a0",
+  "probe_source": "48f4d080a615ae0f1a921319df67583b235c5936",
+  "probe_ggml": "3c4b0270",
+  "probe_vulkan_library_sha256": "dc41f0f930f7a71621e9fb73762fb1e4421aaa4b4bce862a77b00521fde01815",
+  "model_identity": "483418fbbb438f5f1c08dbe2b017e42db0f1d126765cd3f772d8622a30a4915c  /models/breeze-tts-2-q4_k.gguf",
+  "protocol": "CPU smoke; two GPU rounds per mode in default/integer/integer/default order; 20 warmups and100 timed iterations each. Global FORCE_MMVQ only in microbenchmark. Product probe shape-specific and default-off; three resident generations per mode, first warmup excluded.",
+  "logical_ffn_weight_bytes": 169869312,
+  "microbenchmarks": [
+    {
+      "backend": "cpu",
+      "device": "CPU",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 1,
+      "warmup": 0,
+      "iterations": 1,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 3098.907,
+              "submissions": 5,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            },
+            "per_ffn": {
+              "mean_us": 252.169,
+              "submissions": 1,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            },
+            "batched": {
+              "mean_us": 209.259,
+              "submissions": 1,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 272.275,
+              "submissions": 1,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            },
+            "batched_swiglu": {
+              "mean_us": 206.413,
+              "submissions": 1,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            },
+            "packed": {
+              "mean_us": 380.016,
+              "submissions": 1,
+              "checksum": "c310a12f0cfeaf17",
+              "repeat_checksum": "c310a12f0cfeaf17"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 659.896,
+              "submissions": 5,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            },
+            "per_ffn": {
+              "mean_us": 458.231,
+              "submissions": 1,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            },
+            "batched": {
+              "mean_us": 434.637,
+              "submissions": 1,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 504.979,
+              "submissions": 1,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            },
+            "batched_swiglu": {
+              "mean_us": 422.405,
+              "submissions": 1,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            },
+            "packed": {
+              "mean_us": 649.025,
+              "submissions": 1,
+              "checksum": "f5f6212cf7d3d9b1",
+              "repeat_checksum": "f5f6212cf7d3d9b1"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ],
+      "label": "cpu",
+      "log": "backend=CPU device=CPU model=/models/breeze-tts-2-q4_k.gguf layers=1 warmup=0 iterations=1\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=1 submissions=5 mean_us=3098.907 per_submission_us=619.781 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\nvariant=per_ffn n=1 layers=1 submissions=1 mean_us=252.169 per_submission_us=252.169 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\nvariant=batched n=1 layers=1 submissions=1 mean_us=209.259 per_submission_us=209.259 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\nvariant=per_ffn_swiglu n=1 layers=1 submissions=1 mean_us=272.275 per_submission_us=272.275 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\nvariant=batched_swiglu n=1 layers=1 submissions=1 mean_us=206.413 per_submission_us=206.413 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\nvariant=packed n=1 layers=1 submissions=1 mean_us=380.016 per_submission_us=380.016 checksum=c310a12f0cfeaf17 repeat_checksum=c310a12f0cfeaf17\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=c310a12f0cfeaf17 swiglu_checksum=c310a12f0cfeaf17\nvariant=split n=2 layers=1 submissions=5 mean_us=659.896 per_submission_us=131.979 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\nvariant=per_ffn n=2 layers=1 submissions=1 mean_us=458.231 per_submission_us=458.231 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\nvariant=batched n=2 layers=1 submissions=1 mean_us=434.637 per_submission_us=434.637 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\nvariant=per_ffn_swiglu n=2 layers=1 submissions=1 mean_us=504.979 per_submission_us=504.979 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\nvariant=batched_swiglu n=2 layers=1 submissions=1 mean_us=422.405 per_submission_us=422.405 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\nvariant=packed n=2 layers=1 submissions=1 mean_us=649.025 per_submission_us=649.025 checksum=f5f6212cf7d3d9b1 repeat_checksum=f5f6212cf7d3d9b1\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=f5f6212cf7d3d9b1 swiglu_checksum=f5f6212cf7d3d9b1\n"
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 100,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 7724.89353,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 4139.84984,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2408.81091,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3389.11912,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2369.9899,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "packed": {
+              "mean_us": 2478.58093,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 7130.84537,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4155.23573,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2491.13886,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3394.93723,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2514.77927,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "packed": {
+              "mean_us": 2528.48373,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ],
+      "label": "default-a",
+      "log": "backend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=7724.894 per_submission_us=128.748 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4139.850 per_submission_us=344.987 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched n=1 layers=12 submissions=1 mean_us=2408.811 per_submission_us=2408.811 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3389.119 per_submission_us=282.427 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2369.990 per_submission_us=2369.990 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=packed n=1 layers=12 submissions=1 mean_us=2478.581 per_submission_us=2478.581 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=fa45fb51a7fb99ae swiglu_checksum=fa45fb51a7fb99ae\nvariant=split n=2 layers=12 submissions=60 mean_us=7130.845 per_submission_us=118.847 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4155.236 per_submission_us=346.270 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2491.139 per_submission_us=2491.139 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3394.937 per_submission_us=282.911 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2514.779 per_submission_us=2514.779 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=packed n=2 layers=12 submissions=1 mean_us=2528.484 per_submission_us=2528.484 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\nggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\n",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/packed-ffn-default-a.json"
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 100,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6533.25013,
+              "submissions": 60,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "per_ffn": {
+              "mean_us": 4677.39103,
+              "submissions": 12,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "batched": {
+              "mean_us": 2358.79571,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3605.16497,
+              "submissions": 12,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "batched_swiglu": {
+              "mean_us": 2461.72151,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "packed": {
+              "mean_us": 2449.11869,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 7103.55578,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4187.5744,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2622.92768,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3707.90963,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2541.13522,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "packed": {
+              "mean_us": 2655.9398,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ],
+      "label": "integer-a",
+      "log": "backend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=6533.250 per_submission_us=108.888 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4677.391 per_submission_us=389.783 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=batched n=1 layers=12 submissions=1 mean_us=2358.796 per_submission_us=2358.796 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3605.165 per_submission_us=300.430 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2461.722 per_submission_us=2461.722 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=packed n=1 layers=12 submissions=1 mean_us=2449.119 per_submission_us=2449.119 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=ec471c9d8c7edc67 swiglu_checksum=ec471c9d8c7edc67\nvariant=split n=2 layers=12 submissions=60 mean_us=7103.556 per_submission_us=118.393 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4187.574 per_submission_us=348.965 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2622.928 per_submission_us=2622.928 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3707.910 per_submission_us=308.992 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2541.135 per_submission_us=2541.135 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=packed n=2 layers=12 submissions=1 mean_us=2655.940 per_submission_us=2655.940 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\nggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\n",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "GGML_VK_FORCE_MMVQ=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/packed-ffn-integer-a.json"
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 100,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 6601.80468,
+              "submissions": 60,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "per_ffn": {
+              "mean_us": 4171.32942,
+              "submissions": 12,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "batched": {
+              "mean_us": 2414.03462,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3310.99109,
+              "submissions": 12,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "batched_swiglu": {
+              "mean_us": 2481.13928,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            },
+            "packed": {
+              "mean_us": 2433.31594,
+              "submissions": 1,
+              "checksum": "ec471c9d8c7edc67",
+              "repeat_checksum": "ec471c9d8c7edc67"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 7061.87515,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4124.79307,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2552.98094,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3351.61634,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2480.64186,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "packed": {
+              "mean_us": 2505.57498,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ],
+      "label": "integer-b",
+      "log": "backend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=6601.805 per_submission_us=110.030 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4171.329 per_submission_us=347.611 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=batched n=1 layers=12 submissions=1 mean_us=2414.035 per_submission_us=2414.035 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3310.991 per_submission_us=275.916 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2481.139 per_submission_us=2481.139 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\nvariant=packed n=1 layers=12 submissions=1 mean_us=2433.316 per_submission_us=2433.316 checksum=ec471c9d8c7edc67 repeat_checksum=ec471c9d8c7edc67\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=ec471c9d8c7edc67 swiglu_checksum=ec471c9d8c7edc67\nvariant=split n=2 layers=12 submissions=60 mean_us=7061.875 per_submission_us=117.698 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4124.793 per_submission_us=343.733 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2552.981 per_submission_us=2552.981 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3351.616 per_submission_us=279.301 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2480.642 per_submission_us=2480.642 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=packed n=2 layers=12 submissions=1 mean_us=2505.575 per_submission_us=2505.575 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\nggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\n",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "GGML_VK_FORCE_MMVQ=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/packed-ffn-integer-b.json"
+      ]
+    },
+    {
+      "backend": "gpu",
+      "device": "Vulkan0",
+      "model": "/models/breeze-tts-2-q4_k.gguf",
+      "layers": 12,
+      "warmup": 20,
+      "iterations": 100,
+      "weights": "real_model_Q4_K",
+      "input": "synthetic_normalized_f32_scale_0.25",
+      "timed_scope": "graph_compute_plus_synchronize",
+      "cases": [
+        {
+          "n": 1,
+          "variants": {
+            "split": {
+              "mean_us": 7209.75126,
+              "submissions": 60,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn": {
+              "mean_us": 4104.80373,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched": {
+              "mean_us": 2490.08189,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3360.8462,
+              "submissions": 12,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "batched_swiglu": {
+              "mean_us": 2426.48204,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            },
+            "packed": {
+              "mean_us": 2457.42933,
+              "submissions": 1,
+              "checksum": "fa45fb51a7fb99ae",
+              "repeat_checksum": "fa45fb51a7fb99ae"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        },
+        {
+          "n": 2,
+          "variants": {
+            "split": {
+              "mean_us": 6990.61646,
+              "submissions": 60,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn": {
+              "mean_us": 4130.8907,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched": {
+              "mean_us": 2487.89422,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "per_ffn_swiglu": {
+              "mean_us": 3442.35411,
+              "submissions": 12,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "batched_swiglu": {
+              "mean_us": 2465.44613,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            },
+            "packed": {
+              "mean_us": 2567.26327,
+              "submissions": 1,
+              "checksum": "d48e42ef0599b7a0",
+              "repeat_checksum": "d48e42ef0599b7a0"
+            }
+          },
+          "normal_vs_swiglu": {
+            "max_abs": 0,
+            "max_rel": 0
+          },
+          "normal_vs_packed": {
+            "max_abs": 0,
+            "max_rel": 0
+          }
+        }
+      ],
+      "label": "default-b",
+      "log": "backend=Vulkan0 device=Vulkan0 model=/models/breeze-tts-2-q4_k.gguf layers=12 warmup=20 iterations=100\nweights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\nvariant=split n=1 layers=12 submissions=60 mean_us=7209.751 per_submission_us=120.163 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn n=1 layers=12 submissions=12 mean_us=4104.804 per_submission_us=342.067 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched n=1 layers=12 submissions=1 mean_us=2490.082 per_submission_us=2490.082 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=per_ffn_swiglu n=1 layers=12 submissions=12 mean_us=3360.846 per_submission_us=280.071 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=batched_swiglu n=1 layers=12 submissions=1 mean_us=2426.482 per_submission_us=2426.482 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\nvariant=packed n=1 layers=12 submissions=1 mean_us=2457.429 per_submission_us=2457.429 checksum=fa45fb51a7fb99ae repeat_checksum=fa45fb51a7fb99ae\ncompare=normal_vs_swiglu n=1 max_abs=0 max_rel=0 normal_checksum=fa45fb51a7fb99ae swiglu_checksum=fa45fb51a7fb99ae\nvariant=split n=2 layers=12 submissions=60 mean_us=6990.616 per_submission_us=116.510 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn n=2 layers=12 submissions=12 mean_us=4130.891 per_submission_us=344.241 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched n=2 layers=12 submissions=1 mean_us=2487.894 per_submission_us=2487.894 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=per_ffn_swiglu n=2 layers=12 submissions=12 mean_us=3442.354 per_submission_us=286.863 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=batched_swiglu n=2 layers=12 submissions=1 mean_us=2465.446 per_submission_us=2465.446 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\nvariant=packed n=2 layers=12 submissions=1 mean_us=2567.263 per_submission_us=2567.263 checksum=d48e42ef0599b7a0 repeat_checksum=d48e42ef0599b7a0\ncompare=normal_vs_swiglu n=2 max_abs=0 max_rel=0 normal_checksum=d48e42ef0599b7a0 swiglu_checksum=d48e42ef0599b7a0\nggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\n",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/packed-ffn-default-b.json"
+      ]
+    }
+  ],
+  "generation": [
+    {
+      "label": "dispatch-off",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-dispatch-off.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "48f4d080a615ae0f1a921319df67583b235c5936",
+      "runs": [
+        {
+          "wall_ms": 15950.3,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9360504694835681,
+          "first_audio_ms": 2973.0,
+          "stages_ms": {
+            "backbone decode": 3127.1,
+            "depth decode": 10730.8,
+            "vocoder": 1927.4
+          }
+        },
+        {
+          "wall_ms": 15687.0,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9205985915492958,
+          "first_audio_ms": 2855.0,
+          "stages_ms": {
+            "backbone decode": 3062.2,
+            "depth decode": 10666.1,
+            "vocoder": 1857.1
+          }
+        },
+        {
+          "wall_ms": 15641.9,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9179518779342724,
+          "first_audio_ms": 2842.0,
+          "stages_ms": {
+            "backbone decode": 3058.9,
+            "depth decode": 10639.6,
+            "vocoder": 1844.8
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-dispatch-off.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-dispatch-off.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-dispatch-off.repeat-3.wav\n",
+      "log_sha256": "b37757e5859d555d3fd17a4382f8ef50402b5a6c486b2d9f257a33027706b36a",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2973.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5960.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8877.7 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11845.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14887.8 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15950.1 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15950.3 ms (wall RTF 0.936)\ntime to first audio 2973 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.1 ms\n  backbone prefill      75.0 ms\n  first vocoder        271.3 ms  (40 frames)\n  backbone decode     3127.1 ms  (14.68 ms/frame)\n  depth decode       10730.8 ms  (50.38 ms/frame)\n  vocoder             1927.4 ms  (9.05 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-dispatch-off.wav (17.04 s)\n  flush 1 ready_ms=2855.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5767.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8733.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11667.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14602.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15686.9 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15687.0 ms (wall RTF 0.921)\ntime to first audio 2855 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          33.1 ms\n  backbone prefill      53.8 ms\n  first vocoder        252.4 ms  (40 frames)\n  backbone decode     3062.2 ms  (14.38 ms/frame)\n  depth decode       10666.1 ms  (50.08 ms/frame)\n  vocoder             1857.1 ms  (8.72 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-dispatch-off.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2842.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5728.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8615.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11566.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14588.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15641.7 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15641.9 ms (wall RTF 0.918)\ntime to first audio 2842 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          33.1 ms\n  backbone prefill      51.3 ms\n  first vocoder        249.8 ms  (40 frames)\n  backbone decode     3058.9 ms  (14.36 ms/frame)\n  depth decode       10639.6 ms  (49.95 ms/frame)\n  vocoder             1844.8 ms  (8.66 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-dispatch-off.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "dispatch-on",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ=1",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-dispatch-on.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "48f4d080a615ae0f1a921319df67583b235c5936",
+      "runs": [
+        {
+          "wall_ms": 17242.8,
+          "frames": 235,
+          "audio_s": 18.8,
+          "wall_rtf": 0.9171702127659573,
+          "first_audio_ms": 2976.0,
+          "stages_ms": {
+            "backbone decode": 3458.8,
+            "depth decode": 11580.2,
+            "vocoder": 2038.9
+          }
+        },
+        {
+          "wall_ms": 17203.8,
+          "frames": 235,
+          "audio_s": 18.8,
+          "wall_rtf": 0.9150957446808509,
+          "first_audio_ms": 2811.0,
+          "stages_ms": {
+            "backbone decode": 3425.7,
+            "depth decode": 11662.3,
+            "vocoder": 2015.4
+          }
+        },
+        {
+          "wall_ms": 17190.9,
+          "frames": 235,
+          "audio_s": 18.8,
+          "wall_rtf": 0.9144095744680852,
+          "first_audio_ms": 2833.0,
+          "stages_ms": {
+            "backbone decode": 3410.8,
+            "depth decode": 11670.8,
+            "vocoder": 2010.8
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "0dedfe14c4f7d3b3068fbec1e80539dfc1a509fe4927a88fbacffa828450bc9a  /tmp/refresh-dispatch-on.wav\n0dedfe14c4f7d3b3068fbec1e80539dfc1a509fe4927a88fbacffa828450bc9a  /tmp/refresh-dispatch-on.repeat-2.wav\n0dedfe14c4f7d3b3068fbec1e80539dfc1a509fe4927a88fbacffa828450bc9a  /tmp/refresh-dispatch-on.repeat-3.wav\n",
+      "log_sha256": "91a034a2abc470596723bdbbb5cb49b72f3dde71606ce207a2899547fd63a9c2",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2976.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5951.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8837.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11738.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14655.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17242.5 delivered_audio_s=18.80\n\ngenerated 18.80 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     17242.8 ms (wall RTF 0.917)\ntime to first audio 2976 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.8 ms\n  backbone prefill      74.9 ms\n  first vocoder        263.8 ms  (40 frames)\n  backbone decode     3458.8 ms  (14.72 ms/frame)\n  depth decode       11580.2 ms  (49.28 ms/frame)\n  vocoder             2038.9 ms  (8.68 ms/frame)\n  235 frames, 18.80 s audio\nwrote /tmp/refresh-dispatch-on.wav (18.80 s)\n  flush 1 ready_ms=2811.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5702.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8789.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11678.6 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14584.7 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17203.6 delivered_audio_s=18.80\n\ngenerated 18.80 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     17203.8 ms (wall RTF 0.915)\ntime to first audio 2811 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          34.5 ms\n  backbone prefill      51.0 ms\n  first vocoder        254.5 ms  (40 frames)\n  backbone decode     3425.7 ms  (14.58 ms/frame)\n  depth decode       11662.3 ms  (49.63 ms/frame)\n  vocoder             2015.4 ms  (8.58 ms/frame)\n  235 frames, 18.80 s audio\nwrote /tmp/refresh-dispatch-on.repeat-2.wav (18.80 s)\n  flush 1 ready_ms=2832.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5716.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8639.3 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11566.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14489.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=17190.7 delivered_audio_s=18.80\n\ngenerated 18.80 s\ngeneration wall     17190.9 ms (wall RTF 0.914)\ntime to first audio 2833 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.5 ms\n  backbone prefill      53.2 ms\n  first vocoder        253.5 ms  (40 frames)\n  backbone decode     3410.8 ms  (14.51 ms/frame)\n  depth decode       11670.8 ms  (49.66 ms/frame)\n  vocoder             2010.8 ms  (8.56 ms/frame)\n  235 frames, 18.80 s audio\nwrote /tmp/refresh-dispatch-on.repeat-3.wav (18.80 s)\n"
+    }
+  ],
+  "verdict": "Rejected: only marginal graph improvement, changed n1 tensor values and speech frame count/duration. No production change.",
+  "limits": "Synthetic FFN inputs, independent layer roots, explicit intermediate buffers. No hardware bandwidth/occupancy counters; bytes/time is not measured DRAM throughput. One English speech fixture, not final workload or quality acceptance."
+}

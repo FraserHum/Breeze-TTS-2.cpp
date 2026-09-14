@@ -1,5 +1,12 @@
 # RTF-080 implementation progress
 
+## September 15 packed FFN dispatch probe
+
+The [packed FFN experiment](../docs/research/packed-ffn-probe-results.md) adds real
+packed projection coverage to the existing benchmark. Shape-specific integer
+dispatch reduced depth time only slightly and changed speech from 213 to 235
+frames. It was reverted; no runtime change or RTF-0.8 claim is retained.
+
 ## September 14 exact-runtime refresh
 
 The [controlled refresh](../docs/research/optimization-refresh-results.md) measured
