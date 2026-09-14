@@ -135,7 +135,7 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
     // stack is causal, so drop only old latent frames after a guarded RF check.
     const int history = trim_prefix >= 0 ? conv_tail_history(m) : -1;
     if (trim_prefix >= 0 && trim_prefix <= T && history > 0 && history <= 16) {
-        const int keep = std::min(trim_prefix, 16);
+        const int keep = std::min(trim_prefix, history);
         const int drop = trim_prefix - keep;
         if (drop > 0) {
             h = ggml_view_2d(ctx, h, h->ne[0], h->ne[1] - drop, h->nb[1],

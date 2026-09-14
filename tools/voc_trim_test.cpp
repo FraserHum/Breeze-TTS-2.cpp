@@ -2,6 +2,7 @@
 #include "breeze/codec.h"
 #include "breeze/model.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -85,7 +86,7 @@ int main(int argc, char ** argv) {
     const std::vector<int> codes = codec.encode(speech, encoded_frames);
     const int nc = model.cfg.num_codebooks;
     const int spf = model.cfg.samples_per_frame;
-    constexpr int needed_frames = 128;
+    constexpr int needed_frames = 144;
     if (nc <= 0 || spf <= 0 || encoded_frames < needed_frames ||
         codes.size() < (size_t) needed_frames * nc) {
         std::fprintf(stderr, "fixture encoded to %d frames; need at least %d\n", encoded_frames, needed_frames);
@@ -93,7 +94,12 @@ int main(int argc, char ** argv) {
         return 1;
     }
 
-    const int starts[] = { 0, 16, 88 };
+    // The reference Breeze model has 19,928 samples of convolution support:
+    // 19,928 / 1,920 + 1 = 11 retained frames. Exercise both trim boundaries
+    // and the moving window used by generation after 88 frames.
+    constexpr int history = 11;
+    const int context = model.cfg.voc.sliding_window + 16;
+    const int starts[] = { 0, 11, 16, 88, 89, 104 };
     const int counts[] = { 1, 4, 40 };
     bool ok = true;
     for (int start : starts) {
@@ -103,19 +109,22 @@ int main(int argc, char ** argv) {
                 ok = false;
                 continue;
             }
-            const int T = start + count;
-            const std::vector<int> window(codes.begin(), codes.begin() + (size_t) T * nc);
+            const int ctx_start = std::max(0, start - context);
+            const int prefix = start - ctx_start;
+            const int T = prefix + count;
+            const std::vector<int> window(codes.begin() + (size_t) ctx_start * nc,
+                                          codes.begin() + (size_t) (start + count) * nc);
             const std::vector<float> ref = codec.decode(window, T, nc);
-            const std::vector<float> got = codec.decode(window, T, nc, start);
+            const std::vector<float> got = codec.decode(window, T, nc, prefix);
             const size_t want = (size_t) count * spf;
-            const size_t expected = (size_t) (std::min(start, 16) + count) * spf;
+            const size_t expected = (size_t) (std::min(prefix, history) + count) * spf;
             const bool lengths = ref.size() == (size_t) T * spf && got.size() == expected;
             Stats s;
-            if (lengths) s = compare(ref, (size_t) start * spf, got, got.size() - want, want);
+            if (lengths) s = compare(ref, (size_t) prefix * spf, got, got.size() - want, want);
             const bool pass = lengths && s.equal_length && s.finite && s.snr >= 30.0 &&
                               s.corr >= 0.999 && s.max_diff < 0.03;
-            std::printf("start=%d count=%d ref=%zu got=%zu snr_db=%.3f corr=%.9f max_diff=%.6g %s\n",
-                        start, count, ref.size(), got.size(), s.snr, s.corr, s.max_diff,
+            std::printf("start=%d count=%d ctx_start=%d ref=%zu got=%zu snr_db=%.3f corr=%.9f max_diff=%.6g %s\n",
+                        start, count, ctx_start, ref.size(), got.size(), s.snr, s.corr, s.max_diff,
                         pass ? "PASS" : "FAIL");
             ok = ok && pass;
         }
