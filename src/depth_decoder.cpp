@@ -495,7 +495,7 @@ static ggml_tensor * dd_cache_append(ggml_context * ctx, std::vector<ggml_tensor
 }
 
 static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor * x, int il,
-                              ggml_tensor * pos, ggml_tensor * ff, ggml_tensor * mask,
+                              ggml_tensor * pos, ggml_tensor * ff, ggml_tensor * mask, ggml_tensor * flash_mask,
                               int start, int n,
                               const std::vector<ggml_tensor *> & k_cache,
                               const std::vector<ggml_tensor *> & v_cache,
@@ -528,7 +528,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
 
     ggml_tensor * kfull = dd_cache_append(ctx, cpy_roots, k_cache[il], k, start);
     ggml_tensor * vfull = dd_cache_append(ctx, cpy_roots, v_cache[il], v, start);
-    ggml_tensor * a = attention(ctx, q, kfull, vfull, mask, scale, c.n_head, c.n_kv_head);
+    ggml_tensor * a = flash_mask ? attention_flash(ctx, q, kfull, vfull, flash_mask, scale)
+                                : attention(ctx, q, kfull, vfull, mask, scale, c.n_head, c.n_kv_head);
     a = linear(ctx, m.w(p + ".attn_output.weight"), a);
     x = ggml_add(ctx, res, a);
 
@@ -579,8 +580,11 @@ static ggml_tensor * dd_step_body(ggml_context * ctx, BreezeModel & m, const KVC
         embed = ggml_concat(ctx, h0, embed, 1); // [2048, 2*nb], position major
     ggml_tensor * x = linear(ctx, m.w("dd.in_proj.weight"), embed); // [1024, n_tok]
 
+    const char * flash_env = std::getenv("BREEZE_DD_FLASH_ATTN");
+    ggml_tensor * flash_mask = flash_env && std::strcmp(flash_env, "1") == 0
+        ? ggml_cast(ctx, mask, GGML_TYPE_F16) : nullptr;
     for (int il = 0; il < c.n_layer; il++)
-        x = dd_layer(ctx, m, x, il, pos, ff, mask, start * nb, n_tok, kv.k, kv.v, cpy_roots,
+        x = dd_layer(ctx, m, x, il, pos, ff, mask, flash_mask, start * nb, n_tok, kv.k, kv.v, cpy_roots,
                      capture_refs, capture_layers);
     x = rms_norm(ctx, x, m.w("dd.output_norm.weight"), c.rms_eps);
 

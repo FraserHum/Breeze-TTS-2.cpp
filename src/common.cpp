@@ -201,6 +201,15 @@ ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, gg
     return ggml_cont_2d(ctx, kqv, hd * n_head, nq);
 }
 
+ggml_tensor * attention_flash(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k,
+                              ggml_tensor * v, ggml_tensor * mask, float scale) {
+    ggml_tensor * out = ggml_flash_attn_ext(ctx, ggml_permute(ctx, q, 0, 2, 1, 3),
+        ggml_permute(ctx, k, 0, 2, 1, 3), ggml_permute(ctx, v, 0, 2, 1, 3), mask,
+        scale, 0.0f, 0.0f);
+    ggml_flash_attn_ext_set_prec(out, GGML_PREC_F32);
+    return ggml_reshape_2d(ctx, out, q->ne[0] * q->ne[1], q->ne[2]);
+}
+
 std::vector<float> build_causal_mask(int n_q, int n_kv, int q_offset, int sliding_window) {
     std::vector<float> mask((size_t) n_q * n_kv, 0.0f);
     for (int q = 0; q < n_q; q++) {

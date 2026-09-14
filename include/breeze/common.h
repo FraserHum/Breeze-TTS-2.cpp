@@ -77,6 +77,9 @@ ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor
 ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, ggml_tensor * v,
                         ggml_tensor * mask, float scale, int n_head, int n_kv_head, bool v_transposed = false);
 
+// Same layouts as attention(); mask must be contiguous F16.
+ggml_tensor * attention_flash(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k,
+                              ggml_tensor * v, ggml_tensor * mask, float scale);
 std::vector<float> build_causal_mask(int n_q, int n_kv, int q_offset, int sliding_window);
 
 // causal within a branch, blind across branches, for interleaved multi branch caches
