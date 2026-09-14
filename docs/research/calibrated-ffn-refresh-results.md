@@ -80,3 +80,15 @@ specifies delivery, not speaker identity; the saved-reference case adds
 speaker conditioning. Quantized weights can alter sampled audio codes even
 with the same random seed, so identity/prosody consistency needs separate
 assessment from acceptable overall sound quality.
+
+## Deployed Calliope reference comparison
+
+At the user's request, copied the exact deployed `/voices/calliope.breeze`
+into the dev pod (SHA-256 `331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8`).
+Both Q4/Q3 use that reference, the same household text, instruction
+`Speak clearly and naturally.`, and seed 42. Three repetitions per mode
+complete deterministically; warmed mean RTF is **0.934128 Q4 / 0.849720 Q3**.
+Audio duration is **9.52 / 9.12 seconds**. This is a single-order screen,
+not a reversed timing matrix. Copied warmed WAVs have verified remote hashes.
+Receipt: `benchmarks/depth-corpus/calibrated-ffn-calliope.json`.
+Production remains unchanged.

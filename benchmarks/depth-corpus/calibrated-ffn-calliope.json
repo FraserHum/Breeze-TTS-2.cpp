@@ -1,0 +1,191 @@
+{
+  "reference": {
+    "source": "deployment/breezetts:/voices/calliope.breeze",
+    "sha256": "331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8",
+    "bytes": 10514
+  },
+  "speech": [
+    {
+      "label": "calliope-q4-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-calliope-q4-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /src/build/breeze-cli",
+      "source": "2b2b097e8e021504b59cc45f19e434badd4e9788",
+      "runs": [
+        {
+          "wall_ms": 9003.6,
+          "frames": 119,
+          "audio_s": 9.52,
+          "wall_rtf": 0.9457563025210085,
+          "first_audio_ms": 3042.0,
+          "stages_ms": {
+            "backbone decode": 1945.1,
+            "depth decode": 5900.5,
+            "vocoder": 974.8
+          }
+        },
+        {
+          "wall_ms": 8899.1,
+          "frames": 119,
+          "audio_s": 9.52,
+          "wall_rtf": 0.934779411764706,
+          "first_audio_ms": 2972.0,
+          "stages_ms": {
+            "backbone decode": 1916.6,
+            "depth decode": 5923.1,
+            "vocoder": 944.5
+          }
+        },
+        {
+          "wall_ms": 8886.7,
+          "frames": 119,
+          "audio_s": 9.52,
+          "wall_rtf": 0.9334768907563027,
+          "first_audio_ms": 2932.0,
+          "stages_ms": {
+            "backbone decode": 1915.1,
+            "depth decode": 5914.9,
+            "vocoder": 951.2
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f25d0566a168a1310013eaf76ccb7838111e4b322c8fa101b047a52110e55f6d  /tmp/refresh-calliope-q4-a.wav\nf25d0566a168a1310013eaf76ccb7838111e4b322c8fa101b047a52110e55f6d  /tmp/refresh-calliope-q4-a.repeat-2.wav\nf25d0566a168a1310013eaf76ccb7838111e4b322c8fa101b047a52110e55f6d  /tmp/refresh-calliope-q4-a.repeat-3.wav\n",
+      "log_sha256": "9eaef14b06a6528e1acf7b6f05aaa71173327006b2d22545515237fd7be80cf3"
+    },
+    {
+      "label": "calliope-q3-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-calliope-q3-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /src/build/breeze-cli",
+      "source": "2b2b097e8e021504b59cc45f19e434badd4e9788",
+      "runs": [
+        {
+          "wall_ms": 7951.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8718201754385966,
+          "first_audio_ms": 2832.0,
+          "stages_ms": {
+            "backbone decode": 1872.6,
+            "depth decode": 4919.8,
+            "vocoder": 965.2
+          }
+        },
+        {
+          "wall_ms": 7741.6,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8488596491228071,
+          "first_audio_ms": 2732.0,
+          "stages_ms": {
+            "backbone decode": 1828.0,
+            "depth decode": 4872.0,
+            "vocoder": 920.9
+          }
+        },
+        {
+          "wall_ms": 7757.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8505811403508773,
+          "first_audio_ms": 2726.0,
+          "stages_ms": {
+            "backbone decode": 1827.0,
+            "depth decode": 4888.7,
+            "vocoder": 931.4
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-calliope-q3-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-calliope-q3-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-calliope-q3-a.repeat-3.wav\n",
+      "log_sha256": "e111daa6eae74b0928ab72e49e27dfae36a5e7921a5a6dbc96862156e7972ae3"
+    }
+  ],
+  "source": "2b2b097",
+  "note": "Same deployed Calliope reference in both modes; no deployment changed. One process per mode, three resident repeats; first excluded from timing means."
+}
