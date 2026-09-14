@@ -54,9 +54,6 @@ static ggml_tensor * bb_layer(ggml_context * ctx, BreezeModel & m, Graph & g, Ba
         q = ggml_view_3d(ctx, qkv, c.head_dim, c.n_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], 0);
         k = ggml_view_3d(ctx, qkv, c.head_dim, c.n_kv_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], (size_t) q_dim * sizeof(float));
         v = ggml_view_3d(ctx, qkv, c.head_dim, c.n_kv_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], (size_t) (q_dim + kv_dim) * sizeof(float));
-        if (!ggml_is_contiguous(q)) q = ggml_cont(ctx, q);
-        if (!ggml_is_contiguous(k)) k = ggml_cont(ctx, k);
-        if (!ggml_is_contiguous(v)) v = ggml_cont(ctx, v);
     } else {
         q = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_q.weight"), h), c.head_dim, c.n_head, n);
         k = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_k.weight"), h), c.head_dim, c.n_kv_head, n);

@@ -158,14 +158,10 @@ ggml_tensor * swiglu_ffn(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate
 
 ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate_up,
                                 ggml_tensor * down, int intermediate_size) {
-    ggml_tensor * gu = ggml_mul_mat(ctx, gate_up, x);
-    const int n = (int) gu->ne[1];
-    ggml_tensor * gate = ggml_view_2d(ctx, gu, intermediate_size, n, gu->nb[1], 0);
-    ggml_tensor * up = ggml_view_2d(ctx, gu, intermediate_size, n, gu->nb[1], (size_t) intermediate_size * sizeof(float));
-    if (!ggml_is_contiguous(gate)) gate = ggml_cont(ctx, gate);
-    if (!ggml_is_contiguous(up)) up = ggml_cont(ctx, up);
-    ggml_tensor * g = ggml_silu(ctx, gate);
-    return ggml_mul_mat(ctx, down, ggml_mul(ctx, g, up));
+    (void) intermediate_size;
+    ggml_tensor * h = ggml_mul_mat(ctx, gate_up, x);
+    ggml_tensor * act = ggml_swiglu(ctx, h);
+    return ggml_mul_mat(ctx, down, act);
 }
 
 ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, ggml_tensor * v,
