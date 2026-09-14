@@ -151,9 +151,9 @@ ggml_tensor * linear(ggml_context * ctx, ggml_tensor * w, ggml_tensor * x) {
 
 ggml_tensor * swiglu_ffn(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate,
                          ggml_tensor * up, ggml_tensor * down) {
-    ggml_tensor * g = ggml_silu(ctx, ggml_mul_mat(ctx, gate, x));
+    ggml_tensor * g = ggml_mul_mat(ctx, gate, x);
     ggml_tensor * u = ggml_mul_mat(ctx, up, x);
-    return ggml_mul_mat(ctx, down, ggml_mul(ctx, g, u));
+    return ggml_mul_mat(ctx, down, ggml_swiglu_split(ctx, g, u));
 }
 
 ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate_up,
