@@ -50,6 +50,7 @@ static void dd_require(ggml_tensor * t, const char * what, int64_t ne0, int64_t 
 
 // BREEZE_DEPTH_STEP_TIMING=1 arms per-phase timing of run(). the env read happens once and the
 // result is cached; with the env unset or != 1 every measurement below is a dead branch
+// In the regular async path, d2h_ms includes the final graph wait; compare comp_ms + d2h_ms.
 bool rt_depth_timing_enabled() {
     static const int en = [] {
         const char * e = std::getenv("BREEZE_DEPTH_STEP_TIMING");

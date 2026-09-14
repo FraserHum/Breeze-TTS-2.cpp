@@ -1,0 +1,511 @@
+{
+  "candidate_commit": "1644f523fc0cc37fac7a45a74769e495addcb922",
+  "baseline_commit": "932f973",
+  "backend_commit": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd",
+  "candidate_binary_sha256": "b076b3db0185bbce31739a2be770b22dff602db945a38aef65e8df2b55c72c8c",
+  "backend_binary_sha256": "172a074e97c595f8c6c6d8eb1c4d1e54f5a3090573e9bb537ff62e1b05f8d1e8",
+  "model_sha256": "34483105709c75c38cdafcddcb4ec91e0b222097d30e76432507c448053a83de",
+  "voice_sha256": "331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8",
+  "ordinary_approved_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3",
+  "tags_approved_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194",
+  "attribution": {
+    "timing_log_sha256": "ef2b1af29fc86ea861a2e5e70dcdc73fa7960cc901a96c18a75861608ac6048a",
+    "phase_runs": [
+      {
+        "frames": 114,
+        "mean_ms_per_frame": {
+          "stage_ms": 0.0023596491228070177,
+          "set_ms": 0.013131578947368421,
+          "comp_ms": 43.133184210526316,
+          "d2h_ms": 1.5790087719298245,
+          "sample_ms": 0.28792982456140354,
+          "total_ms": 45.01541228070175
+        }
+      },
+      {
+        "frames": 114,
+        "mean_ms_per_frame": {
+          "stage_ms": 0.0022368421052631577,
+          "set_ms": 0.012517543859649123,
+          "comp_ms": 42.34923684210526,
+          "d2h_ms": 1.2423333333333333,
+          "sample_ms": 0.29346491228070176,
+          "total_ms": 43.89968421052632
+        }
+      },
+      {
+        "frames": 114,
+        "mean_ms_per_frame": {
+          "stage_ms": 0.002543859649122807,
+          "set_ms": 0.012780701754385965,
+          "comp_ms": 43.47921929824562,
+          "d2h_ms": 1.5061228070175439,
+          "sample_ms": 0.28646491228070176,
+          "total_ms": 45.28707894736842
+        }
+      }
+    ],
+    "warmup_runs": 1,
+    "profile": {
+      "source_log_sha256": "c62736d6121a4a846c4e2e6481d0d1fa0ed66cdbdb869a5a2770ec3165fbcab4",
+      "single_token_graphs": 112,
+      "median_us_per_graph": {
+        "CONT": 48.558499999999995,
+        "CPY": 41.7085,
+        "GET_ROWS": 3.005,
+        "GLU": 31.1935,
+        "ffn": 1948.7475,
+        "projections": 358.9285,
+        "attention": 119.614,
+        "head": 111.852,
+        "norm": 129.35199999999998,
+        "ROPE": 54.513,
+        "SOFT_MAX": 43.897999999999996
+      },
+      "warning": "Separate logger-perturbed run; category medians do not sum to a graph median or establish removable time."
+    }
+  },
+  "runs": [
+    {
+      "label": "baseline-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/tmp/q3-kernel-baseline/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-baseline-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /tmp/q3-kernel-baseline/breeze-cli",
+      "source": "932f973 (saved baseline executable; same Vulkan library as candidate)",
+      "runs": [
+        {
+          "wall_ms": 8152.6,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8939254385964913,
+          "first_audio_ms": 2898.0,
+          "stages_ms": {
+            "backbone decode": 1831.6,
+            "depth decode": 5085.0,
+            "vocoder": 1039.5
+          }
+        },
+        {
+          "wall_ms": 8094.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8875328947368423,
+          "first_audio_ms": 2796.0,
+          "stages_ms": {
+            "backbone decode": 1872.3,
+            "depth decode": 5150.9,
+            "vocoder": 949.4
+          }
+        },
+        {
+          "wall_ms": 7954.7,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8722258771929825,
+          "first_audio_ms": 2773.0,
+          "stages_ms": {
+            "backbone decode": 1812.2,
+            "depth decode": 5087.8,
+            "vocoder": 939.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-a.repeat-3.wav\n",
+      "log_sha256": "8c916509628a3fe617c82c19c87ee81799084803eb3c8c9a9892c6cb6278ab0b"
+    },
+    {
+      "label": "async-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-async-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "73e82e43bd584f0b3ada9f9891a3d389  /src/build/breeze-cli",
+      "source": "1644f523fc0cc37fac7a45a74769e495addcb922",
+      "runs": [
+        {
+          "wall_ms": 8118.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8902192982456142,
+          "first_audio_ms": 3026.0,
+          "stages_ms": {
+            "backbone decode": 1888.7,
+            "depth decode": 5052.7,
+            "vocoder": 969.4
+          }
+        },
+        {
+          "wall_ms": 7836.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8592105263157895,
+          "first_audio_ms": 2745.0,
+          "stages_ms": {
+            "backbone decode": 1853.8,
+            "depth decode": 4949.0,
+            "vocoder": 926.7
+          }
+        },
+        {
+          "wall_ms": 7873.7,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8633442982456141,
+          "first_audio_ms": 2654.0,
+          "stages_ms": {
+            "backbone decode": 1877.6,
+            "depth decode": 4951.7,
+            "vocoder": 938.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-a.repeat-3.wav\n",
+      "log_sha256": "fdd57e0cb5bf3cbdc4e181e93757ad573e56554191ed697b2fe7bb64678ece46"
+    },
+    {
+      "label": "async-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-async-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "73e82e43bd584f0b3ada9f9891a3d389  /src/build/breeze-cli",
+      "source": "1644f523fc0cc37fac7a45a74769e495addcb922",
+      "runs": [
+        {
+          "wall_ms": 8131.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8915899122807017,
+          "first_audio_ms": 2849.0,
+          "stages_ms": {
+            "backbone decode": 1919.2,
+            "depth decode": 5042.0,
+            "vocoder": 984.2
+          }
+        },
+        {
+          "wall_ms": 7913.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8677412280701755,
+          "first_audio_ms": 2730.0,
+          "stages_ms": {
+            "backbone decode": 1862.4,
+            "depth decode": 4974.4,
+            "vocoder": 946.2
+          }
+        },
+        {
+          "wall_ms": 7859.7,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8618092105263159,
+          "first_audio_ms": 2723.0,
+          "stages_ms": {
+            "backbone decode": 1853.5,
+            "depth decode": 4960.2,
+            "vocoder": 934.6
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-async-b.repeat-3.wav\n",
+      "log_sha256": "7c95cedff4b6cd9b53f69fb391face45286e407e271223897f62f1126214c36d"
+    },
+    {
+      "label": "baseline-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/tmp/q3-kernel-baseline/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-baseline-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "45190d015056b16ea4a0d1cbd631cf5c  /tmp/q3-kernel-baseline/breeze-cli",
+      "source": "932f973 (saved baseline executable; same Vulkan library as candidate)",
+      "runs": [
+        {
+          "wall_ms": 8281.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.9080263157894738,
+          "first_audio_ms": 2854.0,
+          "stages_ms": {
+            "backbone decode": 1911.3,
+            "depth decode": 5212.0,
+            "vocoder": 974.3
+          }
+        },
+        {
+          "wall_ms": 7980.9,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8750986842105263,
+          "first_audio_ms": 2773.0,
+          "stages_ms": {
+            "backbone decode": 1857.1,
+            "depth decode": 5068.5,
+            "vocoder": 939.2
+          }
+        },
+        {
+          "wall_ms": 7903.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8666447368421054,
+          "first_audio_ms": 2791.0,
+          "stages_ms": {
+            "backbone decode": 1853.7,
+            "depth decode": 5000.1,
+            "vocoder": 945.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-b.repeat-3.wav\n",
+      "log_sha256": "3f3b7840e387cdd1689faf56116666e1179cd4c633ed21a0db71cf62ab3e78c3"
+    },
+    {
+      "label": "async-tags",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "2",
+        "--timings",
+        "--output",
+        "/tmp/refresh-async-tags.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices",
+        "--cfg-scale",
+        "2"
+      ],
+      "returncode": 0,
+      "binary_md5": "73e82e43bd584f0b3ada9f9891a3d389  /src/build/breeze-cli",
+      "source": "1644f523fc0cc37fac7a45a74769e495addcb922",
+      "runs": [
+        {
+          "wall_ms": 14110.3,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.16807119205298,
+          "first_audio_ms": 4154.0,
+          "stages_ms": {
+            "backbone decode": 4968.4,
+            "depth decode": 7022.6,
+            "vocoder": 1295.7
+          }
+        },
+        {
+          "wall_ms": 14078.1,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1654056291390729,
+          "first_audio_ms": 4043.0,
+          "stages_ms": {
+            "backbone decode": 4976.5,
+            "depth decode": 7091.6,
+            "vocoder": 1250.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-async-tags.wav\n52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-async-tags.repeat-2.wav\n",
+      "log_sha256": "9de32a178e3f8a444ef83bdf63626b5238a2dd81a1d456ebf7f2af9e458d96e9"
+    }
+  ],
+  "decision": "Retain one-wait regular depth path; production untouched. Warm ABBA short Calliope gain is modest, not proof of 0.8 RTF or general workload speedup."
+}
