@@ -939,12 +939,14 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         ggml_backend_tensor_set(g.mask, mask_staging.data(), 0, mask_n * sizeof(float));
 
         const std::chrono::steady_clock::time_point rtd_c = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
-        ggml_backend_graph_compute(m.backend.backend, g.graph);
+        ggml_backend_graph_compute_async(m.backend.backend, g.graph);
         const std::chrono::steady_clock::time_point rtd_d = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
 
         const size_t n_out = (size_t) g.logits->ne[0] * (size_t) g.logits->ne[1];
         GGML_ASSERT(n_out == logits_buf.size());
-        ggml_backend_tensor_get(g.logits, logits_buf.data(), 0, n_out * sizeof(float));
+        // Queue the read with the graph, then wait once before host sampling.
+        ggml_backend_tensor_get_async(m.backend.backend, g.logits, logits_buf.data(), 0, n_out * sizeof(float));
+        ggml_backend_synchronize(m.backend.backend);
         const std::chrono::steady_clock::time_point rtd_e = rtd ? rtd_now() : std::chrono::steady_clock::time_point{};
 
         if (capture_this) {
