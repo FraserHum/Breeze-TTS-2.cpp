@@ -1,0 +1,79 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index 8cb21d36..e140f671 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -9639,7 +9639,12 @@ static void ggml_vk_mul_mat_vec_q_f16(ggml_backend_vk_context * ctx, vk_context&
+     GGML_ASSERT(ne11 == 1 || ne12 * ne13 == 1);
+     bool batch_n = ne11 > 1;
+ 
+-    const bool x_non_contig = !ggml_vk_dim01_contiguous(src0);
++    const bool strided_x = src0->type == GGML_TYPE_F32 && src1->type == GGML_TYPE_F32 && ne11 == 1 &&
++        src0->nb[0] == sizeof(float) && src0->nb[1] >= ne00 * sizeof(float) && src0->nb[1] % 16 == 0 &&
++        src0->nb[2] == src0->nb[1] * ne01 && src0->nb[3] == src0->nb[2] * ne02 &&
++        ggml_nbytes(src0) / sizeof(float) <= UINT32_MAX && src0->nb[2] / sizeof(float) <= UINT32_MAX &&
++        (vk_tensor_offset(src0) + src0->view_offs) % ctx->device->properties.limits.minStorageBufferOffsetAlignment == 0;
++    const bool x_non_contig = !ggml_vk_dim01_contiguous(src0) && !strided_x;
+     const bool y_non_contig = !ggml_vk_dim01_contiguous(src1);
+ 
+     const bool f16_f32_kernel = src1->type == GGML_TYPE_F32;
+@@ -9778,7 +9783,7 @@ static void ggml_vk_mul_mat_vec_q_f16(ggml_backend_vk_context * ctx, vk_context&
+     uint32_t stride_batch_d = batch_n ? ne20 : (ne20*ne21);
+ 
+     if (!ggml_vk_dim01_contiguous(src0) && !qx_needs_dequant) {
+-        stride_batch_x = src0->nb[0] / ggml_type_size(src0->type);
++        stride_batch_x = strided_x ? src0->nb[2] / sizeof(float) : src0->nb[0] / ggml_type_size(src0->type);
+     }
+ 
+     if (!ggml_vk_dim01_contiguous(src1) && !qy_needs_dequant) {
+@@ -9822,7 +9827,7 @@ static void ggml_vk_mul_mat_vec_q_f16(ggml_backend_vk_context * ctx, vk_context&
+ 
+         uint32_t groups_y = std::min((uint32_t)(ne12 * ne13) - base_work_group_y, ctx->device->properties.limits.maxComputeWorkGroupCount[1]);
+         const vk_mat_vec_push_constants pc = {
+-            (uint32_t)ne00, (uint32_t)ne10, (uint32_t)ne10, (uint32_t)ne01,
++            (uint32_t)ne00, (uint32_t)(strided_x ? src0->nb[1] / sizeof(float) : ne10), (uint32_t)ne10, (uint32_t)ne01,
+             stride_batch_x, stride_batch_y, stride_batch_d,
+             fusion_flags, base_work_group_y,
+             (uint32_t)ne02, (uint32_t)ne12, (uint32_t)r2, (uint32_t)r3,
+diff --git a/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp b/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp
+index 5a9d0e77..9239172d 100644
+--- a/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp
++++ b/src/ggml-vulkan/vulkan-shaders/mul_mat_vec.comp
+@@ -3,6 +3,12 @@
+ #extension GL_EXT_shader_explicit_arithmetic_types_int32 : require
+ 
+ #include "mul_mat_vec_base.glsl"
++#if defined(DATA_A_F32)
++#define ROW_STRIDE_A p.stride_a
++#else
++#define ROW_STRIDE_A p.ncols
++#endif
++
+ #include "dequant_funcs.glsl"
+ 
+ layout(local_size_x_id = 0, local_size_y = 1, local_size_z = 1) in;
+@@ -68,10 +74,10 @@ void iter(inout FLOAT_TYPE temp[NUM_COLS][NUM_ROWS], const uint first_row, const
+ 
+         const vec4 b = load_b(j, iybs, iqs, lastiter, OOB_y, OOB_z, OOB_w);
+ #endif
+-        uint ibi = first_row*p.ncols;
++        uint ibi = first_row*ROW_STRIDE_A;
+         [[unroll]] for (uint n = 0; n < num_rows; ++n) {
+             const uint ib = (ibi + col)/QUANT_K; // block index
+-            ibi += p.ncols;
++            ibi += ROW_STRIDE_A;
+ 
+ #if K_PER_ITER == 8
+             vec4 v = dequantize4(ib, iqs, a_offset);
+@@ -124,10 +130,10 @@ void iter_aligned_nonquant(inout FLOAT_TYPE temp[NUM_COLS][NUM_ROWS], const uint
+ 
+         const vec4 b = data_b_v4[(j*p.batch_stride_b + b_offset + iybs + iqs) / 4];
+ 
+-        uint ibi = first_row*p.ncols;
++        uint ibi = first_row*ROW_STRIDE_A;
+         [[unroll]] for (uint n = 0; n < num_rows; ++n) {
+             const uint ib = (ibi + col)/QUANT_K; // block index
+-            ibi += p.ncols;
++            ibi += ROW_STRIDE_A;
+ 
+             const vec4 v = dequantize4_2aligned(ib, iqs, a_offset);
+ 

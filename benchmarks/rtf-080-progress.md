@@ -248,3 +248,16 @@ The opt-in native `ggml_flash_attn_ext` backbone path failed the unchanged full-
 The strict-F32 Vulkan follow-up kept F32 Q/K/V/cache inputs and the existing scalar F32-body shader without changing global F16 dispatch. The strict=0 context-1 control returned code 7; strict=1 returned code 7 at contexts 1, 4, and 64, with worst observed max-absolute/relative-L2 drift of `0.0180987716/0.00747097078`, `0.257628113/0.038572333`, and `0.558972359/0.0536461904`. This numerical gate detects drift, not actual speech failure; its cause remains unresolved and no speech or performance claim follows. The runtime/tool changes were reverted; the candidate and strict backend patches plus receipts are archived: [backbone-flash-candidate.patch](depth-corpus/backbone-flash-candidate.patch), [backbone-flash-strict-vulkan.patch](depth-corpus/backbone-flash-strict-vulkan.patch), and [backbone-flash-strict.json](depth-corpus/backbone-flash-strict.json). The baseline CLI MD5 remained `067a25764c424185bd684f60354852e0`.
 
 Next order: evaluate the completed 16-sample language-quality proxy set and expanded all-layer/late-frame capture (byte parity at five frames across all 12 layers), then continue calibrated standard Q3_K/selective precision with disjoint calibration/evaluation. Selective Q3_K FFN/Q4 attention is built and calibration runtime is in progress; the native weighted Q3_K FFN build is in progress. Conditionally test IQ/rotation/packed feasibility, do small finishing work only if the measured gap warrants it, and defer the student track until then. The 0.8 target remains unmet.
+
+## Strided F32 V cache — 2026-09-15
+
+Retained opt-in prototype (`BREEZE_V_CACHE_TRANSPOSED=1`, default off): long
+saved-reference RTF **1.09996 → 1.02455** (6.86% faster); ordinary speech
+**0.92313 → 0.92339** (unchanged). All 24 tested speech WAVs match within their
+workload. CPU/Vulkan strided-cache checks and full-backbone fingerprints pass.
+At 1024 context tokens, median backbone call falls **27.897 → 21.584 ms**.
+Production is unchanged and 0.8 RTF remains unmet. Depth FFN bandwidth /
+selective precision remains the next ordinary-speech priority, with user
+listening approval required for any changed audio, rather than strict sample
+parity as the acceptance rule. See
+[experiment results](../docs/research/strided-v-cache-results.md).
