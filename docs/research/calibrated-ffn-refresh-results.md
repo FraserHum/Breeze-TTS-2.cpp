@@ -92,3 +92,8 @@ Audio duration is **9.52 / 9.12 seconds**. This is a single-order screen,
 not a reversed timing matrix. Copied warmed WAVs have verified remote hashes.
 Receipt: `benchmarks/depth-corpus/calibrated-ffn-calliope.json`.
 Production remains unchanged.
+
+The user approved the deployed-Calliope listening pair: "quality is good".
+This approves the tested calibrated Q3 candidate's audio quality with the
+Calliope reference. It does not establish broader workload performance or
+meeting 0.8 RTF; deployment remains unchanged.
