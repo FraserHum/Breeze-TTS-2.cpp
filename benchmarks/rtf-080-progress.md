@@ -287,3 +287,14 @@ short Calliope RTF **0.87920 Q3 → 0.85282 IQ2**, with depth **45.104 → 43.01
 ms/frame**. All twelve runs complete; audio differs and **IQ2 listening
 approval is pending**. No deployment change, no 0.8 claim, and no use of the
 reserved final workload set. [IQ2 results](../docs/research/iq2-ffn-refresh-results.md).
+
+## Q3 kernel probes — 2026-09-15
+
+Approved Q3 kept fixed. Existing integer-dot dispatch is **6.48% slower** in
+the twelve-layer single-token FFN microbenchmark. Four-row and one-row
+floating Q3 specializations preserve output checksums but show no reliable
+benefit over the original two rows. All runtime probes are reverted; three
+baseline binaries and ordinary/tagged Calliope WAVs match exactly after
+restoration. Q3-capable benchmark support and receipts remain. No new speedup,
+production change, or 0.8 claim. IQ2's laugh→sigh user quality rejection is
+recorded. See [Q3 kernel results](../docs/research/q3-kernel-probe-results.md).
