@@ -248,8 +248,9 @@ static bool load_weights(const std::string & path, ggml_backend_t backend, Model
             const ggml_type type = gguf_get_tensor_type(model.gguf, id);
             const int expected_k = kind == Down ? kFfn : kHidden;
             const int expected_m = kind == Down ? kHidden : kFfn;
-            if (type != GGML_TYPE_Q4_K || ne[0] != expected_k || ne[1] != expected_m
-                    || ne[2] != 1 || ne[3] != 1) {
+            if ((type != GGML_TYPE_Q4_K && type != GGML_TYPE_Q3_K) || ne[0] != expected_k || ne[1] != expected_m
+                    || ne[2] != 1 || ne[3] != 1
+                    || ((layer > 0 || kind > Gate) && type != model.weights[0][Gate]->type)) {
                 std::fprintf(stderr, "unexpected %s: type=%s shape=[%" PRId64 ",%" PRId64 "]\n",
                              name.c_str(), ggml_type_name(type), ne[0], ne[1]);
                 ggml_free(weight_ctx);
@@ -268,7 +269,7 @@ static bool load_weights(const std::string & path, ggml_backend_t backend, Model
     }
 
     for (int layer = 0; layer < kLayers; ++layer) {
-        model.packed_gate_up[layer] = ggml_new_tensor_2d(weight_ctx, GGML_TYPE_Q4_K, kHidden, 2 * kFfn);
+        model.packed_gate_up[layer] = ggml_new_tensor_2d(weight_ctx, model.weights[layer][Gate]->type, kHidden, 2 * kFfn);
     }
     model.tensor_ctx = weight_ctx;
     model.buffer = ggml_backend_alloc_ctx_tensors(model.tensor_ctx, backend);
@@ -520,7 +521,7 @@ static std::string hex_hash(uint64_t value) {
 }
 
 static void write_json(const Options & options, const std::string & device,
-                       const std::array<CaseResults, 2> & cases) {
+                       const std::array<CaseResults, 2> & cases, const ModelWeights & model) {
     if (options.json.empty()) return;
     std::ofstream output(options.json);
     if (!output) {
@@ -534,7 +535,7 @@ static void write_json(const Options & options, const std::string & device,
            << "  \"layers\": " << options.layers << ",\n"
            << "  \"warmup\": " << options.warmup << ",\n"
            << "  \"iterations\": " << options.iterations << ",\n"
-           << "  \"weights\": \"real_model_Q4_K\",\n"
+           << "  \"weights\": " << json_quote(model.weights[0][Gate]->type == GGML_TYPE_Q3_K ? "real_model_Q3_K" : "real_model_Q4_K") << ",\n"
            << "  \"input\": \"synthetic_normalized_f32_scale_0.25\",\n"
            << "  \"timed_scope\": \"graph_compute_plus_synchronize\",\n"
            << "  \"cases\": [\n";
@@ -592,7 +593,7 @@ int main(int argc, char ** argv) {
     std::printf("backend=%s device=%s model=%s layers=%d warmup=%d iterations=%d\n",
                 ggml_backend_name(backend), device ? ggml_backend_dev_name(device) : "unknown",
                 options.model.c_str(), options.layers, options.warmup, options.iterations);
-    std::printf("weights=real_model_Q4_K input=synthetic_normalized_f32 scale=0.25 "
+    std::printf("weights=real_model_Q3_K_or_Q4_K input=synthetic_normalized_f32 scale=0.25 "
                 "scope=graph_compute+synchronize; split=5 submissions/FFN; batched=independent layer roots\n");
 
     ModelWeights model;
@@ -657,7 +658,7 @@ int main(int argc, char ** argv) {
         }
     }
 
-    write_json(options, device ? ggml_backend_dev_name(device) : "unknown", results);
+    write_json(options, device ? ggml_backend_dev_name(device) : "unknown", results, model);
 
     ggml_backend_buffer_free(graph_buffer);
     ggml_free(graph_ctx);

@@ -40,3 +40,10 @@ Receipt (including builder, runner, exact commands and tensor hashes):
 `benchmarks/depth-corpus/iq2-ffn-refresh.json`.
 Audio: `.beehive/agent/BREEZE-IQ2-REFRESH-20260915/audio/`.
 Verify: `python3 benchmarks/verify_iq2_ffn_refresh.py`.
+
+## Delivery-tag rejection
+
+The user reported that IQ2 ignored `(laugh)` and produced a second sigh in
+its place in the paired Calliope delivery test (`calliope-delivery-tags.json`,
+guidance 2). IQ2 fails this user quality check and is rejected for promotion.
+Q3 remains the approved candidate. The earlier pending status is historical.
