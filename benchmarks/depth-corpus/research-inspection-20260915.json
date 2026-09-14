@@ -1,0 +1,180 @@
+{
+  "kind": "read-only research inspection, not performance evidence",
+  "date": "2026-09-15",
+  "source": "132cda7",
+  "ggml": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd",
+  "model_sha256": "34483105709c75c38cdafcddcb4ec91e0b222097d30e76432507c448053a83de",
+  "device_command": "kubectl -n hermes-voice exec breezetts-dev -- vulkaninfo",
+  "vulkaninfo_sha256": "c49ac9173ceacd2503c23627afe65692001c77b54a1203bb05bf145e7a0797b6",
+  "device_features": [
+    "deviceName        = AMD Radeon 780M Graphics (RADV PHOENIX)",
+    "subgroupSize                      = 64",
+    "driverInfo                                           = Mesa 26.0.8-1ubuntu0.3",
+    "minSubgroupSize                                                               = 32",
+    "maxSubgroupSize                                                               = 64",
+    "subgroupSizeControl                                = true"
+  ],
+  "rf_recurrence": "upsample: rf=rf*stride+kernel-1; conv: rf+=(kernel-1)*dilation",
+  "rf_steps": [
+    {
+      "stage": "dup.0",
+      "stride": 2,
+      "kernel": 2,
+      "dw_kernel": 7,
+      "rf": 7
+    },
+    {
+      "stage": "dup.1",
+      "stride": 2,
+      "kernel": 2,
+      "dw_kernel": 7,
+      "rf": 21
+    },
+    {
+      "stage": "dhead",
+      "kernel": 7,
+      "rf": 27
+    },
+    {
+      "stage": "dblk.0.up",
+      "stride": 8,
+      "kernel": 16,
+      "rf": 231
+    },
+    {
+      "stage": "dblk.0.res.0",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 1,
+      "rf": 237
+    },
+    {
+      "stage": "dblk.0.res.1",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 3,
+      "rf": 255
+    },
+    {
+      "stage": "dblk.0.res.2",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 9,
+      "rf": 309
+    },
+    {
+      "stage": "dblk.1.up",
+      "stride": 5,
+      "kernel": 10,
+      "rf": 1554
+    },
+    {
+      "stage": "dblk.1.res.0",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 1,
+      "rf": 1560
+    },
+    {
+      "stage": "dblk.1.res.1",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 3,
+      "rf": 1578
+    },
+    {
+      "stage": "dblk.1.res.2",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 9,
+      "rf": 1632
+    },
+    {
+      "stage": "dblk.2.up",
+      "stride": 4,
+      "kernel": 8,
+      "rf": 6535
+    },
+    {
+      "stage": "dblk.2.res.0",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 1,
+      "rf": 6541
+    },
+    {
+      "stage": "dblk.2.res.1",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 3,
+      "rf": 6559
+    },
+    {
+      "stage": "dblk.2.res.2",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 9,
+      "rf": 6613
+    },
+    {
+      "stage": "dblk.3.up",
+      "stride": 3,
+      "kernel": 6,
+      "rf": 19844
+    },
+    {
+      "stage": "dblk.3.res.0",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 1,
+      "rf": 19850
+    },
+    {
+      "stage": "dblk.3.res.1",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 3,
+      "rf": 19868
+    },
+    {
+      "stage": "dblk.3.res.2",
+      "kernels": [
+        7,
+        1
+      ],
+      "dilation": 9,
+      "rf": 19922
+    },
+    {
+      "stage": "dfin",
+      "kernel": 7,
+      "rf": 19928
+    }
+  ],
+  "rf_samples": 19928,
+  "samples_per_frame": 1920,
+  "computed_history": 11,
+  "retained_history": 16
+}

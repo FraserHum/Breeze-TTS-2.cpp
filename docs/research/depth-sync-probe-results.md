@@ -64,7 +64,12 @@ hashes: `benchmarks/depth-corpus/depth-sync-probe.json`. Run
 `python3 benchmarks/verify_depth_sync_probe.py` to check it. Backend remains
 `acc4d4d7`; no backend patch or new runtime flag was needed.
 
-Next bounded candidate: measure the existing F32 depth output head with F16
+Correction from the subsequent [collaborative investigation](rtf-080-unexplored-20260915.md):
+F16 heads were already tested on an older baseline (0.464 ms/frame gain), so
+the proposal below is a replication, not an unexplored opportunity. Prioritize
+the newly identified subgroup and computed-history probes instead.
+
+Original next-candidate proposal: measure the existing F32 depth output head with F16
 weights. The profile suggests only a small opportunity (roughly 1.7 ms/frame
 for the entire head), so demand a measured gain before requesting listening
 approval. It cannot independently close the remaining gap; larger progress
