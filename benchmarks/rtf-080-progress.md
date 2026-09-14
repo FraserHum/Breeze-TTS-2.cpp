@@ -261,3 +261,14 @@ selective precision remains the next ordinary-speech priority, with user
 listening approval required for any changed audio, rather than strict sample
 parity as the acceptance rule. See
 [experiment results](../docs/research/strided-v-cache-results.md).
+
+## Calibrated depth FFN refresh — 2026-09-15
+
+Reused calibrated Q3_K FFNs on the exact current Q4 baseline; the other 1,125
+tensors and metadata remain identical. With current packed-weight runtime,
+report RTF is **0.92465 → 0.86108**, household **0.91504 → 0.82999**, saved
+voice **0.95191 → 0.88001**. Report depth drops **50.419 → 45.231 ms/frame**.
+All 24 runs completed and repeat deterministically, but each Q4/Q3 audio pair
+changes; household pacing lengthens materially. **User listening approval is
+pending**, production unchanged, and 0.8 remains unmet. See
+[results](../docs/research/calibrated-ffn-refresh-results.md).
