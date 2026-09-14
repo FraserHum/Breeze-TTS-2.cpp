@@ -1,0 +1,1167 @@
+{
+  "decision": "opt-in candidate; awaiting user audio quality approval",
+  "production_changed": false,
+  "backend_final": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd",
+  "final_hashes": "f2e5f31d3fc12cfad585416f9273096da6b55ea73edb1f83cb569c4d3ea7d7c4  /src/build/breeze-cli\n172a074e97c595f8c6c6d8eb1c4d1e54f5a3090573e9bb537ff62e1b05f8d1e8  /src/build/third_party/ggml/src/ggml-vulkan/libggml-vulkan.so\n34483105709c75c38cdafcddcb4ec91e0b222097d30e76432507c448053a83de  /tmp/breeze-current-ffn-q3-calibrated.gguf\n331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8  /tmp/voices/calliope.breeze\n",
+  "audio_hashes": {
+    "ordinary": {
+      "control": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3",
+      "flash": "3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681"
+    },
+    "tagged": {
+      "control": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194",
+      "flash": "3dc18e86ee015c747840260d0aa08b7bd0fb96a3109e4442d35c6cb3ffa39cfb"
+    }
+  },
+  "speech": {
+    "control-a": {
+      "label": "control-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7698.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8441118421052632,
+          "first_audio_ms": 2768.0,
+          "stages_ms": {
+            "backbone decode": 1862.0,
+            "depth decode": 4751.7,
+            "vocoder": 894.2
+          }
+        },
+        {
+          "wall_ms": 7504.1,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8228179824561405,
+          "first_audio_ms": 2641.0,
+          "stages_ms": {
+            "backbone decode": 1828.3,
+            "depth decode": 4689.3,
+            "vocoder": 854.9
+          }
+        },
+        {
+          "wall_ms": 7617.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8352302631578948,
+          "first_audio_ms": 2645.0,
+          "stages_ms": {
+            "backbone decode": 1842.6,
+            "depth decode": 4808.8,
+            "vocoder": 859.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-a.repeat-3.wav\n",
+      "log_sha256": "c7b050b1661db92dea37134497849708b1fad1376771e51dc70dc872f949927c",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "submit4-a": {
+      "label": "submit4-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "GGML_VK_TEST_DEPTH_SUBMIT_DIVISOR=4",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-submit4-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7766.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8516228070175439,
+          "first_audio_ms": 2783.0,
+          "stages_ms": {
+            "backbone decode": 1868.7,
+            "depth decode": 4805.4,
+            "vocoder": 890.5
+          }
+        },
+        {
+          "wall_ms": 7669.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8408991228070176,
+          "first_audio_ms": 2710.0,
+          "stages_ms": {
+            "backbone decode": 1843.8,
+            "depth decode": 4833.3,
+            "vocoder": 870.3
+          }
+        },
+        {
+          "wall_ms": 7598.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8331469298245615,
+          "first_audio_ms": 2636.0,
+          "stages_ms": {
+            "backbone decode": 1836.4,
+            "depth decode": 4786.6,
+            "vocoder": 860.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-a.repeat-3.wav\n",
+      "log_sha256": "fbe8e21c56a3c66fc8a87e5be444785c8b9c0afa928e95c1463f381cb5b54018",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "submit4-b": {
+      "label": "submit4-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "GGML_VK_TEST_DEPTH_SUBMIT_DIVISOR=4",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-submit4-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7720.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8465131578947369,
+          "first_audio_ms": 2744.0,
+          "stages_ms": {
+            "backbone decode": 1854.1,
+            "depth decode": 4800.5,
+            "vocoder": 885.5
+          }
+        },
+        {
+          "wall_ms": 7596.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8329166666666667,
+          "first_audio_ms": 2657.0,
+          "stages_ms": {
+            "backbone decode": 1825.6,
+            "depth decode": 4795.8,
+            "vocoder": 862.1
+          }
+        },
+        {
+          "wall_ms": 7652.4,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.839078947368421,
+          "first_audio_ms": 2706.0,
+          "stages_ms": {
+            "backbone decode": 1827.2,
+            "depth decode": 4832.8,
+            "vocoder": 869.8
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-submit4-b.repeat-3.wav\n",
+      "log_sha256": "01fdbc4712f0f9c2d2b28fdcf8cb9c73a4afed3a11e75d74d09cbe5e557550b4",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "control-b": {
+      "label": "control-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7795.1,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8547258771929825,
+          "first_audio_ms": 2783.0,
+          "stages_ms": {
+            "backbone decode": 1890.4,
+            "depth decode": 4822.9,
+            "vocoder": 888.9
+          }
+        },
+        {
+          "wall_ms": 7601.9,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8335416666666667,
+          "first_audio_ms": 2632.0,
+          "stages_ms": {
+            "backbone decode": 1831.4,
+            "depth decode": 4789.3,
+            "vocoder": 864.5
+          }
+        },
+        {
+          "wall_ms": 7631.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8367543859649124,
+          "first_audio_ms": 2630.0,
+          "stages_ms": {
+            "backbone decode": 1831.9,
+            "depth decode": 4825.1,
+            "vocoder": 862.2
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-b.repeat-3.wav\n",
+      "log_sha256": "e23b691e5321157e86642acec2ff8d19b672ad5f958fb49525f0d9260ee61992",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "flash-a": {
+      "label": "flash-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "BREEZE_DD_FLASH_ATTN=1",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-flash-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7500.3,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.81525,
+          "first_audio_ms": 2684.0,
+          "stages_ms": {
+            "backbone decode": 1876.9,
+            "depth decode": 4545.4,
+            "vocoder": 887.2
+          }
+        },
+        {
+          "wall_ms": 7493.7,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8145326086956521,
+          "first_audio_ms": 2576.0,
+          "stages_ms": {
+            "backbone decode": 1869.4,
+            "depth decode": 4616.3,
+            "vocoder": 873.5
+          }
+        },
+        {
+          "wall_ms": 7458.4,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.810695652173913,
+          "first_audio_ms": 2603.0,
+          "stages_ms": {
+            "backbone decode": 1859.3,
+            "depth decode": 4622.3,
+            "vocoder": 866.5
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-a.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-a.repeat-2.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-a.repeat-3.wav\n",
+      "log_sha256": "02c469ca1600b6297269868b4d3ae3b4714b12a62ebd139ecbf41e17a13ba39c",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "control-fa-a": {
+      "label": "control-fa-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-fa-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7684.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8426315789473685,
+          "first_audio_ms": 2731.0,
+          "stages_ms": {
+            "backbone decode": 1861.2,
+            "depth decode": 4749.2,
+            "vocoder": 881.0
+          }
+        },
+        {
+          "wall_ms": 7547.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8275548245614036,
+          "first_audio_ms": 2665.0,
+          "stages_ms": {
+            "backbone decode": 1827.1,
+            "depth decode": 4744.4,
+            "vocoder": 856.2
+          }
+        },
+        {
+          "wall_ms": 7532.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8258771929824562,
+          "first_audio_ms": 2664.0,
+          "stages_ms": {
+            "backbone decode": 1829.3,
+            "depth decode": 4732.7,
+            "vocoder": 858.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-a.repeat-3.wav\n",
+      "log_sha256": "3a76f3a67dbbb50a612c9e02aec026c89208d27051198c07f92ae9479a80e2e1",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "control-fa-b": {
+      "label": "control-fa-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-fa-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7811.9,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8565679824561404,
+          "first_audio_ms": 2774.0,
+          "stages_ms": {
+            "backbone decode": 1893.6,
+            "depth decode": 4829.3,
+            "vocoder": 889.5
+          }
+        },
+        {
+          "wall_ms": 7647.4,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8385307017543859,
+          "first_audio_ms": 2634.0,
+          "stages_ms": {
+            "backbone decode": 1829.1,
+            "depth decode": 4821.0,
+            "vocoder": 875.5
+          }
+        },
+        {
+          "wall_ms": 7566.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8296929824561404,
+          "first_audio_ms": 2632.0,
+          "stages_ms": {
+            "backbone decode": 1829.0,
+            "depth decode": 4746.0,
+            "vocoder": 875.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-fa-b.repeat-3.wav\n",
+      "log_sha256": "62b2e043680a5a83125ed068028bc2fb93fdf8ba1f556f46c15cbdc565d8c4fb",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "flash-b": {
+      "label": "flash-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "BREEZE_DD_FLASH_ATTN=1",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-flash-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "f9b641e5315799c9ea82bc3ed38886c56817fcbe",
+      "runs": [
+        {
+          "wall_ms": 7494.1,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8145760869565218,
+          "first_audio_ms": 2638.0,
+          "stages_ms": {
+            "backbone decode": 1876.0,
+            "depth decode": 4515.5,
+            "vocoder": 911.9
+          }
+        },
+        {
+          "wall_ms": 7444.8,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8092173913043479,
+          "first_audio_ms": 2663.0,
+          "stages_ms": {
+            "backbone decode": 1856.2,
+            "depth decode": 4580.5,
+            "vocoder": 868.6
+          }
+        },
+        {
+          "wall_ms": 7400.0,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8043478260869567,
+          "first_audio_ms": 2581.0,
+          "stages_ms": {
+            "backbone decode": 1853.3,
+            "depth decode": 4556.3,
+            "vocoder": 872.2
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-b.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-b.repeat-2.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-b.repeat-3.wav\n",
+      "log_sha256": "13cbb072059caafc4cf9c93918b8d6892df3f5c87d268a4277eaa100cf076952",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "fe491b62"
+    },
+    "control-restored": {
+      "label": "control-restored",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-restored.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "4fb96794c0c6027e574d2f531977617a5364b9bc",
+      "runs": [
+        {
+          "wall_ms": 7658.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8397149122807018,
+          "first_audio_ms": 2724.0,
+          "stages_ms": {
+            "backbone decode": 1850.7,
+            "depth decode": 4740.7,
+            "vocoder": 888.0
+          }
+        },
+        {
+          "wall_ms": 7645.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8382675438596492,
+          "first_audio_ms": 2667.0,
+          "stages_ms": {
+            "backbone decode": 1837.3,
+            "depth decode": 4835.0,
+            "vocoder": 861.6
+          }
+        },
+        {
+          "wall_ms": 7703.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8446491228070176,
+          "first_audio_ms": 2742.0,
+          "stages_ms": {
+            "backbone decode": 1843.6,
+            "depth decode": 4893.2,
+            "vocoder": 862.0
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-restored.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-restored.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-control-restored.repeat-3.wav\n",
+      "log_sha256": "cd0baacf1b4ff5fc33d6a967e28bcab389a7aeaeb84c7e92c5dd86066eb4ff08",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd"
+    },
+    "flash-restored": {
+      "label": "flash-restored",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "BREEZE_DD_FLASH_ATTN=1",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-flash-restored.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "4fb96794c0c6027e574d2f531977617a5364b9bc",
+      "runs": [
+        {
+          "wall_ms": 7549.1,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.820554347826087,
+          "first_audio_ms": 2640.0,
+          "stages_ms": {
+            "backbone decode": 1881.7,
+            "depth decode": 4586.5,
+            "vocoder": 889.9
+          }
+        },
+        {
+          "wall_ms": 7400.7,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8044239130434783,
+          "first_audio_ms": 2571.0,
+          "stages_ms": {
+            "backbone decode": 1857.3,
+            "depth decode": 4542.7,
+            "vocoder": 865.3
+          }
+        },
+        {
+          "wall_ms": 7485.8,
+          "frames": 115,
+          "audio_s": 9.2,
+          "wall_rtf": 0.8136739130434784,
+          "first_audio_ms": 2684.0,
+          "stages_ms": {
+            "backbone decode": 1870.7,
+            "depth decode": 4633.8,
+            "vocoder": 870.7
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-restored.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-restored.repeat-2.wav\n3e35dafe2dd8a9d78c30fe271401d457e4765885d2b8bcf8c52bf384c64a6681  /tmp/refresh-flash-restored.repeat-3.wav\n",
+      "log_sha256": "6209a93281f86dcbe77b804298d9c66636b239680badffec290b5d6db86d14d1",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd"
+    },
+    "control-tags": {
+      "label": "control-tags",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-control-tags.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices",
+        "--cfg-scale",
+        "2"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "4fb96794c0c6027e574d2f531977617a5364b9bc",
+      "runs": [
+        {
+          "wall_ms": 13933.7,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1534519867549669,
+          "first_audio_ms": 4218.0,
+          "stages_ms": {
+            "backbone decode": 4943.6,
+            "depth decode": 6957.3,
+            "vocoder": 1202.9
+          }
+        },
+        {
+          "wall_ms": 14067.5,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1645281456953642,
+          "first_audio_ms": 4034.0,
+          "stages_ms": {
+            "backbone decode": 4935.7,
+            "depth decode": 7122.2,
+            "vocoder": 1254.4
+          }
+        },
+        {
+          "wall_ms": 13918.3,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1521771523178808,
+          "first_audio_ms": 4144.0,
+          "stages_ms": {
+            "backbone decode": 4911.9,
+            "depth decode": 7032.8,
+            "vocoder": 1182.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-control-tags.wav\n52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-control-tags.repeat-2.wav\n52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-control-tags.repeat-3.wav\n",
+      "log_sha256": "1c288a1f995d0d9a5b6c3f7c321493d15ced0f4fea766d4604f2862d6f63cb23",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd"
+    },
+    "flash-tags": {
+      "label": "flash-tags",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "BREEZE_DD_FLASH_ATTN=1",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-flash-tags.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices",
+        "--cfg-scale",
+        "2"
+      ],
+      "returncode": 0,
+      "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00  /src/build/breeze-cli",
+      "source": "4fb96794c0c6027e574d2f531977617a5364b9bc",
+      "runs": [
+        {
+          "wall_ms": 13556.1,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1221937086092715,
+          "first_audio_ms": 3979.0,
+          "stages_ms": {
+            "backbone decode": 5076.8,
+            "depth decode": 6434.9,
+            "vocoder": 1223.7
+          }
+        },
+        {
+          "wall_ms": 13197.2,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.0924834437086093,
+          "first_audio_ms": 3963.0,
+          "stages_ms": {
+            "backbone decode": 4902.1,
+            "depth decode": 6337.2,
+            "vocoder": 1183.7
+          }
+        },
+        {
+          "wall_ms": 13514.9,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1187831125827814,
+          "first_audio_ms": 3873.0,
+          "stages_ms": {
+            "backbone decode": 5019.1,
+            "depth decode": 6545.4,
+            "vocoder": 1194.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "3dc18e86ee015c747840260d0aa08b7bd0fb96a3109e4442d35c6cb3ffa39cfb  /tmp/refresh-flash-tags.wav\n3dc18e86ee015c747840260d0aa08b7bd0fb96a3109e4442d35c6cb3ffa39cfb  /tmp/refresh-flash-tags.repeat-2.wav\n3dc18e86ee015c747840260d0aa08b7bd0fb96a3109e4442d35c6cb3ffa39cfb  /tmp/refresh-flash-tags.repeat-3.wav\n",
+      "log_sha256": "9d0233ee778fcf5d13596569f1f442de426fe6ef3cb65e544f024dbb8abd6fbf",
+      "binary_source": "fbf7361",
+      "source_note": "Runner source is local HEAD at receipt time; CLI built at fbf7361; later changes only diagnostic tool, backend pin, and records.",
+      "backend": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd"
+    }
+  },
+  "primitive_logs": {
+    "attention-cpu": "branches=1 positions=2 max_abs=1.1920929e-07 relative_l2=4.48733874e-08 PASS\nbranches=1 positions=3 max_abs=1.1920929e-07 relative_l2=6.35453905e-08 PASS\nbranches=1 positions=4 max_abs=1.78813934e-07 relative_l2=7.09152753e-08 PASS\nbranches=1 positions=15 max_abs=2.98023224e-07 relative_l2=1.49094842e-07 PASS\nbranches=1 positions=16 max_abs=2.98023224e-07 relative_l2=1.27568226e-07 PASS\nbranches=2 positions=2 max_abs=1.1920929e-07 relative_l2=4.15953381e-08 PASS\nbranches=2 positions=3 max_abs=1.78813934e-07 relative_l2=6.61246644e-08 PASS\nbranches=2 positions=4 max_abs=2.38418579e-07 relative_l2=9.16718573e-08 PASS\nbranches=2 positions=15 max_abs=2.98023224e-07 relative_l2=1.11498789e-07 PASS\nbranches=2 positions=16 max_abs=3.57627869e-07 relative_l2=1.23419812e-07 PASS\n",
+    "mask-cpu": "mode=mask branches=1 positions=2 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=1 positions=3 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=1 positions=4 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=1 positions=15 max_abs=0 relative_l2=0 analytic_max=9.53674316e-07 PASS\nmode=mask branches=1 positions=16 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=2 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=3 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=4 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=15 max_abs=3.81469727e-06 relative_l2=9.8116119e-08 analytic_max=3.81469727e-06 PASS\nmode=mask branches=2 positions=16 max_abs=0 relative_l2=0 analytic_max=0 PASS\n",
+    "native-final": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nmode=numeric branches=1 positions=2 max_abs=0.000798285007 relative_l2=0.000222190156 analytic_max=0 PASS\nmode=numeric branches=1 positions=3 max_abs=0.00104653835 relative_l2=0.000393534427 analytic_max=0 FAIL\nmode=numeric branches=1 positions=4 max_abs=0.000989198685 relative_l2=0.000363512222 analytic_max=0 PASS\nmode=numeric branches=1 positions=15 max_abs=0.00141853094 relative_l2=0.000491360105 analytic_max=0 FAIL\nmode=numeric branches=1 positions=16 max_abs=0.00118386745 relative_l2=0.000454964279 analytic_max=0 FAIL\nmode=numeric branches=2 positions=2 max_abs=0.00132668018 relative_l2=0.00039136491 analytic_max=0 FAIL\nmode=numeric branches=2 positions=3 max_abs=0.0020846948 relative_l2=0.000778330687 analytic_max=0 FAIL\nmode=numeric branches=2 positions=4 max_abs=0.00207805634 relative_l2=0.00088146675 analytic_max=0 FAIL\nmode=numeric branches=2 positions=15 max_abs=0.00306493044 relative_l2=0.00115252898 analytic_max=0 FAIL\nmode=numeric branches=2 positions=16 max_abs=0.00298494101 relative_l2=0.00116483029 analytic_max=0 FAIL\ncommand terminated with exit code 1\n",
+    "mask-native-final": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nmode=mask branches=1 positions=2 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=1 positions=3 max_abs=0.00520896912 relative_l2=0.000222385237 analytic_max=0.00520896912 FAIL\nmode=mask branches=1 positions=4 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=1 positions=15 max_abs=0.00104141235 relative_l2=0.000158243144 analytic_max=0.00104188919 FAIL\nmode=mask branches=1 positions=16 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=2 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=3 max_abs=0.0078125 relative_l2=0.000122669357 analytic_max=0.0208358765 FAIL\nmode=mask branches=2 positions=4 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=15 max_abs=0.0078125 relative_l2=0.000189680984 analytic_max=0.0166664124 FAIL\nmode=mask branches=2 positions=16 max_abs=0 relative_l2=0 analytic_max=0 PASS\ncommand terminated with exit code 1\n",
+    "f32-final": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 0 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: none\nmode=numeric branches=1 positions=2 max_abs=3.30209732e-05 relative_l2=1.10058083e-05 analytic_max=0 PASS\nmode=numeric branches=1 positions=3 max_abs=1.78813934e-07 relative_l2=1.05316323e-07 analytic_max=0 PASS\nmode=numeric branches=1 positions=4 max_abs=2.08616257e-07 relative_l2=9.82224666e-08 analytic_max=0 PASS\nmode=numeric branches=1 positions=15 max_abs=2.38418579e-07 relative_l2=1.03820075e-07 analytic_max=0 PASS\nmode=numeric branches=1 positions=16 max_abs=2.38418579e-07 relative_l2=1.15039294e-07 analytic_max=0 PASS\nmode=numeric branches=2 positions=2 max_abs=3.67611647e-05 relative_l2=9.91726046e-06 analytic_max=0 PASS\nmode=numeric branches=2 positions=3 max_abs=8.17552209e-05 relative_l2=2.23975514e-05 analytic_max=0 PASS\nmode=numeric branches=2 positions=4 max_abs=8.1717968e-05 relative_l2=3.85917678e-05 analytic_max=0 PASS\nmode=numeric branches=2 positions=15 max_abs=5.08986413e-05 relative_l2=2.53301576e-05 analytic_max=0 PASS\nmode=numeric branches=2 positions=16 max_abs=5.75948507e-05 relative_l2=2.69785272e-05 analytic_max=0 PASS\n",
+    "mask-f32-final": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 0 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: none\nmode=mask branches=1 positions=2 max_abs=3.81469727e-06 relative_l2=7.8926648e-08 analytic_max=3.81469727e-06 PASS\nmode=mask branches=1 positions=3 max_abs=1.90734863e-06 relative_l2=8.14448759e-08 analytic_max=1.90734863e-06 PASS\nmode=mask branches=1 positions=4 max_abs=1.90734863e-06 relative_l2=7.44694528e-08 analytic_max=1.90734863e-06 PASS\nmode=mask branches=1 positions=15 max_abs=0 relative_l2=0 analytic_max=9.53674316e-07 PASS\nmode=mask branches=1 positions=16 max_abs=0 relative_l2=0 analytic_max=0 PASS\nmode=mask branches=2 positions=2 max_abs=3.81469727e-06 relative_l2=4.66457356e-08 analytic_max=3.81469727e-06 PASS\nmode=mask branches=2 positions=3 max_abs=3.81469727e-06 relative_l2=6.73021519e-08 analytic_max=7.62939453e-06 PASS\nmode=mask branches=2 positions=4 max_abs=3.81469727e-06 relative_l2=5.66700326e-08 analytic_max=3.81469727e-06 PASS\nmode=mask branches=2 positions=15 max_abs=3.81469727e-06 relative_l2=6.93785765e-08 analytic_max=3.81469727e-06 PASS\nmode=mask branches=2 positions=16 max_abs=3.81469727e-06 relative_l2=9.88914199e-08 analytic_max=3.81469727e-06 PASS\n"
+  },
+  "submit_diagnostics": {
+    "submitdiag40": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nVK_DEPTH_SUBMIT divisor=40 submits=3 nodes=381 flops=1346066045 previous_flops=123650707516\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2884034300\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2884263228\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2884492156\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2884721084\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2884950012\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2885178940\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=381 flops=1346066045 previous_flops=2885407868\nVK_DEPTH_SUBMIT divisor=40 submits=6 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=40 submits=9 nodes=380 flops=675819005 previous_flops=675769949\nloading /tmp/breeze-current-ffn-q3-calibrated.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=710.3 delivered_audio_s=0.64\n\ngenerated 0.64 s\ngeneration wall     710.9 ms (wall RTF 1.111)\ntime to first audio 710 ms over 1 flushes\n  reference encode       0.0 ms\n  prompt build          69.8 ms\n  backbone prefill      84.5 ms\n  first vocoder         69.9 ms  (8 frames)\n  backbone decode      125.0 ms  (15.62 ms/frame)\n  depth decode         356.8 ms  (44.60 ms/frame)\n  vocoder               69.9 ms  (8.74 ms/frame)\n  8 frames, 0.64 s audio\nwrote /tmp/submitdiag40.wav (0.64 s)\n",
+    "submitdiag4": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=123650707516\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2884034300\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2884263228\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2884492156\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2884721084\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2884950012\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2885178940\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=381 flops=1346066045 previous_flops=2885407868\nVK_DEPTH_SUBMIT divisor=4 submits=3 nodes=380 flops=675181277 previous_flops=1346066045\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675230333 previous_flops=675181277\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675279389 previous_flops=675230333\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675328445 previous_flops=675279389\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675377501 previous_flops=675328445\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675426557 previous_flops=675377501\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675475613 previous_flops=675426557\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675524669 previous_flops=675475613\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675573725 previous_flops=675524669\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675622781 previous_flops=675573725\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675671837 previous_flops=675622781\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675720893 previous_flops=675671837\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675769949 previous_flops=675720893\nVK_DEPTH_SUBMIT divisor=4 submits=4 nodes=380 flops=675819005 previous_flops=675769949\nloading /tmp/breeze-current-ffn-q3-calibrated.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=713.3 delivered_audio_s=0.64\n\ngenerated 0.64 s\ngeneration wall     713.9 ms (wall RTF 1.115)\ntime to first audio 713 ms over 1 flushes\n  reference encode       0.0 ms\n  prompt build          70.3 ms\n  backbone prefill      84.3 ms\n  first vocoder         69.5 ms  (8 frames)\n  backbone decode      128.3 ms  (16.03 ms/frame)\n  depth decode         358.4 ms  (44.80 ms/frame)\n  vocoder               69.5 ms  (8.68 ms/frame)\n  8 frames, 0.64 s audio\nwrote /tmp/submitdiag4.wav (0.64 s)\n"
+  },
+  "phase_log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /tmp/breeze-current-ffn-q3-calibrated.gguf ...\nbackend: Vulkan0, sample rate: 24000\nRTD frame=0 stage_ms=0.002 set_ms=0.030 comp_ms=9.095 d2h_ms=38.809 sample_ms=0.293 total_ms=48.229\nRTD frame=1 stage_ms=0.002 set_ms=0.012 comp_ms=7.165 d2h_ms=32.758 sample_ms=0.287 total_ms=40.223\nRTD frame=2 stage_ms=0.002 set_ms=0.011 comp_ms=7.477 d2h_ms=32.032 sample_ms=0.317 total_ms=39.839\nRTD frame=3 stage_ms=0.002 set_ms=0.012 comp_ms=6.888 d2h_ms=34.381 sample_ms=0.284 total_ms=41.567\nRTD frame=4 stage_ms=0.002 set_ms=0.011 comp_ms=7.457 d2h_ms=31.901 sample_ms=0.309 total_ms=39.679\nRTD frame=5 stage_ms=0.002 set_ms=0.011 comp_ms=7.134 d2h_ms=32.328 sample_ms=0.283 total_ms=39.759\nRTD frame=6 stage_ms=0.002 set_ms=0.012 comp_ms=8.019 d2h_ms=32.863 sample_ms=0.316 total_ms=41.211\nRTD frame=7 stage_ms=0.002 set_ms=0.013 comp_ms=7.586 d2h_ms=33.586 sample_ms=0.284 total_ms=41.471\nRTD frame=8 stage_ms=0.002 set_ms=0.012 comp_ms=6.901 d2h_ms=34.753 sample_ms=0.245 total_ms=41.913\nRTD frame=9 stage_ms=0.002 set_ms=0.013 comp_ms=6.710 d2h_ms=34.822 sample_ms=0.259 total_ms=41.805\nRTD frame=10 stage_ms=0.002 set_ms=0.011 comp_ms=7.944 d2h_ms=31.550 sample_ms=0.304 total_ms=39.811\nRTD frame=11 stage_ms=0.002 set_ms=0.013 comp_ms=7.782 d2h_ms=32.025 sample_ms=0.285 total_ms=40.107\nRTD frame=12 stage_ms=0.002 set_ms=0.010 comp_ms=6.622 d2h_ms=34.075 sample_ms=0.234 total_ms=40.943\nRTD frame=13 stage_ms=0.002 set_ms=0.014 comp_ms=7.612 d2h_ms=31.838 sample_ms=0.281 total_ms=39.747\nRTD frame=14 stage_ms=0.002 set_ms=0.012 comp_ms=7.492 d2h_ms=32.176 sample_ms=0.309 total_ms=39.991\nRTD frame=15 stage_ms=0.002 set_ms=0.014 comp_ms=8.628 d2h_ms=31.296 sample_ms=0.322 total_ms=40.262\nRTD frame=16 stage_ms=0.001 set_ms=0.011 comp_ms=6.933 d2h_ms=34.154 sample_ms=0.268 total_ms=41.368\nRTD frame=17 stage_ms=0.002 set_ms=0.011 comp_ms=7.302 d2h_ms=32.461 sample_ms=0.294 total_ms=40.070\nRTD frame=18 stage_ms=0.002 set_ms=0.014 comp_ms=8.021 d2h_ms=34.388 sample_ms=0.300 total_ms=42.724\nRTD frame=19 stage_ms=0.002 set_ms=0.012 comp_ms=6.785 d2h_ms=35.725 sample_ms=0.249 total_ms=42.772\nRTD frame=20 stage_ms=0.002 set_ms=0.013 comp_ms=7.141 d2h_ms=37.437 sample_ms=0.293 total_ms=44.886\nRTD frame=21 stage_ms=0.001 set_ms=0.011 comp_ms=6.614 d2h_ms=34.816 sample_ms=0.247 total_ms=41.689\nRTD frame=22 stage_ms=0.002 set_ms=0.012 comp_ms=7.552 d2h_ms=31.934 sample_ms=0.321 total_ms=39.820\nRTD frame=23 stage_ms=0.002 set_ms=0.012 comp_ms=7.609 d2h_ms=31.940 sample_ms=0.297 total_ms=39.860\nRTD frame=24 stage_ms=0.002 set_ms=0.014 comp_ms=7.633 d2h_ms=33.203 sample_ms=0.298 total_ms=41.149\nRTD frame=25 stage_ms=0.002 set_ms=0.012 comp_ms=7.204 d2h_ms=32.943 sample_ms=0.243 total_ms=40.404\nRTD frame=26 stage_ms=0.002 set_ms=0.013 comp_ms=6.947 d2h_ms=35.676 sample_ms=0.266 total_ms=42.903\nRTD frame=27 stage_ms=0.002 set_ms=0.013 comp_ms=6.367 d2h_ms=34.705 sample_ms=0.246 total_ms=41.332\nRTD frame=28 stage_ms=0.002 set_ms=0.016 comp_ms=7.925 d2h_ms=36.666 sample_ms=0.298 total_ms=44.907\nRTD frame=29 stage_ms=0.002 set_ms=0.016 comp_ms=7.889 d2h_ms=36.132 sample_ms=0.281 total_ms=44.319\nRTD frame=30 stage_ms=0.002 set_ms=0.010 comp_ms=6.915 d2h_ms=33.558 sample_ms=0.261 total_ms=40.745\nRTD frame=31 stage_ms=0.002 set_ms=0.016 comp_ms=7.381 d2h_ms=32.723 sample_ms=0.256 total_ms=40.378\nRTD frame=32 stage_ms=0.002 set_ms=0.012 comp_ms=7.633 d2h_ms=35.181 sample_ms=0.298 total_ms=43.125\nRTD frame=33 stage_ms=0.002 set_ms=0.012 comp_ms=7.289 d2h_ms=35.310 sample_ms=0.283 total_ms=42.896\nRTD frame=34 stage_ms=0.003 set_ms=0.019 comp_ms=8.702 d2h_ms=36.428 sample_ms=0.310 total_ms=45.462\nRTD frame=35 stage_ms=0.002 set_ms=0.013 comp_ms=7.076 d2h_ms=35.515 sample_ms=0.240 total_ms=42.846\nRTD frame=36 stage_ms=0.002 set_ms=0.012 comp_ms=7.263 d2h_ms=33.517 sample_ms=0.270 total_ms=41.064\nRTD frame=37 stage_ms=0.002 set_ms=0.011 comp_ms=7.281 d2h_ms=32.394 sample_ms=0.273 total_ms=39.961\nRTD frame=38 stage_ms=0.002 set_ms=0.015 comp_ms=7.321 d2h_ms=35.003 sample_ms=0.271 total_ms=42.612\nRTD frame=39 stage_ms=0.002 set_ms=0.011 comp_ms=7.506 d2h_ms=31.926 sample_ms=0.289 total_ms=39.735\n  flush 1 ready_ms=2736.3 delivered_audio_s=3.20\n\ngenerated 3.20 sRTD frame=40 stage_ms=0.002 set_ms=0.012 comp_ms=7.178 d2h_ms=33.663 sample_ms=0.260 total_ms=41.115\nRTD frame=41 stage_ms=0.002 set_ms=0.012 comp_ms=7.193 d2h_ms=32.228 sample_ms=0.275 total_ms=39.710\nRTD frame=42 stage_ms=0.002 set_ms=0.013 comp_ms=8.469 d2h_ms=31.498 sample_ms=0.299 total_ms=40.281\nRTD frame=43 stage_ms=0.002 set_ms=0.013 comp_ms=6.668 d2h_ms=33.087 sample_ms=0.248 total_ms=40.017\nRTD frame=44 stage_ms=0.002 set_ms=0.011 comp_ms=7.523 d2h_ms=32.121 sample_ms=0.312 total_ms=39.969\nRTD frame=45 stage_ms=0.002 set_ms=0.014 comp_ms=7.428 d2h_ms=33.880 sample_ms=0.275 total_ms=41.598\nRTD frame=46 stage_ms=0.002 set_ms=0.012 comp_ms=8.269 d2h_ms=31.666 sample_ms=0.321 total_ms=40.270\nRTD frame=47 stage_ms=0.002 set_ms=0.011 comp_ms=7.454 d2h_ms=32.322 sample_ms=0.318 total_ms=40.107\nRTD frame=48 stage_ms=0.002 set_ms=0.013 comp_ms=7.453 d2h_ms=32.100 sample_ms=0.284 total_ms=39.852\nRTD frame=49 stage_ms=0.003 set_ms=0.018 comp_ms=7.101 d2h_ms=35.931 sample_ms=0.254 total_ms=43.307\nRTD frame=50 stage_ms=0.002 set_ms=0.016 comp_ms=7.408 d2h_ms=36.444 sample_ms=0.287 total_ms=44.157\nRTD frame=51 stage_ms=0.002 set_ms=0.020 comp_ms=8.382 d2h_ms=38.642 sample_ms=0.271 total_ms=47.317\nRTD frame=52 stage_ms=0.002 set_ms=0.014 comp_ms=8.181 d2h_ms=36.748 sample_ms=0.307 total_ms=45.251\nRTD frame=53 stage_ms=0.003 set_ms=0.023 comp_ms=9.173 d2h_ms=41.892 sample_ms=0.349 total_ms=51.440\nRTD frame=54 stage_ms=0.003 set_ms=0.026 comp_ms=8.345 d2h_ms=40.147 sample_ms=0.261 total_ms=48.782\nRTD frame=55 stage_ms=0.002 set_ms=0.012 comp_ms=7.122 d2h_ms=35.136 sample_ms=0.272 total_ms=42.544\nRTD frame=56 stage_ms=0.002 set_ms=0.014 comp_ms=6.720 d2h_ms=35.901 sample_ms=0.264 total_ms=42.901\nRTD frame=57 stage_ms=0.002 set_ms=0.011 comp_ms=7.194 d2h_ms=34.265 sample_ms=0.247 total_ms=41.719\nRTD frame=58 stage_ms=0.002 set_ms=0.011 comp_ms=7.036 d2h_ms=32.396 sample_ms=0.282 total_ms=39.727\nRTD frame=59 stage_ms=0.002 set_ms=0.017 comp_ms=8.374 d2h_ms=31.527 sample_ms=0.327 total_ms=40.248\nRTD frame=60 stage_ms=0.002 set_ms=0.012 comp_ms=7.183 d2h_ms=35.689 sample_ms=0.280 total_ms=43.165\nRTD frame=61 stage_ms=0.002 set_ms=0.013 comp_ms=7.500 d2h_ms=33.459 sample_ms=0.275 total_ms=41.248\nRTD frame=62 stage_ms=0.002 set_ms=0.014 comp_ms=6.890 d2h_ms=35.508 sample_ms=0.275 total_ms=42.690\nRTD frame=63 stage_ms=0.002 set_ms=0.016 comp_ms=7.868 d2h_ms=35.018 sample_ms=0.346 total_ms=43.250\nRTD frame=64 stage_ms=0.002 set_ms=0.014 comp_ms=7.205 d2h_ms=32.912 sample_ms=0.286 total_ms=40.418\nRTD frame=65 stage_ms=0.002 set_ms=0.011 comp_ms=7.066 d2h_ms=32.953 sample_ms=0.243 total_ms=40.274\nRTD frame=66 stage_ms=0.002 set_ms=0.011 comp_ms=7.277 d2h_ms=32.292 sample_ms=0.286 total_ms=39.868\nRTD frame=67 stage_ms=0.002 set_ms=0.012 comp_ms=7.775 d2h_ms=31.831 sample_ms=0.281 total_ms=39.901\nRTD frame=68 stage_ms=0.002 set_ms=0.013 comp_ms=7.002 d2h_ms=36.433 sample_ms=0.275 total_ms=43.726\nRTD frame=69 stage_ms=0.002 set_ms=0.010 comp_ms=6.747 d2h_ms=33.210 sample_ms=0.252 total_ms=40.221\nRTD frame=70 stage_ms=0.002 set_ms=0.011 comp_ms=7.264 d2h_ms=32.174 sample_ms=0.279 total_ms=39.728\nRTD frame=71 stage_ms=0.002 set_ms=0.015 comp_ms=7.784 d2h_ms=33.723 sample_ms=0.292 total_ms=41.816\nRTD frame=72 stage_ms=0.001 set_ms=0.012 comp_ms=6.994 d2h_ms=33.760 sample_ms=0.251 total_ms=41.018\nRTD frame=73 stage_ms=0.002 set_ms=0.012 comp_ms=7.100 d2h_ms=34.906 sample_ms=0.268 total_ms=42.289\nRTD frame=74 stage_ms=0.002 set_ms=0.013 comp_ms=7.552 d2h_ms=32.155 sample_ms=0.342 total_ms=40.065\nRTD frame=75 stage_ms=0.002 set_ms=0.011 comp_ms=7.549 d2h_ms=32.034 sample_ms=0.284 total_ms=39.879\nRTD frame=76 stage_ms=0.003 set_ms=0.019 comp_ms=7.860 d2h_ms=33.756 sample_ms=0.279 total_ms=41.917\nRTD frame=77 stage_ms=0.002 set_ms=0.012 comp_ms=7.806 d2h_ms=31.703 sample_ms=0.282 total_ms=39.804\nRTD frame=78 stage_ms=0.002 set_ms=0.012 comp_ms=7.442 d2h_ms=32.018 sample_ms=0.288 total_ms=39.761\nRTD frame=79 stage_ms=0.002 set_ms=0.013 comp_ms=7.850 d2h_ms=32.158 sample_ms=0.278 total_ms=40.300\n  flush 2 ready_ms=5395.3 delivered_audio_s=6.40\n\ngenerated 6.40 sRTD frame=80 stage_ms=0.002 set_ms=0.010 comp_ms=6.455 d2h_ms=33.935 sample_ms=0.249 total_ms=40.651\nRTD frame=81 stage_ms=0.003 set_ms=0.014 comp_ms=6.796 d2h_ms=33.280 sample_ms=0.236 total_ms=40.328\nRTD frame=82 stage_ms=0.002 set_ms=0.015 comp_ms=7.505 d2h_ms=32.148 sample_ms=0.279 total_ms=39.949\nRTD frame=83 stage_ms=0.003 set_ms=0.022 comp_ms=7.570 d2h_ms=41.243 sample_ms=0.270 total_ms=49.107\nRTD frame=84 stage_ms=0.003 set_ms=0.016 comp_ms=7.481 d2h_ms=36.468 sample_ms=0.273 total_ms=44.241\nRTD frame=85 stage_ms=0.002 set_ms=0.012 comp_ms=6.868 d2h_ms=34.475 sample_ms=0.246 total_ms=41.603\nRTD frame=86 stage_ms=0.002 set_ms=0.013 comp_ms=7.078 d2h_ms=34.635 sample_ms=0.281 total_ms=42.009\nRTD frame=87 stage_ms=0.002 set_ms=0.024 comp_ms=7.412 d2h_ms=35.370 sample_ms=0.275 total_ms=43.083\nRTD frame=88 stage_ms=0.002 set_ms=0.012 comp_ms=7.151 d2h_ms=34.516 sample_ms=0.271 total_ms=41.953\nRTD frame=89 stage_ms=0.002 set_ms=0.011 comp_ms=7.508 d2h_ms=32.093 sample_ms=0.281 total_ms=39.895\nRTD frame=90 stage_ms=0.002 set_ms=0.010 comp_ms=7.453 d2h_ms=32.162 sample_ms=0.320 total_ms=39.948\nRTD frame=91 stage_ms=0.002 set_ms=0.013 comp_ms=8.346 d2h_ms=33.867 sample_ms=0.318 total_ms=42.547\nRTD frame=92 stage_ms=0.002 set_ms=0.014 comp_ms=6.653 d2h_ms=36.317 sample_ms=0.248 total_ms=43.233\nRTD frame=93 stage_ms=0.002 set_ms=0.012 comp_ms=6.831 d2h_ms=35.402 sample_ms=0.257 total_ms=42.504\nRTD frame=94 stage_ms=0.003 set_ms=0.015 comp_ms=6.832 d2h_ms=37.165 sample_ms=0.275 total_ms=44.290\nRTD frame=95 stage_ms=0.003 set_ms=0.023 comp_ms=8.160 d2h_ms=40.301 sample_ms=0.258 total_ms=48.746\nRTD frame=96 stage_ms=0.002 set_ms=0.012 comp_ms=7.720 d2h_ms=32.179 sample_ms=0.307 total_ms=40.221\nRTD frame=97 stage_ms=0.002 set_ms=0.011 comp_ms=7.630 d2h_ms=32.129 sample_ms=0.286 total_ms=40.058\nRTD frame=98 stage_ms=0.002 set_ms=0.013 comp_ms=8.549 d2h_ms=31.509 sample_ms=0.315 total_ms=40.387\nRTD frame=99 stage_ms=0.003 set_ms=0.019 comp_ms=8.471 d2h_ms=34.057 sample_ms=0.327 total_ms=42.876\nRTD frame=100 stage_ms=0.002 set_ms=0.014 comp_ms=6.360 d2h_ms=34.674 sample_ms=0.218 total_ms=41.269\nRTD frame=101 stage_ms=0.002 set_ms=0.012 comp_ms=6.417 d2h_ms=35.675 sample_ms=0.234 total_ms=42.340\nRTD frame=102 stage_ms=0.002 set_ms=0.013 comp_ms=7.662 d2h_ms=34.301 sample_ms=0.301 total_ms=42.280\nRTD frame=103 stage_ms=0.002 set_ms=0.015 comp_ms=8.034 d2h_ms=35.140 sample_ms=0.273 total_ms=43.464\nRTD frame=104 stage_ms=0.002 set_ms=0.013 comp_ms=7.946 d2h_ms=34.062 sample_ms=0.270 total_ms=42.293\nRTD frame=105 stage_ms=0.002 set_ms=0.011 comp_ms=6.806 d2h_ms=33.524 sample_ms=0.247 total_ms=40.590\nRTD frame=106 stage_ms=0.002 set_ms=0.014 comp_ms=8.682 d2h_ms=31.306 sample_ms=0.334 total_ms=40.337\nRTD frame=107 stage_ms=0.001 set_ms=0.012 comp_ms=7.586 d2h_ms=32.036 sample_ms=0.292 total_ms=39.927\nRTD frame=108 stage_ms=0.002 set_ms=0.011 comp_ms=6.603 d2h_ms=33.463 sample_ms=0.272 total_ms=40.350\nRTD frame=109 stage_ms=0.002 set_ms=0.011 comp_ms=7.106 d2h_ms=32.577 sample_ms=0.254 total_ms=39.949\nRTD frame=110 stage_ms=0.002 set_ms=0.013 comp_ms=7.044 d2h_ms=38.204 sample_ms=0.245 total_ms=45.507\nRTD frame=111 stage_ms=0.002 set_ms=0.011 comp_ms=6.644 d2h_ms=33.453 sample_ms=0.251 total_ms=40.361\nRTD frame=112 stage_ms=0.002 set_ms=0.010 comp_ms=6.552 d2h_ms=33.795 sample_ms=0.231 total_ms=40.590\nRTD frame=113 stage_ms=0.002 set_ms=0.015 comp_ms=8.164 d2h_ms=33.283 sample_ms=0.289 total_ms=41.753\n  flush 3 ready_ms=7701.6 delivered_audio_s=9.12\n\ngenerated 9.12 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     7702.4 ms (wall RTF 0.845)\ntime to first audio 2736 ms over 3 flushes\n  reference encode       0.0 ms\n  prompt build          70.0 ms\n  backbone prefill     107.6 ms\n  first vocoder        263.0 ms  (40 frames)\n  backbone decode     1859.9 ms  (16.31 ms/frame)\n  depth decode        4764.9 ms  (41.80 ms/frame)\n  vocoder              884.4 ms  (7.76 ms/frame)\n  114 frames, 9.12 s audio\nwrote /tmp/depth-async-phases.wav (9.12 s)\nRTD frame=0 stage_ms=0.001 set_ms=0.030 comp_ms=6.257 d2h_ms=35.869 sample_ms=0.239 total_ms=42.397\nRTD frame=1 stage_ms=0.010 set_ms=0.017 comp_ms=7.654 d2h_ms=32.322 sample_ms=0.312 total_ms=40.314\nRTD frame=2 stage_ms=0.002 set_ms=0.012 comp_ms=6.970 d2h_ms=33.252 sample_ms=0.258 total_ms=40.494\nRTD frame=3 stage_ms=0.002 set_ms=0.012 comp_ms=7.331 d2h_ms=32.278 sample_ms=0.293 total_ms=39.916\nRTD frame=4 stage_ms=0.002 set_ms=0.012 comp_ms=7.535 d2h_ms=32.106 sample_ms=0.285 total_ms=39.939\nRTD frame=5 stage_ms=0.001 set_ms=0.011 comp_ms=6.857 d2h_ms=33.907 sample_ms=0.246 total_ms=41.023\nRTD frame=6 stage_ms=0.002 set_ms=0.015 comp_ms=8.349 d2h_ms=32.109 sample_ms=0.315 total_ms=40.790\nRTD frame=7 stage_ms=0.002 set_ms=0.017 comp_ms=7.155 d2h_ms=34.973 sample_ms=0.267 total_ms=42.414\nRTD frame=8 stage_ms=0.002 set_ms=0.011 comp_ms=7.334 d2h_ms=32.463 sample_ms=0.269 total_ms=40.079\nRTD frame=9 stage_ms=0.002 set_ms=0.012 comp_ms=7.692 d2h_ms=31.996 sample_ms=0.297 total_ms=39.998\nRTD frame=10 stage_ms=0.003 set_ms=0.018 comp_ms=9.483 d2h_ms=35.401 sample_ms=0.285 total_ms=45.189\nRTD frame=11 stage_ms=0.002 set_ms=0.013 comp_ms=7.809 d2h_ms=34.946 sample_ms=0.250 total_ms=43.021\nRTD frame=12 stage_ms=0.002 set_ms=0.012 comp_ms=6.634 d2h_ms=35.041 sample_ms=0.293 total_ms=41.982\nRTD frame=13 stage_ms=0.002 set_ms=0.011 comp_ms=7.142 d2h_ms=33.133 sample_ms=0.267 total_ms=40.556\nRTD frame=14 stage_ms=0.002 set_ms=0.011 comp_ms=7.186 d2h_ms=33.649 sample_ms=0.250 total_ms=41.099\nRTD frame=15 stage_ms=0.002 set_ms=0.014 comp_ms=7.339 d2h_ms=35.591 sample_ms=0.253 total_ms=43.198\nRTD frame=16 stage_ms=0.002 set_ms=0.011 comp_ms=7.067 d2h_ms=32.959 sample_ms=0.248 total_ms=40.286\nRTD frame=17 stage_ms=0.002 set_ms=0.011 comp_ms=7.384 d2h_ms=32.195 sample_ms=0.299 total_ms=39.891\nRTD frame=18 stage_ms=0.002 set_ms=0.013 comp_ms=7.728 d2h_ms=32.233 sample_ms=0.287 total_ms=40.264\nRTD frame=19 stage_ms=0.002 set_ms=0.010 comp_ms=6.867 d2h_ms=33.694 sample_ms=0.261 total_ms=40.834\nRTD frame=20 stage_ms=0.002 set_ms=0.011 comp_ms=7.276 d2h_ms=32.961 sample_ms=0.285 total_ms=40.536\nRTD frame=21 stage_ms=0.002 set_ms=0.011 comp_ms=6.669 d2h_ms=34.396 sample_ms=0.240 total_ms=41.319\nRTD frame=22 stage_ms=0.002 set_ms=0.012 comp_ms=7.608 d2h_ms=32.061 sample_ms=0.290 total_ms=39.973\nRTD frame=23 stage_ms=0.002 set_ms=0.013 comp_ms=7.749 d2h_ms=32.352 sample_ms=0.288 total_ms=40.403\nRTD frame=24 stage_ms=0.002 set_ms=0.015 comp_ms=8.287 d2h_ms=31.651 sample_ms=0.304 total_ms=40.259\nRTD frame=25 stage_ms=0.002 set_ms=0.012 comp_ms=7.305 d2h_ms=32.717 sample_ms=0.283 total_ms=40.319\nRTD frame=26 stage_ms=0.002 set_ms=0.011 comp_ms=7.697 d2h_ms=32.004 sample_ms=0.297 total_ms=40.010\nRTD frame=27 stage_ms=0.002 set_ms=0.012 comp_ms=7.840 d2h_ms=32.130 sample_ms=0.301 total_ms=40.284\nRTD frame=28 stage_ms=0.002 set_ms=0.012 comp_ms=7.628 d2h_ms=34.004 sample_ms=0.275 total_ms=41.921\nRTD frame=29 stage_ms=0.002 set_ms=0.015 comp_ms=7.610 d2h_ms=31.979 sample_ms=0.283 total_ms=39.889\nRTD frame=30 stage_ms=0.002 set_ms=0.011 comp_ms=6.895 d2h_ms=34.668 sample_ms=0.237 total_ms=41.813\nRTD frame=31 stage_ms=0.002 set_ms=0.021 comp_ms=7.984 d2h_ms=32.556 sample_ms=0.265 total_ms=40.828\nRTD frame=32 stage_ms=0.002 set_ms=0.013 comp_ms=7.034 d2h_ms=33.580 sample_ms=0.253 total_ms=40.882\nRTD frame=33 stage_ms=0.002 set_ms=0.048 comp_ms=8.368 d2h_ms=34.716 sample_ms=0.267 total_ms=43.402\nRTD frame=34 stage_ms=0.002 set_ms=0.011 comp_ms=7.544 d2h_ms=32.096 sample_ms=0.294 total_ms=39.948\nRTD frame=35 stage_ms=0.002 set_ms=0.014 comp_ms=7.395 d2h_ms=34.665 sample_ms=0.284 total_ms=42.360\nRTD frame=36 stage_ms=0.002 set_ms=0.013 comp_ms=7.585 d2h_ms=34.439 sample_ms=0.272 total_ms=42.312\nRTD frame=37 stage_ms=0.002 set_ms=0.012 comp_ms=7.367 d2h_ms=34.234 sample_ms=0.251 total_ms=41.865\nRTD frame=38 stage_ms=0.002 set_ms=0.011 comp_ms=7.258 d2h_ms=32.257 sample_ms=0.280 total_ms=39.808\nRTD frame=39 stage_ms=0.002 set_ms=0.011 comp_ms=7.489 d2h_ms=32.208 sample_ms=0.272 total_ms=39.981\n  flush 1 ready_ms=2615.9 delivered_audio_s=3.20\n\ngenerated 3.20 sRTD frame=40 stage_ms=0.002 set_ms=0.013 comp_ms=6.696 d2h_ms=34.429 sample_ms=0.245 total_ms=41.385\nRTD frame=41 stage_ms=0.002 set_ms=0.010 comp_ms=6.715 d2h_ms=33.571 sample_ms=0.231 total_ms=40.529\nRTD frame=42 stage_ms=0.002 set_ms=0.011 comp_ms=7.592 d2h_ms=32.027 sample_ms=0.305 total_ms=39.936\nRTD frame=43 stage_ms=0.002 set_ms=0.010 comp_ms=6.914 d2h_ms=33.125 sample_ms=0.260 total_ms=40.312\nRTD frame=44 stage_ms=0.002 set_ms=0.014 comp_ms=8.228 d2h_ms=32.806 sample_ms=0.345 total_ms=41.396\nRTD frame=45 stage_ms=0.002 set_ms=0.013 comp_ms=6.256 d2h_ms=37.696 sample_ms=0.247 total_ms=44.214\nRTD frame=46 stage_ms=0.002 set_ms=0.016 comp_ms=6.710 d2h_ms=36.985 sample_ms=0.248 total_ms=43.962\nRTD frame=47 stage_ms=0.002 set_ms=0.012 comp_ms=8.324 d2h_ms=31.585 sample_ms=0.329 total_ms=40.253\nRTD frame=48 stage_ms=0.002 set_ms=0.012 comp_ms=7.801 d2h_ms=32.011 sample_ms=0.294 total_ms=40.119\nRTD frame=49 stage_ms=0.002 set_ms=0.012 comp_ms=7.313 d2h_ms=32.383 sample_ms=0.288 total_ms=39.999\nRTD frame=50 stage_ms=0.002 set_ms=0.011 comp_ms=7.321 d2h_ms=32.243 sample_ms=0.293 total_ms=39.869\nRTD frame=51 stage_ms=0.002 set_ms=0.011 comp_ms=7.476 d2h_ms=32.060 sample_ms=0.338 total_ms=39.887\nRTD frame=52 stage_ms=0.002 set_ms=0.014 comp_ms=7.802 d2h_ms=31.872 sample_ms=0.274 total_ms=39.964\nRTD frame=53 stage_ms=0.002 set_ms=0.014 comp_ms=7.691 d2h_ms=34.194 sample_ms=0.292 total_ms=42.193\nRTD frame=54 stage_ms=0.002 set_ms=0.012 comp_ms=7.422 d2h_ms=32.208 sample_ms=0.291 total_ms=39.934\nRTD frame=55 stage_ms=0.002 set_ms=0.012 comp_ms=7.014 d2h_ms=34.158 sample_ms=0.240 total_ms=41.426\nRTD frame=56 stage_ms=0.002 set_ms=0.012 comp_ms=7.848 d2h_ms=33.444 sample_ms=0.254 total_ms=41.560\nRTD frame=57 stage_ms=0.002 set_ms=0.013 comp_ms=7.224 d2h_ms=35.352 sample_ms=0.272 total_ms=42.864\nRTD frame=58 stage_ms=0.002 set_ms=0.009 comp_ms=7.060 d2h_ms=34.645 sample_ms=0.278 total_ms=41.993\nRTD frame=59 stage_ms=0.002 set_ms=0.011 comp_ms=6.617 d2h_ms=35.121 sample_ms=0.259 total_ms=42.009\nRTD frame=60 stage_ms=0.002 set_ms=0.011 comp_ms=7.501 d2h_ms=32.162 sample_ms=0.293 total_ms=39.969\nRTD frame=61 stage_ms=0.002 set_ms=0.012 comp_ms=7.183 d2h_ms=34.105 sample_ms=0.273 total_ms=41.574\nRTD frame=62 stage_ms=0.003 set_ms=0.014 comp_ms=6.785 d2h_ms=35.353 sample_ms=0.233 total_ms=42.387\nRTD frame=63 stage_ms=0.002 set_ms=0.012 comp_ms=7.119 d2h_ms=35.191 sample_ms=0.250 total_ms=42.574\nRTD frame=64 stage_ms=0.002 set_ms=0.013 comp_ms=6.626 d2h_ms=34.877 sample_ms=0.256 total_ms=41.774\nRTD frame=65 stage_ms=0.002 set_ms=0.013 comp_ms=8.472 d2h_ms=32.561 sample_ms=0.311 total_ms=41.360\nRTD frame=66 stage_ms=0.002 set_ms=0.012 comp_ms=6.818 d2h_ms=32.976 sample_ms=0.253 total_ms=40.060\nRTD frame=67 stage_ms=0.002 set_ms=0.012 comp_ms=7.455 d2h_ms=32.338 sample_ms=0.301 total_ms=40.108\nRTD frame=68 stage_ms=0.002 set_ms=0.012 comp_ms=7.712 d2h_ms=32.467 sample_ms=0.268 total_ms=40.461\nRTD frame=69 stage_ms=0.002 set_ms=0.014 comp_ms=7.826 d2h_ms=38.572 sample_ms=0.314 total_ms=46.727\nRTD frame=70 stage_ms=0.002 set_ms=0.014 comp_ms=7.188 d2h_ms=32.583 sample_ms=0.263 total_ms=40.048\nRTD frame=71 stage_ms=0.002 set_ms=0.012 comp_ms=7.174 d2h_ms=33.431 sample_ms=0.275 total_ms=40.893\nRTD frame=72 stage_ms=0.002 set_ms=0.011 comp_ms=7.972 d2h_ms=31.732 sample_ms=0.287 total_ms=40.004\nRTD frame=73 stage_ms=0.003 set_ms=0.011 comp_ms=6.643 d2h_ms=34.103 sample_ms=0.240 total_ms=41.001\nRTD frame=74 stage_ms=0.002 set_ms=0.014 comp_ms=7.253 d2h_ms=32.739 sample_ms=0.258 total_ms=40.266\nRTD frame=75 stage_ms=0.002 set_ms=0.012 comp_ms=7.326 d2h_ms=33.649 sample_ms=0.275 total_ms=41.264\nRTD frame=76 stage_ms=0.001 set_ms=0.015 comp_ms=6.596 d2h_ms=34.334 sample_ms=0.229 total_ms=41.176\nRTD frame=77 stage_ms=0.001 set_ms=0.011 comp_ms=7.419 d2h_ms=32.342 sample_ms=0.288 total_ms=40.061\nRTD frame=78 stage_ms=0.002 set_ms=0.018 comp_ms=7.820 d2h_ms=32.761 sample_ms=0.317 total_ms=40.919\nRTD frame=79 stage_ms=0.002 set_ms=0.013 comp_ms=7.698 d2h_ms=32.284 sample_ms=0.302 total_ms=40.300\n  flush 2 ready_ms=5229.9 delivered_audio_s=6.40\n\ngenerated 6.40 sRTD frame=80 stage_ms=0.002 set_ms=0.012 comp_ms=6.954 d2h_ms=33.751 sample_ms=0.262 total_ms=40.981\nRTD frame=81 stage_ms=0.002 set_ms=0.011 comp_ms=6.956 d2h_ms=34.550 sample_ms=0.238 total_ms=41.756\nRTD frame=82 stage_ms=0.001 set_ms=0.010 comp_ms=6.686 d2h_ms=33.567 sample_ms=0.239 total_ms=40.504\nRTD frame=83 stage_ms=0.002 set_ms=0.012 comp_ms=7.528 d2h_ms=32.515 sample_ms=0.293 total_ms=40.350\nRTD frame=84 stage_ms=0.002 set_ms=0.013 comp_ms=6.898 d2h_ms=35.590 sample_ms=0.240 total_ms=42.744\nRTD frame=85 stage_ms=0.002 set_ms=0.014 comp_ms=6.752 d2h_ms=36.472 sample_ms=0.273 total_ms=43.512\nRTD frame=86 stage_ms=0.003 set_ms=0.018 comp_ms=8.122 d2h_ms=36.402 sample_ms=0.283 total_ms=44.827\nRTD frame=87 stage_ms=0.003 set_ms=0.019 comp_ms=8.436 d2h_ms=36.746 sample_ms=0.286 total_ms=45.489\nRTD frame=88 stage_ms=0.002 set_ms=0.011 comp_ms=7.367 d2h_ms=34.711 sample_ms=0.273 total_ms=42.363\nRTD frame=89 stage_ms=0.003 set_ms=0.022 comp_ms=8.941 d2h_ms=48.217 sample_ms=0.327 total_ms=57.511\nRTD frame=90 stage_ms=0.002 set_ms=0.016 comp_ms=7.126 d2h_ms=34.689 sample_ms=0.261 total_ms=42.093\nRTD frame=91 stage_ms=0.004 set_ms=0.036 comp_ms=9.116 d2h_ms=42.995 sample_ms=0.339 total_ms=52.490\nRTD frame=92 stage_ms=0.002 set_ms=0.015 comp_ms=6.569 d2h_ms=36.454 sample_ms=0.234 total_ms=43.274\nRTD frame=93 stage_ms=0.002 set_ms=0.012 comp_ms=7.017 d2h_ms=33.578 sample_ms=0.246 total_ms=40.856\nRTD frame=94 stage_ms=0.002 set_ms=0.013 comp_ms=7.758 d2h_ms=32.449 sample_ms=0.302 total_ms=40.522\nRTD frame=95 stage_ms=0.002 set_ms=0.011 comp_ms=7.110 d2h_ms=32.884 sample_ms=0.277 total_ms=40.285\nRTD frame=96 stage_ms=0.002 set_ms=0.015 comp_ms=8.441 d2h_ms=33.577 sample_ms=0.322 total_ms=42.357\nRTD frame=97 stage_ms=0.002 set_ms=0.017 comp_ms=7.656 d2h_ms=34.972 sample_ms=0.272 total_ms=42.919\nRTD frame=98 stage_ms=0.002 set_ms=0.012 comp_ms=7.393 d2h_ms=32.573 sample_ms=0.281 total_ms=40.260\nRTD frame=99 stage_ms=0.002 set_ms=0.011 comp_ms=6.937 d2h_ms=34.710 sample_ms=0.257 total_ms=41.918\nRTD frame=100 stage_ms=0.002 set_ms=0.011 comp_ms=7.577 d2h_ms=31.947 sample_ms=0.282 total_ms=39.819\nRTD frame=101 stage_ms=0.002 set_ms=0.013 comp_ms=7.587 d2h_ms=32.029 sample_ms=0.307 total_ms=39.937\nRTD frame=102 stage_ms=0.002 set_ms=0.010 comp_ms=6.692 d2h_ms=33.647 sample_ms=0.214 total_ms=40.565\nRTD frame=103 stage_ms=0.002 set_ms=0.012 comp_ms=7.524 d2h_ms=32.349 sample_ms=0.301 total_ms=40.188\nRTD frame=104 stage_ms=0.003 set_ms=0.015 comp_ms=7.960 d2h_ms=35.072 sample_ms=0.307 total_ms=43.357\nRTD frame=105 stage_ms=0.002 set_ms=0.013 comp_ms=7.302 d2h_ms=34.509 sample_ms=0.259 total_ms=42.084\nRTD frame=106 stage_ms=0.002 set_ms=0.014 comp_ms=7.634 d2h_ms=34.032 sample_ms=0.286 total_ms=41.968\nRTD frame=107 stage_ms=0.002 set_ms=0.012 comp_ms=7.573 d2h_ms=32.973 sample_ms=0.333 total_ms=40.893\nRTD frame=108 stage_ms=0.002 set_ms=0.012 comp_ms=7.085 d2h_ms=34.237 sample_ms=0.242 total_ms=41.577\nRTD frame=109 stage_ms=0.003 set_ms=0.016 comp_ms=7.501 d2h_ms=35.352 sample_ms=0.245 total_ms=43.115\nRTD frame=110 stage_ms=0.002 set_ms=0.011 comp_ms=6.761 d2h_ms=33.412 sample_ms=0.251 total_ms=40.436\nRTD frame=111 stage_ms=0.002 set_ms=0.011 comp_ms=7.506 d2h_ms=32.179 sample_ms=0.287 total_ms=39.984\nRTD frame=112 stage_ms=0.002 set_ms=0.012 comp_ms=7.616 d2h_ms=32.421 sample_ms=0.259 total_ms=40.309\nRTD frame=113 stage_ms=0.003 set_ms=0.013 comp_ms=7.765 d2h_ms=33.485 sample_ms=0.289 total_ms=41.554\n  flush 3 ready_ms=7538.3 delivered_audio_s=9.12\n\ngenerated 9.12 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     7538.9 ms (wall RTF 0.827)\ntime to first audio 2616 ms over 3 flushes\n  reference encode       0.0 ms\n  prompt build          29.6 ms\n  backbone prefill      74.2 ms\n  first vocoder        251.2 ms  (40 frames)\n  backbone decode     1828.6 ms  (16.04 ms/frame)\n  depth decode        4732.4 ms  (41.51 ms/frame)\n  vocoder              859.2 ms  (7.54 ms/frame)\n  114 frames, 9.12 s audio\nwrote /tmp/depth-async-phases.repeat-2.wav (9.12 s)\nRTD frame=0 stage_ms=0.002 set_ms=0.031 comp_ms=6.120 d2h_ms=33.986 sample_ms=0.264 total_ms=40.402\nRTD frame=1 stage_ms=0.002 set_ms=0.012 comp_ms=7.330 d2h_ms=32.525 sample_ms=0.291 total_ms=40.159\nRTD frame=2 stage_ms=0.002 set_ms=0.014 comp_ms=7.090 d2h_ms=32.498 sample_ms=0.288 total_ms=39.891\nRTD frame=3 stage_ms=0.002 set_ms=0.011 comp_ms=7.206 d2h_ms=32.408 sample_ms=0.313 total_ms=39.938\nRTD frame=4 stage_ms=0.002 set_ms=0.012 comp_ms=7.182 d2h_ms=33.387 sample_ms=0.270 total_ms=40.853\nRTD frame=5 stage_ms=0.002 set_ms=0.018 comp_ms=7.499 d2h_ms=35.076 sample_ms=0.324 total_ms=42.919\nRTD frame=6 stage_ms=0.002 set_ms=0.016 comp_ms=7.517 d2h_ms=36.156 sample_ms=0.262 total_ms=43.954\nRTD frame=7 stage_ms=0.002 set_ms=0.015 comp_ms=8.688 d2h_ms=33.850 sample_ms=0.294 total_ms=42.849\nRTD frame=8 stage_ms=0.002 set_ms=0.012 comp_ms=7.636 d2h_ms=33.005 sample_ms=0.281 total_ms=40.936\nRTD frame=9 stage_ms=0.002 set_ms=0.014 comp_ms=7.263 d2h_ms=36.080 sample_ms=0.275 total_ms=43.635\nRTD frame=10 stage_ms=0.002 set_ms=0.010 comp_ms=6.742 d2h_ms=33.732 sample_ms=0.247 total_ms=40.734\nRTD frame=11 stage_ms=0.002 set_ms=0.011 comp_ms=7.766 d2h_ms=32.073 sample_ms=0.316 total_ms=40.168\nRTD frame=12 stage_ms=0.003 set_ms=0.013 comp_ms=7.760 d2h_ms=32.392 sample_ms=0.289 total_ms=40.458\nRTD frame=13 stage_ms=0.002 set_ms=0.013 comp_ms=7.875 d2h_ms=34.285 sample_ms=0.294 total_ms=42.469\nRTD frame=14 stage_ms=0.002 set_ms=0.016 comp_ms=6.994 d2h_ms=33.298 sample_ms=0.249 total_ms=40.559\nRTD frame=15 stage_ms=0.002 set_ms=0.014 comp_ms=7.924 d2h_ms=32.246 sample_ms=0.360 total_ms=40.547\nRTD frame=16 stage_ms=0.002 set_ms=0.012 comp_ms=7.953 d2h_ms=33.105 sample_ms=0.287 total_ms=41.359\nRTD frame=17 stage_ms=0.002 set_ms=0.011 comp_ms=7.552 d2h_ms=32.383 sample_ms=0.325 total_ms=40.273\nRTD frame=18 stage_ms=0.002 set_ms=0.010 comp_ms=7.184 d2h_ms=32.215 sample_ms=0.279 total_ms=39.690\nRTD frame=19 stage_ms=0.003 set_ms=0.015 comp_ms=7.410 d2h_ms=33.569 sample_ms=0.320 total_ms=41.317\nRTD frame=20 stage_ms=0.002 set_ms=0.011 comp_ms=7.457 d2h_ms=32.891 sample_ms=0.284 total_ms=40.645\nRTD frame=21 stage_ms=0.002 set_ms=0.014 comp_ms=7.302 d2h_ms=32.286 sample_ms=0.317 total_ms=39.920\nRTD frame=22 stage_ms=0.002 set_ms=0.010 comp_ms=7.154 d2h_ms=33.557 sample_ms=0.249 total_ms=40.971\nRTD frame=23 stage_ms=0.002 set_ms=0.014 comp_ms=7.202 d2h_ms=34.783 sample_ms=0.282 total_ms=42.282\nRTD frame=24 stage_ms=0.003 set_ms=0.013 comp_ms=7.208 d2h_ms=35.072 sample_ms=0.248 total_ms=42.544\nRTD frame=25 stage_ms=0.002 set_ms=0.013 comp_ms=7.527 d2h_ms=36.648 sample_ms=0.322 total_ms=44.511\nRTD frame=26 stage_ms=0.002 set_ms=0.019 comp_ms=6.578 d2h_ms=33.991 sample_ms=0.254 total_ms=40.844\nRTD frame=27 stage_ms=0.002 set_ms=0.013 comp_ms=7.606 d2h_ms=31.984 sample_ms=0.312 total_ms=39.917\nRTD frame=28 stage_ms=0.002 set_ms=0.012 comp_ms=8.039 d2h_ms=31.854 sample_ms=0.293 total_ms=40.200\nRTD frame=29 stage_ms=0.001 set_ms=0.011 comp_ms=7.737 d2h_ms=31.744 sample_ms=0.307 total_ms=39.800\nRTD frame=30 stage_ms=0.002 set_ms=0.011 comp_ms=7.413 d2h_ms=32.121 sample_ms=0.288 total_ms=39.834\nRTD frame=31 stage_ms=0.002 set_ms=0.014 comp_ms=7.621 d2h_ms=31.992 sample_ms=0.308 total_ms=39.937\nRTD frame=32 stage_ms=0.002 set_ms=0.012 comp_ms=7.859 d2h_ms=31.809 sample_ms=0.308 total_ms=39.990\nRTD frame=33 stage_ms=0.002 set_ms=0.011 comp_ms=7.528 d2h_ms=32.095 sample_ms=0.293 total_ms=39.929\nRTD frame=34 stage_ms=0.002 set_ms=0.012 comp_ms=7.532 d2h_ms=32.085 sample_ms=0.297 total_ms=39.928\nRTD frame=35 stage_ms=0.001 set_ms=0.012 comp_ms=7.578 d2h_ms=32.193 sample_ms=0.284 total_ms=40.068\nRTD frame=36 stage_ms=0.002 set_ms=0.014 comp_ms=7.853 d2h_ms=34.559 sample_ms=0.255 total_ms=42.683\nRTD frame=37 stage_ms=0.002 set_ms=0.011 comp_ms=7.401 d2h_ms=32.108 sample_ms=0.307 total_ms=39.828\nRTD frame=38 stage_ms=0.002 set_ms=0.011 comp_ms=7.812 d2h_ms=32.779 sample_ms=0.280 total_ms=40.884\nRTD frame=39 stage_ms=0.002 set_ms=0.011 comp_ms=6.454 d2h_ms=33.910 sample_ms=0.235 total_ms=40.611\n  flush 1 ready_ms=2603.1 delivered_audio_s=3.20\n\ngenerated 3.20 sRTD frame=40 stage_ms=0.002 set_ms=0.011 comp_ms=6.984 d2h_ms=33.345 sample_ms=0.254 total_ms=40.595\nRTD frame=41 stage_ms=0.001 set_ms=0.012 comp_ms=7.057 d2h_ms=33.424 sample_ms=0.240 total_ms=40.734\nRTD frame=42 stage_ms=0.002 set_ms=0.013 comp_ms=7.786 d2h_ms=31.690 sample_ms=0.283 total_ms=39.774\nRTD frame=43 stage_ms=0.002 set_ms=0.013 comp_ms=7.678 d2h_ms=32.604 sample_ms=0.310 total_ms=40.607\nRTD frame=44 stage_ms=0.002 set_ms=0.010 comp_ms=7.095 d2h_ms=32.996 sample_ms=0.251 total_ms=40.355\nRTD frame=45 stage_ms=0.002 set_ms=0.013 comp_ms=7.659 d2h_ms=32.398 sample_ms=0.271 total_ms=40.342\nRTD frame=46 stage_ms=0.002 set_ms=0.011 comp_ms=7.488 d2h_ms=32.017 sample_ms=0.284 total_ms=39.802\nRTD frame=47 stage_ms=0.002 set_ms=0.013 comp_ms=7.619 d2h_ms=32.313 sample_ms=0.283 total_ms=40.230\nRTD frame=48 stage_ms=0.002 set_ms=0.011 comp_ms=7.249 d2h_ms=32.458 sample_ms=0.276 total_ms=39.996\nRTD frame=49 stage_ms=0.003 set_ms=0.019 comp_ms=9.516 d2h_ms=34.766 sample_ms=0.474 total_ms=44.778\nRTD frame=50 stage_ms=0.002 set_ms=0.013 comp_ms=7.551 d2h_ms=35.214 sample_ms=0.316 total_ms=43.097\nRTD frame=51 stage_ms=0.002 set_ms=0.011 comp_ms=6.869 d2h_ms=34.687 sample_ms=0.243 total_ms=41.811\nRTD frame=52 stage_ms=0.002 set_ms=0.012 comp_ms=7.680 d2h_ms=31.932 sample_ms=0.261 total_ms=39.886\nRTD frame=53 stage_ms=0.002 set_ms=0.011 comp_ms=6.948 d2h_ms=33.530 sample_ms=0.249 total_ms=40.740\nRTD frame=54 stage_ms=0.002 set_ms=0.015 comp_ms=6.737 d2h_ms=35.739 sample_ms=0.222 total_ms=42.715\nRTD frame=55 stage_ms=0.002 set_ms=0.010 comp_ms=7.415 d2h_ms=33.823 sample_ms=0.319 total_ms=41.569\nRTD frame=56 stage_ms=0.002 set_ms=0.011 comp_ms=7.771 d2h_ms=31.884 sample_ms=0.305 total_ms=39.974\nRTD frame=57 stage_ms=0.002 set_ms=0.013 comp_ms=7.407 d2h_ms=32.821 sample_ms=0.278 total_ms=40.522\nRTD frame=58 stage_ms=0.002 set_ms=0.014 comp_ms=7.696 d2h_ms=32.122 sample_ms=0.280 total_ms=40.114\nRTD frame=59 stage_ms=0.002 set_ms=0.014 comp_ms=7.275 d2h_ms=32.483 sample_ms=0.300 total_ms=40.073\nRTD frame=60 stage_ms=0.002 set_ms=0.012 comp_ms=7.468 d2h_ms=33.797 sample_ms=0.289 total_ms=41.569\nRTD frame=61 stage_ms=0.002 set_ms=0.011 comp_ms=7.580 d2h_ms=32.101 sample_ms=0.289 total_ms=39.982\nRTD frame=62 stage_ms=0.002 set_ms=0.013 comp_ms=7.225 d2h_ms=33.360 sample_ms=0.260 total_ms=40.859\nRTD frame=63 stage_ms=0.002 set_ms=0.013 comp_ms=7.638 d2h_ms=32.120 sample_ms=0.290 total_ms=40.063\nRTD frame=64 stage_ms=0.002 set_ms=0.012 comp_ms=7.588 d2h_ms=31.991 sample_ms=0.273 total_ms=39.865\nRTD frame=65 stage_ms=0.002 set_ms=0.012 comp_ms=7.302 d2h_ms=32.262 sample_ms=0.317 total_ms=39.895\nRTD frame=66 stage_ms=0.002 set_ms=0.012 comp_ms=7.617 d2h_ms=32.497 sample_ms=0.279 total_ms=40.406\nRTD frame=67 stage_ms=0.002 set_ms=0.013 comp_ms=6.906 d2h_ms=35.030 sample_ms=0.272 total_ms=42.224\nRTD frame=68 stage_ms=0.002 set_ms=0.014 comp_ms=7.511 d2h_ms=32.186 sample_ms=0.324 total_ms=40.036\nRTD frame=69 stage_ms=0.003 set_ms=0.014 comp_ms=7.122 d2h_ms=34.863 sample_ms=0.310 total_ms=42.311\nRTD frame=70 stage_ms=0.002 set_ms=0.014 comp_ms=7.710 d2h_ms=32.519 sample_ms=0.283 total_ms=40.529\nRTD frame=71 stage_ms=0.002 set_ms=0.013 comp_ms=7.941 d2h_ms=33.306 sample_ms=0.335 total_ms=41.597\nRTD frame=72 stage_ms=0.003 set_ms=0.016 comp_ms=7.814 d2h_ms=36.027 sample_ms=0.256 total_ms=44.116\nRTD frame=73 stage_ms=0.002 set_ms=0.013 comp_ms=7.593 d2h_ms=34.974 sample_ms=0.254 total_ms=42.836\nRTD frame=74 stage_ms=0.002 set_ms=0.014 comp_ms=7.655 d2h_ms=35.323 sample_ms=0.300 total_ms=43.295\nRTD frame=75 stage_ms=0.002 set_ms=0.013 comp_ms=7.065 d2h_ms=33.269 sample_ms=0.239 total_ms=40.587\nRTD frame=76 stage_ms=0.002 set_ms=0.012 comp_ms=7.244 d2h_ms=34.258 sample_ms=0.249 total_ms=41.764\nRTD frame=77 stage_ms=0.002 set_ms=0.011 comp_ms=7.726 d2h_ms=31.914 sample_ms=0.315 total_ms=39.968\nRTD frame=78 stage_ms=0.002 set_ms=0.011 comp_ms=7.418 d2h_ms=32.185 sample_ms=0.298 total_ms=39.914\nRTD frame=79 stage_ms=0.002 set_ms=0.011 comp_ms=6.829 d2h_ms=34.781 sample_ms=0.243 total_ms=41.866\n  flush 2 ready_ms=5206.6 delivered_audio_s=6.40\n\ngenerated 6.40 sRTD frame=80 stage_ms=0.002 set_ms=0.015 comp_ms=7.014 d2h_ms=33.404 sample_ms=0.281 total_ms=40.715\nRTD frame=81 stage_ms=0.002 set_ms=0.012 comp_ms=6.582 d2h_ms=33.259 sample_ms=0.252 total_ms=40.108\nRTD frame=82 stage_ms=0.002 set_ms=0.014 comp_ms=7.166 d2h_ms=33.695 sample_ms=0.256 total_ms=41.133\nRTD frame=83 stage_ms=0.002 set_ms=0.014 comp_ms=6.972 d2h_ms=34.429 sample_ms=0.287 total_ms=41.704\nRTD frame=84 stage_ms=0.002 set_ms=0.013 comp_ms=7.591 d2h_ms=34.649 sample_ms=0.279 total_ms=42.534\nRTD frame=85 stage_ms=0.002 set_ms=0.011 comp_ms=6.673 d2h_ms=32.950 sample_ms=0.255 total_ms=39.890\nRTD frame=86 stage_ms=0.002 set_ms=0.010 comp_ms=7.112 d2h_ms=32.470 sample_ms=0.329 total_ms=39.923\nRTD frame=87 stage_ms=0.002 set_ms=0.011 comp_ms=6.829 d2h_ms=33.347 sample_ms=0.291 total_ms=40.480\nRTD frame=88 stage_ms=0.001 set_ms=0.012 comp_ms=6.621 d2h_ms=34.312 sample_ms=0.248 total_ms=41.195\nRTD frame=89 stage_ms=0.002 set_ms=0.011 comp_ms=7.097 d2h_ms=32.477 sample_ms=0.293 total_ms=39.879\nRTD frame=90 stage_ms=0.002 set_ms=0.011 comp_ms=7.229 d2h_ms=32.395 sample_ms=0.283 total_ms=39.919\nRTD frame=91 stage_ms=0.002 set_ms=0.013 comp_ms=7.013 d2h_ms=34.425 sample_ms=0.247 total_ms=41.699\nRTD frame=92 stage_ms=0.002 set_ms=0.013 comp_ms=7.740 d2h_ms=31.909 sample_ms=0.326 total_ms=39.990\nRTD frame=93 stage_ms=0.002 set_ms=0.012 comp_ms=6.808 d2h_ms=34.535 sample_ms=0.257 total_ms=41.615\nRTD frame=94 stage_ms=0.002 set_ms=0.013 comp_ms=7.619 d2h_ms=32.697 sample_ms=0.283 total_ms=40.615\nRTD frame=95 stage_ms=0.001 set_ms=0.011 comp_ms=6.660 d2h_ms=35.560 sample_ms=0.249 total_ms=42.481\nRTD frame=96 stage_ms=0.002 set_ms=0.012 comp_ms=6.878 d2h_ms=35.600 sample_ms=0.277 total_ms=42.770\nRTD frame=97 stage_ms=0.002 set_ms=0.011 comp_ms=7.334 d2h_ms=34.899 sample_ms=0.280 total_ms=42.526\nRTD frame=98 stage_ms=0.002 set_ms=0.011 comp_ms=7.076 d2h_ms=33.647 sample_ms=0.287 total_ms=41.023\nRTD frame=99 stage_ms=0.002 set_ms=0.015 comp_ms=8.219 d2h_ms=33.308 sample_ms=0.341 total_ms=41.885\nRTD frame=100 stage_ms=0.002 set_ms=0.014 comp_ms=7.244 d2h_ms=32.679 sample_ms=0.268 total_ms=40.207\nRTD frame=101 stage_ms=0.002 set_ms=0.015 comp_ms=5.921 d2h_ms=37.023 sample_ms=0.247 total_ms=43.207\nRTD frame=102 stage_ms=0.002 set_ms=0.013 comp_ms=7.453 d2h_ms=32.449 sample_ms=0.258 total_ms=40.175\nRTD frame=103 stage_ms=0.002 set_ms=0.012 comp_ms=6.747 d2h_ms=34.761 sample_ms=0.251 total_ms=41.774\nRTD frame=104 stage_ms=0.003 set_ms=0.016 comp_ms=8.782 d2h_ms=31.627 sample_ms=0.406 total_ms=40.834\nRTD frame=105 stage_ms=0.002 set_ms=0.011 comp_ms=7.294 d2h_ms=33.000 sample_ms=0.284 total_ms=40.590\nRTD frame=106 stage_ms=0.002 set_ms=0.012 comp_ms=7.717 d2h_ms=31.904 sample_ms=0.286 total_ms=39.921\nRTD frame=107 stage_ms=0.002 set_ms=0.012 comp_ms=7.749 d2h_ms=32.059 sample_ms=0.305 total_ms=40.126\nRTD frame=108 stage_ms=0.002 set_ms=0.013 comp_ms=7.154 d2h_ms=35.988 sample_ms=0.245 total_ms=43.402\nRTD frame=109 stage_ms=0.002 set_ms=0.015 comp_ms=7.806 d2h_ms=33.107 sample_ms=0.261 total_ms=41.191\nRTD frame=110 stage_ms=0.002 set_ms=0.018 comp_ms=8.459 d2h_ms=31.938 sample_ms=0.358 total_ms=40.775\nRTD frame=111 stage_ms=0.002 set_ms=0.014 comp_ms=7.793 d2h_ms=32.154 sample_ms=0.321 total_ms=40.284\nRTD frame=112 stage_ms=0.002 set_ms=0.012 comp_ms=7.023 d2h_ms=33.734 sample_ms=0.250 total_ms=41.021\nRTD frame=113 stage_ms=0.003 set_ms=0.020 comp_ms=9.233 d2h_ms=37.409 sample_ms=0.317 total_ms=46.981\n  flush 3 ready_ms=7476.5 delivered_audio_s=9.12\n\ngenerated 9.12 s\ngeneration wall     7477.2 ms (wall RTF 0.820)\ntime to first audio 2603 ms over 3 flushes\n  reference encode       0.0 ms\n  prompt build          29.9 ms\n  backbone prefill      68.0 ms\n  first vocoder        252.9 ms  (40 frames)\n  backbone decode     1819.6 ms  (15.96 ms/frame)\n  depth decode        4683.4 ms  (41.08 ms/frame)\n  vocoder              861.6 ms  (7.56 ms/frame)\n  114 frames, 9.12 s audio\nwrote /tmp/depth-async-phases.repeat-3.wav (9.12 s)\n",
+  "limits": [
+    "Development household prompts only; final held-out corpus untouched.",
+    "One warmup excluded per process. Flash ABBA order: flash-a, control-fa-a, control-fa-b, flash-b.",
+    "Native GPU primitive still fails original .001 tolerances; F32 diagnostic disables F16 and coopmat only for the primitive, not speech.",
+    "Restored backend repeats confirm original-library behavior. Tagged runs are quality/CFG checks, not speed acceptance.",
+    "CLI SHA and backend-library SHA must be considered together; restoring library does not change CLI hash.",
+    "Audio is changed and NOT quality approved. No production promotion."
+  ],
+  "primitive_command": "c++ -O3 -std=c++17 -I/src/include -I/src/third_party/ggml/include /src/tools/depth_attention_test.cpp /src/build/libbreeze_core.a -L/src/build/third_party/ggml/src -L/src/build/third_party/ggml/src/ggml-vulkan -Wl,-rpath,/src/build/third_party/ggml/src:/src/build/third_party/ggml/src/ggml-vulkan -lggml -lggml-cpu -lggml-vulkan -lggml-base -pthread -o /tmp/depth-attention-test",
+  "primitive_run": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 /tmp/depth-attention-test [--cpu] [--mask-only]; FP32 diagnostic adds GGML_VK_DISABLE_F16=1 GGML_VK_DISABLE_COOPMAT=1 GGML_VK_DISABLE_COOPMAT2=1"
+}
