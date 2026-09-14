@@ -1,0 +1,41 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index e140f671..7d068f06 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -17477,7 +17477,23 @@ static ggml_status ggml_backend_vk_graph_compute(ggml_backend_t backend, ggml_cg
+             flops_cap = 2'000'000'000ULL * ctx->device->shader_core_count;
+         }
+     }
+-    uint64_t flops_per_submit = std::min(flops_cap, ctx->last_total_flops / 40u);
++    static const char * depth_divisor_env = getenv("GGML_VK_TEST_DEPTH_SUBMIT_DIVISOR");
++    static const bool depth_submit_log = getenv("GGML_VK_TEST_DEPTH_SUBMIT_LOG") != nullptr;
++    uint32_t depth_ffns = 0;
++    if (depth_divisor_env || depth_submit_log) {
++        for (int i = 0; i < cgraph->n_nodes; ++i) {
++            const ggml_tensor * node = cgraph->nodes[i];
++            const ggml_tensor * weight = node->src[0];
++            depth_ffns += node->op == GGML_OP_MUL_MAT && weight && weight->type == GGML_TYPE_Q3_K &&
++                weight->ne[0] == 1024 && weight->ne[1] == 16384 && node->ne[1] <= 4;
++        }
++    }
++    uint32_t flops_divisor = 40;
++    if (depth_ffns == 12 && depth_divisor_env) {
++        GGML_ASSERT(strcmp(depth_divisor_env, "1") == 0 || strcmp(depth_divisor_env, "4") == 0 || strcmp(depth_divisor_env, "40") == 0);
++        flops_divisor = (uint32_t) atoi(depth_divisor_env);
++    }
++    uint64_t flops_per_submit = std::min(flops_cap, ctx->last_total_flops / flops_divisor);
+ 
+     auto const submit_after = [&](int start, int end) {
+         if (ctx->device->serialize_submissions) {
+@@ -17790,6 +17806,11 @@ static ggml_status ggml_backend_vk_graph_compute(ggml_backend_t backend, ggml_cg
+         ctx->fused_ops_write_mask = 0;
+     }
+ 
++    if (depth_submit_log && depth_ffns == 12) {
++        GGML_LOG_INFO("VK_DEPTH_SUBMIT divisor=%u submits=%u nodes=%d flops=%llu previous_flops=%llu\n",
++                      flops_divisor, submit_count, cgraph->n_nodes,
++                      (unsigned long long) total_flops, (unsigned long long) ctx->last_total_flops);
++    }
+     ctx->last_total_flops = total_flops;
+ 
+     if (vk_perf_logger_enabled) {
