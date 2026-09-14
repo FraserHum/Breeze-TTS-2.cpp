@@ -272,3 +272,18 @@ All 24 runs completed and repeat deterministically, but each Q4/Q3 audio pair
 changes; household pacing lengthens materially. **User listening approval is
 pending**, production unchanged, and 0.8 remains unmet. See
 [results](../docs/research/calibrated-ffn-refresh-results.md).
+
+## Approved Q3 combination and native IQ2 screen — 2026-09-15
+
+User approved Q3 audio, including Calliope. On an existing long English
+passage, adding the optional transposed cache yields design RTF
+**0.89703 → 0.86058** and Calliope **0.90292 → 0.89699**, with identical
+WAVs and zero parsed delivery deficit in all twelve runs. Unchanged depth
+also varies in the design comparison; do not assign all wall saving to the
+cache. Its default stays off. [Combination results](../docs/research/combined-q3-cache-results.md).
+
+A bounded calibrated native IQ2_S FFN screen on the current baseline yields
+short Calliope RTF **0.87920 Q3 → 0.85282 IQ2**, with depth **45.104 → 43.016
+ms/frame**. All twelve runs complete; audio differs and **IQ2 listening
+approval is pending**. No deployment change, no 0.8 claim, and no use of the
+reserved final workload set. [IQ2 results](../docs/research/iq2-ffn-refresh-results.md).
