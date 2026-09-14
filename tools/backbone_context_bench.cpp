@@ -21,6 +21,7 @@ constexpr int kMaxRepeats = 100000;
 struct Options {
     std::string model;
     std::string backend = "cpu";
+    bool check_cache_only = false;
     int context = 1;
     int warmup = 1;
     int iterations = 5;
@@ -29,7 +30,7 @@ struct Options {
 static void usage(const char * argv0) {
     std::fprintf(stderr,
         "usage: %s --model PATH [--backend cpu|gpu] [--context N] "
-        "[--warmup N] [--iterations N]\n", argv0);
+        "[--warmup N] [--iterations N] [--check-cache-only]\n", argv0);
 }
 
 static bool positive_int(const char * text, int max_value, int & value) {
@@ -49,6 +50,8 @@ static bool parse_args(int argc, char ** argv, Options & options) {
             options.model = argv[++i];
         } else if (arg == "--backend" && i + 1 < argc) {
             options.backend = argv[++i];
+        } else if (arg == "--check-cache-only") {
+            options.check_cache_only = true;
         } else if (arg == "--cpu") {
             options.backend = "cpu";
         } else if (arg == "--gpu") {
@@ -66,7 +69,7 @@ static bool parse_args(int argc, char ** argv, Options & options) {
             return false;
         }
     }
-    return (options.backend == "cpu" || options.backend == "gpu") && !options.model.empty();
+    return (options.backend == "cpu" || options.backend == "gpu") && (options.check_cache_only || !options.model.empty());
 }
 
 static uint32_t next_random(uint32_t & state) {
@@ -140,6 +143,13 @@ int main(int argc, char ** argv) {
     if (!parse_args(argc, argv, options)) {
         usage(argv[0]);
         return 2;
+    }
+    if (options.check_cache_only) {
+        breeze::Backend backend;
+        backend.init(options.backend == "gpu");
+        const bool ok = (backend.is_gpu == (options.backend == "gpu")) && check_strided_cache(backend);
+        backend.free();
+        return ok ? 0 : 8;
     }
     breeze::BreezeModel model;
     if (!model.load(options.model, options.backend == "gpu")) {
@@ -228,6 +238,12 @@ int main(int argc, char ** argv) {
                 all_finite ? "true" : "false", all_shapes ? "true" : "false",
                 all_positions ? "true" : "false", exact_repeated ? "true" : "false");
 
+    uint64_t hash = 14695981039346656037ULL;
+    for (const auto * values : {&reference.hidden, &reference.logits}) {
+        const auto * bytes = reinterpret_cast<const unsigned char *>(values->data());
+        for (size_t i = 0; i < values->size() * sizeof(float); ++i) hash = (hash ^ bytes[i]) * 1099511628211ULL;
+    }
+    std::printf("output_fnv1a64=%016llx\n", (unsigned long long) hash);
     state.free();
     model.free();
     return all_finite && all_shapes && all_positions && exact_repeated ? 0 : 7;
