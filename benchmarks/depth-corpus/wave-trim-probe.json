@@ -1,0 +1,1035 @@
+{
+  "wave_source": "51b3e1d",
+  "wave_backend": "c0f98773",
+  "restored_backend": "acc4d4d7c52f592b56f2dde3481d17e3da5cb7dd",
+  "wave_micro": [
+    {
+      "label": "wave64-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/q3-ffn-wave64-a.json"
+      ],
+      "result": {
+        "backend": "gpu",
+        "device": "Vulkan0",
+        "model": "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "layers": 12,
+        "warmup": 20,
+        "iterations": 100,
+        "weights": "real_model_Q3_K",
+        "input": "synthetic_normalized_f32_scale_0.25",
+        "timed_scope": "graph_compute_plus_synchronize",
+        "cases": [
+          {
+            "n": 1,
+            "variants": {
+              "split": {
+                "mean_us": 8156.70309,
+                "submissions": 60,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "per_ffn": {
+                "mean_us": 4061.42443,
+                "submissions": 12,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "batched": {
+                "mean_us": 1825.63324,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2732.22641,
+                "submissions": 12,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "batched_swiglu": {
+                "mean_us": 2059.39741,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "packed": {
+                "mean_us": 1927.81823,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          },
+          {
+            "n": 2,
+            "variants": {
+              "split": {
+                "mean_us": 7740.81351,
+                "submissions": 60,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn": {
+                "mean_us": 3993.80229,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched": {
+                "mean_us": 1866.0129,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2715.44174,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched_swiglu": {
+                "mean_us": 1886.03568,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "packed": {
+                "mean_us": 1880.15375,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "wave32-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "GGML_VK_TEST_Q3_WAVE32=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/q3-ffn-wave32-a.json"
+      ],
+      "result": {
+        "backend": "gpu",
+        "device": "Vulkan0",
+        "model": "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "layers": 12,
+        "warmup": 20,
+        "iterations": 100,
+        "weights": "real_model_Q3_K",
+        "input": "synthetic_normalized_f32_scale_0.25",
+        "timed_scope": "graph_compute_plus_synchronize",
+        "cases": [
+          {
+            "n": 1,
+            "variants": {
+              "split": {
+                "mean_us": 8148.67539,
+                "submissions": 60,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "per_ffn": {
+                "mean_us": 4024.46972,
+                "submissions": 12,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "batched": {
+                "mean_us": 1976.52967,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2896.49836,
+                "submissions": 12,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "batched_swiglu": {
+                "mean_us": 1925.56506,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "packed": {
+                "mean_us": 1935.69496,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          },
+          {
+            "n": 2,
+            "variants": {
+              "split": {
+                "mean_us": 8018.95457,
+                "submissions": 60,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn": {
+                "mean_us": 4004.13747,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched": {
+                "mean_us": 1883.67139,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2712.56069,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched_swiglu": {
+                "mean_us": 1872.34725,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "packed": {
+                "mean_us": 1870.4251,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "wave32-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "GGML_VK_TEST_Q3_WAVE32=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/q3-ffn-wave32-b.json"
+      ],
+      "result": {
+        "backend": "gpu",
+        "device": "Vulkan0",
+        "model": "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "layers": 12,
+        "warmup": 20,
+        "iterations": 100,
+        "weights": "real_model_Q3_K",
+        "input": "synthetic_normalized_f32_scale_0.25",
+        "timed_scope": "graph_compute_plus_synchronize",
+        "cases": [
+          {
+            "n": 1,
+            "variants": {
+              "split": {
+                "mean_us": 8150.57312,
+                "submissions": 60,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "per_ffn": {
+                "mean_us": 4290.99041,
+                "submissions": 12,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "batched": {
+                "mean_us": 1996.38654,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2886.13072,
+                "submissions": 12,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "batched_swiglu": {
+                "mean_us": 1934.42029,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              },
+              "packed": {
+                "mean_us": 1955.57257,
+                "submissions": 1,
+                "checksum": "feb2258a1431b54f",
+                "repeat_checksum": "feb2258a1431b54f"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          },
+          {
+            "n": 2,
+            "variants": {
+              "split": {
+                "mean_us": 7611.67698,
+                "submissions": 60,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn": {
+                "mean_us": 4033.49648,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched": {
+                "mean_us": 2251.48131,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2684.34021,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched_swiglu": {
+                "mean_us": 1863.66755,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "packed": {
+                "mean_us": 1943.041,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "label": "wave64-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "/src/build/depth-ffn-bench",
+        "--backend",
+        "gpu",
+        "--model",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--layers",
+        "12",
+        "--warmup",
+        "20",
+        "--iterations",
+        "100",
+        "--json",
+        "/tmp/q3-ffn-wave64-b.json"
+      ],
+      "result": {
+        "backend": "gpu",
+        "device": "Vulkan0",
+        "model": "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "layers": 12,
+        "warmup": 20,
+        "iterations": 100,
+        "weights": "real_model_Q3_K",
+        "input": "synthetic_normalized_f32_scale_0.25",
+        "timed_scope": "graph_compute_plus_synchronize",
+        "cases": [
+          {
+            "n": 1,
+            "variants": {
+              "split": {
+                "mean_us": 8244.56491,
+                "submissions": 60,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "per_ffn": {
+                "mean_us": 3997.34587,
+                "submissions": 12,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "batched": {
+                "mean_us": 1818.38779,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2655.96753,
+                "submissions": 12,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "batched_swiglu": {
+                "mean_us": 1796.75633,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              },
+              "packed": {
+                "mean_us": 1813.14585,
+                "submissions": 1,
+                "checksum": "78005586da494c31",
+                "repeat_checksum": "78005586da494c31"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          },
+          {
+            "n": 2,
+            "variants": {
+              "split": {
+                "mean_us": 7522.74897,
+                "submissions": 60,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn": {
+                "mean_us": 4002.11552,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched": {
+                "mean_us": 1995.3461,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "per_ffn_swiglu": {
+                "mean_us": 2655.01637,
+                "submissions": 12,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "batched_swiglu": {
+                "mean_us": 1839.41483,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              },
+              "packed": {
+                "mean_us": 1873.43017,
+                "submissions": 1,
+                "checksum": "8d6b6c5f8609eae4",
+                "repeat_checksum": "8d6b6c5f8609eae4"
+              }
+            },
+            "normal_vs_swiglu": {
+              "max_abs": 0,
+              "max_rel": 0
+            },
+            "normal_vs_packed": {
+              "max_abs": 0,
+              "max_rel": 0
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "trim_source": "33bf2d0",
+  "baseline_source": "132cda7 (saved pre-probe executable)",
+  "trim_binary_sha256": "295605c98771ea9d45f47311bebd25f7df779908fb0c91c44b86ee865b140ef3",
+  "baseline_binary_sha256": "b076b3db0185bbce31739a2be770b22dff602db945a38aef65e8df2b55c72c8c",
+  "speech_backend_sha256": "172a074e97c595f8c6c6d8eb1c4d1e54f5a3090573e9bb537ff62e1b05f8d1e8",
+  "model_sha256": "34483105709c75c38cdafcddcb4ec91e0b222097d30e76432507c448053a83de",
+  "voice_sha256": "331f8daab3736cf24a31b0d1c54f0b87376ae6e196ec01411a084fc540a5d0d8",
+  "ordinary_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3",
+  "tags_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194",
+  "speech": [
+    {
+      "label": "baseline-trim-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/tmp/pre-wave-trim/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-baseline-trim-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "73e82e43bd584f0b3ada9f9891a3d389  /tmp/pre-wave-trim/breeze-cli",
+      "source": "132cda7 (saved pre-probe executable)",
+      "runs": [
+        {
+          "wall_ms": 8093.2,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8874122807017544,
+          "first_audio_ms": 2936.0,
+          "stages_ms": {
+            "backbone decode": 1917.4,
+            "depth decode": 5009.2,
+            "vocoder": 977.8
+          }
+        },
+        {
+          "wall_ms": 7830.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.858640350877193,
+          "first_audio_ms": 2749.0,
+          "stages_ms": {
+            "backbone decode": 1831.7,
+            "depth decode": 4946.1,
+            "vocoder": 924.0
+          }
+        },
+        {
+          "wall_ms": 8015.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8788706140350878,
+          "first_audio_ms": 2742.0,
+          "stages_ms": {
+            "backbone decode": 1858.4,
+            "depth decode": 5122.1,
+            "vocoder": 926.3
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-a.repeat-3.wav\n",
+      "log_sha256": "6cb36782df4d890a2ac45e8baf77c4c56252916e5e711b380d3726d8e8b66bf7"
+    },
+    {
+      "label": "trim11-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-trim11-a.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "393ec6d29b91414726573817e3c09863  /src/build/breeze-cli",
+      "source": "33bf2d01b484f7b2568b221fe77e8076b779fa82",
+      "runs": [
+        {
+          "wall_ms": 7823.1,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.857796052631579,
+          "first_audio_ms": 2770.0,
+          "stages_ms": {
+            "backbone decode": 1870.8,
+            "depth decode": 4865.4,
+            "vocoder": 883.9
+          }
+        },
+        {
+          "wall_ms": 7661.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8400548245614036,
+          "first_audio_ms": 2653.0,
+          "stages_ms": {
+            "backbone decode": 1834.0,
+            "depth decode": 4850.6,
+            "vocoder": 859.3
+          }
+        },
+        {
+          "wall_ms": 7767.3,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8516776315789475,
+          "first_audio_ms": 2723.0,
+          "stages_ms": {
+            "backbone decode": 1846.5,
+            "depth decode": 4941.1,
+            "vocoder": 866.6
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-a.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-a.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-a.repeat-3.wav\n",
+      "log_sha256": "42e129b3c8cc9243af6963183937d1759d62145106c5433e269756711fefe209"
+    },
+    {
+      "label": "trim11-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-trim11-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "393ec6d29b91414726573817e3c09863  /src/build/breeze-cli",
+      "source": "33bf2d01b484f7b2568b221fe77e8076b779fa82",
+      "runs": [
+        {
+          "wall_ms": 7755.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8503289473684211,
+          "first_audio_ms": 2820.0,
+          "stages_ms": {
+            "backbone decode": 1876.4,
+            "depth decode": 4809.5,
+            "vocoder": 884.6
+          }
+        },
+        {
+          "wall_ms": 7621.6,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.835701754385965,
+          "first_audio_ms": 2688.0,
+          "stages_ms": {
+            "backbone decode": 1839.9,
+            "depth decode": 4791.3,
+            "vocoder": 857.8
+          }
+        },
+        {
+          "wall_ms": 7540.9,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8268530701754386,
+          "first_audio_ms": 2616.0,
+          "stages_ms": {
+            "backbone decode": 1829.4,
+            "depth decode": 4743.2,
+            "vocoder": 861.7
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-trim11-b.repeat-3.wav\n",
+      "log_sha256": "9b589d517224c7a8902c352d1b82f60976f95d6075b291f947feff3146528507"
+    },
+    {
+      "label": "baseline-trim-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/tmp/pre-wave-trim/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "The laundry has finished, and the back door is locked. It might rain this afternoon, so please bring the cushions inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-baseline-trim-b.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "73e82e43bd584f0b3ada9f9891a3d389  /tmp/pre-wave-trim/breeze-cli",
+      "source": "132cda7 (saved pre-probe executable)",
+      "runs": [
+        {
+          "wall_ms": 7888.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8649122807017544,
+          "first_audio_ms": 2721.0,
+          "stages_ms": {
+            "backbone decode": 1882.4,
+            "depth decode": 4871.8,
+            "vocoder": 950.2
+          }
+        },
+        {
+          "wall_ms": 7606.0,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8339912280701754,
+          "first_audio_ms": 2629.0,
+          "stages_ms": {
+            "backbone decode": 1820.1,
+            "depth decode": 4718.3,
+            "vocoder": 939.6
+          }
+        },
+        {
+          "wall_ms": 7618.8,
+          "frames": 114,
+          "audio_s": 9.12,
+          "wall_rtf": 0.8353947368421054,
+          "first_audio_ms": 2646.0,
+          "stages_ms": {
+            "backbone decode": 1824.8,
+            "depth decode": 4741.5,
+            "vocoder": 944.4
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "f876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-b.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-b.repeat-2.wav\nf876f7bbcdaa65e73fc105e7151519f0f778780ff27255cd6d89adbac19ee0e3  /tmp/refresh-baseline-trim-b.repeat-3.wav\n",
+      "log_sha256": "b5c8f146502edbb40ca635bcf4646a0837795b198ef2ff4dadb5ad32bd5599e3"
+    },
+    {
+      "label": "trim11-tags",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_TEST_PACKED_Q4_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "BREEZE_V_CACHE_TRANSPOSED=0",
+        "/src/build/breeze-cli",
+        "/tmp/breeze-current-ffn-q3-calibrated.gguf",
+        "--text",
+        "(sigh) The laundry has finished, and the back door is locked. (laugh) At least one of us remembered the cushions this time. It might rain this afternoon, so please bring them inside. Your next meeting starts at half past two.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "2",
+        "--timings",
+        "--output",
+        "/tmp/refresh-trim11-tags.wav",
+        "--voice",
+        "calliope",
+        "--voices-dir",
+        "/tmp/voices",
+        "--cfg-scale",
+        "2"
+      ],
+      "returncode": 0,
+      "binary_md5": "393ec6d29b91414726573817e3c09863  /src/build/breeze-cli",
+      "source": "33bf2d01b484f7b2568b221fe77e8076b779fa82",
+      "runs": [
+        {
+          "wall_ms": 13919.7,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.152293046357616,
+          "first_audio_ms": 4160.0,
+          "stages_ms": {
+            "backbone decode": 4950.1,
+            "depth decode": 6944.8,
+            "vocoder": 1209.4
+          }
+        },
+        {
+          "wall_ms": 13875.1,
+          "frames": 151,
+          "audio_s": 12.08,
+          "wall_rtf": 1.1486009933774834,
+          "first_audio_ms": 4149.0,
+          "stages_ms": {
+            "backbone decode": 4922.8,
+            "depth decode": 7020.2,
+            "vocoder": 1165.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-trim11-tags.wav\n52f0a1c9b0d4cb358dc9b0600edd02db0a22ddd9b8025e76b8408cb63ceab194  /tmp/refresh-trim11-tags.repeat-2.wav\n",
+      "log_sha256": "1874b2a0ee28e34f049fad76433e8e6d01c412aafd4f1609d667942943414d6c"
+    }
+  ],
+  "boundary_initial_log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nstart=0 count=1 ctx_start=0 ref=1920 got=1920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=0 count=4 ctx_start=0 ref=7680 got=7680 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=0 count=40 ctx_start=0 ref=76800 got=76800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=1 ctx_start=0 ref=23040 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=4 ctx_start=0 ref=28800 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=40 ctx_start=0 ref=97920 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=1 ctx_start=0 ref=32640 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=4 ctx_start=0 ref=38400 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=40 ctx_start=0 ref=107520 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=1 ctx_start=0 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=4 ctx_start=0 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=40 ctx_start=0 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=1 ctx_start=1 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=4 ctx_start=1 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=40 ctx_start=1 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=1 ctx_start=16 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=4 ctx_start=16 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=40 ctx_start=16 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\n",
+  "decision": "Retain computed history; reject wave32. Vocoder saving ~0.634 ms/frame; whole-wall delta includes unrelated depth drift. Production unchanged.",
+  "boundary_restored_log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\nstart=0 count=1 ctx_start=0 ref=1920 got=1920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=0 count=4 ctx_start=0 ref=7680 got=7680 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=0 count=40 ctx_start=0 ref=76800 got=76800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=1 ctx_start=0 ref=23040 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=4 ctx_start=0 ref=28800 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=11 count=40 ctx_start=0 ref=97920 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=1 ctx_start=0 ref=32640 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=4 ctx_start=0 ref=38400 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=16 count=40 ctx_start=0 ref=107520 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=1 ctx_start=0 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=4 ctx_start=0 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=88 count=40 ctx_start=0 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=1 ctx_start=1 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=4 ctx_start=1 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=89 count=40 ctx_start=1 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=1 ctx_start=16 ref=170880 got=23040 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=4 ctx_start=16 ref=176640 got=28800 snr_db=inf corr=1.000000000 max_diff=0 PASS\nstart=104 count=40 ctx_start=16 ref=245760 got=97920 snr_db=inf corr=1.000000000 max_diff=0 PASS\n"
+}
