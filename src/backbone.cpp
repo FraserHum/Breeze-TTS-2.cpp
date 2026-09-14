@@ -1,12 +1,15 @@
 #include "breeze/backbone.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <string>
 
 namespace breeze {
 
 void BackboneState::init(BreezeModel & m, int max_seq) {
-    kv.init(m.backend, m.cfg.bb.n_layer, m.cfg.bb.head_dim, m.cfg.bb.n_kv_head, max_seq);
+    const char * transpose = std::getenv("BREEZE_V_CACHE_TRANSPOSED");
+    kv.init(m.backend, m.cfg.bb.n_layer, m.cfg.bb.head_dim, m.cfg.bb.n_kv_head, max_seq, 1,
+            transpose && std::string(transpose) == "1");
     pos = 0;
 }
 
@@ -65,9 +68,19 @@ static ggml_tensor * bb_layer(ggml_context * ctx, BreezeModel & m, Graph & g, Ba
     k = ggml_rope_ext(ctx, k, pos, nullptr, c.head_dim, GGML_ROPE_TYPE_NEOX, 0, c.rope_theta, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
 
     ggml_tensor * kfull = cache_append(ctx, g, st.kv.k[il], k, st.pos);
-    ggml_tensor * vfull = cache_append(ctx, g, st.kv.v[il], v, st.pos);
+    ggml_tensor * vfull;
+    if (st.kv.transposed_v) {
+        ggml_tensor * cache = st.kv.v[il];
+        ggml_tensor * dst = ggml_view_3d(ctx, cache, n, c.head_dim, c.n_kv_head,
+                                       cache->nb[1], cache->nb[2], (size_t) st.pos * sizeof(float));
+        g.write(ggml_cpy(ctx, ggml_permute(ctx, v, 1, 2, 0, 3), dst));
+        vfull = ggml_view_3d(ctx, cache, st.pos + n, c.head_dim, c.n_kv_head,
+                            cache->nb[1], cache->nb[2], 0);
+    } else {
+        vfull = cache_append(ctx, g, st.kv.v[il], v, st.pos);
+    }
 
-    ggml_tensor * a = attention(ctx, q, kfull, vfull, mask, scale, c.n_head, c.n_kv_head);
+    ggml_tensor * a = attention(ctx, q, kfull, vfull, mask, scale, c.n_head, c.n_kv_head, st.kv.transposed_v);
     a = linear(ctx, m.w(p + ".attn_output.weight"), a);
     x = ggml_add(ctx, res, a);
 

@@ -96,6 +96,43 @@ static bool exact_equal(const breeze::StepOut & a, const breeze::StepOut & b) {
     return a.hidden == b.hidden && a.logits == b.logits;
 }
 
+// Exercise odd tails, grouped heads, poisoned padding, and canonical prefix transfer.
+static bool check_strided_cache(breeze::Backend & backend) {
+    for (int tokens : {1, 3, 4, 7, 8}) {
+        breeze::KVCache small, large;
+        small.init(backend, 1, 4, 2, tokens + 1, 1, true);
+        large.init(backend, 1, 4, 2, tokens + 13, 1, true);
+        std::vector<std::vector<float>> snap(2, std::vector<float>(tokens * 8));
+        fill_embeddings(snap[0], 31);
+        fill_embeddings(snap[1], 47);
+        for (auto * cache : {&small, &large}) {
+            std::vector<float> poison(ggml_nelements(cache->v[0]), NAN);
+            ggml_backend_tensor_set(cache->v[0], poison.data(), 0, poison.size() * sizeof(float));
+        }
+        small.restore(snap);
+        large.restore(small.snapshot(tokens));
+        bool ok = small.snapshot(tokens) == snap && large.snapshot(tokens) == snap;
+        for (auto * cache : {&small, &large}) {
+            breeze::Graph graph;
+            auto * view = ggml_view_3d(graph.ctx, cache->v[0], tokens, 4, 2,
+                                      cache->v[0]->nb[1], cache->v[0]->nb[2], 0);
+            std::vector<float> weights(tokens * 4, 1.0f / tokens);
+            auto * rhs = graph.input_f32(weights, tokens, 1, 4);
+            auto * direct = ggml_mul_mat(graph.ctx, view, rhs);
+            auto * dense = ggml_mul_mat(graph.ctx, ggml_cont(graph.ctx, view), rhs);
+            graph.mark_output(direct);
+            graph.compute(backend, dense);
+            auto a = breeze::tensor_to_f32(direct), b = breeze::tensor_to_f32(dense);
+            ok = ok && finite(a) && a == b;
+        }
+        small.free();
+        large.free();
+        if (!ok) return false;
+    }
+    std::printf("strided_cache_snapshot_and_matvec_check=true\n");
+    return true;
+}
+
 } // namespace
 
 int main(int argc, char ** argv) {
@@ -113,6 +150,11 @@ int main(int argc, char ** argv) {
         std::fprintf(stderr, "requested %s backend, got %s\n", options.backend.c_str(), model.backend.name());
         model.free();
         return 4;
+    }
+    if (!check_strided_cache(model.backend)) {
+        std::fprintf(stderr, "strided cache self-check failed\n");
+        model.free();
+        return 8;
     }
     const breeze::BackboneConfig & cfg = model.cfg.bb;
     if (cfg.hidden <= 0 || cfg.n_layer <= 0 || cfg.head_dim <= 0 || cfg.n_kv_head <= 0) {

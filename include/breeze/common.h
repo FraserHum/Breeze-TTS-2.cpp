@@ -30,7 +30,8 @@ struct KVCache {
     std::vector<ggml_tensor *> k, v;
     int head_dim = 0, n_kv_head = 0, max_seq = 0, len = 0, n_branch = 1;
 
-    void init(Backend & be, int n_layer, int head_dim, int n_kv_head, int max_seq, int n_branch = 1);
+    bool transposed_v = false;
+    void init(Backend & be, int n_layer, int head_dim, int n_kv_head, int max_seq, int n_branch = 1, bool transpose_v = false);
     void reset() { len = 0; }
     void free();
 
@@ -74,7 +75,7 @@ ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor
 
 // q,k,v laid out as [head_dim, n_head, n_tokens]; returns [head_dim*n_head, n_q]
 ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, ggml_tensor * v,
-                        ggml_tensor * mask, float scale, int n_head, int n_kv_head);
+                        ggml_tensor * mask, float scale, int n_head, int n_kv_head, bool v_transposed = false);
 
 std::vector<float> build_causal_mask(int n_q, int n_kv, int q_offset, int sliding_window);
 

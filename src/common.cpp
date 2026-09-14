@@ -33,7 +33,8 @@ void Backend::free() {
     backend = nullptr;
 }
 
-void KVCache::init(Backend & be, int n_layer, int hd, int nkv, int ms, int nb) {
+void KVCache::init(Backend & be, int n_layer, int hd, int nkv, int ms, int nb, bool transpose_v) {
+    transposed_v = transpose_v;
     head_dim = hd;
     n_kv_head = nkv;
     max_seq = ms;
@@ -45,7 +46,9 @@ void KVCache::init(Backend & be, int n_layer, int hd, int nkv, int ms, int nb) {
     v.resize(n_layer);
     for (int i = 0; i < n_layer; i++) {
         k[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms * nb);
-        v[i] = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms * nb);
+        v[i] = transposed_v
+            ? ggml_new_tensor_3d(ctx, GGML_TYPE_F32, ((int64_t) ms * nb + 3) / 4 * 4, hd, nkv)
+            : ggml_new_tensor_3d(ctx, GGML_TYPE_F32, hd, nkv, ms * nb);
     }
     buffer = ggml_backend_alloc_ctx_tensors(ctx, be.backend);
 }
@@ -58,7 +61,7 @@ void KVCache::free() {
 }
 
 std::vector<std::vector<float>> KVCache::snapshot(int pos) const {
-    // the sequence dim is the last one, so [0, pos) is the contiguous head of every tensor
+    // Snapshots always use canonical [head_dim, kv_heads, tokens] order.
     GGML_ASSERT(head_dim > 0 && n_kv_head > 0 && pos >= 0 && pos <= max_seq * n_branch);
     const size_t n = (size_t) head_dim * (size_t) n_kv_head * (size_t) pos;
     std::vector<std::vector<float>> out;
@@ -68,7 +71,16 @@ std::vector<std::vector<float>> KVCache::snapshot(int pos) const {
         ggml_backend_tensor_get(k[i], buf.data(), 0, n * sizeof(float));
         out.push_back(std::move(buf));
         std::vector<float> bufv(n);
-        ggml_backend_tensor_get(v[i], bufv.data(), 0, n * sizeof(float));
+        if (transposed_v && n > 0) {
+            std::vector<float> rows(n);
+            const size_t width = (size_t) head_dim * n_kv_head;
+            ggml_backend_tensor_get_2d(v[i], rows.data(), 0, pos * sizeof(float), width,
+                                       v[i]->nb[1], pos * sizeof(float));
+            for (size_t r = 0; r < width; ++r)
+                for (int t = 0; t < pos; ++t) bufv[t * width + r] = rows[r * pos + t];
+        } else {
+            ggml_backend_tensor_get(v[i], bufv.data(), 0, n * sizeof(float));
+        }
         out.push_back(std::move(bufv));
     }
     return out;
@@ -83,7 +95,16 @@ void KVCache::restore(const std::vector<std::vector<float>> & snap) {
         GGML_ASSERT(stride > 0 && n % stride == 0 && n / stride <= (size_t) max_seq * (size_t) n_branch);
         // snapshot() emits interleaved (k0, v0, k1, v1, ...) per layer
         ggml_tensor * t = (i & 1) ? v[i / 2] : k[i / 2];
-        ggml_backend_tensor_set(t, snap[i].data(), 0, n * sizeof(float));
+        if ((i & 1) && transposed_v && n > 0) {
+            const size_t tokens = n / stride;
+            std::vector<float> rows(n);
+            for (size_t r = 0; r < stride; ++r)
+                for (size_t j = 0; j < tokens; ++j) rows[r * tokens + j] = snap[i][j * stride + r];
+            ggml_backend_tensor_set_2d(t, rows.data(), 0, tokens * sizeof(float), stride,
+                                       t->nb[1], tokens * sizeof(float));
+        } else {
+            ggml_backend_tensor_set(t, snap[i].data(), 0, n * sizeof(float));
+        }
     }
 }
 
@@ -165,7 +186,7 @@ ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor
 }
 
 ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, ggml_tensor * v,
-                        ggml_tensor * mask, float scale, int n_head, int n_kv_head) {
+                        ggml_tensor * mask, float scale, int n_head, int n_kv_head, bool v_transposed) {
     (void) n_kv_head;
     const int hd = (int) q->ne[0];
     const int nq = (int) q->ne[2];
@@ -173,7 +194,8 @@ ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, gg
     ggml_tensor * kp = ggml_permute(ctx, k, 0, 2, 1, 3);
     ggml_tensor * kq = ggml_mul_mat(ctx, kp, qp);
     kq = ggml_soft_max_ext(ctx, kq, mask, scale, 0.0f);
-    ggml_tensor * vt = ggml_cont(ctx, ggml_permute(ctx, v, 1, 2, 0, 3));
+    ggml_tensor * vt = v_transposed ? (nq == 1 ? v : ggml_cont(ctx, v))
+                                  : ggml_cont(ctx, ggml_permute(ctx, v, 1, 2, 0, 3));
     ggml_tensor * kqv = ggml_mul_mat(ctx, vt, kq);
     kqv = ggml_permute(ctx, kqv, 0, 2, 1, 3);
     return ggml_cont_2d(ctx, kqv, hd * n_head, nq);
