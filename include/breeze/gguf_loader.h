@@ -1,6 +1,7 @@
 #pragma once
 
 #include "breeze/common.h"
+#include "breeze/config.h"
 #include "ggml.h"
 #include "gguf.h"
 
@@ -15,10 +16,13 @@ struct GGUFModel {
     gguf_context * gguf = nullptr;
     ggml_context * meta = nullptr;
     ggml_backend_buffer_t buffer = nullptr;
+    ggml_context * packed_meta = nullptr;
+    ggml_backend_buffer_t packed_buffer = nullptr;
     std::unordered_map<std::string, ggml_tensor *> tensors;
 
     bool load(const std::string & path, Backend & be);
     void free();
+    bool pack_weights(const struct BreezeConfig & cfg, Backend & be);
 
     ggml_tensor * get(const std::string & name) const;
     ggml_tensor * find(const std::string & name) const;

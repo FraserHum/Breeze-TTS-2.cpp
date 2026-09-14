@@ -84,6 +84,9 @@ ggml_tensor * depthwise1d_causal(ggml_context * ctx, ggml_tensor * w, ggml_tenso
                                  ggml_tensor * x, int kernel);
 ggml_tensor * resnet_block(ggml_context * ctx, BreezeModel & m, const std::string & prefix, ggml_tensor * x);
 ggml_tensor * seanet_encoder(ggml_context * ctx, BreezeModel & m, ggml_tensor * x);
+ggml_tensor * convnext(ggml_context * ctx, BreezeModel & m, const std::string & prefix, ggml_tensor * x);
+ggml_tensor * quantizer_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
+                               const std::vector<int> & codes, int n_cb, int T);
 ggml_tensor * mimi_transformer(ggml_context * ctx, BreezeModel & m, Graph & g, ggml_tensor * x,
                                const std::string & prefix, int seq_len);
 ggml_tensor * vocoder_transformer(ggml_context * ctx, BreezeModel & m, Graph & g, ggml_tensor * x, int seq_len);

@@ -14,13 +14,13 @@ namespace breeze {
 bool GGUFModel::load(const std::string & path, Backend & be) {
     gguf_init_params gp{ /*no_alloc=*/true, /*ctx=*/&meta };
     gguf = gguf_init_from_file(path.c_str(), gp);
-    if (!gguf) return false;
+    if (!gguf) { fprintf(stderr, "gguf_init_from_file failed for %s\n", path.c_str()); return false; }
 
     buffer = ggml_backend_alloc_ctx_tensors(meta, be.backend);
-    if (!buffer) return false;
+    if (!buffer) { fprintf(stderr, "ggml_backend_alloc_ctx_tensors failed\n"); return false; }
 
     FILE * f = fopen(path.c_str(), "rb");
-    if (!f) return false;
+    if (!f) { fprintf(stderr, "fopen failed for %s\n", path.c_str()); return false; }
 
     const size_t data_off = gguf_get_data_offset(gguf);
     const int64_t n = gguf_get_n_tensors(gguf);
@@ -41,12 +41,116 @@ bool GGUFModel::load(const std::string & path, Backend & be) {
 }
 
 void GGUFModel::free() {
+    if (packed_buffer) ggml_backend_buffer_free(packed_buffer);
+    if (packed_meta) ggml_free(packed_meta);
     if (buffer) ggml_backend_buffer_free(buffer);
     if (meta) ggml_free(meta);
     if (gguf) gguf_free(gguf);
+    packed_buffer = nullptr;
+    packed_meta = nullptr;
     buffer = nullptr;
     meta = nullptr;
     gguf = nullptr;
+    tensors.clear();
+}
+
+bool GGUFModel::pack_weights(const BreezeConfig & cfg, Backend & be) {
+    if (has("bb.blk.0.attn_qkv.weight")) {
+        return true; // already packed in GGUF
+    }
+
+    struct PackPlan {
+        std::string out_name;
+        std::vector<std::string> in_names;
+    };
+    std::vector<PackPlan> plans;
+
+    // Backbone layers
+    for (int il = 0; il < cfg.bb.n_layer; il++) {
+        const std::string p = "bb.blk." + std::to_string(il);
+        if (has(p + ".attn_q.weight") && has(p + ".attn_k.weight") && has(p + ".attn_v.weight")) {
+            plans.push_back({p + ".attn_qkv.weight", {p + ".attn_q.weight", p + ".attn_k.weight", p + ".attn_v.weight"}});
+        }
+        if (has(p + ".ffn_gate.weight") && has(p + ".ffn_up.weight")) {
+            plans.push_back({p + ".ffn_gate_up.weight", {p + ".ffn_gate.weight", p + ".ffn_up.weight"}});
+        }
+    }
+
+    // Depth decoder layers
+    for (int il = 0; il < cfg.dd.n_layer; il++) {
+        const std::string p = "dd.blk." + std::to_string(il);
+        if (has(p + ".attn_q.weight") && has(p + ".attn_k.weight") && has(p + ".attn_v.weight")) {
+            plans.push_back({p + ".attn_qkv.weight", {p + ".attn_q.weight", p + ".attn_k.weight", p + ".attn_v.weight"}});
+        }
+        if (has(p + ".ffn_gate.weight") && has(p + ".ffn_up.weight")) {
+            plans.push_back({p + ".ffn_gate_up.weight", {p + ".ffn_gate.weight", p + ".ffn_up.weight"}});
+        }
+    }
+
+    if (plans.empty()) return true;
+
+    const size_t n_tensors = plans.size();
+    const size_t meta_size = n_tensors * ggml_tensor_overhead() + 64 * 1024;
+    ggml_init_params params = { meta_size, nullptr, true };
+    packed_meta = ggml_init(params);
+    if (!packed_meta) return false;
+
+    std::vector<ggml_tensor *> packed_tensors;
+    packed_tensors.reserve(plans.size());
+
+    for (const auto & plan : plans) {
+        ggml_tensor * first = get(plan.in_names[0]);
+        int64_t in_dim = first->ne[0];
+        int64_t total_out = 0;
+        for (const auto & in_name : plan.in_names) {
+            ggml_tensor * t = get(in_name);
+            if (t->ne[0] != in_dim || t->type != first->type) {
+                ggml_free(packed_meta);
+                packed_meta = nullptr;
+                return false;
+            }
+            total_out += t->ne[1];
+        }
+        ggml_tensor * t_packed = ggml_new_tensor_2d(packed_meta, first->type, in_dim, total_out);
+        ggml_set_name(t_packed, plan.out_name.c_str());
+        packed_tensors.push_back(t_packed);
+    }
+
+    packed_buffer = ggml_backend_alloc_ctx_tensors(packed_meta, be.backend);
+    if (!packed_buffer) {
+        ggml_free(packed_meta);
+        packed_meta = nullptr;
+        return false;
+    }
+
+    std::vector<uint8_t> part_buf;
+    std::vector<uint8_t> packed_buf;
+    for (size_t i = 0; i < plans.size(); i++) {
+        const auto & plan = plans[i];
+        ggml_tensor * t_packed = packed_tensors[i];
+        packed_buf.clear();
+
+        for (const auto & in_name : plan.in_names) {
+            ggml_tensor * in_t = get(in_name);
+            const size_t sz = ggml_nbytes(in_t);
+            part_buf.resize(sz);
+            ggml_backend_tensor_get(in_t, part_buf.data(), 0, sz);
+            packed_buf.insert(packed_buf.end(), part_buf.begin(), part_buf.end());
+        }
+
+        if (packed_buf.size() != ggml_nbytes(t_packed)) {
+            ggml_backend_buffer_free(packed_buffer);
+            ggml_free(packed_meta);
+            packed_buffer = nullptr;
+            packed_meta = nullptr;
+            return false;
+        }
+
+        ggml_backend_tensor_set(t_packed, packed_buf.data(), 0, packed_buf.size());
+        tensors[plan.out_name] = t_packed;
+    }
+
+    return true;
 }
 
 ggml_tensor * GGUFModel::find(const std::string & name) const {

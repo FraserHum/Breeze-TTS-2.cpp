@@ -140,32 +140,69 @@ def write_text_encoder(writer, reader, cfg, dtype):
                te["num_hidden_layers"], norms + ATTN + QK + MLP, dtype)
 
 
-def write_backbone(writer, reader, cfg, dtype):
+def write_backbone(writer, reader, cfg, dtype, pack_weights=False):
     bb = cfg["backbone_config"]
     add(writer, "audio_embd.weight", reader.get("depth_decoder.model.embed_tokens.weight"), dtype)
     add(writer, "bb.output_norm.weight", reader.get("backbone_model.norm.weight"), dtype)
     add(writer, "bb.lm_head.weight", reader.get("lm_head.weight"), dtype)
-    norms = [
-        (".input_layernorm.weight", ".attn_norm.weight"),
-        (".post_attention_layernorm.weight", ".ffn_norm.weight"),
-    ]
-    copy_block(writer, reader, "backbone_model.layers.{i}", "bb.blk.{i}",
-               bb["num_hidden_layers"], norms + ATTN + QK + MLP, dtype)
+    for i in range(bb["num_hidden_layers"]):
+        src_base = f"backbone_model.layers.{i}"
+        dst_base = f"bb.blk.{i}"
+        for src_s, dst_s in [(".input_layernorm.weight", ".attn_norm.weight"), (".post_attention_layernorm.weight", ".ffn_norm.weight")]:
+            if (src_base + src_s) in reader.weight_map:
+                add(writer, dst_base + dst_s, reader.get(src_base + src_s), dtype)
+        add(writer, dst_base + ".attn_q_norm.weight", reader.get(src_base + ".self_attn.q_norm.weight"), dtype)
+        add(writer, dst_base + ".attn_k_norm.weight", reader.get(src_base + ".self_attn.k_norm.weight"), dtype)
+        q = reader.get(src_base + ".self_attn.q_proj.weight")
+        k = reader.get(src_base + ".self_attn.k_proj.weight")
+        v = reader.get(src_base + ".self_attn.v_proj.weight")
+        add(writer, dst_base + ".attn_output.weight", reader.get(src_base + ".self_attn.o_proj.weight"), dtype)
+        if pack_weights:
+            add(writer, dst_base + ".attn_qkv.weight", np.concatenate([q, k, v], axis=0), dtype)
+        else:
+            add(writer, dst_base + ".attn_q.weight", q, dtype)
+            add(writer, dst_base + ".attn_k.weight", k, dtype)
+            add(writer, dst_base + ".attn_v.weight", v, dtype)
+        gate = reader.get(src_base + ".mlp.gate_proj.weight")
+        up = reader.get(src_base + ".mlp.up_proj.weight")
+        add(writer, dst_base + ".ffn_down.weight", reader.get(src_base + ".mlp.down_proj.weight"), dtype)
+        if pack_weights:
+            add(writer, dst_base + ".ffn_gate_up.weight", np.concatenate([gate, up], axis=0), dtype)
+        else:
+            add(writer, dst_base + ".ffn_gate.weight", gate, dtype)
+            add(writer, dst_base + ".ffn_up.weight", up, dtype)
 
 
-def write_depth(writer, reader, cfg, dtype):
+def write_depth(writer, reader, cfg, dtype, pack_weights=False):
     dd = cfg["depth_decoder_config"]
     add(writer, "dd.in_proj.weight", reader.get("depth_decoder.model.inputs_embeds_projector.weight"), dtype)
     add(writer, "dd.output_norm.weight", reader.get("depth_decoder.model.norm.weight"), dtype)
-    # (n_cb-1, hidden, vocab) -> (n_cb-1, vocab, hidden) so a ggml slice is [hidden, vocab]
     head = reader.get("depth_decoder.codebooks_head.weight").transpose(0, 2, 1)
     add(writer, "dd.codebooks_head.weight", head, dtype)
-    norms = [
-        (".input_layernorm.weight", ".attn_norm.weight"),
-        (".post_attention_layernorm.weight", ".ffn_norm.weight"),
-    ]
-    copy_block(writer, reader, "depth_decoder.model.layers.{i}", "dd.blk.{i}",
-               dd["num_hidden_layers"], norms + ATTN + MLP, dtype)
+    for i in range(dd["num_hidden_layers"]):
+        src_base = f"depth_decoder.model.layers.{i}"
+        dst_base = f"dd.blk.{i}"
+        for src_s, dst_s in [(".input_layernorm.weight", ".attn_norm.weight"), (".post_attention_layernorm.weight", ".ffn_norm.weight")]:
+            if (src_base + src_s) in reader.weight_map:
+                add(writer, dst_base + dst_s, reader.get(src_base + src_s), dtype)
+        q = reader.get(src_base + ".self_attn.q_proj.weight")
+        k = reader.get(src_base + ".self_attn.k_proj.weight")
+        v = reader.get(src_base + ".self_attn.v_proj.weight")
+        add(writer, dst_base + ".attn_output.weight", reader.get(src_base + ".self_attn.o_proj.weight"), dtype)
+        if pack_weights:
+            add(writer, dst_base + ".attn_qkv.weight", np.concatenate([q, k, v], axis=0), dtype)
+        else:
+            add(writer, dst_base + ".attn_q.weight", q, dtype)
+            add(writer, dst_base + ".attn_k.weight", k, dtype)
+            add(writer, dst_base + ".attn_v.weight", v, dtype)
+        gate = reader.get(src_base + ".mlp.gate_proj.weight")
+        up = reader.get(src_base + ".mlp.up_proj.weight")
+        add(writer, dst_base + ".ffn_down.weight", reader.get(src_base + ".mlp.down_proj.weight"), dtype)
+        if pack_weights:
+            add(writer, dst_base + ".ffn_gate_up.weight", np.concatenate([gate, up], axis=0), dtype)
+        else:
+            add(writer, dst_base + ".ffn_gate.weight", gate, dtype)
+            add(writer, dst_base + ".ffn_up.weight", up, dtype)
 
 
 def write_codec_all(writer, model_dir: Path, dtype: str):
@@ -284,6 +321,7 @@ def main():
     ap.add_argument("model_dir", type=Path)
     ap.add_argument("-o", "--output", type=Path, required=True)
     ap.add_argument("--dtype", choices=["f16", "f32"], default="f16")
+    ap.add_argument("--pack-weights", action="store_true", help="Pack QKV and Gate/Up projection weights")
     args = ap.parse_args()
 
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -296,8 +334,8 @@ def main():
     write_metadata(writer, cfg)
     write_tokenizer(writer, args.model_dir)
     write_text_encoder(writer, reader, cfg, args.dtype)
-    write_backbone(writer, reader, cfg, args.dtype)
-    write_depth(writer, reader, cfg, args.dtype)
+    write_backbone(writer, reader, cfg, args.dtype, pack_weights=args.pack_weights)
+    write_depth(writer, reader, cfg, args.dtype, pack_weights=args.pack_weights)
     at_cfg = write_codec_all(writer, args.model_dir, args.dtype)
     convert_codec.codec_metadata(writer, at_cfg)
 

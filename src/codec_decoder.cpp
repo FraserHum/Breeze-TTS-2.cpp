@@ -19,7 +19,7 @@ static ggml_tensor * snake_beta(ggml_context * ctx, ggml_tensor * x, ggml_tensor
 }
 
 // convnext block over [L, C]
-static ggml_tensor * convnext(ggml_context * ctx, BreezeModel & m, const std::string & p, ggml_tensor * x) {
+ggml_tensor * convnext(ggml_context * ctx, BreezeModel & m, const std::string & p, ggml_tensor * x) {
     ggml_tensor * dw = m.w(p + ".dw.weight");
     ggml_tensor * h = depthwise1d_causal(ctx, dw, m.w(p + ".dw.bias"), x, (int) dw->ne[1]);
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
@@ -41,8 +41,8 @@ static ggml_tensor * residual_unit(ggml_context * ctx, BreezeModel & m, const st
 }
 
 // rebuild the continuous latent from the residual codebooks, first stage split from the rest
-static ggml_tensor * quantizer_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
-                                      const std::vector<int> & codes, int n_cb, int T) {
+ggml_tensor * quantizer_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
+                               const std::vector<int> & codes, int n_cb, int T) {
     auto lookup = [&](const std::string & name, int cb) {
         std::vector<int32_t> idx(T);
         for (int t = 0; t < T; t++) idx[t] = codes[(size_t) t * n_cb + cb];

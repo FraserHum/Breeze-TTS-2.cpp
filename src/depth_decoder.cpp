@@ -507,9 +507,24 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
 
     ggml_tensor * res = x;
     ggml_tensor * h = rms_norm(ctx, x, m.w(p + ".attn_norm.weight"), c.rms_eps);
-    ggml_tensor * q = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_q.weight"), h), c.head_dim, c.n_head, n);
-    ggml_tensor * k = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_k.weight"), h), c.head_dim, c.n_kv_head, n);
-    ggml_tensor * v = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_v.weight"), h), c.head_dim, c.n_kv_head, n);
+    ggml_tensor * q = nullptr;
+    ggml_tensor * k = nullptr;
+    ggml_tensor * v = nullptr;
+    if (m.wopt(p + ".attn_qkv.weight") != nullptr) {
+        const int q_dim = c.head_dim * c.n_head;
+        const int kv_dim = c.head_dim * c.n_kv_head;
+        ggml_tensor * qkv = linear(ctx, m.w(p + ".attn_qkv.weight"), h);
+        q = ggml_view_3d(ctx, qkv, c.head_dim, c.n_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], 0);
+        k = ggml_view_3d(ctx, qkv, c.head_dim, c.n_kv_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], (size_t) q_dim * sizeof(float));
+        v = ggml_view_3d(ctx, qkv, c.head_dim, c.n_kv_head, n, (size_t) c.head_dim * sizeof(float), qkv->nb[1], (size_t) (q_dim + kv_dim) * sizeof(float));
+        if (!ggml_is_contiguous(q)) q = ggml_cont(ctx, q);
+        if (!ggml_is_contiguous(k)) k = ggml_cont(ctx, k);
+        if (!ggml_is_contiguous(v)) v = ggml_cont(ctx, v);
+    } else {
+        q = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_q.weight"), h), c.head_dim, c.n_head, n);
+        k = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_k.weight"), h), c.head_dim, c.n_kv_head, n);
+        v = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_v.weight"), h), c.head_dim, c.n_kv_head, n);
+    }
     q = ggml_rope_ext(ctx, q, pos, ff, c.head_dim, GGML_ROPE_TYPE_NEOX, 0, c.rope_theta, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
     k = ggml_rope_ext(ctx, k, pos, ff, c.head_dim, GGML_ROPE_TYPE_NEOX, 0, c.rope_theta, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -535,6 +550,8 @@ static ggml_tensor * dd_layer(ggml_context * ctx, BreezeModel & m, ggml_tensor *
         ggml_set_output(refs.down_output);
         capture_refs->push_back(refs);
         h = refs.down_output;
+    } else if (m.wopt(p + ".ffn_gate_up.weight") != nullptr) {
+        h = swiglu_ffn_packed(ctx, h, m.w(p + ".ffn_gate_up.weight"), m.w(p + ".ffn_down.weight"), c.ffn);
     } else {
         h = swiglu_ffn(ctx, h, m.w(p + ".ffn_gate.weight"), m.w(p + ".ffn_up.weight"),
                        m.w(p + ".ffn_down.weight"));

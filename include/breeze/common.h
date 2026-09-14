@@ -69,6 +69,8 @@ ggml_tensor * layer_norm(ggml_context * ctx, ggml_tensor * x, ggml_tensor * w, g
 ggml_tensor * linear(ggml_context * ctx, ggml_tensor * w, ggml_tensor * x);
 ggml_tensor * swiglu_ffn(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate,
                          ggml_tensor * up, ggml_tensor * down);
+ggml_tensor * swiglu_ffn_packed(ggml_context * ctx, ggml_tensor * x, ggml_tensor * gate_up,
+                                ggml_tensor * down, int intermediate_size);
 
 // q,k,v laid out as [head_dim, n_head, n_tokens]; returns [head_dim*n_head, n_q]
 ggml_tensor * attention(ggml_context * ctx, ggml_tensor * q, ggml_tensor * k, ggml_tensor * v,

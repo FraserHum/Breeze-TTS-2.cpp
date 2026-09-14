@@ -1,5 +1,6 @@
 #include "breeze/codec.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cfloat>
 #include <cmath>
@@ -87,12 +88,46 @@ std::vector<int> MimiCodec::encode(const std::vector<float> & audio, int & n_fra
     const int dim = m->cfg.codec.codebook_dim;
     const int book = m->cfg.codec_codebook_size;
 
+    const int64_t total_samples = (int64_t) audio.size();
+    constexpr int64_t kChunkSamples = 120000; // 5s of 24kHz audio = 125 transformer frames
+    constexpr int64_t kChunkOverlap = 9600;   // 10 transformer frames to cover 5240-sample receptive field
+    const int hidden = m->cfg.codec.hidden > 0 ? m->cfg.codec.hidden : 512;
+
+    std::vector<float> all_conv_frames;
+    int total_frames = 0;
+
+    for (int64_t chunk_start = 0; chunk_start < total_samples; chunk_start += kChunkSamples) {
+        int64_t chunk_audio_start = chunk_start;
+        int64_t discard = 0;
+        if (chunk_start > 0) {
+            chunk_audio_start = std::max((int64_t) 0, chunk_start - kChunkOverlap);
+            discard = (chunk_start - chunk_audio_start) / 960;
+        }
+        int64_t chunk_audio_end = std::min(total_samples, chunk_start + kChunkSamples);
+        int64_t chunk_len = chunk_audio_end - chunk_audio_start;
+
+        std::vector<float> chunk_audio(audio.begin() + chunk_audio_start, audio.begin() + chunk_audio_end);
+        Graph g_chunk(4096);
+        ggml_tensor * xc = g_chunk.input_f32(chunk_audio, (int) chunk_len, 1); // [chunk_len, 1]
+        xc = seanet_encoder(g_chunk.ctx, *m, xc);                              // [T_chunk, hidden]
+        xc = transpose_cont(g_chunk.ctx, xc);                                  // [hidden, T_chunk]
+        g_chunk.compute(m->backend, xc);
+
+        std::vector<float> xc_h = tensor_to_f32(xc);
+        int n_chunk_frames = (int) xc->ne[1];
+        if (discard < n_chunk_frames) {
+            int keep_frames = n_chunk_frames - (int) discard;
+            size_t src_offset = (size_t) discard * hidden;
+            size_t count = (size_t) keep_frames * hidden;
+            all_conv_frames.insert(all_conv_frames.end(), xc_h.begin() + src_offset, xc_h.begin() + src_offset + count);
+            total_frames += keep_frames;
+        }
+    }
+
     Graph g(16384);
-    ggml_tensor * x = g.input_f32(audio, (int) audio.size(), 1); // [L, 1]
-    x = seanet_encoder(g.ctx, *m, x);                            // [T, hidden]
-    x = transpose_cont(g.ctx, x);                                // [hidden, T]
-    x = mimi_transformer(g.ctx, *m, g, x, "codec.enct", (int) x->ne[1]);
-    x = transpose_cont(g.ctx, x);                                // [T, hidden]
+    ggml_tensor * x = g.input_f32(all_conv_frames, hidden, total_frames); // [hidden, total_frames]
+    x = mimi_transformer(g.ctx, *m, g, x, "codec.enct", total_frames);
+    x = transpose_cont(g.ctx, x);                                // [total_frames, hidden]
     x = conv1d_causal(g.ctx, m->w("codec.downsample.conv.weight"), nullptr, x, 2, 1); // [T2, hidden]
     ggml_tensor * emb = transpose_cont(g.ctx, x);                // [hidden, T2]
     ggml_tensor * rs = linear(g.ctx, m->w("codec.sq.in_proj.weight"), emb); // [dim, T2]
