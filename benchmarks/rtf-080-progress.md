@@ -1,6 +1,15 @@
 # RTF-080 implementation progress
 
-## Current status
+## September 14 exact-runtime refresh
+
+The [controlled refresh](../docs/research/optimization-refresh-results.md) measured
+packing off/on at warmed wall RTF **0.934006 / 0.920839**, with identical WAVs.
+The remaining codec SwiGLU trial showed no repeatable benefit and was reverted;
+the graph-only V-cache proposal would move the copy into Vulkan rather than remove it.
+Thirty generation receipts pass the new verification check. No additional runtime
+change is retained and the final RTF 0.8 workload gates remain unmet.
+
+## September 6–7 status (historical)
 
 The new [depth quantization pilot](../docs/research/depth-quant-pilot.md) has a
 separate **mixed depth Q3_K** candidate: warmed mean wall RTF **0.842859** on

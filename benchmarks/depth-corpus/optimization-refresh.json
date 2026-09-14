@@ -1,0 +1,868 @@
+{
+  "date": "2026-09-14",
+  "hardware": "queenbee AMD Radeon 780M / RADV PHOENIX, shared host; dev pod only benchmark consumer",
+  "scope": "one existing English report prompt; saved test17s voice, not final held-out acceptance",
+  "protocol": "three resident runs per block; first excluded as warmup; all runs recorded. Packing off/on/on/off; codec original/candidate/original. Other host activity and GPU clocks not continuously measured.",
+  "identity_sha256": "483418fbbb438f5f1c08dbe2b017e42db0f1d126765cd3f772d8622a30a4915c  /models/breeze-tts-2-q4_k.gguf\needca70c331f6095d40449efcb401f1f0bc77e9e92590aad447e6b98f1247cf7  /tmp/voices/test17s.breeze\n",
+  "blocks": [
+    {
+      "label": "pack-off-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=0",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-pack-off-a.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 16017.5,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.939994131455399,
+          "first_audio_ms": 2989.0,
+          "stages_ms": {
+            "backbone decode": 3127.5,
+            "depth decode": 10832.3,
+            "vocoder": 1886.0
+          }
+        },
+        {
+          "wall_ms": 15934.9,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9351467136150234,
+          "first_audio_ms": 2899.0,
+          "stages_ms": {
+            "backbone decode": 3113.4,
+            "depth decode": 10877.2,
+            "vocoder": 1840.7
+          }
+        },
+        {
+          "wall_ms": 15900.5,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9331279342723005,
+          "first_audio_ms": 2915.0,
+          "stages_ms": {
+            "backbone decode": 3091.7,
+            "depth decode": 10873.3,
+            "vocoder": 1834.5
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-a.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-a.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-a.repeat-3.wav\n",
+      "log_sha256": "b09ce5cd237aff648635f2b050225db42ea42b4d9c21ed97c14210f1f7cc1c92",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2989.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5971.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8966.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11938.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14921.9 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16017.4 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16017.5 ms (wall RTF 0.940)\ntime to first audio 2989 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.7 ms\n  backbone prefill      81.0 ms\n  first vocoder        263.9 ms  (40 frames)\n  backbone decode     3127.5 ms  (14.68 ms/frame)\n  depth decode       10832.3 ms  (50.86 ms/frame)\n  vocoder             1886.0 ms  (8.85 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-a.wav (17.04 s)\n  flush 1 ready_ms=2898.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5819.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8751.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11747.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14863.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15934.8 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15934.9 ms (wall RTF 0.935)\ntime to first audio 2899 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          34.4 ms\n  backbone prefill      55.5 ms\n  first vocoder        249.3 ms  (40 frames)\n  backbone decode     3113.4 ms  (14.62 ms/frame)\n  depth decode       10877.2 ms  (51.07 ms/frame)\n  vocoder             1840.7 ms  (8.64 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-a.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2914.9 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5886.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8848.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11801.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14835.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15900.4 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15900.5 ms (wall RTF 0.933)\ntime to first audio 2915 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.6 ms\n  backbone prefill      53.9 ms\n  first vocoder        255.3 ms  (40 frames)\n  backbone decode     3091.7 ms  (14.52 ms/frame)\n  depth decode       10873.3 ms  (51.05 ms/frame)\n  vocoder             1834.5 ms  (8.61 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-a.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "pack-on-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-pack-on-a.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 15778.1,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9259448356807513,
+          "first_audio_ms": 2919.0,
+          "stages_ms": {
+            "backbone decode": 3096.3,
+            "depth decode": 10607.5,
+            "vocoder": 1911.7
+          }
+        },
+        {
+          "wall_ms": 15681.0,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9202464788732394,
+          "first_audio_ms": 2967.0,
+          "stages_ms": {
+            "backbone decode": 3073.9,
+            "depth decode": 10668.4,
+            "vocoder": 1839.4
+          }
+        },
+        {
+          "wall_ms": 15706.7,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9217546948356808,
+          "first_audio_ms": 2835.0,
+          "stages_ms": {
+            "backbone decode": 3075.4,
+            "depth decode": 10697.8,
+            "vocoder": 1836.5
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-a.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-a.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-a.repeat-3.wav\n",
+      "log_sha256": "db62f986d51dbc89c03ce0df303f391cf761f361b6d59f206230fed335003e55",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2918.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5809.9 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8828.7 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11805.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14716.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15777.9 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15778.1 ms (wall RTF 0.926)\ntime to first audio 2919 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          74.9 ms\n  backbone prefill      74.2 ms\n  first vocoder        262.1 ms  (40 frames)\n  backbone decode     3096.3 ms  (14.54 ms/frame)\n  depth decode       10607.5 ms  (49.80 ms/frame)\n  vocoder             1911.7 ms  (8.98 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-a.wav (17.04 s)\n  flush 1 ready_ms=2967.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5840.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8730.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11681.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14631.8 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15680.9 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15681.0 ms (wall RTF 0.920)\ntime to first audio 2967 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          34.6 ms\n  backbone prefill      50.5 ms\n  first vocoder        258.5 ms  (40 frames)\n  backbone decode     3073.9 ms  (14.43 ms/frame)\n  depth decode       10668.4 ms  (50.09 ms/frame)\n  vocoder             1839.4 ms  (8.64 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-a.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2835.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5738.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8798.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11719.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14654.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15706.5 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15706.7 ms (wall RTF 0.922)\ntime to first audio 2835 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.6 ms\n  backbone prefill      52.0 ms\n  first vocoder        251.2 ms  (40 frames)\n  backbone decode     3075.4 ms  (14.44 ms/frame)\n  depth decode       10697.8 ms  (50.22 ms/frame)\n  vocoder             1836.5 ms  (8.62 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-a.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "pack-on-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-pack-on-b.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 16044.7,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9415903755868547,
+          "first_audio_ms": 2958.0,
+          "stages_ms": {
+            "backbone decode": 3146.1,
+            "depth decode": 10787.1,
+            "vocoder": 1947.4
+          }
+        },
+        {
+          "wall_ms": 15800.8,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9272769953051643,
+          "first_audio_ms": 2907.0,
+          "stages_ms": {
+            "backbone decode": 3089.1,
+            "depth decode": 10764.5,
+            "vocoder": 1850.6
+          }
+        },
+        {
+          "wall_ms": 15575.9,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9140786384976526,
+          "first_audio_ms": 2835.0,
+          "stages_ms": {
+            "backbone decode": 3073.8,
+            "depth decode": 10563.4,
+            "vocoder": 1843.5
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-b.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-b.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-on-b.repeat-3.wav\n",
+      "log_sha256": "0a254e5575095b37b19d1c9991f0a6d936b3a42d59a0b2ed934fa3f9a09ca48c",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2957.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5992.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9020.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12021.2 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14973.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16044.5 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     16044.7 ms (wall RTF 0.942)\ntime to first audio 2958 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.1 ms\n  backbone prefill      75.7 ms\n  first vocoder        273.2 ms  (40 frames)\n  backbone decode     3146.1 ms  (14.77 ms/frame)\n  depth decode       10787.1 ms  (50.64 ms/frame)\n  vocoder             1947.4 ms  (9.14 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-b.wav (17.04 s)\n  flush 1 ready_ms=2906.8 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5939.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8861.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11785.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14751.8 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15800.7 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15800.8 ms (wall RTF 0.927)\ntime to first audio 2907 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          33.4 ms\n  backbone prefill      49.7 ms\n  first vocoder        253.6 ms  (40 frames)\n  backbone decode     3089.1 ms  (14.50 ms/frame)\n  depth decode       10764.5 ms  (50.54 ms/frame)\n  vocoder             1850.6 ms  (8.69 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-b.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2834.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5738.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8621.0 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11576.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14486.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15575.7 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15575.9 ms (wall RTF 0.914)\ntime to first audio 2835 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.0 ms\n  backbone prefill      49.6 ms\n  first vocoder        251.1 ms  (40 frames)\n  backbone decode     3073.8 ms  (14.43 ms/frame)\n  depth decode       10563.4 ms  (49.59 ms/frame)\n  vocoder             1843.5 ms  (8.66 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-on-b.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "pack-off-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=0",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-pack-off-b.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 16113.5,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9456279342723004,
+          "first_audio_ms": 3077.0,
+          "stages_ms": {
+            "backbone decode": 3126.3,
+            "depth decode": 10917.8,
+            "vocoder": 1899.9
+          }
+        },
+        {
+          "wall_ms": 15978.5,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9377053990610329,
+          "first_audio_ms": 2938.0,
+          "stages_ms": {
+            "backbone decode": 3090.7,
+            "depth decode": 10916.6,
+            "vocoder": 1871.3
+          }
+        },
+        {
+          "wall_ms": 15848.0,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9300469483568076,
+          "first_audio_ms": 2905.0,
+          "stages_ms": {
+            "backbone decode": 3069.7,
+            "depth decode": 10802.3,
+            "vocoder": 1874.3
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-b.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-b.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-pack-off-b.repeat-3.wav\n",
+      "log_sha256": "b57ab89c1aa6a1e818aaa867655117129402968e09c10b4b2a1a7e32da42abf0",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 147740 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3077.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6032.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9038.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12042.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15048.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=16113.3 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     16113.5 ms (wall RTF 0.946)\ntime to first audio 3077 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.1 ms\n  backbone prefill      79.5 ms\n  first vocoder        262.7 ms  (40 frames)\n  backbone decode     3126.3 ms  (14.68 ms/frame)\n  depth decode       10917.8 ms  (51.26 ms/frame)\n  vocoder             1899.9 ms  (8.92 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-b.wav (17.04 s)\n  flush 1 ready_ms=2937.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5903.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8861.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11830.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14909.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15978.4 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 147740 bytes\n\ngeneration wall     15978.5 ms (wall RTF 0.938)\ntime to first audio 2938 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.3 ms\n  backbone prefill      54.0 ms\n  first vocoder        257.1 ms  (40 frames)\n  backbone decode     3090.7 ms  (14.51 ms/frame)\n  depth decode       10916.6 ms  (51.25 ms/frame)\n  vocoder             1871.3 ms  (8.79 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-b.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2904.9 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5845.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8818.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11776.0 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14753.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15847.9 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15848.0 ms (wall RTF 0.930)\ntime to first audio 2905 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          33.2 ms\n  backbone prefill      54.9 ms\n  first vocoder        254.0 ms  (40 frames)\n  backbone decode     3069.7 ms  (14.41 ms/frame)\n  depth decode       10802.3 ms  (50.72 ms/frame)\n  vocoder             1874.3 ms  (8.80 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-pack-off-b.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "codec-control-voice",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-control-voice.wav",
+        "--voice",
+        "test17s",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 15327.0,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9676136363636364,
+          "first_audio_ms": 3159.0,
+          "stages_ms": {
+            "backbone decode": 3503.9,
+            "depth decode": 9885.2,
+            "vocoder": 1689.8
+          }
+        },
+        {
+          "wall_ms": 15157.5,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9569128787878788,
+          "first_audio_ms": 3066.0,
+          "stages_ms": {
+            "backbone decode": 3477.1,
+            "depth decode": 9892.2,
+            "vocoder": 1659.0
+          }
+        },
+        {
+          "wall_ms": 15063.3,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9509659090909091,
+          "first_audio_ms": 3003.0,
+          "stages_ms": {
+            "backbone decode": 3449.4,
+            "depth decode": 9846.9,
+            "vocoder": 1646.2
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice.repeat-2.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice.repeat-3.wav\n",
+      "log_sha256": "517aa1a3306c42d1e37d52c3b0156d53447bd8e1a36c16292c27ac32d6c27b58",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3159.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6171.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9249.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12329.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15326.3 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15327.0 ms (wall RTF 0.968)\ntime to first audio 3159 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          77.8 ms\n  backbone prefill     141.7 ms\n  first vocoder        271.0 ms  (40 frames)\n  backbone decode     3503.9 ms  (17.70 ms/frame)\n  depth decode        9885.2 ms  (49.93 ms/frame)\n  vocoder             1689.8 ms  (8.53 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice.wav (15.84 s)\n  flush 1 ready_ms=3066.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6055.5 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9075.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12119.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15156.7 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15157.5 ms (wall RTF 0.957)\ntime to first audio 3066 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          32.6 ms\n  backbone prefill      80.0 ms\n  first vocoder        253.9 ms  (40 frames)\n  backbone decode     3477.1 ms  (17.56 ms/frame)\n  depth decode        9892.2 ms  (49.96 ms/frame)\n  vocoder             1659.0 ms  (8.38 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice.repeat-2.wav (15.84 s)\n  flush 1 ready_ms=3003.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5997.8 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9056.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12129.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15062.5 delivered_audio_s=15.84\n\ngenerated 15.84 s\ngeneration wall     15063.3 ms (wall RTF 0.951)\ntime to first audio 3003 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          32.8 ms\n  backbone prefill      71.7 ms\n  first vocoder        256.8 ms  (40 frames)\n  backbone decode     3449.4 ms  (17.42 ms/frame)\n  depth decode        9846.9 ms  (49.73 ms/frame)\n  vocoder             1646.2 ms  (8.31 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice.repeat-3.wav (15.84 s)\n"
+    },
+    {
+      "label": "codec-on-a",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-on-a.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "f59dcfe67f06db3dfeb13504e6688d2f  /src/build/breeze-cli",
+      "source": "b1d13b82b04e8f873f2e2fea34c80e479e41bdaa",
+      "runs": [
+        {
+          "wall_ms": 15712.3,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9220833333333334,
+          "first_audio_ms": 2939.0,
+          "stages_ms": {
+            "backbone decode": 3088.5,
+            "depth decode": 10561.3,
+            "vocoder": 1899.4
+          }
+        },
+        {
+          "wall_ms": 15749.3,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9242546948356808,
+          "first_audio_ms": 2830.0,
+          "stages_ms": {
+            "backbone decode": 3076.0,
+            "depth decode": 10723.7,
+            "vocoder": 1853.5
+          }
+        },
+        {
+          "wall_ms": 15689.7,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9207570422535212,
+          "first_audio_ms": 2957.0,
+          "stages_ms": {
+            "backbone decode": 3067.1,
+            "depth decode": 10685.9,
+            "vocoder": 1842.2
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-a.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-a.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-a.repeat-3.wav\n",
+      "log_sha256": "e11230dcac939e68db4cd636f76cd2eb079b390e12982e10422289d9109545be",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2939.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5864.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8769.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11737.7 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14658.1 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15712.2 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15712.3 ms (wall RTF 0.922)\ntime to first audio 2939 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.1 ms\n  backbone prefill      74.5 ms\n  first vocoder        261.5 ms  (40 frames)\n  backbone decode     3088.5 ms  (14.50 ms/frame)\n  depth decode       10561.3 ms  (49.58 ms/frame)\n  vocoder             1899.4 ms  (8.92 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-a.wav (17.04 s)\n  flush 1 ready_ms=2829.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5735.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8848.8 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11756.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14670.8 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15749.1 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15749.3 ms (wall RTF 0.924)\ntime to first audio 2830 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.4 ms\n  backbone prefill      50.1 ms\n  first vocoder        250.7 ms  (40 frames)\n  backbone decode     3076.0 ms  (14.44 ms/frame)\n  depth decode       10723.7 ms  (50.35 ms/frame)\n  vocoder             1853.5 ms  (8.70 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-a.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2957.1 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5831.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8761.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11710.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14628.5 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15689.6 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15689.7 ms (wall RTF 0.921)\ntime to first audio 2957 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.1 ms\n  backbone prefill      49.7 ms\n  first vocoder        252.9 ms  (40 frames)\n  backbone decode     3067.1 ms  (14.40 ms/frame)\n  depth decode       10685.9 ms  (50.17 ms/frame)\n  vocoder             1842.2 ms  (8.65 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-a.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "codec-on-voice",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-on-voice.wav",
+        "--voice",
+        "test17s",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "f59dcfe67f06db3dfeb13504e6688d2f  /src/build/breeze-cli",
+      "source": "b1d13b82b04e8f873f2e2fea34c80e479e41bdaa",
+      "runs": [
+        {
+          "wall_ms": 15537.4,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9808964646464646,
+          "first_audio_ms": 3143.0,
+          "stages_ms": {
+            "backbone decode": 3529.6,
+            "depth decode": 10076.8,
+            "vocoder": 1711.3
+          }
+        },
+        {
+          "wall_ms": 15100.3,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9533017676767677,
+          "first_audio_ms": 2996.0,
+          "stages_ms": {
+            "backbone decode": 3452.7,
+            "depth decode": 9880.8,
+            "vocoder": 1641.3
+          }
+        },
+        {
+          "wall_ms": 15382.0,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9710858585858586,
+          "first_audio_ms": 3132.0,
+          "stages_ms": {
+            "backbone decode": 3499.7,
+            "depth decode": 10030.1,
+            "vocoder": 1722.4
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-on-voice.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-on-voice.repeat-2.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-on-voice.repeat-3.wav\n",
+      "log_sha256": "53e6aa1e0007904a5ee92865a76d9f548f7d92869ec3e3ddd44d8e8e639ef170",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3143.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6370.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9465.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12561.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15536.6 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15537.4 ms (wall RTF 0.981)\ntime to first audio 3143 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          65.9 ms\n  backbone prefill     135.6 ms\n  first vocoder        266.5 ms  (40 frames)\n  backbone decode     3529.6 ms  (17.83 ms/frame)\n  depth decode       10076.8 ms  (50.89 ms/frame)\n  vocoder             1711.3 ms  (8.64 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-on-voice.wav (15.84 s)\n  flush 1 ready_ms=2996.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6035.7 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9093.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12185.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15099.5 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15100.3 ms (wall RTF 0.953)\ntime to first audio 2996 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          32.5 ms\n  backbone prefill      76.1 ms\n  first vocoder        251.2 ms  (40 frames)\n  backbone decode     3452.7 ms  (17.44 ms/frame)\n  depth decode        9880.8 ms  (49.90 ms/frame)\n  vocoder             1641.3 ms  (8.29 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-on-voice.repeat-2.wav (15.84 s)\n  flush 1 ready_ms=3132.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6141.2 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9312.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12410.9 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15381.2 delivered_audio_s=15.84\n\ngenerated 15.84 s\ngeneration wall     15382.0 ms (wall RTF 0.971)\ntime to first audio 3132 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          31.6 ms\n  backbone prefill      80.5 ms\n  first vocoder        312.7 ms  (40 frames)\n  backbone decode     3499.7 ms  (17.68 ms/frame)\n  depth decode       10030.1 ms  (50.66 ms/frame)\n  vocoder             1722.4 ms  (8.70 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-on-voice.repeat-3.wav (15.84 s)\n"
+    },
+    {
+      "label": "codec-on-b",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-on-b.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "f59dcfe67f06db3dfeb13504e6688d2f  /src/build/breeze-cli",
+      "source": "b1d13b82b04e8f873f2e2fea34c80e479e41bdaa",
+      "runs": [
+        {
+          "wall_ms": 15816.0,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9281690140845071,
+          "first_audio_ms": 2930.0,
+          "stages_ms": {
+            "backbone decode": 3100.9,
+            "depth decode": 10576.7,
+            "vocoder": 1973.5
+          }
+        },
+        {
+          "wall_ms": 15570.6,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9137676056338029,
+          "first_audio_ms": 2863.0,
+          "stages_ms": {
+            "backbone decode": 3045.5,
+            "depth decode": 10584.3,
+            "vocoder": 1836.3
+          }
+        },
+        {
+          "wall_ms": 15711.7,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9220481220657277,
+          "first_audio_ms": 2886.0,
+          "stages_ms": {
+            "backbone decode": 3059.8,
+            "depth decode": 10656.0,
+            "vocoder": 1898.9
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-b.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-b.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-on-b.repeat-3.wav\n",
+      "log_sha256": "36ce1de4323a9723ac76f228122ec4bfeea97a4e6d3a2f16848a22d564bbff1f",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2929.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5856.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8766.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11722.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14699.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15814.5 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15816.0 ms (wall RTF 0.928)\ntime to first audio 2930 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          75.3 ms\n  backbone prefill      74.8 ms\n  first vocoder        273.7 ms  (40 frames)\n  backbone decode     3100.9 ms  (14.56 ms/frame)\n  depth decode       10576.7 ms  (49.66 ms/frame)\n  vocoder             1973.5 ms  (9.27 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-b.wav (17.04 s)\n  flush 1 ready_ms=2863.4 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5737.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8659.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11592.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14518.6 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15570.5 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15570.6 ms (wall RTF 0.914)\ntime to first audio 2863 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          41.4 ms\n  backbone prefill      49.7 ms\n  first vocoder        251.4 ms  (40 frames)\n  backbone decode     3045.5 ms  (14.30 ms/frame)\n  depth decode       10584.3 ms  (49.69 ms/frame)\n  vocoder             1836.3 ms  (8.62 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-b.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2886.5 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5773.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8718.6 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11622.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14658.4 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15711.5 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15711.7 ms (wall RTF 0.922)\ntime to first audio 2886 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          32.7 ms\n  backbone prefill      50.4 ms\n  first vocoder        254.7 ms  (40 frames)\n  backbone decode     3059.8 ms  (14.37 ms/frame)\n  depth decode       10656.0 ms  (50.03 ms/frame)\n  vocoder             1898.9 ms  (8.92 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-on-b.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "codec-control-after",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-control-after.wav"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 15686.3,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9205575117370892,
+          "first_audio_ms": 2917.0,
+          "stages_ms": {
+            "backbone decode": 3086.9,
+            "depth decode": 10522.5,
+            "vocoder": 1911.9
+          }
+        },
+        {
+          "wall_ms": 15660.8,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.9190610328638498,
+          "first_audio_ms": 2879.0,
+          "stages_ms": {
+            "backbone decode": 3057.0,
+            "depth decode": 10669.0,
+            "vocoder": 1839.4
+          }
+        },
+        {
+          "wall_ms": 15571.9,
+          "frames": 213,
+          "audio_s": 17.04,
+          "wall_rtf": 0.913843896713615,
+          "first_audio_ms": 2864.0,
+          "stages_ms": {
+            "backbone decode": 3039.7,
+            "depth decode": 10584.7,
+            "vocoder": 1852.3
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-control-after.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-control-after.repeat-2.wav\n67984c45dd90ffe4f6bba7c34b6c39401a793706f4dedbe9e0897705c1dddb3e  /tmp/refresh-codec-control-after.repeat-3.wav\n",
+      "log_sha256": "bd05db223a5fc75734c6470751d04333acb00b8999bfa0ed87834b3d992f8f89",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=2916.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5836.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8774.5 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11681.5 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14639.2 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15686.2 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15686.3 ms (wall RTF 0.921)\ntime to first audio 2917 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          76.7 ms\n  backbone prefill      74.6 ms\n  first vocoder        276.1 ms  (40 frames)\n  backbone decode     3086.9 ms  (14.49 ms/frame)\n  depth decode       10522.5 ms  (49.40 ms/frame)\n  vocoder             1911.9 ms  (8.98 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-control-after.wav (17.04 s)\n  flush 1 ready_ms=2879.0 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5779.4 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8700.4 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11688.8 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14620.0 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15660.6 delivered_audio_s=17.04\n\ngenerated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15660.8 ms (wall RTF 0.919)\ntime to first audio 2879 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.0 ms\n  backbone prefill      50.7 ms\n  first vocoder        257.3 ms  (40 frames)\n  backbone decode     3057.0 ms  (14.35 ms/frame)\n  depth decode       10669.0 ms  (50.09 ms/frame)\n  vocoder             1839.4 ms  (8.64 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-control-after.repeat-2.wav (17.04 s)\n  flush 1 ready_ms=2863.7 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=5767.1 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=8669.2 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=11561.4 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=14524.3 delivered_audio_s=16.00\n\ngenerated 16.00 s  flush 6 ready_ms=15571.7 delivered_audio_s=17.04\n\ngenerated 17.04 s\ngeneration wall     15571.9 ms (wall RTF 0.914)\ntime to first audio 2864 ms over 6 flushes\n  reference encode       0.0 ms\n  prompt build          31.8 ms\n  backbone prefill      49.5 ms\n  first vocoder        259.1 ms  (40 frames)\n  backbone decode     3039.7 ms  (14.27 ms/frame)\n  depth decode       10584.7 ms  (49.69 ms/frame)\n  vocoder             1852.3 ms  (8.70 ms/frame)\n  213 frames, 17.04 s audio\nwrote /tmp/refresh-codec-control-after.repeat-3.wav (17.04 s)\n"
+    },
+    {
+      "label": "codec-control-voice-after",
+      "command": [
+        "kubectl",
+        "-n",
+        "hermes-voice",
+        "exec",
+        "breezetts-dev",
+        "--",
+        "env",
+        "-u",
+        "GGML_VK_DISABLE_FUSION",
+        "-u",
+        "GGML_VK_FORCE_MMVQ",
+        "-u",
+        "GGML_VK_DISABLE_MMVQ",
+        "-u",
+        "GGML_VK_PERF_LOGGER",
+        "GGML_VK_ALLOW_GRAPHICS_QUEUE=1",
+        "BREEZE_PACK_WEIGHTS=1",
+        "BREEZE_VOC_TRIM=1",
+        "BREEZE_VOC_CONVT_MATMUL=1",
+        "BREEZE_VOC_STATEFUL=0",
+        "BREEZE_DD_FUSED=0",
+        "/src/build/breeze-cli",
+        "/models/breeze-tts-2-q4_k.gguf",
+        "--text",
+        "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+        "--instruction",
+        "Speak clearly and naturally.",
+        "--seed",
+        "42",
+        "--repeat",
+        "3",
+        "--timings",
+        "--output",
+        "/tmp/refresh-codec-control-voice-after.wav",
+        "--voice",
+        "test17s",
+        "--voices-dir",
+        "/tmp/voices"
+      ],
+      "returncode": 0,
+      "binary_md5": "431745a896cef38c88ff2b4104ed908c  /src/build/breeze-cli",
+      "source": "1abeb7dc05c9f9b4e657308765e0335f67f7c866",
+      "runs": [
+        {
+          "wall_ms": 15372.1,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9704608585858586,
+          "first_audio_ms": 3099.0,
+          "stages_ms": {
+            "backbone decode": 3525.9,
+            "depth decode": 9927.4,
+            "vocoder": 1702.3
+          }
+        },
+        {
+          "wall_ms": 15099.2,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9532323232323233,
+          "first_audio_ms": 3042.0,
+          "stages_ms": {
+            "backbone decode": 3454.3,
+            "depth decode": 9847.5,
+            "vocoder": 1670.0
+          }
+        },
+        {
+          "wall_ms": 15212.6,
+          "frames": 198,
+          "audio_s": 15.84,
+          "wall_rtf": 0.9603914141414142,
+          "first_audio_ms": 2985.0,
+          "stages_ms": {
+            "backbone decode": 3463.3,
+            "depth decode": 9974.9,
+            "vocoder": 1648.1
+          }
+        }
+      ],
+      "warmup": 1,
+      "wav_sha256": "70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice-after.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice-after.repeat-2.wav\n70a08fe749e78dd1811c01c6e975bbf5c3183a7dd2fa5bc31436729f96b427fc  /tmp/refresh-codec-control-voice-after.repeat-3.wav\n",
+      "log_sha256": "8f2dcb1491bfc9108beea1ae853b82f5fa0f0d78d6737c6f108ec1653f728226",
+      "log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=3099.6 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6188.6 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9342.9 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12401.3 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15371.2 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15372.1 ms (wall RTF 0.970)\ntime to first audio 3099 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          65.2 ms\n  backbone prefill     133.3 ms\n  first vocoder        261.2 ms  (40 frames)\n  backbone decode     3525.9 ms  (17.81 ms/frame)\n  depth decode        9927.4 ms  (50.14 ms/frame)\n  vocoder             1702.3 ms  (8.60 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice-after.wav (15.84 s)\n  flush 1 ready_ms=3042.2 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6045.3 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9089.7 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12150.1 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15098.3 delivered_audio_s=15.84\n\ngenerated 15.84 sdepth decoder: 15 static graphs, compute buffer 213276 bytes\n\ngeneration wall     15099.2 ms (wall RTF 0.953)\ntime to first audio 3042 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          33.1 ms\n  backbone prefill      77.4 ms\n  first vocoder        253.1 ms  (40 frames)\n  backbone decode     3454.3 ms  (17.45 ms/frame)\n  depth decode        9847.5 ms  (49.73 ms/frame)\n  vocoder             1670.0 ms  (8.43 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice-after.repeat-2.wav (15.84 s)\n  flush 1 ready_ms=2985.3 delivered_audio_s=3.20\n\ngenerated 3.20 s  flush 2 ready_ms=6019.0 delivered_audio_s=6.40\n\ngenerated 6.40 s  flush 3 ready_ms=9195.1 delivered_audio_s=9.60\n\ngenerated 9.60 s  flush 4 ready_ms=12242.0 delivered_audio_s=12.80\n\ngenerated 12.80 s  flush 5 ready_ms=15211.7 delivered_audio_s=15.84\n\ngenerated 15.84 s\ngeneration wall     15212.6 ms (wall RTF 0.960)\ntime to first audio 2985 ms over 5 flushes\n  reference encode       0.0 ms\n  prompt build          34.7 ms\n  backbone prefill      75.0 ms\n  first vocoder        256.3 ms  (40 frames)\n  backbone decode     3463.3 ms  (17.49 ms/frame)\n  depth decode        9974.9 ms  (50.38 ms/frame)\n  vocoder             1648.1 ms  (8.32 ms/frame)\n  198 frames, 15.84 s audio\nwrote /tmp/refresh-codec-control-voice-after.repeat-3.wav (15.84 s)\n"
+    }
+  ],
+  "packed_profile_log": "ggml_vulkan: Found 1 Vulkan devices:\nggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat\ndepth decoder: 15 static graphs, compute buffer 213276 bytes\nloading /models/breeze-tts-2-q4_k.gguf ...\nbackend: Vulkan0, sample rate: 24000\n  flush 1 ready_ms=711.3 delivered_audio_s=0.64\n\ngenerated 0.64 s\ngeneration wall     711.4 ms (wall RTF 1.112)\ntime to first audio 711 ms over 1 flushes\n  reference encode       0.0 ms\n  prompt build          51.7 ms\n  backbone prefill      54.3 ms\n  first vocoder         65.5 ms  (8 frames)\n  backbone decode      109.3 ms  (13.66 ms/frame)\n  depth decode         428.0 ms  (53.50 ms/frame)\n  vocoder               65.5 ms  (8.19 ms/frame)\n  8 frames, 0.64 s audio\nwrote /tmp/refresh-profile.wav (0.64 s)\n----------------\nVulkan Timings:\nADD: 429 x 22.195 us = 9521.9 us\nCLAMP: 1 x 2.765 us = 2.765 us\nCOL2IM_1D: 6 x 186.727 us = 1120.37 us\nCONCAT: 8 x 2.799 us = 22.399 us\nCONT: 3664 x 5.405 us = 19805.3 us\nCPY: 3384 x 1.69 us = 5721.47 us\nDIV: 29 x 92.576 us = 2684.73 us\nEXP: 58 x 11.938 us = 692.404 us\nGELU: 26 x 26.175 us = 680.56 us\nGELU_ERF: 2 x 14.287 us = 28.574 us\nGET_ROWS: 145 x 2.404 us = 348.675 us\nGLU: 1692 x 2.903 us = 4912.23 us\nIM2COL: 27 x 155.918 us = 4209.79 us\nMUL: 97 x 36.943 us = 3583.52 us\nMUL_MAT f16 m=10 n=1024 k=1536: 1 x 93.818 us = 93.818 us (335.192 GFLOPS/s)\nMUL_MAT f16 m=1280 n=384 k=384: 3 x 109.006 us = 327.019 us (3458.48 GFLOPS/s)\nMUL_MAT f16 m=1286 n=384 k=2688: 1 x 770.063 us = 770.063 us (3446.87 GFLOPS/s)\nMUL_MAT f16 m=1298 n=384 k=2688: 1 x 802.404 us = 802.404 us (3338.81 GFLOPS/s)\nMUL_MAT f16 m=1334 n=384 k=2688: 1 x 643.021 us = 643.021 us (4281.94 GFLOPS/s)\nMUL_MAT f16 m=15360 n=96 k=96: 3 x 186.861 us = 560.584 us (1507.22 GFLOPS/s)\nMUL_MAT f16 m=15366 n=96 k=672: 1 x 1298.99 us = 1298.99 us (1525.12 GFLOPS/s)\nMUL_MAT f16 m=15378 n=96 k=672: 1 x 1289.61 us = 1289.61 us (1537.41 GFLOPS/s)\nMUL_MAT f16 m=15414 n=96 k=672: 1 x 1282.72 us = 1282.72 us (1549.29 GFLOPS/s)\nMUL_MAT f16 m=256 n=768 k=768: 3 x 104.278 us = 312.834 us (2894.12 GFLOPS/s)\nMUL_MAT f16 m=262 n=768 k=5376: 1 x 1025.91 us = 1025.91 us (2108.64 GFLOPS/s)\nMUL_MAT f16 m=274 n=768 k=5376: 1 x 1026.43 us = 1026.43 us (2204.1 GFLOPS/s)\nMUL_MAT f16 m=310 n=768 k=5376: 1 x 1032.2 us = 1032.2 us (2479.75 GFLOPS/s)\nMUL_MAT f16 m=38 n=1536 k=7168: 1 x 642.781 us = 642.781 us (1301.7 GFLOPS/s)\nMUL_MAT f16 m=5120 n=192 k=192: 3 x 218.027 us = 654.082 us (1726.87 GFLOPS/s)\nMUL_MAT f16 m=5126 n=192 k=1344: 1 x 1470.95 us = 1470.95 us (1797.83 GFLOPS/s)\nMUL_MAT f16 m=5138 n=192 k=1344: 1 x 1456.41 us = 1456.41 us (1820.04 GFLOPS/s)\nMUL_MAT f16 m=5174 n=192 k=1344: 1 x 1453.16 us = 1453.16 us (1836.88 GFLOPS/s)\nMUL_MAT f32 m=1024 n=16 k=1024 batch=2: 1 x 165.554 us = 165.554 us (405.161 GFLOPS/s)\nMUL_MAT f32 m=128 n=14 k=14 batch=16: 28 x 11.726 us = 328.331 us (66.0188 GFLOPS/s)\nMUL_MAT f32 m=14 n=14 k=128 batch=16: 28 x 39.972 us = 1119.22 us (20.0059 GFLOPS/s)\nMUL_MAT f32 m=14 n=14 k=256 batch=4: 26 x 91.79 us = 2386.54 us (4.36456 GFLOPS/s)\nMUL_MAT f32 m=192 n=1280 k=384 batch=8: 1 x 537.501 us = 537.501 us (2805.55 GFLOPS/s)\nMUL_MAT f32 m=256 n=14 k=14 batch=4: 26 x 16.12 us = 419.141 us (24.0107 GFLOPS/s)\nMUL_MAT f32 m=384 n=256 k=768 batch=10: 1 x 1212.7 us = 1212.7 us (1244.3 GFLOPS/s)\nMUL_MAT f32 m=768 n=32 k=1536 batch=16: 1 x 1452.12 us = 1452.12 us (831.589 GFLOPS/s)\nMUL_MAT f32 m=96 n=5120 k=192 batch=6: 1 x 675.523 us = 675.523 us (1672.06 GFLOPS/s)\nMUL_MAT q4_K m=1024 n=16 k=4096: 1 x 141.829 us = 141.829 us (946.219 GFLOPS/s)\nMUL_MAT q4_K m=1024 n=32 k=4096: 1 x 146.157 us = 146.157 us (1836.4 GFLOPS/s)\nMUL_MAT q4_K m=1152 n=14 k=1024: 26 x 97.806 us = 2542.98 us (337.543 GFLOPS/s)\nMUL_MAT q4_K m=1152 n=14 k=6912: 26 x 606.894 us = 15779.2 us (367.341 GFLOPS/s)\nMUL_MAT q4_K m=12288 n=14 k=2048: 28 x 725.782 us = 20321.9 us (970.636 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=14 k=2048: 28 x 170.004 us = 4760.11 us (690.641 GFLOPS/s)\nMUL_MAT q4_K m=2048 n=14 k=6144: 28 x 482.255 us = 13503.2 us (730.51 GFLOPS/s)\nMUL_MAT q4_K m=4096 n=14 k=2048: 28 x 293.156 us = 8208.38 us (801.018 GFLOPS/s)\nMUL_MAT q4_K m=4096 n=16 k=1024: 1 x 103.636 us = 103.636 us (1294.46 GFLOPS/s)\nMUL_MAT q4_K m=4096 n=32 k=1024: 1 x 109.808 us = 109.808 us (2443.4 GFLOPS/s)\nMUL_MAT q8_0 m=1024 n=14 k=1152: 26 x 97.233 us = 2528.07 us (339.552 GFLOPS/s)\nMUL_MAT q8_0 m=2048 n=14 k=1152: 1 x 135.777 us = 135.777 us (486.324 GFLOPS/s)\nMUL_MAT q8_0 m=256 n=14 k=1152: 52 x 71.554 us = 3720.84 us (115.352 GFLOPS/s)\nMUL_MAT q8_0 m=6912 n=14 k=1152: 52 x 329.305 us = 17123.9 us (676.748 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=1024 n=1 k=1024: 1344 x 14.806 us = 19900.2 us (141.566 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=1024 n=1 k=8192: 1344 x 67.042 us = 90104.6 us (250.234 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=2048: 224 x 36.265 us = 8123.36 us (231.258 GFLOPS/s)\nMUL_MAT_ADD MUL_MAT_VEC q4_K m=2048 n=1 k=6144: 224 x 94.566 us = 21183 us (266.095 GFLOPS/s)\nMUL_MAT_VEC f16 m=15366 n=1 k=672: 1 x 256.126 us = 256.126 us (80.5718 GFLOPS/s)\nMUL_MAT_VEC f32 m=10 n=1 k=128 batch=8: 96 x 5.038 us = 483.707 us (4.04873 GFLOPS/s)\nMUL_MAT_VEC f32 m=1024 n=8 k=1024 batch=2: 1 x 365.334 us = 365.334 us (91.8011 GFLOPS/s)\nMUL_MAT_VEC f32 m=11 n=1 k=128 batch=8: 96 x 5.016 us = 481.546 us (4.47359 GFLOPS/s)\nMUL_MAT_VEC f32 m=12 n=1 k=128 batch=8: 96 x 5.047 us = 484.587 us (4.84966 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=10 batch=8: 96 x 4.718 us = 452.971 us (4.12339 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=11 batch=8: 96 x 4.49 us = 431.092 us (4.78873 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=12 batch=8: 96 x 3.855 us = 370.139 us (6.10849 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=13 batch=8: 96 x 4.714 us = 452.564 us (5.43039 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=14 batch=8: 96 x 4.662 us = 447.558 us (5.93042 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=15 batch=16: 28 x 8.333 us = 233.351 us (7.1265 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=15 batch=8: 96 x 4.402 us = 422.628 us (6.74545 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=16 batch=16: 28 x 6.072 us = 170.035 us (10.4547 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=16 batch=8: 96 x 3.723 us = 357.416 us (8.52627 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=17 batch=16: 28 x 8.06 us = 225.698 us (8.38444 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=18 batch=16: 28 x 7.662 us = 214.558 us (9.3543 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=19 batch=16: 28 x 7.163 us = 200.571 us (10.5784 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=20 batch=16: 28 x 6.058 us = 169.634 us (13.1838 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=21 batch=16: 28 x 8.688 us = 243.284 us (9.66403 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=22 batch=16: 28 x 7.824 us = 219.082 us (11.2551 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=3 batch=8: 96 x 4.256 us = 408.653 us (1.20278 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=4 batch=8: 96 x 3.903 us = 374.744 us (1.83626 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=5 batch=8: 96 x 4.691 us = 450.371 us (1.96446 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=6 batch=8: 96 x 4.757 us = 456.739 us (2.36753 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=7 batch=8: 96 x 4.487 us = 430.804 us (2.96643 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=8 batch=8: 96 x 3.871 us = 371.62 us (3.96792 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=1 k=9 batch=8: 96 x 4.77 us = 457.978 us (3.64901 GFLOPS/s)\nMUL_MAT_VEC f32 m=128 n=2 k=2 batch=8: 96 x 4.725 us = 453.605 us (1.3003 GFLOPS/s)\nMUL_MAT_VEC f32 m=13 n=1 k=128 batch=8: 96 x 5.081 us = 487.836 us (5.2188 GFLOPS/s)\nMUL_MAT_VEC f32 m=14 n=1 k=128 batch=8: 96 x 5.126 us = 492.119 us (5.57134 GFLOPS/s)\nMUL_MAT_VEC f32 m=15 n=1 k=128 batch=16: 28 x 16.418 us = 459.721 us (3.72748 GFLOPS/s)\nMUL_MAT_VEC f32 m=15 n=1 k=128 batch=8: 96 x 5.185 us = 497.774 us (5.90147 GFLOPS/s)\nMUL_MAT_VEC f32 m=16 n=1 k=128 batch=16: 28 x 25.416 us = 711.65 us (2.56845 GFLOPS/s)\nMUL_MAT_VEC f32 m=16 n=1 k=128 batch=8: 96 x 5.199 us = 499.178 us (6.2772 GFLOPS/s)\nMUL_MAT_VEC f32 m=17 n=1 k=128 batch=16: 28 x 15.917 us = 445.685 us (4.35752 GFLOPS/s)\nMUL_MAT_VEC f32 m=18 n=1 k=128 batch=16: 28 x 17.931 us = 502.079 us (4.09561 GFLOPS/s)\nMUL_MAT_VEC f32 m=19 n=1 k=128 batch=16: 28 x 16.961 us = 474.923 us (4.57034 GFLOPS/s)\nMUL_MAT_VEC f32 m=2 n=2 k=128 batch=8: 96 x 12.707 us = 1219.95 us (0.642124 GFLOPS/s)\nMUL_MAT_VEC f32 m=20 n=1 k=128 batch=16: 28 x 18.451 us = 516.638 us (4.42244 GFLOPS/s)\nMUL_MAT_VEC f32 m=2051 n=1 k=1024: 120 x 111.574 us = 13388.9 us (37.6286 GFLOPS/s)\nMUL_MAT_VEC f32 m=21 n=1 k=128 batch=16: 28 x 25.779 us = 721.818 us (3.32361 GFLOPS/s)\nMUL_MAT_VEC f32 m=22 n=1 k=128 batch=16: 28 x 18.863 us = 528.172 us (4.75845 GFLOPS/s)\nMUL_MAT_VEC f32 m=3 n=1 k=128 batch=8: 96 x 5.118 us = 491.363 us (1.19569 GFLOPS/s)\nMUL_MAT_VEC f32 m=4 n=1 k=128 batch=8: 96 x 5.179 us = 497.21 us (1.57551 GFLOPS/s)\nMUL_MAT_VEC f32 m=5 n=1 k=128 batch=8: 96 x 5.103 us = 489.964 us (1.99851 GFLOPS/s)\nMUL_MAT_VEC f32 m=6 n=1 k=128 batch=8: 96 x 5.153 us = 494.774 us (2.3749 GFLOPS/s)\nMUL_MAT_VEC f32 m=64 n=8 k=8 batch=16: 8 x 5.92 us = 47.367 us (20.7537 GFLOPS/s)\nMUL_MAT_VEC f32 m=7 n=1 k=128 batch=8: 96 x 5.128 us = 492.366 us (2.78427 GFLOPS/s)\nMUL_MAT_VEC f32 m=8 n=1 k=128 batch=8: 96 x 5.116 us = 491.162 us (3.18982 GFLOPS/s)\nMUL_MAT_VEC f32 m=8 n=8 k=64 batch=16: 8 x 11.491 us = 91.93 us (11.3171 GFLOPS/s)\nMUL_MAT_VEC f32 m=9 n=1 k=128 batch=8: 96 x 5.041 us = 483.951 us (3.64202 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=1 k=2048: 112 x 18.912 us = 2118.17 us (221.723 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=2 k=1024: 96 x 15.303 us = 1469.15 us (273.939 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=2 k=2048: 8 x 22.532 us = 180.26 us (372.198 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=2 k=8192: 96 x 68.484 us = 6574.48 us (489.929 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1024 n=8 k=512: 41 x 14.755 us = 604.972 us (567.955 GFLOPS/s)\nMUL_MAT_VEC q4_K m=12288 n=1 k=2048: 224 x 184.13 us = 41245.3 us (273.281 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1536 n=1 k=1024: 1344 x 13.028 us = 17510.8 us (241.324 GFLOPS/s)\nMUL_MAT_VEC q4_K m=1536 n=2 k=1024: 96 x 14.361 us = 1378.69 us (437.868 GFLOPS/s)\nMUL_MAT_VEC q4_K m=16384 n=1 k=1024: 1344 x 124.144 us = 166850 us (270.153 GFLOPS/s)\nMUL_MAT_VEC q4_K m=16384 n=2 k=1024: 96 x 123.62 us = 11867.5 us (542.598 GFLOPS/s)\nMUL_MAT_VEC q4_K m=2052 n=1 k=2048: 9 x 42.426 us = 381.841 us (198.057 GFLOPS/s)\nMUL_MAT_VEC q4_K m=4096 n=1 k=2048: 224 x 62.671 us = 14038.4 us (267.635 GFLOPS/s)\nMUL_MAT_VEC q4_K m=512 n=8 k=1024: 17 x 12.986 us = 220.769 us (645.637 GFLOPS/s)\nMUL_MAT_VEC q4_K m=512 n=8 k=256: 2 x 9.317 us = 18.634 us (224.649 GFLOPS/s)\nNORM: 2 x 4.628 us = 9.257 us\nPAD: 2 x 5.269 us = 10.539 us\nREPEAT: 6 x 286.336 us = 1718.02 us\nRMS_NORM_MUL RMS_NORM(1024,1,1,1): 2800 x 5.038 us = 14108.5 us\nRMS_NORM_MUL RMS_NORM(1024,2,1,1): 200 x 4.816 us = 963.246 us\nRMS_NORM_MUL RMS_NORM(1152,14,1,1): 105 x 10.462 us = 1098.55 us\nRMS_NORM_MUL RMS_NORM(2048,1,1,1): 456 x 5.566 us = 2538.14 us\nRMS_NORM_MUL RMS_NORM(2048,14,1,1): 57 x 20.4 us = 1162.82 us\nRMS_NORM_MUL RMS_NORM(512,8,1,1): 17 x 3.724 us = 63.314 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,1,1): 224 x 3.624 us = 811.814 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,16,14,1): 28 x 21.262 us = 595.358 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,1,1): 224 x 3.839 us = 860.121 us\nRMS_NORM_MUL_ROPE RMS_NORM(128,8,14,1): 28 x 28.018 us = 784.515 us\nRMS_NORM_MUL_ROPE RMS_NORM(256,1,14,1): 26 x 12.423 us = 323.001 us\nRMS_NORM_MUL_ROPE RMS_NORM(256,4,14,1): 26 x 12.947 us = 336.625 us\nROLL: 2 x 4.768 us = 9.537 us\nROPE: 2896 x 2.199 us = 6368.76 us\nSCALE: 1 x 7.333 us = 7.333 us\nSILU: 8 x 2.088 us = 16.708 us\nSIN: 29 x 81.805 us = 2372.37 us\nSOFT_MAX: 1726 x 3.675 us = 6344.52 us\nSQR: 29 x 79.683 us = 2310.82 us\nSUM_ROWS: 8 x 9.527 us = 76.221 us\nTotal time: 648174 us.\n",
+  "decision": {
+    "packing": "retained existing default; four warm runs each off/on, byte-identical",
+    "codec_swiglu": "trial b1d13b8 reverted in 526c1a3; no repeatable measured gain",
+    "v_cache": "graph-only proposal rejected by source inspection: Vulkan hidden copy; backend stride work deferred",
+    "rtf_080": "not achieved; no final quality/workload acceptance claim"
+  }
+}
