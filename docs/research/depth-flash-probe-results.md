@@ -1,9 +1,9 @@
 # Depth flash attention and submission batching — 2026-09-15
 
-Native depth flash attention is a promising **quality-review candidate**, not
-an accepted default. The paired short Calliope experiment reduces depth time
+Native depth flash attention was measured as a **quality-review candidate**,
+with the default left off. The paired short Calliope experiment reduces depth time
 by **1.817 ms/frame** and wall RTF from **0.830414 to 0.809698**. Audio changes;
-user approval is pending. Production is unchanged and 0.8 remains unmet.
+user approval was pending at measurement time (see the subsequent decision below). Production is unchanged and 0.8 remains unmet.
 
 ## Paired speech result
 
@@ -129,3 +129,14 @@ original numerical mode and the independent `--mask-only` diagnostic.
 
 See [the collaborative investigation](rtf-080-unexplored-20260915.md) and
 [the preceding wave/history experiment](wave32-trim11-results.md).
+
+## Subsequent user quality decision
+
+The user reviewed the flash Calliope tagged samples at CFG=1 and CFG=2,
+said both seemed fine, and preferred CFG=1. Treat the CFG=1 flash candidate
+as quality-approved for these reviewed samples. The new CFG=1 tagged WAV
+hash is `c8925f3caaa2e58f3460fab6460fcb530330ed45c58dca9b436e90515a78b648`;
+it contains 175 frames / 14.00 seconds. Its single-run RTF 0.824 is a listening
+receipt, not a paired performance benchmark. The original machine-readable
+receipt preserves the pending status at measurement time. Production has not
+been changed; the next authorized experiment is F16 depth output heads.
