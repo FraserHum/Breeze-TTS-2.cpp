@@ -184,6 +184,7 @@ Accepts `multipart/form-data` (needed for the reference audio upload) or
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
 | `text` | string | required | Text to speak, UTF-8. |
+| `response_format` | string | `pcm` | Only `pcm` is supported. Other formats are rejected before synthesis. |
 | `instruction` | string | `Speak clearly and naturally.` | Voice description or delivery direction. |
 | `ref_audio` | file | none | Reference WAV for cloning. Any sample rate or channel count; resampled to mono at the model rate. |
 | `ref_text` | string | empty | Exact transcript of `ref_audio`. Required whenever `ref_audio` is present. |
@@ -231,6 +232,7 @@ long before generation finishes.
 | Status | Body | Cause |
 | --- | --- | --- |
 | `400` | `{"error":"text is required"}` | `text` missing or empty. |
+| `400` | `{"error":"unsupported response_format; only pcm is supported"}` | An encoded format such as MP3 or WAV was requested. |
 | `404` | `{"error":"unknown voice_id"}` | No cached or saved voice by that name. |
 | `409` | `{"error":"busy"}` | Another generation is already running. |
 

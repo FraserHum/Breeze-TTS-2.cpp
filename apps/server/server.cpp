@@ -103,6 +103,13 @@ int run_server(const ServerOptions & opts) {
     });
 
     svr.Post("/v1/audio/speech", [&, mutex](const httplib::Request & req, httplib::Response & res) {
+        // Do not return PCM under an encoded-format request: clients cannot decode it.
+        if (field(req, "response_format", "pcm") != "pcm") {
+            res.status = 400;
+            res.set_content("{\"error\":\"unsupported response_format; only pcm is supported\"}",
+                            "application/json");
+            return;
+        }
         auto lock = std::make_shared<std::unique_lock<std::mutex>>(*mutex, std::try_to_lock);
         if (!*lock) {
             res.status = 409;
