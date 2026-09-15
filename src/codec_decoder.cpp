@@ -121,7 +121,7 @@ static int conv_tail_history(const BreezeModel & m) {
     return (int) (rf / spf) + 1;
 }
 
-bool student_tail_enabled(const BreezeModel & m) {
+bool ::breeze::student_tail_enabled(const BreezeModel & m) {
     if (!m.wopt("tail.output.weight")) return false;
     const char * e = std::getenv("BREEZE_VOC_STUDENT_TAIL");
     return !e || std::strcmp(e, "0") != 0;
@@ -199,7 +199,7 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
     h = vocoder_transformer(ctx, m, g, h, T);
 
-    if (student_tail_enabled(m)) {
+    if (::breeze::student_tail_enabled(m)) {
         return student_tail_decode(ctx, m, g, h, T, trim_prefix);
     }
 
