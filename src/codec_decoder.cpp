@@ -191,11 +191,12 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
     h = conv1d_causal(ctx, m.w("codec.dpre.conv.weight"), m.w("codec.dpre.conv.bias"), h, 1, 1);
 
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
-    h = vocoder_transformer(ctx, m, g, h, T);
 
     if (::breeze::student_tail_enabled(m)) {
         return student_tail_decode(ctx, m, g, h, T, trim_prefix);
     }
+
+    h = vocoder_transformer(ctx, m, g, h, T);
 
     // Quantizer, dpre, and transformer still see the full window. The remaining
     // stack is causal, so drop only old latent frames after a guarded RF check.
