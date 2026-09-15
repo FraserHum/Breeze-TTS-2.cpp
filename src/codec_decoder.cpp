@@ -121,12 +121,6 @@ static int conv_tail_history(const BreezeModel & m) {
     return (int) (rf / spf) + 1;
 }
 
-bool ::breeze::student_tail_enabled(const BreezeModel & m) {
-    if (!m.wopt("tail.output.weight")) return false;
-    const char * e = std::getenv("BREEZE_VOC_STUDENT_TAIL");
-    return !e || std::strcmp(e, "0") != 0;
-}
-
 static ggml_tensor * student_tail_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
                                          ggml_tensor * h, int T, int trim_prefix) {
     // h has shape [1024, T] (innermost 1024, then T)
@@ -243,6 +237,12 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
 } // codec_detail
 
 using namespace codec_detail;
+
+bool student_tail_enabled(const BreezeModel & m) {
+    if (!m.wopt("tail.output.weight")) return false;
+    const char * e = std::getenv("BREEZE_VOC_STUDENT_TAIL");
+    return !e || std::strcmp(e, "0") != 0;
+}
 
 // streaming (BREEZE_VOC_STATEFUL) decode: decodes only the NEW frames, carrying the pre-RoPE
 // transformer k/v in a host-side ring plus the convolution tails. bit-exact with the windowed
