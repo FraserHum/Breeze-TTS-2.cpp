@@ -18,9 +18,13 @@ struct GGUFModel {
     ggml_backend_buffer_t buffer = nullptr;
     ggml_context * packed_meta = nullptr;
     ggml_backend_buffer_t packed_buffer = nullptr;
+    std::vector<gguf_context *> extra_ggufs;
+    std::vector<ggml_context *> extra_metas;
+    std::vector<ggml_backend_buffer_t> extra_buffers;
     std::unordered_map<std::string, ggml_tensor *> tensors;
 
     bool load(const std::string & path, Backend & be);
+    bool load_extra(const std::string & path, Backend & be);
     void free();
     bool pack_weights(const struct BreezeConfig & cfg, Backend & be);
 

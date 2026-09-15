@@ -48,6 +48,9 @@ const RtTiming & rt_last_decode();
 // default off; cached like rt_timing_enabled
 bool vocoder_stateful_enabled();
 
+// returns true if student tail weights are present and not disabled by BREEZE_VOC_STUDENT_TAIL=0
+bool student_tail_enabled(const BreezeModel & m);
+
 // streaming vocoder state for one generation PART: the sliding-window key/value ring of the DTf
 // transformer plus the convolution tails. the vocoder transformer attends with WINDOW-RELATIVE
 // positions (pos 0..T-1 over the current decode window), so the ring holds PRE-RoPE k and RAW v;

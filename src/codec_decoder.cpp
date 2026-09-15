@@ -121,6 +121,74 @@ static int conv_tail_history(const BreezeModel & m) {
     return (int) (rf / spf) + 1;
 }
 
+bool student_tail_enabled(const BreezeModel & m) {
+    if (!m.wopt("tail.output.weight")) return false;
+    const char * e = std::getenv("BREEZE_VOC_STUDENT_TAIL");
+    return !e || std::strcmp(e, "0") != 0;
+}
+
+static ggml_tensor * student_tail_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
+                                         ggml_tensor * h, int T, int trim_prefix) {
+    // h has shape [1024, T] (innermost 1024, then T)
+    const int N = trim_prefix >= 0 && trim_prefix <= T ? T - trim_prefix : T;
+    const int history = trim_prefix >= 0 ? std::min(trim_prefix, 72) : 0;
+    const int T_tail = history + N;
+    const int drop = T - T_tail;
+    if (drop > 0) {
+        h = ggml_view_2d(ctx, h, 1024, T_tail, h->nb[1], (size_t) drop * h->nb[1]);
+    }
+
+    // in_proj: [1024, T_tail] -> [512, T_tail]
+    ggml_tensor * ht = ggml_add(ctx, linear(ctx, m.w("tail.in_proj.weight"), h),
+                                m.w("tail.in_proj.bias"));
+
+    // 4 transformer blocks
+    const float scale = 0.125f; // 1.0f / sqrt(64)
+    std::vector<int32_t> pos_v(T_tail);
+    for (int i = 0; i < T_tail; i++) pos_v[i] = i;
+    ggml_tensor * pos = g.input_i32(pos_v, T_tail);
+    std::vector<float> mask_v = build_causal_mask(T_tail, T_tail, 0, 72);
+    ggml_tensor * mask = g.input_f32(mask_v, T_tail, T_tail);
+
+    for (int il = 0; il < 4; il++) {
+        const std::string p = "tail.blk." + std::to_string(il);
+        ggml_tensor * res = ht;
+        ggml_tensor * cur = rms_norm(ctx, ht, m.w(p + ".attn_norm.weight"), 1e-5f);
+        ggml_tensor * q = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_q.weight"), cur), 64, 16, T_tail);
+        ggml_tensor * k = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_k.weight"), cur), 64, 16, T_tail);
+        ggml_tensor * v = ggml_reshape_3d(ctx, linear(ctx, m.w(p + ".attn_v.weight"), cur), 64, 16, T_tail);
+        q = ggml_rope_ext(ctx, q, pos, nullptr, 64, GGML_ROPE_TYPE_NEOX, 0, 10000.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+        k = ggml_rope_ext(ctx, k, pos, nullptr, 64, GGML_ROPE_TYPE_NEOX, 0, 10000.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+        ggml_tensor * a = attention(ctx, q, k, v, mask, scale, 16, 16);
+        a = linear(ctx, m.w(p + ".attn_output.weight"), a);
+        a = ggml_mul(ctx, a, m.w(p + ".attn_scale"));
+        ht = ggml_add(ctx, res, a);
+
+        res = ht;
+        cur = rms_norm(ctx, ht, m.w(p + ".ffn_norm.weight"), 1e-5f);
+        cur = swiglu_ffn(ctx, cur, m.w(p + ".ffn_gate.weight"), m.w(p + ".ffn_up.weight"),
+                         m.w(p + ".ffn_down.weight"));
+        cur = ggml_mul(ctx, cur, m.w(p + ".ffn_scale"));
+        ht = ggml_add(ctx, res, cur);
+    }
+
+    // Keep only the new N frames
+    if (history > 0) {
+        ht = ggml_view_2d(ctx, ht, 512, N, ht->nb[1], (size_t) history * ht->nb[1]);
+    }
+    ht = rms_norm(ctx, ht, m.w("tail.norm.weight"), 1e-5f);
+
+    // out_proj: [512, N] -> [head_dim, N] (head_dim = 2048)
+    ggml_tensor * out = ggml_add(ctx, linear(ctx, m.w("tail.out_proj.weight"), ht),
+                                 m.w("tail.out_proj.bias"));
+    out = ggml_gelu(ctx, out);
+
+    // output head: [head_dim, N] -> [1920, N]
+    ggml_tensor * wav = linear(ctx, m.w("tail.output.weight"), out);
+    const int spf = m.cfg.samples_per_frame > 0 ? m.cfg.samples_per_frame : 1920;
+    return ggml_cont(ctx, ggml_reshape_1d(ctx, wav, (int64_t) N * spf));
+}
+
 ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
                              const std::vector<int> & codes, int n_cb, int T, int trim_prefix) {
     const VocoderConfig & c = m.cfg.voc;
@@ -130,6 +198,10 @@ ggml_tensor * vocoder_decode(ggml_context * ctx, BreezeModel & m, Graph & g,
 
     h = ggml_cont(ctx, ggml_transpose(ctx, h));
     h = vocoder_transformer(ctx, m, g, h, T);
+
+    if (student_tail_enabled(m)) {
+        return student_tail_decode(ctx, m, g, h, T, trim_prefix);
+    }
 
     // Quantizer, dpre, and transformer still see the full window. The remaining
     // stack is causal, so drop only old latent frames after a guarded RF check.

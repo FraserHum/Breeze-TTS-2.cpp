@@ -40,7 +40,58 @@ bool GGUFModel::load(const std::string & path, Backend & be) {
     return true;
 }
 
+bool GGUFModel::load_extra(const std::string & path, Backend & be) {
+    ggml_context * extra_meta = nullptr;
+    gguf_init_params gp{ /*no_alloc=*/true, /*ctx=*/&extra_meta };
+    gguf_context * extra_gguf = gguf_init_from_file(path.c_str(), gp);
+    if (!extra_gguf) { fprintf(stderr, "gguf_init_from_file failed for extra %s\n", path.c_str()); return false; }
+
+    ggml_backend_buffer_t extra_buffer = ggml_backend_alloc_ctx_tensors(extra_meta, be.backend);
+    if (!extra_buffer) {
+        fprintf(stderr, "ggml_backend_alloc_ctx_tensors failed for extra %s\n", path.c_str());
+        ggml_free(extra_meta);
+        gguf_free(extra_gguf);
+        return false;
+    }
+
+    FILE * f = fopen(path.c_str(), "rb");
+    if (!f) {
+        fprintf(stderr, "fopen failed for %s\n", path.c_str());
+        ggml_backend_buffer_free(extra_buffer);
+        ggml_free(extra_meta);
+        gguf_free(extra_gguf);
+        return false;
+    }
+
+    const size_t data_off = gguf_get_data_offset(extra_gguf);
+    const int64_t n = gguf_get_n_tensors(extra_gguf);
+    std::vector<uint8_t> buf;
+    for (int64_t i = 0; i < n; i++) {
+        const char * name = gguf_get_tensor_name(extra_gguf, i);
+        ggml_tensor * t = ggml_get_tensor(extra_meta, name);
+        const size_t off = data_off + gguf_get_tensor_offset(extra_gguf, i);
+        const size_t sz = ggml_nbytes(t);
+        buf.resize(sz);
+        if (breeze_fseek(f, (long long) off, SEEK_SET) != 0) { fclose(f); return false; }
+        if (fread(buf.data(), 1, sz, f) != sz) { fclose(f); return false; }
+        ggml_backend_tensor_set(t, buf.data(), 0, sz);
+        tensors[name] = t;
+    }
+    fclose(f);
+    extra_ggufs.push_back(extra_gguf);
+    extra_metas.push_back(extra_meta);
+    extra_buffers.push_back(extra_buffer);
+    return true;
+}
+
 void GGUFModel::free() {
+    for (auto * eb : extra_buffers) ggml_backend_buffer_free(eb);
+    for (auto * em : extra_metas) ggml_free(em);
+    for (auto * eg : extra_ggufs) gguf_free(eg);
+    extra_buffers.clear();
+    extra_metas.clear();
+    extra_ggufs.clear();
+
     if (packed_buffer) ggml_backend_buffer_free(packed_buffer);
     if (packed_meta) ggml_free(packed_meta);
     if (buffer) ggml_backend_buffer_free(buffer);

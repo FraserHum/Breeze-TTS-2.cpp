@@ -104,6 +104,10 @@ int main(int argc, char ** argv) {
             }
         }
         else if (a == "--output") output = arg(argc, argv, i, "--output");
+        else if (a == "--tail-model") {
+            const char * tm = arg(argc, argv, i, "--tail-model");
+            if (tm) setenv("BREEZE_TAIL_MODEL", tm, 1);
+        }
         else if (a == "--timings") show_timings = true;
         else if (a == "--cpu") use_gpu = false;
         else if (a == "-h" || a == "--help") { usage(); return 0; }
