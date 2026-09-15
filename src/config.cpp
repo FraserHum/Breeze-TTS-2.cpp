@@ -54,6 +54,10 @@ BreezeConfig parse_config(const GGUFModel & gg) {
     auto & dd = c.dd;
     dd.hidden = gg.kv_u32("breeze.dd.hidden_size", 1024);
     dd.n_layer = gg.kv_u32("breeze.dd.block_count", 12);
+    const char * env_dd_blocks = std::getenv("BREEZE_DD_BLOCKS");
+    if (env_dd_blocks && std::atoi(env_dd_blocks) > 0) {
+        dd.n_layer = std::min(dd.n_layer, std::atoi(env_dd_blocks));
+    }
     dd.n_head = gg.kv_u32("breeze.dd.head_count", 8);
     dd.n_kv_head = gg.kv_u32("breeze.dd.head_count_kv", 2);
     dd.head_dim = gg.kv_u32("breeze.dd.head_dim", 128);
