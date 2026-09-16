@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Knowledge distillation trainer for 9-block Depth Decoder."""
+"""Knowledge distillation trainer for 9-block Depth Decoder.
+
+N-voice corpus (per-voice bins from capture_dataset.py's per-voice subdirs):
+    distill.py --train-bin <out>/calliope/train.bin <out>/steward/train.bin \
+               --val-bin   <out>/calliope/validation.bin <out>/steward/validation.bin
+Voice names default to each bin's parent directory name; pass --voice
+(parallel to the bins) to override. Single-voice usage is unchanged.
+"""
 import argparse
 import math
 import os
@@ -9,7 +16,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, ConcatDataset
 import gguf
 
 from model import DepthDecoder
@@ -23,10 +30,11 @@ RECORD_DTYPE = np.dtype([
 
 
 class DepthRecordDataset(Dataset):
-    def __init__(self, bin_path: str):
+    def __init__(self, bin_path: str, voice: str = ""):
         self.path = bin_path
         if not os.path.exists(bin_path):
             raise FileNotFoundError(f"Binary records file not found: {bin_path}")
+        self.voice = voice
         self.memmap = np.memmap(bin_path, dtype=RECORD_DTYPE, mode="r")
         self.length = len(self.memmap)
 
@@ -41,6 +49,35 @@ class DepthRecordDataset(Dataset):
             "codes": torch.from_numpy(rec["codes"].copy()).long(),  # [15]
             "teacher_logits": torch.from_numpy(rec["logits"].copy())  # [15, 2051]
         }
+
+
+def build_dataset(bin_paths, voices=None):
+    """Build per-voice DepthRecordDatasets from bin paths.
+
+    voice names default to the bin's parent directory (the per-voice subdir
+    written by capture_dataset.py); pass an explicit list to override.
+    """
+    ds_list = []
+    for i, p in enumerate(bin_paths):
+        p = str(p)
+        v = voices[i] if (voices is not None and i < len(voices) and voices[i]) else Path(p).parent.name
+        ds_list.append(DepthRecordDataset(p, voice=v))
+    return ds_list
+
+
+def combine_metrics(per_voice):
+    """Aggregate per-voice eval metrics into combined metrics.
+
+    Exact (order-independent): loss/kl/ce are per-record means and top-1
+    values are per-(record,step) fractions, so the combined value is the
+    record-count-weighted average of the per-voice values.
+    """
+    counts = {v: m["_n_records"] for v, m in per_voice.items()}
+    n_total = sum(counts.values())
+    combined = {}
+    for key in ("loss", "kl", "ce", "top1_acc_codes", "top1_acc_teacher"):
+        combined[key] = sum(m[key] * counts[v] for v, m in per_voice.items()) / n_total
+    return combined
 
 
 def init_student_from_teacher(student: DepthDecoder, gguf_path: str, device: str = "cpu"):
@@ -157,13 +194,17 @@ def evaluate(model: DepthDecoder, val_loader: DataLoader, device: str, temperatu
         "ce": total_ce / total_samples,
         "top1_acc_codes": (total_top1_match_codes / total_samples) * 100.0,
         "top1_acc_teacher": (total_top1_match_teacher / total_samples) * 100.0,
+        "_n_records": total_samples,
     }
 
 
 def main():
     parser = argparse.ArgumentParser(description="Distill 9-block depth decoder")
-    parser.add_argument("--train-bin", default="/mnt/media/breeze-teacher/depth-corpus/train.bin")
-    parser.add_argument("--val-bin", default="/mnt/media/breeze-teacher/depth-corpus/validation.bin")
+    # N-voice: pass one bin per voice (parallel --voice labels). Single voice unchanged.
+    parser.add_argument("--train-bin", nargs="+", default=["/mnt/media/breeze-teacher/depth-corpus/train.bin"])
+    parser.add_argument("--val-bin", nargs="+", default=["/mnt/media/breeze-teacher/depth-corpus/validation.bin"])
+    parser.add_argument("--voice", nargs="+", default=None,
+                        help="Parallel to --train-bin/--val-bin voice labels; defaults to each bin's parent dir name")
     parser.add_argument("--teacher-gguf", default="/mnt/media/breeze-teacher/models/teacher-f16.gguf")
     parser.add_argument("--output-dir", default="/mnt/media/breeze-teacher/depth-checkpoints")
     parser.add_argument("--batch-size", type=int, default=64)
@@ -183,32 +224,60 @@ def main():
     device = args.device
     print(f"Training on device: {device}")
 
-    # Datasets
-    print(f"Loading training data from {args.train_bin}...")
-    train_ds = DepthRecordDataset(args.train_bin)
-    print(f"Train dataset: {len(train_ds)} records.")
+    # Datasets (N-voice: one bin per voice, concatenated; per-voice val splits)
+    train_ds_list = build_dataset(args.train_bin, args.voice)
+    val_ds_list = build_dataset(args.val_bin, args.voice)
+    # Guards: train and val voices must be parallel; each voice exactly once
+    if [ds.voice for ds in train_ds_list] != [ds.voice for ds in val_ds_list]:
+        raise SystemExit(f"Voice labels mismatch between train/val bins: "
+                         f"{[d.voice for d in train_ds_list]} vs {[d.voice for d in val_ds_list]}")
+    for name, ds_list in (("train", train_ds_list), ("val", val_ds_list)):
+        voices = [ds.voice for ds in ds_list]
+        if len(set(voices)) != len(voices):
+            raise SystemExit(f"Duplicate voice labels in {name} bins: {voices}")
+        paths = [str(ds.path) for ds in ds_list]
+        if len(set(paths)) != len(paths):
+            raise SystemExit(f"Duplicate {name} bin paths: {paths}")
 
-    print(f"Loading validation data from {args.val_bin}...")
-    val_ds = DepthRecordDataset(args.val_bin)
-    print(f"Val dataset: {len(val_ds)} records.")
+    print("Loading training data...")
+    for ds in train_ds_list:
+        print(f"  train [{ds.voice}]: {len(ds)} records ({ds.path})")
+    print("Loading validation data...")
+    for ds in val_ds_list:
+        print(f"  val   [{ds.voice}]: {len(ds)} records ({ds.path})")
+
+    train_ds = ConcatDataset(train_ds_list)
+    print(f"Train dataset: {len(train_ds)} records (combined).")
+    if len(train_ds_list) > 1:
+        train_counts = {ds.voice: len(ds) for ds in train_ds_list}
+        print(f"Per-voice train counts: {train_counts}")
+        if len(set(train_counts.values())) > 1:
+            print("WARNING: per-voice train record counts differ — the N-voice protocol expects "
+                  "the same prompt set for every voice; investigate before trusting per-voice metrics.")
 
     train_loader = DataLoader(
         train_ds, batch_size=args.batch_size, shuffle=True,
         num_workers=args.num_workers, pin_memory=True, drop_last=True
     )
-    val_loader = DataLoader(
-        val_ds, batch_size=args.batch_size, shuffle=False,
+    val_loaders = {ds.voice: DataLoader(
+        ds, batch_size=args.batch_size, shuffle=False,
         num_workers=args.num_workers, pin_memory=True
-    )
+    ) for ds in val_ds_list}
+    val_counts = {ds.voice: len(ds) for ds in val_ds_list}
 
     # Initialize 9-block student model
     student = DepthDecoder(n_layer=9).to(device)
     init_student_from_teacher(student, args.teacher_gguf, device=device)
 
-    # Baseline evaluation before training
+    # Baseline evaluation before training (per-voice, combined aggregated from them)
     print("\n--- Evaluating untrained 9-block student (layers 0..8 direct truncate) ---")
-    baseline = evaluate(student, val_loader, device, temperature=args.temperature, alpha_kd=args.alpha_kd)
-    print(f"Untrained Baseline: Loss={baseline['loss']:.4f} (KL={baseline['kl']:.4f}, CE={baseline['ce']:.4f}) | Top-1 vs Codes: {baseline['top1_acc_codes']:.2f}% | Top-1 vs Teacher: {baseline['top1_acc_teacher']:.2f}%\n")
+    baseline_voice = {v: evaluate(student, ldr, device, temperature=args.temperature, alpha_kd=args.alpha_kd)
+                     for v, ldr in val_loaders.items()}
+    for v, m in baseline_voice.items():
+        print(f"Untrained Baseline [{v}]: Loss={m['loss']:.4f} (KL={m['kl']:.4f}, CE={m['ce']:.4f}) | Top-1 vs Codes: {m['top1_acc_codes']:.2f}% | Top-1 vs Teacher: {m['top1_acc_teacher']:.2f}%")
+    baseline = combine_metrics(baseline_voice)
+    print(f"Untrained Baseline [combined]: Loss={baseline['loss']:.4f} (KL={baseline['kl']:.4f}, CE={baseline['ce']:.4f}) | Top-1 vs Codes: {baseline['top1_acc_codes']:.2f}% | Top-1 vs Teacher: {baseline['top1_acc_teacher']:.2f}%")
+    print()
 
     # Optimizer & Scheduler
     trainable_params = [p for p in student.parameters() if p.requires_grad]
@@ -263,8 +332,17 @@ def main():
         avg_train_kl = epoch_kl / n_batches
         avg_train_ce = epoch_ce / n_batches
 
-        # Validation
-        val_metrics = evaluate(student, val_loader, device, temperature=args.temperature, alpha_kd=args.alpha_kd)
+        # Validation: per-voice passes only; combined is the record-count-
+        # weighted aggregate of them (exact, no second forward pass over the data)
+        per_voice = {}
+        for v, ldr in val_loaders.items():
+            vm = evaluate(student, ldr, device, temperature=args.temperature, alpha_kd=args.alpha_kd)
+            per_voice[v] = vm
+            print(
+                f"    [{v}] Val Loss={vm['loss']:.4f} (KL={vm['kl']:.4f}, CE={vm['ce']:.4f}) | "
+                f"Top-1 (Codes)={vm['top1_acc_codes']:.2f}% | Top-1 (Teacher)={vm['top1_acc_teacher']:.2f}%"
+            )
+        val_metrics = combine_metrics(per_voice)
 
         current_lr = scheduler.get_last_lr()[0]
         print(
@@ -280,6 +358,7 @@ def main():
                 "epoch": epoch,
                 "model_state_dict": student.state_dict(),
                 "val_metrics": val_metrics,
+                "per_voice_val": per_voice,
                 "n_layer": 9,
             }, best_ckpt_path)
             print(f"  --> Saved new best checkpoint to {best_ckpt_path} (Val Loss: {best_val_loss:.4f})")
