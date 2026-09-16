@@ -1,0 +1,80 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+depth decoder: 15 static graphs, compute buffer 213276 bytes
+loading /models/breeze-tts-2-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+  flush 1 ready_ms=2902.3 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5715.9 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8567.9 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11480.3 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14347.0 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=15351.5 delivered_audio_s=17.04
+generated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     15352.3 ms (wall RTF 0.901)
+time to first audio 2902 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          75.4 ms
+  backbone prefill      75.5 ms
+  first vocoder        272.3 ms  (40 frames)
+  backbone decode     3095.9 ms  (14.53 ms/frame)
+  depth decode       10332.2 ms  (48.51 ms/frame)
+  vocoder             1758.1 ms  (8.25 ms/frame)
+  213 frames, 17.04 s audio
+wrote /tmp/dd12-step-verify.wav (17.04 s)
+  flush 1 ready_ms=2811.8 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5637.3 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8438.0 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11239.2 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14182.6 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=15183.2 delivered_audio_s=17.04
+generated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     15183.3 ms (wall RTF 0.891)
+time to first audio 2812 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          40.9 ms
+  backbone prefill      49.8 ms
+  first vocoder        259.1 ms  (40 frames)
+  backbone decode     3059.1 ms  (14.36 ms/frame)
+  depth decode       10305.9 ms  (48.38 ms/frame)
+  vocoder             1713.9 ms  (8.05 ms/frame)
+  213 frames, 17.04 s audio
+wrote /tmp/dd12-step-verify.repeat-2.wav (17.04 s)
+  flush 1 ready_ms=2789.6 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5585.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8429.0 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11344.8 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14199.3 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=15199.2 delivered_audio_s=17.04
+generated 17.04 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     15199.3 ms (wall RTF 0.892)
+time to first audio 2790 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          32.2 ms
+  backbone prefill      50.9 ms
+  first vocoder        257.3 ms  (40 frames)
+  backbone decode     3062.5 ms  (14.38 ms/frame)
+  depth decode       10314.1 ms  (48.42 ms/frame)
+  vocoder             1726.0 ms  (8.10 ms/frame)
+  213 frames, 17.04 s audio
+wrote /tmp/dd12-step-verify.repeat-3.wav (17.04 s)
+  flush 1 ready_ms=2814.4 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5718.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8536.6 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11365.5 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14253.3 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=15268.6 delivered_audio_s=17.04
+generated 17.04 s
+generation wall     15268.7 ms (wall RTF 0.896)
+time to first audio 2814 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          31.8 ms
+  backbone prefill      50.7 ms
+  first vocoder        256.0 ms  (40 frames)
+  backbone decode     3069.5 ms  (14.41 ms/frame)
+  depth decode       10386.4 ms  (48.76 ms/frame)
+  vocoder             1716.3 ms  (8.06 ms/frame)
+  213 frames, 17.04 s audio
+wrote /tmp/dd12-step-verify.repeat-4.wav (17.04 s)

@@ -1,0 +1,84 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+depth decoder: 1 fused graph (15 steps), compute buffer 336928 bytes
+loading /models/breeze-tts-2-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+  flush 1 ready_ms=2878.5 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5759.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8569.1 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11378.7 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14225.8 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=17065.4 delivered_audio_s=19.20
+generated 19.20 s  flush 7 ready_ms=18343.8 delivered_audio_s=20.56
+generated 20.56 sdepth decoder: 1 fused graph (15 steps), compute buffer 336928 bytes
+
+generation wall     18344.9 ms (wall RTF 0.892)
+time to first audio 2879 ms over 7 flushes
+  reference encode       0.0 ms
+  prompt build          74.8 ms
+  backbone prefill      77.0 ms
+  first vocoder        267.9 ms  (40 frames)
+  backbone decode     3799.9 ms  (14.79 ms/frame)
+  depth decode       12259.7 ms  (47.70 ms/frame)
+  vocoder             2115.8 ms  (8.23 ms/frame)
+  257 frames, 20.56 s audio
+wrote /tmp/fused-verify.wav (20.56 s)
+  flush 1 ready_ms=2818.4 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5631.9 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8544.0 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11365.2 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14204.9 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=17078.3 delivered_audio_s=19.20
+generated 19.20 s  flush 7 ready_ms=18366.6 delivered_audio_s=20.56
+generated 20.56 sdepth decoder: 1 fused graph (15 steps), compute buffer 336928 bytes
+
+generation wall     18367.3 ms (wall RTF 0.893)
+time to first audio 2818 ms over 7 flushes
+  reference encode       0.0 ms
+  prompt build          33.6 ms
+  backbone prefill      50.7 ms
+  first vocoder        254.3 ms  (40 frames)
+  backbone decode     3773.8 ms  (14.68 ms/frame)
+  depth decode       12425.0 ms  (48.35 ms/frame)
+  vocoder             2067.9 ms  (8.05 ms/frame)
+  257 frames, 20.56 s audio
+wrote /tmp/fused-verify.repeat-2.wav (20.56 s)
+  flush 1 ready_ms=2776.7 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5609.7 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8425.9 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11274.5 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14092.1 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=16964.7 delivered_audio_s=19.20
+generated 19.20 s  flush 7 ready_ms=18314.1 delivered_audio_s=20.56
+generated 20.56 sdepth decoder: 1 fused graph (15 steps), compute buffer 336928 bytes
+
+generation wall     18314.3 ms (wall RTF 0.891)
+time to first audio 2777 ms over 7 flushes
+  reference encode       0.0 ms
+  prompt build          34.2 ms
+  backbone prefill      53.9 ms
+  first vocoder        256.7 ms  (40 frames)
+  backbone decode     3759.6 ms  (14.63 ms/frame)
+  depth decode       12307.5 ms  (47.89 ms/frame)
+  vocoder             2143.4 ms  (8.34 ms/frame)
+  257 frames, 20.56 s audio
+wrote /tmp/fused-verify.repeat-3.wav (20.56 s)
+  flush 1 ready_ms=2782.7 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5548.8 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8361.9 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11200.1 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=14010.8 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=16849.3 delivered_audio_s=19.20
+generated 19.20 s  flush 7 ready_ms=18156.4 delivered_audio_s=20.56
+generated 20.56 s
+generation wall     18156.6 ms (wall RTF 0.883)
+time to first audio 2783 ms over 7 flushes
+  reference encode       0.0 ms
+  prompt build          32.9 ms
+  backbone prefill      51.2 ms
+  first vocoder        256.2 ms  (40 frames)
+  backbone decode     3726.7 ms  (14.50 ms/frame)
+  depth decode       12268.3 ms  (47.74 ms/frame)
+  vocoder             2062.1 ms  (8.02 ms/frame)
+  257 frames, 20.56 s audio
+wrote /tmp/fused-verify.repeat-4.wav (20.56 s)

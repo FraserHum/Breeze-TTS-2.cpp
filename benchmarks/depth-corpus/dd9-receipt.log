@@ -1,0 +1,68 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+depth decoder: 15 static graphs, compute buffer 213276 bytes
+loading /models/breeze-tts-2-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+  flush 1 ready_ms=2481.2 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=4919.2 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=5715.6 delivered_audio_s=7.36
+generated 7.36 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     5716.3 ms (wall RTF 0.777)
+time to first audio 2481 ms over 3 flushes
+  reference encode       0.0 ms
+  prompt build          75.0 ms
+  backbone prefill      76.5 ms
+  first vocoder        270.1 ms  (40 frames)
+  backbone decode     1284.8 ms  (13.97 ms/frame)
+  depth decode        3502.8 ms  (38.07 ms/frame)
+  vocoder              764.1 ms  (8.31 ms/frame)
+  92 frames, 7.36 s audio
+wrote /tmp/dd9-verify.wav (7.36 s)
+  flush 1 ready_ms=2411.8 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=4792.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=5581.0 delivered_audio_s=7.36
+generated 7.36 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     5581.6 ms (wall RTF 0.758)
+time to first audio 2412 ms over 3 flushes
+  reference encode       0.0 ms
+  prompt build          33.1 ms
+  backbone prefill      50.4 ms
+  first vocoder        253.6 ms  (40 frames)
+  backbone decode     1266.7 ms  (13.77 ms/frame)
+  depth decode        3484.5 ms  (37.87 ms/frame)
+  vocoder              733.9 ms  (7.98 ms/frame)
+  92 frames, 7.36 s audio
+wrote /tmp/dd9-verify.repeat-2.wav (7.36 s)
+  flush 1 ready_ms=2441.2 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=4883.9 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=5680.7 delivered_audio_s=7.36
+generated 7.36 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     5681.4 ms (wall RTF 0.772)
+time to first audio 2441 ms over 3 flushes
+  reference encode       0.0 ms
+  prompt build          33.4 ms
+  backbone prefill      49.8 ms
+  first vocoder        252.7 ms  (40 frames)
+  backbone decode     1271.2 ms  (13.82 ms/frame)
+  depth decode        3579.5 ms  (38.91 ms/frame)
+  vocoder              735.2 ms  (7.99 ms/frame)
+  92 frames, 7.36 s audio
+wrote /tmp/dd9-verify.repeat-3.wav (7.36 s)
+  flush 1 ready_ms=2382.1 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=4760.7 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=5553.3 delivered_audio_s=7.36
+generated 7.36 s
+generation wall     5553.9 ms (wall RTF 0.755)
+time to first audio 2382 ms over 3 flushes
+  reference encode       0.0 ms
+  prompt build          33.9 ms
+  backbone prefill      53.7 ms
+  first vocoder        258.2 ms  (40 frames)
+  backbone decode     1256.9 ms  (13.66 ms/frame)
+  depth decode        3464.5 ms  (37.66 ms/frame)
+  vocoder              732.7 ms  (7.96 ms/frame)
+  92 frames, 7.36 s audio
+wrote /tmp/dd9-verify.repeat-4.wav (7.36 s)
