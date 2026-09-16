@@ -1,0 +1,29 @@
+ef6e93de013754a21ec9b3686ca3f14e  /src/build/breeze-cli
+depth decoder: 15 static graphs, compute buffer 213276 bytes
+generated 16.16 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+generation wall     15193.9 ms (wall RTF 0.940)
+  first vocoder        249.3 ms  (40 frames)
+  backbone decode     3441.2 ms  (17.04 ms/frame)
+  depth decode        9902.3 ms  (49.02 ms/frame)
+  vocoder             1675.4 ms  (8.29 ms/frame)
+  202 frames, 16.16 s audio
+generated 16.16 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+generation wall     14972.8 ms (wall RTF 0.927)
+  first vocoder        252.8 ms  (40 frames)
+  backbone decode     3407.2 ms  (16.87 ms/frame)
+  depth decode        9822.0 ms  (48.62 ms/frame)
+  vocoder             1631.1 ms  (8.07 ms/frame)
+  202 frames, 16.16 s audio
+generated 16.16 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+generation wall     15029.4 ms (wall RTF 0.930)
+  first vocoder        254.4 ms  (40 frames)
+  backbone decode     3405.3 ms  (16.86 ms/frame)
+  depth decode        9845.3 ms  (48.74 ms/frame)
+  vocoder             1668.1 ms  (8.26 ms/frame)
+  202 frames, 16.16 s audio
+generation wall     15070.7 ms (wall RTF 0.933)
+  first vocoder        258.5 ms  (40 frames)
+  backbone decode     3411.0 ms  (16.89 ms/frame)
+  depth decode        9907.8 ms  (49.05 ms/frame)
+  vocoder             1639.1 ms  (8.11 ms/frame)
+  202 frames, 16.16 s audio

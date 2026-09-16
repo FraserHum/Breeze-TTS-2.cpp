@@ -86,5 +86,26 @@
     "depth_ms_frame": 37.74,
     "vocoder_ms_frame": 8.20,
     "total_compute_ms_frame": 62.73
+  },
+  "build": {
+    "binary_md5": "ef6e93de013754a21ec9b3686ca3f14e",
+    "source_commit": "d968a2f (breezetts-dev /src; divergent from local main.cpp tip f5ee5f6)",
+    "note": "instruction flag is a no-op on this binary: main.cpp:71 sets req.instruction unconditionally before arg parsing; all runs (dd9, dd12 control, corpus capture) ran WITH 'Speak clearly and naturally.' in the prompt (cfg 1.0)"
+  },
+  "baseline_same_build": {
+    "model": "/models/breeze-tts-2-q4_k.gguf (12-block)",
+    "env": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_DD_FUSED=0 BREEZE_DD_BLOCKS=12",
+    "seed": 42,
+    "cfg_scale": 1.0,
+    "log": "dd12-control-receipt.log",
+    "repeats": [
+      { "warm": false, "wall_ms": 15193.9, "wall_rtf": 0.940, "frames": 202, "audio_s": 16.16 },
+      { "warm": true, "wall_ms": 14972.8, "wall_rtf": 0.927, "frames": 202, "audio_s": 16.16 },
+      { "warm": true, "wall_ms": 15029.4, "wall_rtf": 0.930, "frames": 202, "audio_s": 16.16 },
+      { "warm": true, "wall_ms": 15070.7, "wall_rtf": 0.933, "frames": 202, "audio_s": 16.16 }
+    ],
+    "warm_mean_wall_rtf": 0.9300,
+    "same_build_delta_vs_dd9": 0.1383,
+    "note": "Prior receipt cited 0.8954 from the OLD pod build (pre-current-binary); same-build baseline is 0.9300. Old-build receipts (dd12-step-receipt.log, 213f/0.901) cannot be re-run: build is gone. Frame-count differences across builds (213f vs 202f) are top-50/T=0.9 sampling drift, not instruction regime; seed-sweep on one build shows 194-253f at stable RTF 0.904-0.909."
   }
 }
