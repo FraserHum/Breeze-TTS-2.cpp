@@ -377,6 +377,34 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
             std::to_string(capture_max_records) + "}");
     }
 
+    const char * distill_env = std::getenv("BREEZE_DEPTH_DISTILL_CAPTURE");
+    distill_capture_enabled = distill_env != nullptr && distill_env[0] != '\0';
+    if (distill_capture_enabled) {
+        if (n_branch != 1) {
+            GGML_ABORT("BREEZE_DEPTH_DISTILL_CAPTURE requires n_branch == 1 (cfg_scale == 1.0)\n");
+        }
+        if (fused) {
+            GGML_ABORT("BREEZE_DEPTH_DISTILL_CAPTURE requires BREEZE_DD_FUSED=0 to record step logits\n");
+        }
+        distill_capture_path = distill_env;
+        if (distill_capture_path.size() < 4 || distill_capture_path.substr(distill_capture_path.size() - 4) != ".bin") {
+            distill_capture_path += "/depth_records.bin";
+        }
+        distill_capture_file = std::fopen(distill_capture_path.c_str(), "ab");
+        if (!distill_capture_file) {
+            fprintf(stderr, "failed to open %s for BREEZE_DEPTH_DISTILL_CAPTURE\n", distill_capture_path.c_str());
+            GGML_ABORT("cannot open distill capture file\n");
+        }
+        std::fseek(distill_capture_file, 0, SEEK_END);
+        const long cur_sz = std::ftell(distill_capture_file);
+        const size_t record_bytes = sizeof(int32_t) + (size_t) m.cfg.hidden_size * sizeof(float) +
+                                    (size_t) n_step * sizeof(int32_t) + (size_t) n_step * vs * sizeof(float);
+        distill_records = (int)(cur_sz / record_bytes);
+        distill_logits_staging.assign((size_t) n_step * vs, 0.0f);
+        fprintf(stderr, "depth decoder: distillation capture enabled -> %s (cumulative records: %d)\n",
+                distill_capture_path.c_str(), distill_records);
+    }
+
     // dedicated fused-path gumbel stream: the same seed as the step path's rng, but a
     // separate stream (different draw sequence), so same-seed runs are not
     // byte-identical across paths
@@ -436,6 +464,39 @@ void DepthRunner::init(BreezeModel & m, int n_branches, uint32_t seed) {
 }
 
 void DepthRunner::free() {
+    if (distill_capture_enabled && distill_capture_file) {
+        std::fflush(distill_capture_file);
+        std::fseek(distill_capture_file, 0, SEEK_END);
+        const long cur_sz = std::ftell(distill_capture_file);
+        const size_t record_bytes = sizeof(int32_t) + (size_t) 2048 * sizeof(float) +
+                                    (size_t) 15 * sizeof(int32_t) + (size_t) 15 * 2051 * sizeof(float);
+        const int total_recs = (int)(cur_sz / record_bytes);
+        std::fclose(distill_capture_file);
+        distill_capture_file = nullptr;
+        std::string meta_path = distill_capture_path + ".json";
+        FILE * fmeta = std::fopen(meta_path.c_str(), "w");
+        if (fmeta) {
+            std::fprintf(fmeta,
+                "{\n"
+                "  \"records\": %d,\n"
+                "  \"hidden_size\": %d,\n"
+                "  \"audio_vocab_size\": %d,\n"
+                "  \"depth_steps\": %d,\n"
+                "  \"record_bytes\": %zu,\n"
+                "  \"dtype\": [\n"
+                "    [\"cb0\", \"int32\"],\n"
+                "    [\"h0\", \"float32\", %d],\n"
+                "    [\"codes\", \"int32\", %d],\n"
+                "    [\"logits\", \"float32\", [%d, %d]]\n"
+                "  ]\n"
+                "}\n",
+                total_recs, 2048, 2051, 15, record_bytes,
+                2048, 15, 15, 2051);
+            std::fclose(fmeta);
+            fprintf(stderr, "depth decoder: wrote distillation metadata (%d records) -> %s\n",
+                    total_recs, meta_path.c_str());
+        }
+    }
     if (capture_enabled) dd_capture_close(*this);
     kv.free();
     if (depth_alloc) ggml_gallocr_free(depth_alloc);
@@ -971,6 +1032,11 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         } else {
             std::memcpy(combined_logits.data(), logits_buf.data(), (size_t) vs * sizeof(float));
         }
+        if (distill_capture_enabled) {
+            GGML_ASSERT(head_idx < n_step);
+            std::memcpy(distill_logits_staging.data() + (size_t) head_idx * vs,
+                        combined_logits.data(), (size_t) vs * sizeof(float));
+        }
         codes.push_back(j <= n_force ? force[j - 1] : sample_token(combined_logits, sp, rng));
         if (rtd) {
             rtd_acc.stage_ms += rtd_ms(rtd_a, rtd_b);
@@ -981,6 +1047,22 @@ std::vector<int> DepthRunner::run(BreezeModel & m, const std::vector<std::vector
         }
     }
     if (rtd) g_rtd_last = rtd_acc;
+    if (distill_capture_enabled && distill_capture_file) {
+        GGML_ASSERT(n_branch == 1);
+        GGML_ASSERT((int) codes.size() == nc);
+        GGML_ASSERT(flat_hiddens.size() >= (size_t) m.cfg.hidden_size);
+        const int32_t cb0_val = cb0;
+        std::fwrite(&cb0_val, sizeof(int32_t), 1, distill_capture_file);
+        std::fwrite(flat_hiddens.data(), sizeof(float), m.cfg.hidden_size, distill_capture_file);
+        std::vector<int32_t> codes_tail(n_step);
+        for (int i = 0; i < n_step; i++) {
+            codes_tail[i] = (int32_t) codes[i + 1];
+        }
+        std::fwrite(codes_tail.data(), sizeof(int32_t), n_step, distill_capture_file);
+        std::fwrite(distill_logits_staging.data(), sizeof(float), (size_t) n_step * vs, distill_capture_file);
+        std::fflush(distill_capture_file);
+        distill_records++;
+    }
     const std::vector<int> result(codes.begin() + 1, codes.end());
     if (capture_this) dd_capture_frame_record(*this, frame, cb0, codes, n_branch);
     if (dd_debug_enabled()) dd_dump_codes(cb0, result);

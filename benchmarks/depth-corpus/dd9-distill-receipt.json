@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-09-16T00:24:00Z",
+  "target": "breezetts-dev (AMD Radeon 780M, RADV Phoenix, Vulkan0)",
+  "trainer": "sunset (AMD Radeon RX 7900 XTX 24GB, ROCm/PyTorch)",
+  "voice": "calliope-331f8daa",
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "distillation_metrics": {
+    "dataset_records": 22000,
+    "train_records": 17807,
+    "val_records": 2147,
+    "test_records": 2046,
+    "untrained_baseline": {
+      "val_loss": 1.9266,
+      "val_kl": 1.1243,
+      "val_ce": 5.1361,
+      "top1_acc_codes": 10.51,
+      "top1_acc_teacher": 19.88
+    },
+    "best_epoch_15": {
+      "train_loss": 0.4456,
+      "val_loss": 1.0503,
+      "val_kl": 0.3176,
+      "val_ce": 3.9812,
+      "val_top1_acc_codes": 17.57,
+      "val_top1_acc_teacher": 47.00
+    },
+    "test_set_metrics": {
+      "test_loss": 1.0414,
+      "test_kl": 0.3116,
+      "test_ce": 3.9608,
+      "test_top1_acc_codes": 18.08,
+      "test_top1_acc_teacher": 47.84
+    }
+  },
+  "benchmark_780m_repeats": [
+    {
+      "repeat": 1,
+      "warm": false,
+      "wall_ms": 14023.8,
+      "audio_s": 17.60,
+      "frames": 220,
+      "wall_rtf": 0.797,
+      "backbone_ms_frame": 16.92,
+      "depth_ms_frame": 37.46,
+      "vocoder_ms_frame": 8.36
+    },
+    {
+      "repeat": 2,
+      "warm": true,
+      "wall_ms": 14009.0,
+      "audio_s": 17.60,
+      "frames": 220,
+      "wall_rtf": 0.796,
+      "backbone_ms_frame": 16.88,
+      "depth_ms_frame": 37.91,
+      "vocoder_ms_frame": 8.23
+    },
+    {
+      "repeat": 3,
+      "warm": true,
+      "wall_ms": 13792.8,
+      "audio_s": 17.60,
+      "frames": 220,
+      "wall_rtf": 0.784,
+      "backbone_ms_frame": 16.70,
+      "depth_ms_frame": 37.46,
+      "vocoder_ms_frame": 7.99
+    },
+    {
+      "repeat": 4,
+      "warm": true,
+      "wall_ms": 13986.6,
+      "audio_s": 17.60,
+      "frames": 220,
+      "wall_rtf": 0.795,
+      "backbone_ms_frame": 16.80,
+      "depth_ms_frame": 37.86,
+      "vocoder_ms_frame": 8.39
+    }
+  ],
+  "warm_mean": {
+    "wall_rtf": 0.7917,
+    "backbone_ms_frame": 16.79,
+    "depth_ms_frame": 37.74,
+    "vocoder_ms_frame": 8.20,
+    "total_compute_ms_frame": 62.73
+  }
+}

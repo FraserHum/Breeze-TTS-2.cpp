@@ -85,6 +85,13 @@ struct DepthRunner {
     size_t capture_max_records = 0;
     std::vector<float> capture_buf;
 
+    // BREEZE_DEPTH_DISTILL_CAPTURE=<path>: dump teacher (cb0, h0, codes, logits) for 9-block depth student distillation
+    bool distill_capture_enabled = false;
+    std::string distill_capture_path;
+    FILE * distill_capture_file = nullptr;
+    int distill_records = 0;
+    std::vector<float> distill_logits_staging;
+
     // seed is the CLI --seed integer (the same value the step path's rng gets); it seeds
     // the dedicated fused-path gumbel stream
     void init(BreezeModel & m, int n_branches, uint32_t seed);
