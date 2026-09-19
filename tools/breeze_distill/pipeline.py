@@ -14,9 +14,11 @@ import json
 import os
 from pathlib import Path
 import shutil
+import struct
 import subprocess
 import sys
 import time
+import wave
 from typing import Any, Dict, List, Optional, Tuple
 
 from .calibration import DEFAULT_CALIBRATION_PASSAGE, analyze_phoneme_coverage
@@ -43,6 +45,97 @@ HARDWARE_PROFILES = {
         "recommended_levers": {"BREEZE_DD_FUSED": "1"},
     },
 }
+
+# F8 Calliope Method (receipted): a clone reference is ONE concatenated WAV of
+# the supplied utterances (ordered, 0.25 s digital-silence gaps) packed into
+# the codec's reference-token budget. The first utterance that does not fit is
+# the hold-out: synthesize its text with the new vector and measure the
+# acoustic loss vs. the source WAV with the receipted analyzer.
+# Budget receipt: beehive/namespaces/hermes-voice/breezetts-calliope-voice.yaml
+# records T = floor(frames/1920) = 161 at 24 kHz s16 mono (12.95 s pin, 36/39
+# ARPAbet coverage). Pin the budget at the exact 161 * 1920 = 309,120 samples
+# (12.88 s) — the conservative side of the same constraint.
+REF_RATE = 24000
+REF_TOKEN_SAMPLES = 1920
+REF_TOKEN_BUDGET = 161
+REF_BUDGET_SAMPLES = REF_TOKEN_BUDGET * REF_TOKEN_SAMPLES  # 309,120 (12.88 s)
+REF_GAP_SAMPLES = int(REF_RATE * 0.25)                     # 6,000 (0.25 s silence)
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_HOLDOUT_ANALYZER = _REPO_ROOT / "tools" / "tail_training" / "analyze_audio.py"
+
+
+def read_pcm_wav(path: str) -> List[int]:
+    """Read a 24 kHz s16 mono WAV. Fail-closed on any deviation (Calliope receipt)."""
+    with wave.open(str(path), "rb") as wf:
+        if (wf.getframerate(), wf.getnchannels(), wf.getsampwidth()) != (REF_RATE, 1, 2):
+            raise ValueError(f"{path}: clone reference must be 24 kHz s16 mono; got "
+                             f"{wf.getframerate()} Hz, {wf.getnchannels()} ch, {wf.getsampwidth() * 8} bit")
+        return struct.unpack(f"<{wf.getnframes()}h", wf.readframes(wf.getnframes()))
+
+
+def write_pcm_wav(path, samples: List[int]):
+    with wave.open(str(path), "wb") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)
+        wf.setframerate(REF_RATE)
+        wf.writeframes(struct.pack(f"<{len(samples)}h", *samples))
+
+
+def plan_reference_concat(
+    utterances: List[Tuple[str, Optional[str]]],
+    budget_samples: int = REF_BUDGET_SAMPLES,
+    gap_samples: int = REF_GAP_SAMPLES,
+) -> Tuple[List[int], Optional[int]]:
+    """Greedily pack utterances (in order, gap-separated) into the token budget.
+
+    Returns (included_indices, holdout_index): the hold-out is the first
+    utterance that does not fit, or None if everything fits.
+    """
+    sizes = [len(read_pcm_wav(ap)) for ap, _ in utterances]
+    included: List[int] = []
+    holdout: Optional[int] = None
+    used = 0
+    for i, size in enumerate(sizes):
+        needed = size if not included else used + gap_samples + size
+        if needed > budget_samples:
+            if holdout is None:
+                holdout = i
+            continue
+        used = needed
+        included.append(i)
+    return included, holdout
+
+
+def analyze_holdout(teacher_wav: str, student_wav: str, work_dir) -> Dict[str, Any]:
+    """Truncate both to the shorter length, then run the receipted spectral
+    analyzer (tools/tail_training/analyze_audio.py) on hold-out source vs.
+    its clone synthesis."""
+    t = read_pcm_wav(teacher_wav)
+    s = read_pcm_wav(student_wav)
+    n = min(len(t), len(s))
+    if n < 2400:  # analyzer requires >= 100 ms
+        raise ValueError(f"hold-out alignment is {n / REF_RATE * 1000:.0f} ms; need >= 100 ms")
+    td = Path(work_dir) / "holdout-teacher-trim.wav"
+    sd = Path(work_dir) / "holdout-student-trim.wav"
+    write_pcm_wav(td, t[:n])
+    write_pcm_wav(sd, s[:n])
+    proc = subprocess.run(
+        [sys.executable, str(_HOLDOUT_ANALYZER), str(td), str(sd)],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"hold-out analysis failed: {proc.stderr}")
+    m = json.loads(proc.stdout)
+    return {
+        "correlation": m["correlation"],
+        "rms_ratio": m["rms_ratio"],
+        "error_rms": m["error_rms"],
+        "best_lag_samples": m["best_lag_samples"],
+        "best_lag_correlation": m["best_lag_correlation"],
+        "wave_l1": m["wave_l1"],
+        "aligned_samples": n,
+    }
 
 
 @dataclass
@@ -205,6 +298,8 @@ class DistillPipeline:
         self.corpus_dir = self.work_path / "corpus"
         self.ckpt_dir = self.work_path / "checkpoints"
         self.telemetry: Dict[str, Any] = {}
+        # F8 Calliope Method: per-voice clone_holdout_loss (None when everything fit).
+        self.clone_holdout: Dict[str, Any] = {}
 
     def setup_directories(self):
         self.work_path.mkdir(parents=True, exist_ok=True)
@@ -268,16 +363,43 @@ class DistillPipeline:
                     for i, (ap, _) in enumerate(v.utterances, 1):
                         if not ap or not Path(ap).exists():
                             raise FileNotFoundError(f"Audio file {i} for voice '{v.name}' not found: {ap}")
-                primary_wav, primary_text = v.utterances[0]
-                dest_wav = self.voices_dir / f"{v.name}.wav"
-                dest_txt = self.voices_dir / f"{v.name}.txt"
-                transcript = primary_text or DEFAULT_CALIBRATION_PASSAGE
 
+                # F8 Calliope Method: one concatenated reference WAV within the
+                # codec's 161-token (309,120-sample) budget, 0.25 s gaps; the
+                # first non-fitting utterance is the hold-out.
                 if not self.cfg.dry_run:
-                    shutil.copy2(primary_wav, dest_wav)
+                    included, holdout = plan_reference_concat(v.utterances)
+                    if not included:
+                        raise ValueError(f"Voice '{v.name}': no reference utterance fits the "
+                                         f"{REF_BUDGET_SAMPLES}-sample ({REF_BUDGET_SAMPLES / REF_RATE:.2f} s) "
+                                         f"reference budget")
+                    parts: List[int] = []
+                    transcript_parts: List[str] = []
+                    for i in included:
+                        ap, tp = v.utterances[i]
+                        if not tp:
+                            raise ValueError(f"Voice '{v.name}': utterance {i + 1} has no transcript; "
+                                             f"the concatenated reference requires exact ref text")
+                        pcm = read_pcm_wav(ap)
+                        parts.extend(pcm if not parts else [0] * REF_GAP_SAMPLES + pcm)
+                        transcript_parts.append(tp)
+                    total_s = sum(len(read_pcm_wav(v.utterances[i][0])) for i in included) / REF_RATE
+                    print(f"    Calliope Method: {len(included)}/{n_u} utterance(s) in budget "
+                          f"({total_s:.2f} s of {REF_BUDGET_SAMPLES / REF_RATE:.2f} s); "
+                          f"hold-out: {'utterance ' + str(holdout + 1) if holdout is not None else 'none'}")
+                    dest_wav = self.voices_dir / f"{v.name}.wav"
+                    dest_txt = self.voices_dir / f"{v.name}.txt"
+                    write_pcm_wav(dest_wav, parts)
+                    transcript = " ".join(transcript_parts)
                     with open(dest_txt, "w") as f:
                         f.write(transcript + "\n")
+                else:
+                    print(f"    [DRY-RUN] Would concatenate {n_u} utterance(s) into a "
+                          f"{REF_BUDGET_SAMPLES / REF_RATE:.2f} s reference and hold out the first overflow")
+                    dest_wav = self.voices_dir / f"{v.name}.wav"
+                    transcript = ""
 
+                if not self.cfg.dry_run:
                     cmd = [
                         self.cfg.breeze_cli,
                         self.cfg.base_model,
@@ -289,6 +411,39 @@ class DistillPipeline:
                     proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
                     if proc.returncode != 0:
                         raise RuntimeError(f"Failed to pre-encode voice '{v.name}': {proc.stderr}")
+
+                    # Hold-out check: synthesize the hold-out text with the NEW
+                    # vector and measure acoustic loss vs. the source WAV.
+                    if holdout is not None:
+                        h_ap, h_text = v.utterances[holdout]
+                        synth_wav = self.voices_dir / f"{v.name}-holdout-synth.wav"
+                        s_cmd = [
+                            self.cfg.breeze_cli,
+                            self.cfg.base_model,
+                            "--voice", v.name,
+                            "--voices-dir", str(self.voices_dir),
+                            "--text", h_text,
+                            "--output", str(synth_wav),
+                            "--seed", "42",
+                        ]
+                        s_proc = subprocess.run(s_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                        if s_proc.returncode != 0:
+                            raise RuntimeError(f"hold-out synthesis failed for voice '{v.name}': {s_proc.stderr}")
+                        hd = self.voices_dir / f"{v.name}-holdout"
+                        metrics = analyze_holdout(h_ap, str(synth_wav), hd)
+                        self.clone_holdout[v.name] = {
+                            "method": "calliope-concat",
+                            "holdout_utterance_index": holdout,
+                            "holdout_text": h_text,
+                            "clone_holdout_loss": metrics,
+                            "seed": 42,
+                        }
+                        print(f"    Hold-out loss: corr={metrics['correlation']:.4f} "
+                              f"rms_ratio={metrics['rms_ratio']:.3f} "
+                              f"best_lag={metrics['best_lag_samples']} samples "
+                              f"(lag corr={metrics['best_lag_correlation']:.4f})")
+                    else:
+                        self.clone_holdout[v.name] = None
                 else:
                     print(f"    [DRY-RUN] Would execute breeze-cli --save-voice {v.name}")
                     target_breeze.touch()
@@ -432,22 +587,45 @@ class DistillPipeline:
         elif self.cfg.force:
             gate_status = "forced"
             gate_badge = "FORCED (--force; see receipt safety_gate.status)"
+        else:
+            gate_status = "pending"  # resolved per-voice below; measured values decide
+            gate_badge = "VERIFIED (measured vs. data-derived threshold)"
 
         per_voice = self.telemetry.get("best", {}).get("per_voice_val", self.telemetry.get("per_voice_val", {}))
         voice_gate = {}
         for v in self.cfg.voices:
             metrics = per_voice.get(v.name, {})
-            loss = metrics.get("loss", 0.0)
-            kl = metrics.get("kl", 0.0)
-            top1 = metrics.get("top1_acc_teacher", 0.0)  # percentage 0..100 (F3)
-            if threshold is not None:
+            loss = metrics.get("loss")
+            kl = metrics.get("kl")
+            top1 = metrics.get("top1_acc_teacher")  # percentage 0..100 (F3)
+            if threshold is None or top1 is None:
+                badge = "UNVERIFIED"  # fail-closed: a threshold cannot PASS a missing measurement
+                if threshold is not None:
+                    voice_gate[v.name] = False
+            else:
                 voice_gate[v.name] = bool(top1 >= threshold)
                 badge = ("PASS" if voice_gate[v.name] else "FAIL") if not self.cfg.force else "FORCED"
-            else:
-                badge = "UNVERIFIED"
-            print(f"  - Voice '{v.name}': Loss: {loss:.3f} | KL: {kl:.3f} | Top-1 (Teacher): {top1:.1f}% [{badge}]")
 
+            def fmt(x):
+                return f"{x:.3f}" if isinstance(x, (int, float)) else "Unmeasured"
+
+            t1 = f"{top1:.1f}%" if isinstance(top1, (int, float)) else "Unmeasured"
+            print(f"  - Voice '{v.name}': Loss: {fmt(loss)} | KL: {fmt(kl)} | Top-1 (Teacher): {t1} [{badge}]")
+
+        # F8 Calliope Method: clone hold-out acoustic loss (None = everything fit).
+        for v in self.cfg.voices:
+            h = self.clone_holdout.get(v.name, "not run")
+            if h is None:
+                print(f"  - Voice '{v.name}': Hold-out: none (all utterances fit the reference budget)")
+            elif isinstance(h, dict):
+                m = h["clone_holdout_loss"]
+                print(f"  - Voice '{v.name}': Hold-out (utterance {h['holdout_utterance_index'] + 1}): "
+                      f"corr={m['correlation']:.4f} rms_ratio={m['rms_ratio']:.3f} "
+                      f"best_lag={m['best_lag_samples']} samples (lag corr={m['best_lag_correlation']:.4f})")
         all_pass = all(voice_gate.values()) if voice_gate else False
+        if threshold is not None and not self.cfg.force:
+            gate_status = "failed" if not all_pass else "passed"
+            gate_badge = "FAIL (measured below data-derived threshold)" if gate_status == "failed" else "PASS (measured)"
         print("-------------------------------------------------------------")
         print(f"Latency Budget:          <= {target_rtf:.3f} RTF")
         print(f"Artifact RTF:            {rtf_line}")
@@ -469,6 +647,12 @@ class DistillPipeline:
                 "measured": {v.name: per_voice.get(v.name, {}).get("top1_acc_teacher") for v in self.cfg.voices},
                 "status": gate_status,
             },
+            # F8: Calliope Method hold-out loss per cloned voice (None = nothing held out;
+            # absent/None in dry-run because no real synthesis ran — never fabricated).
+            "clone_holdout": {
+                name: (entry["clone_holdout_loss"] if isinstance(entry, dict) else None)
+                for name, entry in self.clone_holdout.items()
+            } or None,
             "all_pass": all_pass if threshold is not None else None,
             "telemetry": self.telemetry,
         }

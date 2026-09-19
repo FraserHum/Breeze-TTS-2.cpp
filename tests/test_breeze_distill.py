@@ -21,9 +21,16 @@ from tools.breeze_distill.pipeline import (
     DistillPipeline,
     DistillPipelineConfig,
     HARDWARE_PROFILES,
+    REF_BUDGET_SAMPLES,
+    REF_GAP_SAMPLES,
     VoiceSpec,
+    plan_reference_concat,
+    read_pcm_wav,
+    write_pcm_wav,
 )
 from tools.breeze_distill import parse_voice_flag
+import struct
+import wave
 
 
 class TestCalibration(unittest.TestCase):
@@ -200,6 +207,107 @@ class TestPipeline(unittest.TestCase):
             self.assertIsNone(card["all_pass"])
             self.assertEqual(card["safety_gate"]["status"], "unverified")
             self.assertIsNone(card["artifact_rtf"])
+
+            # F8: no real synthesis ran in dry-run => no hold-out number is fabricated.
+            self.assertIsNone(card["clone_holdout"])
+
+
+class TestCalliopeMethod(unittest.TestCase):
+    """F8 Calliope Method: concat references into the receipted 161-token budget."""
+
+    RATE = 24000
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
+
+    def _wav(self, name, seconds):
+        path = Path(self.temp_dir) / name
+        n = int(seconds * self.RATE)
+        with wave.open(str(path), "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(self.RATE)
+            wf.writeframes(struct.pack(f"<{n}h", *([1000] * n)))
+        return str(path)
+
+    def test_plan_fits_no_holdout(self):
+        a = self._wav("a.wav", 6.0)
+        b = self._wav("b.wav", 6.0)
+        included, holdout = plan_reference_concat([(a, "x"), (b, "y")])
+        self.assertEqual(included, [0, 1])
+        self.assertIsNone(holdout)
+
+    def test_plan_overflow_first_nonfitting_is_holdout(self):
+        a = self._wav("a.wav", 8.0)
+        b = self._wav("b.wav", 5.0)  # 8 + 0.25 + 5 = 13.25 s > 12.88 s budget
+        c = self._wav("c.wav", 0.5)
+        included, holdout = plan_reference_concat([(a, "x"), (b, "y"), (c, "z")])
+        self.assertEqual(holdout, 1)
+        self.assertIn(2, included)  # later smaller utterance still packs
+        self.assertEqual(included.count(1), 0)
+        # budget accounting: 8.0 + (0.25 + 0.5) s
+        self.assertEqual(included, [0, 2])
+
+    def test_wav_io_roundtrip_and_fail_closed(self):
+        a = self._wav("a.wav", 1.0)
+        pcm = read_pcm_wav(a)
+        self.assertEqual(len(pcm), self.RATE)
+        write_pcm_wav(Path(self.temp_dir) / "b.wav", pcm)
+        self.assertEqual(read_pcm_wav(str(Path(self.temp_dir) / "b.wav")), pcm)
+        # wrong format must fail closed (Calliope receipt: 24 kHz s16 mono)
+        bad = Path(self.temp_dir) / "bad.wav"
+        with wave.open(str(bad), "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(16000)
+            wf.writeframes(struct.pack("<48000h", *([1] * 48000)))
+        with self.assertRaises(ValueError):
+            read_pcm_wav(str(bad))
+
+    def test_scorecard_never_fabricates_unmeasured_metrics(self):
+        # F4/F5 extension: dry-run telemetry is absent => Loss/KL/Top-1 print as
+        # "Unmeasured", and a threshold cannot PASS a missing measurement.
+        work_dir = os.path.join(self.temp_dir, "ws")
+        cfg = DistillPipelineConfig(
+            voices=[VoiceSpec(name="calliope", voice_type="clone",
+                               audio_path="a.wav", utterances=[("a.wav", "x"), ("b.wav", "y")])],
+            target_hardware="780m",
+            work_dir=work_dir,
+            output_model=os.path.join(self.temp_dir, "o.gguf"),
+            dry_run=True,
+            min_top1_threshold=85.0,
+        )
+        p = DistillPipeline(cfg)
+        p.run()
+        with open(Path(work_dir) / "scorecard.json") as f:
+            card = json.load(f)
+            # With a threshold but no telemetry, the gate must FAIL, not PASS (fail-closed).
+            self.assertIsNone(card["safety_gate"]["measured"]["calliope"])
+            self.assertEqual(card["safety_gate"]["status"], "failed")
+
+    def test_holdout_analyzer_recovers_shift(self):
+        # Known-shift recovery: synth == teacher shifted 12 samples (analyzer
+        # machinery receipted in analyze_audio.py self_check; here we verify the
+        # pipeline wrapper reports it).
+        import subprocess
+        import sys
+        from tools.breeze_distill.pipeline import analyze_holdout
+
+        t = Path(self.temp_dir) / "t.wav"
+        n = self.RATE  # 1 s
+        samples = [1000 + ((i * 7) % 171) - 85 for i in range(n)]
+        write_pcm_wav(t, samples)
+        write_pcm_wav(Path(self.temp_dir) / "s.wav", [0] * 12 + samples[: n - 12])
+        m = analyze_holdout(str(t), str(Path(self.temp_dir) / "s.wav"), self.temp_dir)
+        self.assertGreater(m["best_lag_samples"], 0)
+        self.assertAlmostEqual(m["best_lag_samples"], 12, delta=1)
+        # best_lag_correlation is the rescued overlap metric; raw correlation
+        # is unaligned and not a shift-robust claim.
+        self.assertGreater(m["best_lag_correlation"], 0.99)
+        self.assertGreater(m["rms_ratio"], 0.9)
 
 
 if __name__ == "__main__":
