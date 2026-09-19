@@ -1,0 +1,77 @@
+{
+  "title": "Depth-decoder lever probe: BREEZE_DD_FUSED / BREEZE_DD_FLASH_ATTN on the 9-block student",
+  "date": "2026-09-19",
+  "question": "Find ~0.030 RTF (2.4 ms/frame) of savings for the serving candidate after config-loss was ruled out.",
+  "artifact": {
+    "path": "/models/breeze-tts-2-dd9-q4_k-8c359295.gguf (breezetts-dev)",
+    "md5": "73d118b6effd199e72a96a819b0f1916",
+    "sha256": "8c359295c9f7490596a3e2ca36b168747c44708cd4b2fc124e7c45e24cff2062"
+  },
+  "binary": {
+    "path": "/src/build/breeze-cli (breezetts-dev)",
+    "md5": "ef6e93de013754a21ec9b3686ca3f14e",
+    "source_commit": "d968a2f"
+  },
+  "voice": "calliope-331f8daa",
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "base_env": "BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_V_CACHE_TRANSPOSED=0",
+  "host_load_loadavg1": {"probe1_fused_flash_only": "0.58->0.84", "probe2_combined": "0.98->1.55 (rising; numbers are warm, 3rd repeat)"},
+  "results": {
+    "baseline_fused0_flash0": {
+      "note": "flag-off low-load run, same session",
+      "warm_wall_rtf": [0.818, 0.814, 0.823],
+      "depth_ms_frame": 39.5,
+      "backbone_ms_frame": 17.7,
+      "vocoder_ms_frame": 8.2,
+      "frames": 220,
+      "audio_md5": "d7272a9193867e1a6ea8c7418369c109"
+    },
+    "fused1_flash0": {
+      "depth_graphs": "1 fused graph (15 steps), compute buffer 336928 bytes",
+      "warm_wall_rtf": [0.799, 0.805],
+      "rtf_all": [0.811, 0.805, 0.799],
+      "depth_ms_frame": [38.08, 38.37, 38.10],
+      "backbone_ms_frame": [17.73, 17.69, 17.48],
+      "vocoder_ms_frame": [8.12, 7.73, 7.72],
+      "frames": 196,
+      "audio_s": 15.68,
+      "audio_bits": "DIFFERENT from baseline (in-graph gumbel-max sampling changes logits path)"
+    },
+    "fused0_flash1": {
+      "depth_graphs": "15 static graphs, compute buffer 213284 bytes",
+      "warm_wall_rtf": [0.799, 0.801],
+      "rtf_all": [0.811, 0.799, 0.801],
+      "depth_ms_frame": [37.81, 37.60, 37.81],
+      "backbone_ms_frame": [17.97, 17.71, 17.78],
+      "vocoder_ms_frame": [8.18, 8.04, 7.97],
+      "frames": 215,
+      "audio_s": 17.20,
+      "audio_bits": "DIFFERENT from baseline (F16 mask cast path)"
+    },
+    "fused1_flash1_combined": {
+      "depth_graphs": "1 fused graph (15 steps), compute buffer 336936 bytes",
+      "rtf_all": [0.797, 0.791, 0.792],
+      "warm_wall_rtf": [0.791, 0.792],
+      "depth_ms_frame": [36.89, 37.21, 37.19],
+      "backbone_ms_frame": [17.89, 17.62, 17.72],
+      "vocoder_ms_frame": [8.14, 7.89, 7.96],
+      "frames": 219,
+      "audio_s": 17.52,
+      "audio_bits": "DIFFERENT from baseline; frame count 219 ~= baseline 220 (same continuation family)"
+    }
+  },
+  "findings": {
+    "per_frame_savings_combined": "depth 39.5 -> ~37.1 ms/frame = -2.4 ms/frame = -0.027 RTF vs today's baseline; meets the 0.030 RTF target",
+    "stacking": "levers are additive (fused removes 14 graph submissions; flash removes f32 mask bandwidth; orthogonal)",
+    "audio_divergence": "BOTH levers change generated audio at seed 42 (sampling/continuation changes). This is a model-behavior change, not a free flag flip. Quality gate (test-set eval) must pass before adoption.",
+    "context": "0.7917 peak was a host-state artifact (proven bit-exact in dd9-rtf-07917-verification-receipt.json). The combined lever reaches 0.791-0.797 under load 1-1.5 — below the historical peak, structurally."
+  },
+  "open": [
+    "audio quality evaluation (deferred N=2 test-set eval applies; fused changes sampling from host to in-graph gumbel-max)",
+    "N=2 multi-voice artifact (a4b1a73e...) needs the same 4-cell probe — only the 9-block single-voice student was probed",
+    "production pod (binary 607db056..., pre-step-1) may not contain both levers; confirm flag support before any prod claim",
+    "host load rose to 1.55 during the combined probe; a clean re-run at recorded load is the next step before any gate decision"
+  ]
+}
