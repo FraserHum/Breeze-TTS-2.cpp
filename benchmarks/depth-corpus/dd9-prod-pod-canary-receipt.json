@@ -1,0 +1,75 @@
+{
+  "title": "Production-pod canary: depth levers (FUSED+FLASH) on the live serving pod, controlled load",
+  "date": "2026-09-19",
+  "purpose": "Per collaborator gate framing: dev-pod number anchors the queenbee bar; production-pod measurement is operational canary verification, not a gate precondition. Confirm knob support + levers translate into proportional live-latency reduction on the actual serving pod.",
+  "target": {
+    "pod": "breezetts-6b68bd7687-cbzgv (deployment breezetts, ns hermes-voice)",
+    "binary": { "md5": "607db056a5fe5e62f76cc3c0a3537a00", "path": "/usr/local/bin/breeze-cli" },
+    "gpu": "AMD Radeon 780M (RADV PHOENIX) Vulkan",
+    "host": "queenbee, up 5d+ (no reboot)"
+  },
+  "voices": { "calliope": "/models/calliope-331f8daa.breeze", "steward": "/models/steward.breeze" },
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "repeat": 2,
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "env_base": "BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_V_CACHE_TRANSPOSED=0",
+  "results": {
+    "dd9_student_8c359295": {
+      "artifact": { "md5": "73d118b6effd199e72a96a819b0f1916", "sha256": "8c359295c9f7490596a3e2ca36b168747c44708cd4b2fc124e7c45e24cff2062", "path": "/models/breeze-tts-2-dd9-q4_k-8c359295.gguf" },
+      "baseline_fused0_flash0": {
+        "loadavg": 1.17,
+        "wall_rtf": 0.811,
+        "depth_ms_frame": 38.86,
+        "backbone_ms_frame": 17.57,
+        "vocoder_ms_frame": 7.94,
+        "frames": 220,
+        "audio_md5": "d7272a9193867e1a6ea8c7418369c109"
+      },
+      "combined_fused1_flash1": {
+        "loadavg": 1.10,
+        "wall_rtf": 0.791,
+        "depth_ms_frame": 37.12,
+        "backbone_ms_frame": 17.60,
+        "vocoder_ms_frame": 8.02,
+        "frames": 219,
+        "audio_md5": "8b50147daf7171b40c87f6f40c5c22be"
+      },
+      "delta_rtf": -0.020,
+      "delta_depth_ms_frame": -1.74
+    },
+    "q3_ffn_57a846aa": {
+      "artifact": { "md5": "57a846aa01c3828b0ed5831fd71e5391", "path": "/models/breeze-tts-2-q3-ffn-head-f16-31a8cc1f.gguf" },
+      "note": "canonical prod receipt env (GGML_VK_ALLOW_GRAPHICS_QUEUE=1 + BREEZE_DD_BLOCKS=9) reproduced 0.004-different RTF and byte-identical audio vs the un-canonical run — the 0.002 flag cost reconfirms on prod",
+      "baseline_fused0_flash0": {
+        "loadavg": 0.76,
+        "wall_rtf": 0.871,
+        "depth_ms_frame": 43.37,
+        "backbone_ms_frame": 17.76,
+        "vocoder_ms_frame": 7.93,
+        "frames": 221,
+        "audio_md5": "9b1c20691830a5a10b00af6f8763ade4"
+      },
+      "combined_fused1_flash1": {
+        "loadavg": 1.19,
+        "wall_rtf": 0.837,
+        "depth_ms_frame": 40.82,
+        "backbone_ms_frame": 17.47,
+        "vocoder_ms_frame": 8.13,
+        "frames": 209,
+        "audio_md5": "1b56782e97be0a605ad5f98791e9fa85"
+      },
+      "delta_rtf": -0.034,
+      "delta_depth_ms_frame": -2.55
+    }
+  },
+  "provenance_highlights": [
+    "CROSS-POD BIT-EXACT (1): prod-pod 8c359295 baseline wav md5 d7272a91... == the original 09-16 0.7917-run wav (dd9-rtf-07917-verification-receipt.json). Same weights + env + seed => identical output bits across THREE binaries/pods (09-16 build, dev ef6e93de, prod 607db056).",
+    "CROSS-POD BIT-EXACT (2): combined-lever wav 8b50147d... identical between dev pod (dd9-depth-lever-probe.json clean_combined_rerun_single_voice) and prod pod. The fused+flash audio is stable across binary generations — what the ear gate hears in dev clips is what prod will emit.",
+    "DETERMINISM: both repeats per cell byte-identical (md5 .repeat-2 == base in all 8 cells)."
+  ],
+  "anchor_correction": "The 0.846 prod anchor (breezetts-prod-rtf-receipt.json) was measured at recorded loadavg 3.35. Today at load 0.76 the q3 baseline measures 0.871. The anchor is a regime number; the honest controlled-load prod baseline is 0.871 and the load-bearing figure is the lever delta (-0.034 q3, -0.020 student). Queenbee gate letter must cite controlled-load numbers, not the 0.846.",
+  "knob_support_confirmed": "BREEZE_DD_FUSED / BREEZE_DD_FLASH_ATTN active in prod binary 607db056 (fused graph banner '1 fused graph (15 steps)' observed; flash via depth ms/frame drop with 15-static-graphs banner)",
+  "verdict": "Levers translate into proportional live-latency reduction on the actual serving pod at controlled load: student 0.811 -> 0.791, q3 artifact 0.871 -> 0.837. Canary PASS. Deployment (env change only, no binary rollout) is ready to be gated on the ear gate + queenbee letters (c)/(d).",
+  "cleanup": "probe wavs removed from prod /tmp after md5 capture (rm -f /tmp/probe-*.wav /tmp/p*.wav)"
+}
