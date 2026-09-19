@@ -8,9 +8,12 @@ Voice names default to each bin's parent directory name; pass --voice
 (parallel to the bins) to override. Single-voice usage is unchanged.
 """
 import argparse
+import datetime
+import json
 import math
 import os
 from pathlib import Path
+import platform
 import time
 import numpy as np
 import torch
@@ -198,6 +201,57 @@ def evaluate(model: DepthDecoder, val_loader: DataLoader, device: str, temperatu
     }
 
 
+def write_receipt(out_dir: Path, args, train_counts: dict, val_counts: dict,
+                  baseline: dict, baseline_voice: dict,
+                  best_epoch: int, best_val_metrics: dict, best_per_voice: dict):
+    """Persist distill_receipt.json at --output-dir.
+
+    Contract for consumers (breeze-distill pipeline, safety-gate derivation):
+    - per_voice_val: per-voice {loss, kl, ce, top1_acc_codes, top1_acc_teacher, _n_records}
+      at the best checkpoint's epoch (combined = count-weighted aggregate via combine_metrics)
+    - baseline_per_voice: untrained 9-block truncation, same keys
+    - All *_acc_* values are percentages (0..100).
+    """
+    receipt = {
+        "tool": "distill.py",
+        "version": 1,
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "host": platform.node(),
+        "python": platform.python_version(),
+        "torch": torch.__version__,
+        "device": args.device,
+        "n_layer": 9,
+        "args": {
+            "teacher_gguf": args.teacher_gguf,
+            "output_dir": args.output_dir,
+            "batch_size": args.batch_size,
+            "epochs": args.epochs,
+            "lr": args.lr,
+            "min_lr": args.min_lr,
+            "weight_decay": args.weight_decay,
+            "temperature": args.temperature,
+            "alpha_kd": args.alpha_kd,
+            "train_bin": args.train_bin,
+            "val_bin": args.val_bin,
+        },
+        "train_counts": train_counts,
+        "val_counts": val_counts,
+        "baseline": {
+            "per_voice": baseline_voice,
+            "combined": baseline,
+        },
+        "best": {
+            "epoch": best_epoch,
+            "combined": best_val_metrics,
+            "per_voice_val": best_per_voice,
+        },
+    }
+    path = out_dir / "distill_receipt.json"
+    with open(path, "w") as f:
+        json.dump(receipt, f, indent=2)
+    print(f"Receipt written: {path}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Distill 9-block depth decoder")
     # N-voice: pass one bin per voice (parallel --voice labels). Single voice unchanged.
@@ -295,6 +349,9 @@ def main():
 
     best_val_loss = float("inf")
     best_ckpt_path = out_dir / "best_student_9block.pt"
+    best_epoch = None
+    best_val_metrics = None
+    best_per_voice = {}
 
     for epoch in range(1, args.epochs + 1):
         student.train()
@@ -354,6 +411,9 @@ def main():
 
         if val_metrics["loss"] < best_val_loss:
             best_val_loss = val_metrics["loss"]
+            best_epoch = epoch
+            best_val_metrics = val_metrics
+            best_per_voice = per_voice
             torch.save({
                 "epoch": epoch,
                 "model_state_dict": student.state_dict(),
@@ -365,6 +425,17 @@ def main():
 
     print("\n=== Distillation Training Complete ===")
     print(f"Best validation loss: {best_val_loss:.4f} saved at {best_ckpt_path}")
+
+    write_receipt(
+        out_dir, args,
+        train_counts={ds.voice: len(ds) for ds in train_ds_list},
+        val_counts=val_counts,
+        baseline=baseline,
+        baseline_voice=baseline_voice,
+        best_epoch=best_epoch,
+        best_val_metrics=val_metrics,
+        best_per_voice=best_per_voice,
+    )
 
 
 if __name__ == "__main__":

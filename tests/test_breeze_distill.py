@@ -129,12 +129,24 @@ class TestPipeline(unittest.TestCase):
         self.assertEqual(v1.name, "calliope")
         self.assertEqual(v1.voice_type, "clone")
         self.assertEqual(v1.audio_path, "calliope.wav")
+        self.assertEqual(v1.utterances, [("calliope.wav", None)])
 
         v2 = parse_voice_flag('name=steward,type=design,instruction="Warm butler",seed=108')
         self.assertEqual(v2.name, "steward")
         self.assertEqual(v2.voice_type, "design")
         self.assertEqual(v2.instruction, "Warm butler")
         self.assertEqual(v2.seed, 108)
+
+    def test_parse_voice_flag_multi_utterance(self):
+        # F8: repeated audio=/text= pairs become multi-utterance clone references;
+        # quoted commas in text must stay inside the value.
+        v = parse_voice_flag(
+            'name=calliope,type=clone,audio=a1.wav,text="line, one",audio=a2.wav,text="line two"'
+        )
+        self.assertEqual(v.utterances, [("a1.wav", "line, one"), ("a2.wav", "line two")])
+        self.assertEqual(v.audio_path, "a1.wav")
+        self.assertEqual(v.transcript, "line, one")
+        v.validate()  # structural: 2 utterances is valid shape
 
     def test_voice_spec_validation(self):
         bad_v = VoiceSpec(name="bad name with spaces", voice_type="clone")
@@ -146,10 +158,12 @@ class TestPipeline(unittest.TestCase):
             bad_type.validate()
 
     def test_hardware_profiles(self):
+        # Receipt-gated profiles only; the unmeasured 6-block 'edge' profile was CUT.
         self.assertIn("780m", HARDWARE_PROFILES)
         self.assertEqual(HARDWARE_PROFILES["780m"]["n_blocks"], 9)
-        self.assertIn("edge", HARDWARE_PROFILES)
-        self.assertEqual(HARDWARE_PROFILES["edge"]["n_blocks"], 6)
+        self.assertIn("baseline", HARDWARE_PROFILES)
+        self.assertEqual(HARDWARE_PROFILES["baseline"]["n_blocks"], 12)
+        self.assertNotIn("edge", HARDWARE_PROFILES)
 
     def test_pipeline_dry_run_execution(self):
         work_dir = os.path.join(self.temp_dir, "distill_work")
@@ -180,8 +194,12 @@ class TestPipeline(unittest.TestCase):
             card = json.load(f)
             self.assertEqual(card["n_blocks"], 9)
             self.assertEqual(card["target_hardware"], "780m")
-            self.assertTrue(card["all_pass"])
             self.assertEqual(card["voices"], ["calliope", "steward"])
+            # F4/F5: dry-run has no threshold => fail-closed UNVERIFIED,
+            # all_pass is None (never fabricated True), no RTF number.
+            self.assertIsNone(card["all_pass"])
+            self.assertEqual(card["safety_gate"]["status"], "unverified")
+            self.assertIsNone(card["artifact_rtf"])
 
 
 if __name__ == "__main__":

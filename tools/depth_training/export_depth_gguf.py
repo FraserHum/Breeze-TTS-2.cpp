@@ -91,6 +91,7 @@ def export_gguf(
     breeze_quantize_bin: str = "/mnt/media/breeze-teacher/build/breeze-quantize",
     voice_specs=None,
     default_voice: str = None,
+    student_md5: str = None,
 ):
     print(f"Reading base model from {base_gguf}...")
     reader = gguf.GGUFReader(base_gguf)
@@ -107,6 +108,11 @@ def export_gguf(
 
     # 1. Copy metadata with block count = 9
     copy_metadata(reader, writer, n_blocks=n_blocks)
+
+    # Lineage (Define lock): bake the student checkpoint hash into the artifact so
+    # a stock-model update can't orphan baked artifacts.
+    if student_md5:
+        writer.add_string("breeze.student.ckpt_md5", student_md5)
 
     # 1b. Embed voices (before quantization; probe-verified the KVs survive q4_k)
     if voice_specs:
@@ -192,6 +198,8 @@ def main():
                         help="embed a .breeze voice file into the GGUF metadata; repeatable")
     parser.add_argument("--default-voice", default=None,
                         help="which embedded voice is the fallback when no --voice/--ref-audio is given")
+    parser.add_argument("--student-md5", default=None,
+                        help="md5 of the student checkpoint file; baked into metadata as breeze.student.ckpt_md5 for lineage")
     args = parser.parse_args()
 
     export_gguf(
@@ -202,6 +210,7 @@ def main():
         breeze_quantize_bin=args.breeze_quantize,
         voice_specs=args.embed_voice,
         default_voice=args.default_voice,
+        student_md5=args.student_md5,
     )
 
 

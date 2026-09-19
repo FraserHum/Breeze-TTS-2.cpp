@@ -2,8 +2,14 @@
 
 Provides the standardized 39-ARPAbet pangram reference text and validation utilities
 to ensure zero-shot voice design or cloning clips have adequate phonetic diversity.
+
+NOTE (F8): this is WORD-LEVEL LEXICAL ANALYSIS, not true phonetic analysis.
+Coverage = union of phonemes from a word lookup table (CMUdict when available,
+otherwise a small hand lexicon). It does not model stress, sub-lexemes, or
+coarticulation, so 39/39 is a necessary-but-not-sufficient diversity check.
 """
 from dataclasses import dataclass, field
+import os
 import re
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -171,11 +177,38 @@ def tokenize_words(text: str) -> List[str]:
     return [w.strip("'") for w in words if w.strip("'")]
 
 
+# CMUdict (e.g. /usr/share/dict/cmu dict, cmudict-0.7b, or any CMUdict flat file):
+# one "WORD  PH1 PH2 ..." entry per line. Preferred over the hand lexicon (F8).
+_CACHED_CMU: Dict[str, List[str]] = {}
+
+
+def load_cmudict(path: Optional[str] = None) -> Dict[str, List[str]]:
+    if path is None:
+        path = os.environ.get("CMUDICT_PATH", "cmudict-0.7b")
+    if path in _CACHED_CMU:
+        return _CACHED_CMU[path]
+    lex: Dict[str, List[str]] = {}
+    try:
+        with open(path) as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) >= 2:
+                    word = parts[0].split("-")[0].lower()
+                    # Strip stress digits (1/2/3) from phoneme tokens
+                    lex[word] = [re.sub(r"[123]", "", p) for p in parts[1:]]
+    except OSError:
+        return {}
+    _CACHED_CMU[path] = lex
+    return lex
+
+
 def analyze_phoneme_coverage(
     text: str, custom_lexicon: Optional[Dict[str, List[str]]] = None
 ) -> PhonemeReport:
-    """Analyze the ARPAbet 39 coverage of a given reference text."""
+    """Analyze the ARPAbet 39 coverage of a given reference text (lexical, see module note)."""
     lexicon = dict(BASE_LEXICON)
+    cmu = load_cmudict()
+    lexicon.update(cmu)
     if custom_lexicon:
         lexicon.update(custom_lexicon)
 

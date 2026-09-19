@@ -75,43 +75,6 @@ def cmd_select(args):
     )
 
 
-def parse_voice_flag(v_str: str) -> VoiceSpec:
-    """Parse comma-separated voice specification: key=val,key=val...
-
-    Example:
-      name=steward,type=design,instruction="Warm British butler",seed=42
-      name=calliope,type=clone,audio=./calliope.wav
-      name=calliope,type=precomputed,breeze=./calliope.breeze
-    """
-    parts = v_str.split(",")
-    kvs = {}
-    for p in parts:
-        if "=" in p:
-            k, v = p.split("=", 1)
-            kvs[k.strip()] = v.strip().strip('"').strip("'")
-
-    name = kvs.get("name")
-    if not name:
-        raise ValueError(f"Voice specification requires 'name': {v_str}")
-
-    v_type = kvs.get("type", "clone")
-    audio = kvs.get("audio")
-    transcript = kvs.get("text")
-    instruction = kvs.get("instruction")
-    seed = int(kvs.get("seed", 42))
-    breeze = kvs.get("breeze")
-
-    return VoiceSpec(
-        name=name,
-        voice_type=v_type,
-        audio_path=audio,
-        transcript=transcript,
-        instruction=instruction,
-        seed=seed,
-        breeze_path=breeze,
-    )
-
-
 def cmd_build(args):
     voices: list[VoiceSpec] = []
     if args.voice:
@@ -138,6 +101,7 @@ def cmd_build(args):
         batch_size=args.batch_size,
         learning_rate=args.lr,
         min_top1_threshold=args.min_top1,
+        force=args.force,
         dry_run=args.dry_run,
     )
 
@@ -189,7 +153,7 @@ def main():
         "--target-hardware",
         choices=list(HARDWARE_PROFILES.keys()),
         default="780m",
-        help="Hardware profile (780m: 9 blocks, edge: 6 blocks)",
+        help="Receipt-gated hardware profile (780m: 9 blocks @0.80 RTF, baseline: 12 blocks @0.93 RTF)",
     )
     p_bld.add_argument("--n-blocks", type=int, default=None, help="Explicit depth decoder block count")
     p_bld.add_argument("--base-model", default="models/teacher-f16.gguf", help="Teacher model GGUF")
@@ -201,7 +165,11 @@ def main():
     p_bld.add_argument("--epochs", type=int, default=15, help="Distillation epochs")
     p_bld.add_argument("--batch-size", type=int, default=32, help="Batch size")
     p_bld.add_argument("--lr", type=float, default=2e-4, help="Learning rate")
-    p_bld.add_argument("--min-top1", type=float, default=0.40, help="Minimum validation Top-1 match threshold")
+    p_bld.add_argument("--min-top1", type=float, default=None,
+                       help="Safety-gate threshold for top1_acc_teacher, PERCENT 0..100 (derive from a "
+                            "full-corpus receipt). Omit => UNVERIFIED, fail-closed (no PASS).")
+    p_bld.add_argument("--force", action="store_true",
+                       help="Override a failing safety gate; recorded as status=forced in scorecard.json (receipted)")
     p_bld.add_argument("--dry-run", action="store_true", help="Dry run end-to-end pipeline")
 
     args = parser.parse_args()
