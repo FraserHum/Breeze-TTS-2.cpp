@@ -71,7 +71,7 @@ def read_pcm_wav(path: str) -> List[int]:
         if (wf.getframerate(), wf.getnchannels(), wf.getsampwidth()) != (REF_RATE, 1, 2):
             raise ValueError(f"{path}: clone reference must be 24 kHz s16 mono; got "
                              f"{wf.getframerate()} Hz, {wf.getnchannels()} ch, {wf.getsampwidth() * 8} bit")
-        return struct.unpack(f"<{wf.getnframes()}h", wf.readframes(wf.getnframes()))
+        return list(struct.unpack(f"<{wf.getnframes()}h", wf.readframes(wf.getnframes())))
 
 
 def write_pcm_wav(path, samples: List[int]):
