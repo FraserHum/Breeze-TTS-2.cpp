@@ -42,6 +42,18 @@
     "error_path": "unknown voice name exits rc=1 with 'no voice called bogus (not in <dir>, not embedded)'",
     "log": "dd9-embedded-voices-acceptance.log (full transcript)"
   },
+  "pod_acceptance": {
+    "host": "pod breezetts-dev (ns hermes-voice, node queenbee, x86_64)",
+    "binary_md5": "9513fee77a8c04c5685ba46cb763db8a",
+    "artifact_md5": "a622cf8d9a1885053edb0c96a3aeb10e",
+    "note": "same binary + artifact as sunset acceptance; pod /models PVC was full, so artifact+binary staged in /tmp/acc with LD_LIBRARY_PATH=/tmp/acc (dynamic libggml* shipped from the sunset build tree); loose-dir control still reads /models",
+    "frame_diff": {
+      "steward": { "emb_default_wav_md5": "5172e5af24ce53afdd7ed0694d899fed", "emb_voice_steward_wav_md5": "5172e5af24ce53afdd7ed0694d899fed", "dir_voice_steward_wav_md5": "5172e5af24ce53afdd7ed0694d899fed", "wav_bytes": 30764, "identical": true },
+      "calliope": { "emb_voice_wav_md5": "2ad8be344e8caef6c817c334dc9e3911", "dir_voice_wav_md5": "2ad8be344e8caef6c817c334dc9e3911", "wav_bytes": 38444, "identical": true }
+    },
+    "cross_host_note": "wav md5s differ from sunset for the same voice (sunset steward 631f5199.../38444B, pod 5172e5af.../30764B) — expected: different GPU/runtime (pod uses its own Vulkan device). Within-host embedded-vs-loose identity is the acceptance criterion and it holds on both hosts",
+    "log": "dd9-embedded-voices-pod-acceptance.log (full transcript)"
+  },
   "c_side_verification": {
     "unit_test": "tests/test_embedded_voices.cpp (test-embedded-voices): 26/26 PASS — synthetic GGUF via gguf C API, real GGUFModel::load + kv_bytes + parse_voice_bytes + load_embedded_voices; byte-identical KV payloads, field-exact Voice round-trip for both canonical voices; guard rails reject empty/truncated/bad-magic buffers",
     "cli_semantics": "dir lookup wins; on miss the embedded lookup runs; no --voice and no --ref-audio falls back to the embedded default (warns); no-embed GGUFs behave exactly as before",

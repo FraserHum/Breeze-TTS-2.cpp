@@ -1,0 +1,40 @@
+=== binary md5 ===
+9513fee77a8c04c5685ba46cb763db8a  /tmp/acc/breeze-cli
+=== artifact md5 ===
+a622cf8d9a1885053edb0c96a3aeb10e  /tmp/acc/breeze-dd9-n2-embedded-q4_k.gguf
+=== list-voices (no --voices-dir, no --text) ===
+rc=0
+loading /tmp/acc/breeze-dd9-n2-embedded-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+embedded in /tmp/acc/breeze-dd9-n2-embedded-q4_k.gguf:
+calliope                  12.88 s  Not even the fires of Hell are a match for my flame. With this I'll start a fire they can never put out. Somebody's dreams just went up in flames. Better break out the fire extinguisher.
+steward                    9.92 s  Good evening. The household is in order, and I have the week's list ready whenever you wish. There is no hurry at all; we have plenty of time.  (default)
+in /nonexistent:
+  (none)
+=== embedded default (no --voice, no --voices-dir) ===
+emb-default rc=0
+=== embedded --voice steward ===
+emb-steward rc=0
+=== embedded --voice calliope ===
+emb-calliope rc=0
+=== loose dir --voice steward (control, /models) ===
+dir-steward rc=0
+=== loose dir --voice calliope (control, /models) ===
+dir-calliope rc=0
+=== error path: unknown voice ===
+bogus rc=1 (expect 1)
+no voice called bogus (not in /nonexistent, not embedded)
+loading /tmp/acc/breeze-dd9-n2-embedded-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+=== frame diff (wav md5) ===
+5172e5af24ce53afdd7ed0694d899fed  /tmp/acc/emb-default.wav
+5172e5af24ce53afdd7ed0694d899fed  /tmp/acc/dir-steward.wav
+5172e5af24ce53afdd7ed0694d899fed  /tmp/acc/emb-steward.wav
+2ad8be344e8caef6c817c334dc9e3911  /tmp/acc/emb-calliope.wav
+2ad8be344e8caef6c817c334dc9e3911  /tmp/acc/dir-calliope.wav
+/tmp/acc/emb-default.wav 30764B
+/tmp/acc/dir-steward.wav 30764B
+/tmp/acc/emb-steward.wav 30764B
+/tmp/acc/emb-calliope.wav 38444B
+/tmp/acc/dir-calliope.wav 38444B
+=== DONE ===
