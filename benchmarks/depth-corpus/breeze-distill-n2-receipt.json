@@ -1,0 +1,92 @@
+{
+  "tool": "distill.py",
+  "version": 1,
+  "timestamp": "2026-09-19T13:18:56.513305+00:00",
+  "host": "sunset",
+  "python": "3.12.13",
+  "torch": "2.11.0+rocm7.2",
+  "device": "cuda",
+  "n_layer": 9,
+  "args": {
+    "teacher_gguf": "/mnt/media/breeze-teacher/models/teacher-f16.gguf",
+    "output_dir": "/mnt/media/breeze-teacher/full_distill_ws/checkpoints",
+    "batch_size": 32,
+    "epochs": 15,
+    "lr": 0.0002,
+    "min_lr": 1e-05,
+    "weight_decay": 0.01,
+    "temperature": 1.0,
+    "alpha_kd": 0.8,
+    "train_bin": [
+      "/mnt/media/breeze-teacher/full_distill_ws/corpus/calliope/train.bin",
+      "/mnt/media/breeze-teacher/full_distill_ws/corpus/steward/train.bin"
+    ],
+    "val_bin": [
+      "/mnt/media/breeze-teacher/full_distill_ws/corpus/calliope/validation.bin",
+      "/mnt/media/breeze-teacher/full_distill_ws/corpus/steward/validation.bin"
+    ]
+  },
+  "train_counts": {
+    "calliope": 17807,
+    "steward": 19503
+  },
+  "val_counts": {
+    "calliope": 2147,
+    "steward": 2358
+  },
+  "baseline": {
+    "per_voice": {
+      "calliope": {
+        "loss": 1.9266492947346119,
+        "kl": 1.1242768056291617,
+        "ce": 5.1361390586003735,
+        "top1_acc_codes": 10.513896085963896,
+        "top1_acc_teacher": 19.87890201665437,
+        "_n_records": 2147
+      },
+      "steward": {
+        "loss": 1.8905606608556629,
+        "kl": 1.104918027045466,
+        "ce": 5.033131020265277,
+        "top1_acc_codes": 9.443031513053953,
+        "top1_acc_teacher": 19.99434662431453,
+        "_n_records": 2358
+      }
+    },
+    "combined": {
+      "loss": 1.9077598388663408,
+      "kl": 1.1141440642528344,
+      "ce": 5.08222275351843,
+      "top1_acc_codes": 9.953385838922465,
+      "top1_acc_teacher": 19.939327851252074
+    }
+  },
+  "best": {
+    "epoch": 15,
+    "combined": {
+      "loss": 1.1880494707432492,
+      "kl": 0.4500678768598544,
+      "ce": 4.1399757708614064,
+      "top1_acc_codes": 15.86681576600747,
+      "top1_acc_teacher": 40.951537514367985
+    },
+    "per_voice_val": {
+      "calliope": {
+        "loss": 1.2466441618046984,
+        "kl": 0.4960619684327854,
+        "ce": 4.248972846454501,
+        "top1_acc_codes": 15.482069072359153,
+        "top1_acc_teacher": 38.22077527732476,
+        "_n_records": 2147
+      },
+      "steward": {
+        "loss": 1.1346979857097752,
+        "kl": 0.40818945675506946,
+        "ce": 4.04073203833453,
+        "top1_acc_codes": 16.217134320402266,
+        "top1_acc_teacher": 43.43794401264272,
+        "_n_records": 2358
+      }
+    }
+  }
+}

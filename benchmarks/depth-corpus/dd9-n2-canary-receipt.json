@@ -1,0 +1,95 @@
+{
+  "title": "Canary benchmark: 9-block depth decoder (N=2 embedded voices) on AMD Radeon 780M (RADV PHOENIX)",
+  "date": "2026-09-20",
+  "purpose": "Verify RTF <= 0.800 and zero-sidecar runtime serving on AMD Radeon 780M for the full-corpus compiled artifact with embedded Calliope and Steward voices.",
+  "target": {
+    "pod": "breezetts-dev (deployment dev, ns hermes-voice)",
+    "binary": {
+      "md5": "f1776155f91907ab79dfbe0d86c2b2cf",
+      "path": "/src/build/breeze-cli"
+    },
+    "gpu": "AMD Radeon 780M Graphics (RADV PHOENIX) Vulkan0",
+    "host": "queenbee, up 6d+ (controlled load)"
+  },
+  "artifact": {
+    "md5": "3dd1d8f7d429364e2e60e5614e26126f",
+    "path": "/models/breeze-dd9-n2-q4_k.gguf",
+    "size_bytes": 2429004960,
+    "student_ckpt_md5": "d9521eed2229101c5c83e9b00919c178",
+    "n_blocks": 9,
+    "embedded_voices": ["calliope", "steward"],
+    "default_embedded_voice": "calliope"
+  },
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "repeat": 2,
+  "voices_dir": "/nonexistent",
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "env_base": "BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_V_CACHE_TRANSPOSED=0 BREEZE_DD_FUSED=1 BREEZE_DD_FLASH_ATTN=1",
+  "results": {
+    "calliope": {
+      "repeat_1": {
+        "wall_time_ms": 13818.5,
+        "wall_rtf": 0.792,
+        "first_audio_ms": 2572,
+        "reference_encode_ms": 0.0,
+        "backbone_ms_frame": 17.55,
+        "depth_ms_frame": 36.71,
+        "vocoder_ms_frame": 8.24,
+        "frames": 218,
+        "audio_s": 17.44,
+        "audio_md5": "eb1cac2231d3945357c35b29bc0ae1bc"
+      },
+      "repeat_2": {
+        "wall_time_ms": 13677.9,
+        "wall_rtf": 0.784,
+        "first_audio_ms": 2442,
+        "reference_encode_ms": 0.0,
+        "backbone_ms_frame": 17.28,
+        "depth_ms_frame": 36.63,
+        "vocoder_ms_frame": 8.31,
+        "frames": 218,
+        "audio_s": 17.44,
+        "audio_md5": "eb1cac2231d3945357c35b29bc0ae1bc"
+      },
+      "average_rtf": 0.788,
+      "determinism_match": true
+    },
+    "steward": {
+      "repeat_1": {
+        "wall_time_ms": 16225.3,
+        "wall_rtf": 0.802,
+        "first_audio_ms": 2582,
+        "reference_encode_ms": 0.0,
+        "backbone_ms_frame": 17.90,
+        "depth_ms_frame": 36.87,
+        "vocoder_ms_frame": 8.58,
+        "frames": 253,
+        "audio_s": 20.24,
+        "audio_md5": "0b18f2aeab7a0a0a0baede89759beca1"
+      },
+      "repeat_2": {
+        "wall_time_ms": 16104.1,
+        "wall_rtf": 0.796,
+        "first_audio_ms": 2560,
+        "reference_encode_ms": 0.0,
+        "backbone_ms_frame": 17.81,
+        "depth_ms_frame": 37.17,
+        "vocoder_ms_frame": 8.20,
+        "frames": 253,
+        "audio_s": 20.24,
+        "audio_md5": "0b18f2aeab7a0a0a0baede89759beca1"
+      },
+      "average_rtf": 0.799,
+      "determinism_match": true
+    }
+  },
+  "verdict": {
+    "latency_budget_rtf": 0.800,
+    "calliope_rtf": 0.788,
+    "steward_rtf": 0.799,
+    "budget_pass": true,
+    "zero_sidecar_pass": true,
+    "determinism_pass": true
+  }
+}
