@@ -1,0 +1,1308 @@
+[
+  {
+    "id": "train-archive-management-01",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "The scanned letters are arranged by sender, with uncertain dates kept in a separate folder. I can prepare a short index before you review the collection.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-02",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "Several photographs have handwritten captions on the reverse. Preserve those notes alongside the images, because they may explain relationships that the pictures alone cannot reveal.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-03",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "Your document search found three plausible matches. The earliest draft uses a different title, while the final version includes the appendix mentioned in your notes.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-04",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "I have grouped the receipts by supplier and marked the unreadable ones for review. The totals remain provisional until those last few amounts are checked carefully.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-05",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "The inventory contains duplicate entries for two storage boxes. Compare their labels before combining them; similar descriptions do not necessarily mean that their contents are identical.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-06",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "For this collection, a simple chronological list should be enough. Add a subject index later if you find yourself repeatedly searching across several different years.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-07",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "Some filenames contain only a camera timestamp. A brief descriptive label will make the useful images easier to recognize without opening every file in the directory.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-archive-management-08",
+    "split": "train",
+    "family": "archive_management",
+    "category": "ordinary",
+    "text": "The oldest notebook begins halfway through a conversation, so its opening page needs a little context. A short introductory note would help the next reader.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-01",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "Your opening paragraph makes the main point clearly, but the second example repeats it. Removing that example would give the closing recommendation more room to breathe.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-02",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "The draft sounds friendlier when you address the reader directly. Keep the concrete explanation, and replace the formal introduction with a straightforward description of the problem.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-03",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "There are two different arguments in this section. Give each one its own paragraph so the evidence connects naturally to the conclusion it is meant to support.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-04",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "I would keep the unexpected detail about the old sign. It gives the description a specific setting and makes the surrounding passage feel less generic overall.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-05",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "The shorter title is easier to remember, although it loses some precision. We can recover that detail in the subtitle without making the heading unusually long.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-06",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "This sentence contains several qualifications before reaching its main verb. Put the action first, then explain the exception once the reader knows what actually happens next.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-07",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "A brief example would help here: describe one person completing the task from beginning to end, including the point where they would normally become confused or hesitate.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-writing-editing-08",
+    "split": "train",
+    "family": "writing_editing",
+    "category": "ordinary",
+    "text": "The final paragraph introduces a new idea instead of finishing the existing argument. Move that idea earlier, or save it for a separate piece of writing.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-01",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "The ferry terminal is across the footbridge from the station. Allow a little extra time if you are carrying luggage, since the crossing can become crowded.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-02",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "Your connection involves changing platforms rather than changing stations. Check the departure board when you arrive, because the platform shown on the ticket may be updated.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-03",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "The smaller suitcase should fit in the overhead rack. Put anything you need during the journey in a separate bag that can remain beside your seat.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-04",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "There is a direct coach in the afternoon and a faster route with one transfer. The direct option is simpler if avoiding uncertainty matters more than speed.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-05",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "The booking confirmation lists the apartment entrance on a side street. Save those arrival instructions before leaving, especially if your mobile connection may be unreliable abroad.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-06",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "A flexible ticket could be useful if the first leg is delayed. Compare the actual change conditions rather than assuming that every flexible fare offers the same protection.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-07",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "The walking route follows the waterfront for most of the distance. It is slightly longer than the main road, but involves fewer complicated crossings along the way.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-travel-logistics-08",
+    "split": "train",
+    "family": "travel_logistics",
+    "category": "ordinary",
+    "text": "For the overnight journey, keep your ticket and identification within reach. The attendant may check them after boarding, once you have settled into your compartment comfortably.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-01",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "The proposal has three unresolved decisions, and only one affects the schedule immediately. Settle that dependency first, then review the remaining choices when the estimates are available.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-02",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "You have enough material for a useful first draft. Write the core recommendation now, and leave clearly marked gaps where the supporting figures still need confirmation.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-03",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "The discussion would benefit from a specific decision at the end. Tell participants what needs agreement so they can arrive prepared to compare the relevant options.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-04",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "This task is waiting on feedback from another team. A short status note should identify the missing input and explain which work can continue while you wait.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-05",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "The revised scope removes the least certain feature and preserves the main workflow. That makes the deadline more credible without preventing us from adding the feature later.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-06",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "Before assigning the remaining work, check whether both estimates include review time. Otherwise the plan may appear balanced while leaving one person with considerably more responsibility.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-07",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "The handover note should explain the current state, the next action, and any unresolved assumption. A long history is less useful than those three practical details.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-work-planning-08",
+    "split": "train",
+    "family": "work_planning",
+    "category": "ordinary",
+    "text": "There is a quiet gap between the larger milestones. Use it for the awkward cleanup tasks that tend to be postponed once the next delivery becomes urgent.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-01",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The service is responding again, but the queue is still draining. New requests should complete normally while older work catches up over the next few minutes.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-02",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The upload reached the server successfully. What remains is the preview generation, which can take longer for a large file than the transfer itself initially required.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-03",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "Your network connection looks stable during this sample. If the interruption returns, record the approximate time so we can compare it with the access point logs afterward.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-04",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The restart cleared the temporary error, but it did not explain the cause. Keep the diagnostic record so a repeated failure gives us something concrete to investigate.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-05",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The backup finished without reporting an error. A small restore check would provide stronger evidence that the saved files are actually usable when they are needed later.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-06",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The application is using its fallback setting because the preferred device was unavailable at startup. Reopening the device selector should let you choose the intended output again.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-07",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "This warning concerns an optional component rather than the main process. The task can finish, although the result will omit the extra preview described in the settings.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-technical-status-08",
+    "split": "train",
+    "family": "technical_status",
+    "category": "ordinary",
+    "text": "The latest measurement includes the initial loading cost. For a fair comparison, report that separately from the repeated operations that run after everything is already in memory.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-01",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "The onions are soft enough to continue, but they have not started to brown. Give them another minute if you want a deeper flavour in the finished sauce.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-02",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "Keep a little of the cooking water before draining the pasta. You can use it to loosen the sauce gradually instead of adding more oil or cream.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-03",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "This mixture will thicken as it cools. Stop just before it reaches the consistency you want, then check it again after it has rested for a moment.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-04",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "Toast the spices briefly until their aroma becomes noticeable, then add the liquid. Have the next ingredients ready so the dry pan does not remain unattended too long.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-05",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "The recipe makes a fairly generous portion. If you halve it, use a smaller baking dish as well, or the mixture may spread much thinner than intended.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-06",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "A sharp knife will make these slices more even. Work slowly and let the blade do the cutting rather than pushing hard against the vegetable with your hand.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-07",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "Taste the dressing before pouring it over everything. A small adjustment is easier in the bowl than after the leaves and other ingredients have already been mixed together.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-food-preparation-08",
+    "split": "train",
+    "family": "food_preparation",
+    "category": "ordinary",
+    "text": "The dough feels sticky now, but resting may make it easier to handle. Give it a little time before deciding that it needs another handful of flour.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-01",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "The cheaper lamp includes the bulb, while the other one requires a separate purchase. Compare the complete cost and check whether either replacement bulb is easy to find.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-02",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "Both backpacks hold about the same amount, but their openings are quite different. Think about which items you reach for most often when choosing between the two designs.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-03",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "This jacket has a removable lining, which makes it useful across a wider range of weather. Check the fit with the lining attached before choosing a smaller size.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-04",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "The replacement part looks similar in the photograph, but the connector is different. Match the model number before ordering rather than relying on the overall shape alone.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-05",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "Buying the larger pack saves money per item only if you will use it. For something unfamiliar, the smaller pack may be the more sensible first purchase.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-06",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "The listing describes a refurbished item with a limited warranty. Read the condition notes closely, particularly any mention of battery wear or accessories that are not included.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-07",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "The two chairs have similar dimensions on paper. Seat firmness and arm height can still feel very different, so trying them briefly would answer more than another specification.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-shopping-choices-08",
+    "split": "train",
+    "family": "shopping_choices",
+    "category": "ordinary",
+    "text": "This fabric sample looks warmer under the shop lights. Take it near a window before deciding whether the colour will suit the room where you intend to use it.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-01",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "A tiny fictional newspaper could give the invitation a playful structure. Use a headline for the occasion, then turn the practical details into short announcements around the page.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-02",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "Try beginning the story with an object that has arrived in the wrong place. The explanation can unfold gradually as different characters notice something unusual about it.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-03",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "For a simple drawing exercise, choose one familiar object and sketch it from three angles. Concentrate on its outline first, then add the details that identify it.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-04",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "The scene might be stronger if the character misunderstands a harmless remark. That creates a small, believable problem without requiring a dramatic coincidence to move the story forward.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-05",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "A limited colour palette would help these illustrations belong together. Pick one dominant colour, one supporting colour, and a neutral background before adding any decorative accents later.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-06",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "The melody has a memorable beginning, but the ending feels abrupt. Repeat a small part of the opening phrase to make the final line feel more connected.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-07",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "You could make the puzzle easier without revealing the answer by changing the first clue. It should show players how to think about the remaining clues themselves.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-creative-ideas-08",
+    "split": "train",
+    "family": "creative_ideas",
+    "category": "ordinary",
+    "text": "Instead of adding another character, give the existing narrator a reason to hesitate. A small uncertainty can create tension while keeping the scene easy to follow throughout.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-01",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The sample contains two hundred and forty entries. Thirty six were incomplete, twelve were duplicates, and the remaining one hundred and ninety two were ready for review.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-02",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "Read the reference as seven, zero, four, nine, two. The zero is part of the identifier, so it should remain there when the number is copied elsewhere.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-03",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The scale shows three point seven five kilograms before the container is subtracted. The empty container weighs four hundred grams, according to the label on its underside.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-04",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "A quarter of the original amount remains in the first bottle. The second bottle contains about two thirds, although its wider shape makes a visual comparison rather misleading.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-05",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The recorded distances are eighteen point two, eighteen point seven, and nineteen point one metres. Use the same unit throughout the comparison so the figures remain easy to interpret.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-06",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The counter moved from nine hundred and ninety eight to one thousand and three. That is an increase of five, despite the extra digit in the final reading.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-07",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The two estimates differ by roughly eight percent. That may be significant, but we should check their assumptions before treating the difference as a measured improvement in performance.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-reading-numbers-08",
+    "split": "train",
+    "family": "reading_numbers",
+    "category": "numbers",
+    "text": "The parcel measures forty two centimetres long, twenty six wide, and eleven high. Its dimensions matter separately from its weight when selecting the appropriate shipping option online.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-01",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The exhibition opens on the twenty third of October and closes in early December. Its first weekend has extended opening hours, according to the provisional programme provided today.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-02",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The invitation says a quarter to seven in the evening. If you are adding it manually, check that the calendar has not interpreted the time as early morning.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-03",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The recording was made in nineteen ninety eight, but the transcript was revised in two thousand and seven. Both dates belong in the record for different reasons.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-04",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The deadline is the last working day of February. That is not always the final calendar day, so check which date the organiser actually intends this year.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-05",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "There are ninety minutes between the two sessions, including a short transfer. That should leave time for a break if the first session finishes close to its scheduled end.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-06",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The notice uses the date format day, month, year. The fourth of June can easily be mistaken for the sixth of April when a different convention is assumed.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-07",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The clock reads twenty three forty five, which is a quarter to midnight. The event continues into the following day, so its finishing date will be different.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calendar-times-08",
+    "split": "train",
+    "family": "calendar_times",
+    "category": "dates",
+    "text": "The archive spans the late eighteen seventies through the early nineteen twenties. Some entries have only a season recorded, rather than a precise day or even a month.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-01",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "Amelia will introduce the first speaker, and Theo will handle questions afterward. Priya has offered to collect the written comments so nobody has to interrupt the discussion midway.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-02",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "The programme lists Sofia Alvarez beside the opening presentation. Later sessions feature Marcus Bennett, Eleanor Price, and a short conversation hosted by Daniel Okafor about their shared project.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-03",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "Nadia and Oliver described the same incident from different viewpoints. Keep their accounts separate until you have identified which details they both directly observed at the time.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-04",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "Please label the first recording for Beatrice and the second for Gabriel. Their surnames are similar, so using the full names will help prevent confusion during the review.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-05",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "The fictional crew includes Captain Mira Solano, engineer Felix Hart, and navigator Imani Cole. Each person should have a distinct way of describing the same unexpected problem.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-06",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "Arjun suggested a shorter route, while Lucia preferred the familiar one. Neither had checked the temporary closure notice that appeared at the entrance earlier in the afternoon.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-07",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "The acknowledgements mention Charlotte, Ibrahim, Yuki, and Matilda. Read each name clearly, with enough separation that the list does not sound like one long unfamiliar phrase instead.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-names-pronunciation-08",
+    "split": "train",
+    "family": "names_pronunciation",
+    "category": "names",
+    "text": "Elias has the original drawing, and Francesca has the revised measurements. Their copies need to be compared before anyone assumes that the most recent file contains every correction.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-01",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "Would you prefer a concise overview first, or would it be more useful to work through one detailed example before we consider the broader implications of this choice?",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-02",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "Which part of the result surprised you most? Was it the overall direction, the size of the difference, or the fact that the smallest example behaved differently?",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-03",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "If we removed this extra step, what information would disappear? Would anyone actually need that information later, or is it being collected mainly because it always has been?",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-04",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "Does the alternative solve the same problem, or does it quietly change the goal? Those can both be useful approaches, but they should not be compared without explanation.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-05",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "How would this process feel to someone trying it for the first time? Is the next action obvious, and can they tell whether their previous action succeeded?",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-06",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "Are these two measurements describing the same interval? One starts before loading finishes, while the other begins afterward, which could explain much of the apparent difference between them.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-07",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "What would convince us that the change helped? A clearer success condition now would make it easier to interpret the next result without moving the target afterward.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-questions-comparisons-08",
+    "split": "train",
+    "family": "questions_comparisons",
+    "category": "questions",
+    "text": "Could the unusual result be caused by the input rather than the implementation? Try the same example in both versions before drawing a conclusion about the underlying mechanism.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-expressive-reactions-01",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(sigh) I read the whole description twice and still missed the little note at the bottom. At least we found it before starting the assembly again.",
+    "tag_expectations": [
+      "sigh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-02",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(laugh) The mascot has managed to look more serious than everyone in the photograph. I think that accidental expression is exactly what makes the picture so memorable.",
+    "tag_expectations": [
+      "laugh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-03",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(sigh) That explanation seemed straightforward until the final exception appeared. Let us take it one piece at a time and see which part actually applies to this case.",
+    "tag_expectations": [
+      "sigh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-04",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(laugh) Apparently the quickest route involved walking past the same statue three times. We did eventually arrive, although I would hesitate to call our navigation especially efficient today.",
+    "tag_expectations": [
+      "laugh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-05",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "I thought the surprise would remain secret until the announcement. (laugh) Then someone put the enormous congratulatory banner directly beside the entrance where absolutely everyone could see it.",
+    "tag_expectations": [
+      "laugh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-06",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "The last page answers the question we spent an hour discussing. (sigh) It would have been useful to know that before filling the board with competing explanations.",
+    "tag_expectations": [
+      "sigh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-07",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(sigh) Well, that was more complicated than expected. (laugh) At least the tiny rubber duck appears to be enjoying its new position beside the very serious equipment.",
+    "tag_expectations": [
+      "sigh",
+      "laugh"
+    ]
+  },
+  {
+    "id": "train-expressive-reactions-08",
+    "split": "train",
+    "family": "expressive_reactions",
+    "category": "expressive",
+    "text": "(laugh) You have given the imaginary dragon an excellent job title. (sigh) Now we just need to explain why a regional treasure coordinator requires such an enormous desk.",
+    "tag_expectations": [
+      "laugh",
+      "sigh"
+    ]
+  },
+  {
+    "id": "train-calm-guidance-01",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "Take a moment to look at the arrangement before moving anything. There is no need to decide immediately; the simplest change may become clearer once you have noticed the pattern. The goal for now is simply to understand what is already there.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-02",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "Start with the nearest edge and follow it slowly with your eyes. When it disappears behind another shape, pause there before deciding where the outline should continue next. You can always revise that decision after the whole outline becomes visible.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-03",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "We can leave the difficult section for a moment. Complete the part you understand, then return with a clearer picture of what the remaining question actually requires from you. A short written note will help you remember where the uncertainty began.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-04",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "Listen to the full phrase before repeating it. A small pause after the opening words can make the sentence easier to follow without changing its meaning or emphasis. Try a comfortable pace first, then adjust only the parts that feel awkward.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-05",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "The surface does not need to be perfectly smooth yet. Work across a small area, check it from another angle, and stop when the remaining marks become faint. It is easier to remove a little more than to replace what disappears.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-06",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "There is enough time to review the choice carefully. Write down the two things that matter most, then see how each option responds to those specific priorities today. The list can remain short; it only needs to guide this particular decision.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-07",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "Let the final note fade before beginning the next phrase. That brief space is part of the rhythm, rather than an empty gap that needs to be filled. If you are unsure, listen once more before trying to match it yourself.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-calm-guidance-08",
+    "split": "train",
+    "family": "calm_guidance",
+    "category": "quiet_pauses",
+    "text": "Keep the first attempt simple. Once the basic shape feels familiar, you can add the finer details without trying to solve every small problem at the same time. A clear beginning provides something reliable to build on during the next attempt.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-01",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "The paper boat drifted beneath the bridge and vanished into the shadows. A moment later it emerged on the other side, carrying a yellow leaf like an oversized passenger. A child watched from the bank until the current carried both passengers around the bend and out of sight behind the reeds.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-02",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "At the end of the narrow lane stood a shop with no name above its entrance. Only a painted blue circle suggested that somebody still expected visitors to arrive. Inside, a brass balance rested on the counter, with a single white feather lying motionless on one of its shallow metal dishes.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-03",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "The bell sounded once, although nobody could see a person near the tower. For a few seconds the square became quiet, and even the pigeons seemed to hesitate. Then a bicycle rattled over the paving stones, breaking the silence as suddenly as the mysterious note had first appeared above the rooftops.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-04",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "A red thread ran through the weave from one corner to the other. The apprentice had intended to hide the mistake, but the finished pattern looked better with it. She decided to leave it there, turning what had seemed like a careless accident into the small detail that made the work her own.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-05",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "The little theatre had been dark for years. When its entrance finally opened again, the first audience found the old velvet curtain carefully repaired and waiting above the stage. Somebody had even polished the little brass rail along the balcony, where generations of visitors had leaned forward to see the actors more clearly.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-06",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "Every morning the boatman placed a smooth stone beside the landing. By autumn, a curved line of stones marked the place where the river had stood during summer. People began adding stones of their own, until the simple marker became a winding sculpture that nobody had planned and everyone seemed to recognize.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-07",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "The map showed a staircase that no longer existed. After searching the building, the visitors discovered that its outline was still visible as a pale mark on the wall. One visitor traced the fading outline upward and realized that a sealed doorway on the next floor stood exactly where the final step had ended.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-narrative-passages-08",
+    "split": "train",
+    "family": "narrative_passages",
+    "category": "long_passage",
+    "text": "She expected the envelope to contain a formal answer. Instead, it held a sketch of the missing sculpture and a single sentence asking whether she recognized the unusual shape. She turned the paper over, hoping to find a signature, but the reverse was blank except for a faint impression left by the pencil.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-01",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "A shadow becomes softer when light reaches an object from many directions. That is why an overcast sky creates gentler edges than a small, bright lamp nearby does. The size of the light source as seen from the object matters more than its physical size considered alone.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-02",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "A useful comparison changes one important variable at a time. Otherwise, when the result improves, it becomes difficult to tell which part of the change actually helped most. That discipline also makes an unexpected result easier to investigate, because there are fewer competing explanations to consider afterward.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-03",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "An average can hide very different experiences. Two groups may share the same central value while one has tightly clustered results and the other has a much wider spread. Looking at the range as well as the average helps reveal that difference before we make a practical decision.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-04",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "A map simplifies the world so that certain relationships become easier to see. What it leaves out matters just as much as the details it chooses to emphasize. A diagram designed for navigating streets will therefore look different from one designed to explain the movement of water.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-05",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "Echoes arrive after the original sound because they travel a longer path. In a large empty room, several reflections can overlap and make spoken words less distinct overall. Curtains and other soft furnishings can absorb some reflected energy, changing the character of the room without altering its size.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-06",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "A woven pattern repeats a small set of crossings to create a larger structure. Changing that repeated unit can alter both the appearance and the flexibility of the fabric. The same idea appears in other crafts, where a modest repeated rule produces something surprisingly rich when viewed together.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-07",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "An analogy helps when it makes a difficult relationship familiar. It becomes misleading when we assume that every detail of the familiar example must also apply to the unfamiliar one. Use the comparison to understand the relevant structure, then return to the actual problem before making the final judgement.",
+    "tag_expectations": []
+  },
+  {
+    "id": "train-explanations-08",
+    "split": "train",
+    "family": "explanations",
+    "category": "explanation",
+    "text": "A small sample can reveal an obvious failure, but it may miss a rare one. That is why a successful first trial is useful evidence without being a final guarantee. The next trial should explore situations that differ meaningfully from the first, rather than merely repeating its easiest cases.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-01",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "(sigh) The interviewer speaks clearly, but the chair occasionally creaks underneath the answer. Mark those moments separately so they are not mistaken for faults in the microphone or recording setup.",
+    "tag_expectations": [
+      "sigh"
+    ]
+  },
+  {
+    "id": "validation-recording-review-02",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "The second take has a more natural pace near the beginning. Its final sentence is slightly rushed, so compare that section before deciding which complete version to keep.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-03",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "There is a faint humming sound between the spoken phrases. Check whether it was present in the room before assuming that the recording software introduced it during processing.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-04",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "The speaker pauses before the unfamiliar term, then pronounces it confidently. Preserve that small hesitation if it helps the explanation sound thoughtful rather than mechanically hurried throughout.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-05",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "The applause begins just before the final word has finished. A careful edit should retain the word clearly without making the audience response seem disconnected from the presentation.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-06",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "The microphone was moved closer halfway through the session. Note that change in the review, because the difference in tone may otherwise sound like a change of speaker.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-07",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "A quiet passage can still contain useful detail. Listen at a consistent level instead of turning it up repeatedly and then judging the following sentence as unexpectedly loud.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-recording-review-08",
+    "split": "validation",
+    "family": "recording_review",
+    "category": "audio_review",
+    "text": "The caption says there are four speakers, but only three distinct voices are obvious in this excerpt. Keep that uncertainty in the notes until the full session is checked.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-01",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "The bronze figure is displayed beside a drawing of its original setting. Together they show how the object would have appeared before it became part of the collection.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-02",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "This gallery follows the history of printing through a series of small demonstrations. The hand press near the entrance makes the physical effort of producing each page especially clear.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-03",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "The label describes the vessel as ceremonial, but its precise use remains uncertain. Notice how the explanation separates what researchers observed from the possibilities they have proposed so far.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-04",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "A fragment of coloured glass rests inside the illuminated case. Its curved edge suggests that it once belonged to a larger window, although the surrounding design has not survived.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-05",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "(laugh) The curator has placed the unfinished study beside the completed portrait. Look closely at the position of the hands to see which part of the composition changed most.",
+    "tag_expectations": [
+      "laugh"
+    ]
+  },
+  {
+    "id": "validation-museum-visit-06",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "The mechanical model runs at intervals rather than continuously. Wait for its next demonstration if you want to understand how the separate pieces move together inside the original machine.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-07",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "The textile is shown under subdued lighting to reduce further fading. Its colours would once have been much brighter than the delicate shades that visitors can now see today.",
+    "tag_expectations": []
+  },
+  {
+    "id": "validation-museum-visit-08",
+    "split": "validation",
+    "family": "museum_visit",
+    "category": "museum_visit",
+    "text": "The final room contains objects donated by local residents. Their short personal accounts give ordinary possessions a significance that would be difficult to explain through dates and materials alone.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-01",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "The crescent moon appears low above the horizon after sunset. Its position changes from evening to evening, so the same clear viewpoint will not always frame it equally well.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-02",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "A planet can look like a bright star when seen without equipment. Its slow movement against the background constellations is one clue that the point of light is different.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-03",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "The telescope reveals a pale band crossing the face of Jupiter. Better atmospheric conditions may show finer detail, even when the instrument and its magnification remain exactly the same.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-04",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "(laugh) The meteor lasted less than a second, leaving a brief white streak across the sky. Several observers noticed it, but their descriptions of its colour were slightly different afterward.",
+    "tag_expectations": [
+      "laugh"
+    ]
+  },
+  {
+    "id": "test-astronomy-notes-05",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "The observatory keeps its lights dim during public viewing. Give your eyes time to adjust before deciding whether the fainter objects mentioned by the guide are actually visible tonight.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-06",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "The star chart is drawn for a particular season and latitude. Turn it to match the direction you are facing rather than expecting the printed orientation to fit automatically.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-07",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "A lunar eclipse develops gradually as the moon moves through the shadow. The changing colour can be more interesting to watch than the exact instant of maximum coverage itself.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-astronomy-notes-08",
+    "split": "test",
+    "family": "astronomy_notes",
+    "category": "astronomy",
+    "text": "The photograph combines several long exposures to reveal a faint cloud of gas. That processing does not mean the cloud would look equally bright through the telescope directly.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-01",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "The grain changes direction near the knot, making that small section harder to plane smoothly. Approach it carefully and inspect the surface before taking another full length shaving.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-02",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "A trial joint in scrap timber can reveal a loose setting before the finished pieces are cut. Label the test parts so the useful adjustment is not forgotten later.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-03",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "The pencil mark belongs on the waste side of the intended cut. Leaving the line visible gives you a clear reference when checking the piece against its final measurement.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-04",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "The clamp needs enough pressure to hold the pieces in position, but more force will not correct an uneven edge. Check the fit before tightening everything into place.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-05",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "A thin coat of finish often looks patchy while it is first applied. Follow the product instructions and allow it to settle before deciding that another coat is needed.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-06",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "The drawer slides freely until the final few centimetres. Look for a small obstruction at the back before removing material from an edge that may already fit correctly.",
+    "tag_expectations": []
+  },
+  {
+    "id": "test-woodworking-practice-07",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "(sigh) The template has shifted slightly since the first piece was marked. Recheck its position now, rather than carrying the same small error into every remaining part of the assembly.",
+    "tag_expectations": [
+      "sigh"
+    ]
+  },
+  {
+    "id": "test-woodworking-practice-08",
+    "split": "test",
+    "family": "woodworking_practice",
+    "category": "woodworking",
+    "text": "The repaired corner is strong enough, but its colour stands out against the older timber. Test the finish on a spare piece before trying to blend the visible repair.",
+    "tag_expectations": []
+  }
+]
