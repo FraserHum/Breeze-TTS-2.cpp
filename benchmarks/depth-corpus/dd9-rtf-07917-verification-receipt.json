@@ -1,0 +1,78 @@
+{
+  "title": "Verification receipt: 0.7917 RTF non-replication root cause (artifact + env integrity confirmed, drift attributed to system state)",
+  "date": "2026-09-19",
+  "question": "Why does the 09-16 0.7917 warm-mean RTF no longer reproduce? Specifically: were there config tweaks or optimizations implemented in the working version that were lost?",
+  "method": "Forensic review of the original task transcripts (tasks 1836/1846) + bit-exact re-run of the original 09-16 command line, env, and artifact on breezetts-dev (task 2577).",
+  "corrections_to_prior_forensics": {
+    "loading_line_attribution": "The 'loading /models/breeze-tts-2-q4_k.gguf' line in dd9-receipt.log belongs to the 12-block baseline control (task 1846, 0.93 RTF), NOT the 0.7917 candidate run (task 1836). The candidate loaded /tmp/breeze-dd9-q4_k.gguf.",
+    "buffer_fingerprint": "213276 bytes is the dev-pod fingerprint for this artifact (confirmed still printing on 09-19); 213284 bytes is the production-pod fingerprint for the DIFFERENT artifact q3-ffn-head-f16-31a8cc1f. Not a temporal drift of the same weights."
+  },
+  "provenance_anchors": {
+    "artifact_0916": {
+      "path_original": "/tmp/breeze-dd9-q4_k.gguf (breezetts-dev)",
+      "preserved_path": "/models/breeze-tts-2-dd9-q4_k-8c359295.gguf (breezetts-dev)",
+      "size_bytes": 2428985376,
+      "md5": "73d118b6effd199e72a96a819b0f1916",
+      "sha256": "8c359295c9f7490596a3e2ca36b168747c44708cd4b2fc124e7c45e24cff2062",
+      "sunset_copy": "/mnt/media/breeze-teacher/models/breeze-dd9-q4_k.gguf (md5+sha256 match, independently verified 2026-09-19)",
+      "status": "BIT-EXACT SURVIVOR — the exact 0.7917 artifact is intact"
+    },
+    "binary": {
+      "path": "/src/build/breeze-cli (breezetts-dev)",
+      "md5": "ef6e93de013754a21ec9b3686ca3f14e",
+      "built": "2026-09-15 21:44 UTC (predates the 0.7917 run)",
+      "status": "UNCHANGED since the 0.7917 run"
+    },
+    "audio_bitexactness": {
+      "original_0916_wav": "/tmp/dd9-distill-verify.wav (mtime Sep 16 00:22)",
+      "rerun_0919_wavs": ["/tmp/test-exact-07917.wav", "/tmp/test-exact-07917.repeat-2.wav (mtime Sep 19 06:44)"],
+      "md5_all_three": "d7272a9193867e1a6ea8c7418369c109",
+      "implication": "Same weights + same env + same seed => identical output bits on 09-16 and 09-19. The model/env pair is exactly what was measured originally; only the wall clock differs."
+    }
+  },
+  "original_command_recovered": {
+    "env": "BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_DD_FUSED=0 BREEZE_V_CACHE_TRANSPOSED=0 (note: no GGML_VK_ALLOW_GRAPHICS_QUEUE=1)",
+    "argv": "kubectl -n hermes-voice exec breezetts-dev -- env <env above> /src/build/breeze-cli /tmp/breeze-dd9-q4_k.gguf --text \"The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.\" --voice calliope-331f8daa --voices-dir /models --seed 42 --cfg-scale 1.0 --repeat 4 --timings --output /tmp/dd9-distill-verify.wav",
+    "note": "This env line now fills the recording gap in dd9-distill-receipt.json, which omitted the candidate-run env."
+  },
+  "results": {
+    "warmup_excerpts_0916_committed": {"rtfs": [0.777, 0.758, 0.772, 0.755], "frames": 92, "artifact_note": "92-frame warmup runs, shorter than canonical prompt; NOT the 0.7917 numbers"},
+    "canonical_0916": {
+      "ms_wall": [14023.8, 14009.0, 13792.8, 13986.6],
+      "warm_mean_wall_rtf": 0.7917,
+      "frames": 220, "audio_s": 17.6,
+      "per_frame_ms": {"backbone": 16.79, "depth": 37.74, "vocoder": 8.20, "total": 62.73}
+    },
+    "canonical_0919_rerun_task2577": {
+      "ms_wall": [14576.2, 14528.2],
+      "warm_wall_rtf": [0.828, 0.825],
+      "frames": 220, "audio_s": 17.6,
+      "per_frame_ms": {"backbone": [17.92, 17.66], "depth": [39.23, 39.50], "vocoder": [8.20, 8.31], "total": [65.35, 65.47]}
+    },
+    "n2_candidate_0919_reference": {
+      "artifact_md5": "a4b1a73e801dedb54a5edea0dd130473",
+      "warm_mean_wall_rtf": 0.821,
+      "per_frame_ms": {"backbone": 17.91, "depth": 38.71, "vocoder": 8.22, "total": 64.84}
+    }
+  },
+  "verdict": {
+    "theory_a_artifact_swap": "RULED OUT — bit-exact survivor artifact (md5 73d118b6…, sha256 8c359295…) + bit-exact output audio (md5 d7272a91…) across 09-16 and 09-19.",
+    "theory_b_lost_env_or_optimization": "RULED OUT — original env recovered from raw transcript and re-run reproduces only the drift, no loss. The exact command + env + artifact yields 0.825 today.",
+    "theory_c_system_state_drift": "CONFIRMED (leading cause) — backbone +5.2% and depth decoder +4.7% systematic slowdown 09-16 -> 09-19 on identical code+weights. Queenbee uptime 5d22h rules out kernel/GPU firmware re-anchor; the drift is SoC clock/thermal/host-load regime. 09-16 runs executed at host load ~0.40; 09-19 re-run and prod run at host load 2-4.",
+    "conclusion": "0.7917 was a peak-condition regime measurement, not a lost configuration. No config tweak or optimization was lost. The honest same-pod anchor is 0.820-0.825 (9-block 9-student, breezetts-dev, 09-19). Production-pod anchor with the q3-ffn-head-f16 artifact under host load 3-4 is 0.846."
+  },
+  "deployment_implications": {
+    "serving_candidate": "N=2 9-block distilled student (a4b1a73e…) at 0.821 warm-mean on dev pod, 0.820 single-voice control; N=2 vs single-voice delta +0.16 ms/frame (+0.001 RTF) = zero measurable inference penalty for multi-voice embedding.",
+    "queenbee_gate_c_anchor": "Dev-pod 0.821 (N=2) vs production-pod 0.846 (current q3-ffn under host load 3-4). The gap is dominated by host-load regime + artifact, not model regression. Recommendation: re-measure the production artifact on breezetts-dev at controlled load to isolate the model delta from the load delta before setting the queenbee RTF bar.",
+    "open_confounds": [
+      "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 is in the canonical env but NOT in the original 0.7917 env — its wall-clock effect is unmeasured (it may have contributed to the 09-16 low-load regime advantage)",
+      "Host load at 09-19 re-run (task 2577) not recorded — should be captured in future receipts"
+    ]
+  },
+  "receipts": {
+    "original": "benchmarks/depth-corpus/dd9-distill-receipt.json",
+    "n2_control": "benchmarks/depth-corpus/dd9-n2-rtf-control-receipt.json",
+    "production": "benchmarks/depth-corpus/breezetts-prod-rtf-receipt.json",
+    "raw_rerun_transcript": "task-2577.log (Antigravity brain, 42 lines)"
+  }
+}

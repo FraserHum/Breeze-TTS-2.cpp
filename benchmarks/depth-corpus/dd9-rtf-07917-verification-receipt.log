@@ -1,0 +1,42 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+depth decoder: 15 static graphs, compute buffer 213276 bytes
+loading /models/breeze-tts-2-dd9-q4_k-8c359295.gguf ...
+backend: Vulkan0, sample rate: 24000
+  flush 1 ready_ms=2700.9 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5291.6 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=7938.1 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=10556.9 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13188.0 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14575.5 delivered_audio_s=17.60
+generated 17.60 sdepth decoder: 15 static graphs, compute buffer 213276 bytes
+
+generation wall     14576.2 ms (wall RTF 0.828)
+time to first audio 2701 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          75.9 ms
+  backbone prefill     103.5 ms
+  first vocoder        275.0 ms  (40 frames)
+  backbone decode     3941.6 ms  (17.92 ms/frame)
+  depth decode        8629.8 ms  (39.23 ms/frame)
+  vocoder             1803.6 ms  (8.20 ms/frame)
+  220 frames, 17.60 s audio
+wrote /tmp/test-exact-07917.wav (17.60 s)
+  flush 1 ready_ms=2605.0 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5296.8 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=7885.0 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=10497.1 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13139.6 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14527.6 delivered_audio_s=17.60
+generated 17.60 s
+generation wall     14528.2 ms (wall RTF 0.825)
+time to first audio 2605 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          35.6 ms
+  backbone prefill      73.1 ms
+  first vocoder        267.6 ms  (40 frames)
+  backbone decode     3885.0 ms  (17.66 ms/frame)
+  depth decode        8690.6 ms  (39.50 ms/frame)
+  vocoder             1827.5 ms  (8.31 ms/frame)
+  220 frames, 17.60 s audio
+wrote /tmp/test-exact-07917.repeat-2.wav (17.60 s)
