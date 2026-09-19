@@ -1,0 +1,108 @@
+{
+  "date": "2026-09-15",
+  "device": "AMD Radeon 780M RADV",
+  "source_head": "1b04645",
+  "probe": "tools/voc_tail_cost.cpp",
+  "reference_max_diff": 0,
+  "student_precision": "All weights F32; existing dequantized dtf blocks plus deterministic synthetic final projection",
+  "warm_repeats": 5,
+  "discarded_warmup_per_block": 1,
+  "rows": [
+    {
+      "round": 0,
+      "frames": 1,
+      "mode": "conv_tail",
+      "median_ms": 82.355,
+      "min_ms": 82.053,
+      "max_ms": 85.763
+    },
+    {
+      "round": 0,
+      "frames": 1,
+      "mode": "student_window_recompute",
+      "median_ms": 4.924,
+      "min_ms": 4.799,
+      "max_ms": 5.246
+    },
+    {
+      "round": 0,
+      "frames": 4,
+      "mode": "conv_tail",
+      "median_ms": 101.557,
+      "min_ms": 98.891,
+      "max_ms": 136.032
+    },
+    {
+      "round": 0,
+      "frames": 4,
+      "mode": "student_window_recompute",
+      "median_ms": 4.909,
+      "min_ms": 4.805,
+      "max_ms": 5.301
+    },
+    {
+      "round": 0,
+      "frames": 12,
+      "mode": "conv_tail",
+      "median_ms": 146.042,
+      "min_ms": 143.711,
+      "max_ms": 148.053
+    },
+    {
+      "round": 0,
+      "frames": 12,
+      "mode": "student_window_recompute",
+      "median_ms": 5.434,
+      "min_ms": 5.161,
+      "max_ms": 7.492
+    },
+    {
+      "round": 1,
+      "frames": 1,
+      "mode": "student_window_recompute",
+      "median_ms": 4.796,
+      "min_ms": 4.719,
+      "max_ms": 5.135
+    },
+    {
+      "round": 1,
+      "frames": 1,
+      "mode": "conv_tail",
+      "median_ms": 82.517,
+      "min_ms": 81.894,
+      "max_ms": 84.081
+    },
+    {
+      "round": 1,
+      "frames": 4,
+      "mode": "student_window_recompute",
+      "median_ms": 4.77,
+      "min_ms": 4.601,
+      "max_ms": 4.884
+    },
+    {
+      "round": 1,
+      "frames": 4,
+      "mode": "conv_tail",
+      "median_ms": 100.155,
+      "min_ms": 97.538,
+      "max_ms": 102.957
+    },
+    {
+      "round": 1,
+      "frames": 12,
+      "mode": "student_window_recompute",
+      "median_ms": 5.285,
+      "min_ms": 5.129,
+      "max_ms": 5.511
+    },
+    {
+      "round": 1,
+      "frames": 12,
+      "mode": "conv_tail",
+      "median_ms": 144.341,
+      "min_ms": 142.991,
+      "max_ms": 145.699
+    }
+  ]
+}

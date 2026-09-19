@@ -65,8 +65,8 @@
     "serving_candidate": "N=2 9-block distilled student (a4b1a73e…) at 0.821 warm-mean on dev pod, 0.820 single-voice control; N=2 vs single-voice delta +0.16 ms/frame (+0.001 RTF) = zero measurable inference penalty for multi-voice embedding.",
     "queenbee_gate_c_anchor": "Dev-pod 0.821 (N=2) vs production-pod 0.846 (current q3-ffn under host load 3-4). The gap is dominated by host-load regime + artifact, not model regression. Recommendation: re-measure the production artifact on breezetts-dev at controlled load to isolate the model delta from the load delta before setting the queenbee RTF bar.",
     "open_confounds": [
-      "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 is in the canonical env but NOT in the original 0.7917 env — its wall-clock effect is unmeasured (it may have contributed to the 09-16 low-load regime advantage)",
-      "Host load at 09-19 re-run (task 2577) not recorded — should be captured in future receipts"
+      "RESOLVED (09-19): GGML_VK_ALLOW_GRAPHICS_QUEUE A/B at recorded low load (loadavg 0.28→0.91, artifact 8c359295…, binary ef6e93de…): flag OFF 0.828/0.818/0.814/0.823 (warm) vs flag ON canonical 0.820/0.821 — cost ≈ 0.002 RTF, NOT 0.028. The 2×2 flag theory is retracted: the 09-16 low-load cell (0.7917) was a host-state regime, not a flag effect. See dd9-depth-lever-probe.json.",
+      "Host load at 09-19 re-run (task 2577) not recorded — loadavg is captured in all receipts after this correction"
     ]
   },
   "receipts": {

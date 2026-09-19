@@ -1,0 +1,1012 @@
+{
+  "caveats": [
+    "English rows alone form the imatrix; Mandarin rows are a paired diagnostic evaluation within the expanded calibration corpus.",
+    "The plain fixed rotation has no seed search, learned parameters, GGUF format, or runtime transform implementation.",
+    "Q4_K is an unrotated dequantized control measured against the F16-rounded BF16 source, not a new quantization result.",
+    "Packed byte sizes are compared within each native format; packed contents are expected to differ after rotation."
+  ],
+  "decision": {
+    "deployment_recommendation": "diagnostic_only",
+    "interpretation": "This screen measures local projection error under native packed quantization. It does not test runtime rotation cost, Vulkan support, free-running speech, or final held-out quality.",
+    "quality_or_runtime_claim": false
+  },
+  "float_identity": {
+    "max_rel_l2": 2.8638683292455843e-15,
+    "passed": true,
+    "rows": [
+      {
+        "calibration": {
+          "max_abs": 1.1546319456101628e-14,
+          "reference_rms": 0.6407239880906833,
+          "rel_l2": 9.171068883794513e-16
+        },
+        "calibration_rows": 80,
+        "diagnostic": {
+          "max_abs": 1.1546319456101628e-14,
+          "reference_rms": 0.5508652026472167,
+          "rel_l2": 9.341105579552248e-16
+        },
+        "diagnostic_rows": 80,
+        "role": "gate",
+        "self_inverse_max_abs": 0.0,
+        "shape": [
+          8192,
+          1024
+        ]
+      },
+      {
+        "calibration": {
+          "max_abs": 7.993605777301127e-15,
+          "reference_rms": 0.3511490153969326,
+          "rel_l2": 9.972204859944731e-16
+        },
+        "calibration_rows": 80,
+        "diagnostic": {
+          "max_abs": 5.773159728050814e-15,
+          "reference_rms": 0.3158508893417029,
+          "rel_l2": 1.024244795252005e-15
+        },
+        "diagnostic_rows": 80,
+        "role": "up",
+        "self_inverse_max_abs": 0.0,
+        "shape": [
+          8192,
+          1024
+        ]
+      },
+      {
+        "calibration": {
+          "max_abs": 5.440092820663267e-15,
+          "reference_rms": 0.16018212327902953,
+          "rel_l2": 2.835433367281128e-15
+        },
+        "calibration_rows": 80,
+        "diagnostic": {
+          "max_abs": 1.4654943925052066e-14,
+          "reference_rms": 0.14721786989291302,
+          "rel_l2": 2.8638683292455843e-15
+        },
+        "diagnostic_rows": 80,
+        "role": "down",
+        "self_inverse_max_abs": 2.220446049250313e-16,
+        "shape": [
+          1024,
+          8192
+        ]
+      }
+    ],
+    "tolerance": 1e-12
+  },
+  "native_results": [
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.8215059638023376,
+        "reference_rms": 0.6407239886853365,
+        "rel_l2": 0.12461840936948353
+      },
+      "diagnostic": {
+        "max_abs": 0.8083587735891342,
+        "reference_rms": 0.5508652019839406,
+        "rel_l2": 0.14800809552908584
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "f260d50f1db258632e043fba03be91e7c918899e7d06380055251d033090dab4",
+        "normalized_max": 75.99337768554688,
+        "normalized_mean": 0.9999999995052349,
+        "normalized_min": 0.10858162492513657,
+        "normalized_weight_sha256": "813044bb7562f5743def65e8e5db0baf795b6e369b9c0c7988dfae0d3a682f70",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "6c2bd9a970ce2e4367bce2e50bdd40a4243cde17bf597781a259362331d268ab",
+      "role": "gate",
+      "rotation": "unrotated",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.11148858070373535,
+        "reference_rms": 0.024388516817092823,
+        "rel_l2": 0.26150438223513184
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.855850338935852,
+        "reference_rms": 0.6407239886853365,
+        "rel_l2": 0.13267053564913706
+      },
+      "diagnostic": {
+        "max_abs": 0.9446600675582886,
+        "reference_rms": 0.5508652019839406,
+        "rel_l2": 0.15776851336005096
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "1c68055f465395a9591bb7192c5e4446c8a43b24d34ffee02edd209a05254fed",
+        "normalized_max": 3.7945101261138916,
+        "normalized_mean": 1.0000000010913936,
+        "normalized_min": 0.19114980101585388,
+        "normalized_weight_sha256": "05338510632cf613a0ae7a9ec1c6ec428580a9bfe43d2f6a6c9d054316a865a3",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "23b3142235e6bdb3c13112c12011ef6b729f0ce97049ceac17eeacecddb43e0b",
+      "role": "gate",
+      "rotation": "hadamard",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.09771907329559326,
+        "reference_rms": 0.02438851681727356,
+        "rel_l2": 0.25377904372177396
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.3883320093154907,
+        "reference_rms": 0.6407239886853365,
+        "rel_l2": 0.07303703076127319
+      },
+      "diagnostic": {
+        "max_abs": 0.4634131193161011,
+        "reference_rms": 0.5508652019839406,
+        "rel_l2": 0.08592411830135134
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "f260d50f1db258632e043fba03be91e7c918899e7d06380055251d033090dab4",
+        "normalized_max": 75.99337768554688,
+        "normalized_mean": 0.9999999995052349,
+        "normalized_min": 0.10858162492513657,
+        "normalized_weight_sha256": "813044bb7562f5743def65e8e5db0baf795b6e369b9c0c7988dfae0d3a682f70",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "171e1b7439d61d7b7abe9e6d441374f4a1d9e00321b8aab9b82e738e4c033638",
+      "role": "gate",
+      "rotation": "unrotated",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.052734375,
+        "reference_rms": 0.024388516817092823,
+        "rel_l2": 0.15134705952989275
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.6384563446044922,
+        "reference_rms": 0.6407239886853365,
+        "rel_l2": 0.07797285985255602
+      },
+      "diagnostic": {
+        "max_abs": 0.6326550245285034,
+        "reference_rms": 0.5508652019839406,
+        "rel_l2": 0.09176294933177143
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "1c68055f465395a9591bb7192c5e4446c8a43b24d34ffee02edd209a05254fed",
+        "normalized_max": 3.7945101261138916,
+        "normalized_mean": 1.0000000010913936,
+        "normalized_min": 0.19114980101585388,
+        "normalized_weight_sha256": "05338510632cf613a0ae7a9ec1c6ec428580a9bfe43d2f6a6c9d054316a865a3",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "d5edbb12ba79c6aa6d785e779f9bdec54a67ea8108e1001352c7dccf8cd3148e",
+      "role": "gate",
+      "rotation": "hadamard",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.052459314465522766,
+        "reference_rms": 0.02438851681727356,
+        "rel_l2": 0.1461935497186405
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.4899507761001587,
+        "reference_rms": 0.35114901549778565,
+        "rel_l2": 0.1816564562109342
+      },
+      "diagnostic": {
+        "max_abs": 0.3848518207669258,
+        "reference_rms": 0.3158508897868281,
+        "rel_l2": 0.20595679169203043
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "f260d50f1db258632e043fba03be91e7c918899e7d06380055251d033090dab4",
+        "normalized_max": 75.99337768554688,
+        "normalized_mean": 0.9999999995052349,
+        "normalized_min": 0.10858162492513657,
+        "normalized_weight_sha256": "813044bb7562f5743def65e8e5db0baf795b6e369b9c0c7988dfae0d3a682f70",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "93a3e1f548670e26687eff35804941087940d1eef0f1f876dae32dea2379ce85",
+      "role": "up",
+      "rotation": "unrotated",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.08124107122421265,
+        "reference_rms": 0.019426126820109732,
+        "rel_l2": 0.26175485972169243
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.4704469032585621,
+        "reference_rms": 0.35114901549778565,
+        "rel_l2": 0.1922793558789978
+      },
+      "diagnostic": {
+        "max_abs": 0.444545179605484,
+        "reference_rms": 0.3158508897868281,
+        "rel_l2": 0.2165942455791602
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "1c68055f465395a9591bb7192c5e4446c8a43b24d34ffee02edd209a05254fed",
+        "normalized_max": 3.7945101261138916,
+        "normalized_mean": 1.0000000010913936,
+        "normalized_min": 0.19114980101585388,
+        "normalized_weight_sha256": "05338510632cf613a0ae7a9ec1c6ec428580a9bfe43d2f6a6c9d054316a865a3",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "f3974ccbfc2ac0102c71484090e00a82780123fa20f977a6b91120c4ee1df9ed",
+      "role": "up",
+      "rotation": "hadamard",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.04712692275643349,
+        "reference_rms": 0.019426126820198578,
+        "rel_l2": 0.25356983071789707
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.2237328588962555,
+        "reference_rms": 0.35114901549778565,
+        "rel_l2": 0.11009480488779069
+      },
+      "diagnostic": {
+        "max_abs": 0.271831251331605,
+        "reference_rms": 0.3158508897868281,
+        "rel_l2": 0.12303225705927089
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "f260d50f1db258632e043fba03be91e7c918899e7d06380055251d033090dab4",
+        "normalized_max": 75.99337768554688,
+        "normalized_mean": 0.9999999995052349,
+        "normalized_min": 0.10858162492513657,
+        "normalized_weight_sha256": "813044bb7562f5743def65e8e5db0baf795b6e369b9c0c7988dfae0d3a682f70",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "686a64728db40a7c2bd4bf2cf625b0ce5b8dec47fa8cd2f1ac89d7e9c74b14f0",
+      "role": "up",
+      "rotation": "unrotated",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.03729248046875,
+        "reference_rms": 0.019426126820109732,
+        "rel_l2": 0.1519249418862926
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 2.216158866882324,
+          "rms": 0.44822038736966807,
+          "rows": 80,
+          "width": 1024
+        },
+        "rotated_diagnostic": {
+          "max_abs": 2.203442335128784,
+          "rms": 0.43980779391018426,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_calibration": {
+          "max_abs": 15.192306518554688,
+          "rms": 0.44822038741824893,
+          "rows": 80,
+          "width": 1024
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 14.83304214477539,
+          "rms": 0.4398077938628919,
+          "rows": 80,
+          "width": 1024
+        }
+      },
+      "calibration": {
+        "max_abs": 0.2810835838317871,
+        "reference_rms": 0.35114901549778565,
+        "rel_l2": 0.11277209125812723
+      },
+      "diagnostic": {
+        "max_abs": 0.3267389666289091,
+        "reference_rms": 0.3158508897868281,
+        "rel_l2": 0.12624942270268125
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 1024,
+        "mean_square_sha256": "1c68055f465395a9591bb7192c5e4446c8a43b24d34ffee02edd209a05254fed",
+        "normalized_max": 3.7945101261138916,
+        "normalized_mean": 1.0000000010913936,
+        "normalized_min": 0.19114980101585388,
+        "normalized_weight_sha256": "05338510632cf613a0ae7a9ec1c6ec428580a9bfe43d2f6a6c9d054316a865a3",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "61ba051f6de1b9467b0c14a241c4a1861207fa697ddbef6a4be00e20acc0f11f",
+      "role": "up",
+      "rotation": "hadamard",
+      "shape": [
+        8192,
+        1024
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.020221002399921417,
+        "reference_rms": 0.019426126820198578,
+        "rel_l2": 0.14614538953149564
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 0.4443854093551636,
+          "rms": 0.07193348879674022,
+          "rows": 80,
+          "width": 8192
+        },
+        "rotated_diagnostic": {
+          "max_abs": 0.5084646940231323,
+          "rms": 0.06589987662833564,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_calibration": {
+          "max_abs": 3.928659677505493,
+          "rms": 0.07193348879115403,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 6.084320545196533,
+          "rms": 0.06589987662335604,
+          "rows": 80,
+          "width": 8192
+        }
+      },
+      "calibration": {
+        "max_abs": 0.18650603294372559,
+        "reference_rms": 0.16018212003584759,
+        "rel_l2": 0.17357659483603516
+      },
+      "diagnostic": {
+        "max_abs": 0.2062426209449768,
+        "reference_rms": 0.1472178719578396,
+        "rel_l2": 0.18995610186130574
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 8192,
+        "mean_square_sha256": "11495a22e1493071df78ec973a8118b8a14db0d8d38c0089edaa47aec0ac6177",
+        "normalized_max": 81.97611999511719,
+        "normalized_mean": 0.9999999999933493,
+        "normalized_min": 0.007252172101289034,
+        "normalized_weight_sha256": "28c48cf1f1147dda6bd65dbab4930b01d996ace691d94287b6de0b0dad718fe9",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "0239058ce73b7ac2a2acdc5b33fafbb8c03b4464be2cb4e6b25b2fa07a79d580",
+      "role": "down",
+      "rotation": "unrotated",
+      "shape": [
+        1024,
+        8192
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.13421672582626343,
+        "reference_rms": 0.02016607925082694,
+        "rel_l2": 0.27337843685517677
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 0.4443854093551636,
+          "rms": 0.07193348879674022,
+          "rows": 80,
+          "width": 8192
+        },
+        "rotated_diagnostic": {
+          "max_abs": 0.5084646940231323,
+          "rms": 0.06589987662833564,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_calibration": {
+          "max_abs": 3.928659677505493,
+          "rms": 0.07193348879115403,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 6.084320545196533,
+          "rms": 0.06589987662335604,
+          "rows": 80,
+          "width": 8192
+        }
+      },
+      "calibration": {
+        "max_abs": 0.24188679456710815,
+        "reference_rms": 0.16018212003584759,
+        "rel_l2": 0.19944779365926152
+      },
+      "diagnostic": {
+        "max_abs": 0.20465190708637238,
+        "reference_rms": 0.1472178719578396,
+        "rel_l2": 0.20590460408743957
+      },
+      "format": "IQ2_S",
+      "imatrix": {
+        "channels": 8192,
+        "mean_square_sha256": "858c30887222632f37035c223c819ea13e78b9db2fd79cac8a0940f82c326648",
+        "normalized_max": 4.220952987670898,
+        "normalized_mean": 0.9999999998208295,
+        "normalized_min": 0.1213700994849205,
+        "normalized_weight_sha256": "4c222b583cd8845632cb4074b24272db2b36565b986321fca2285d4274ab9ad4",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 2686976,
+      "packed_sha256": "28d243a843afa1b99a847c5e0264323f5d8a5b4ce4b6e78d58abc125cb590e50",
+      "role": "down",
+      "rotation": "hadamard",
+      "shape": [
+        1024,
+        8192
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.04736386239528656,
+        "reference_rms": 0.020166079251333995,
+        "rel_l2": 0.25272540325974335
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 0.4443854093551636,
+          "rms": 0.07193348879674022,
+          "rows": 80,
+          "width": 8192
+        },
+        "rotated_diagnostic": {
+          "max_abs": 0.5084646940231323,
+          "rms": 0.06589987662833564,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_calibration": {
+          "max_abs": 3.928659677505493,
+          "rms": 0.07193348879115403,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 6.084320545196533,
+          "rms": 0.06589987662335604,
+          "rows": 80,
+          "width": 8192
+        }
+      },
+      "calibration": {
+        "max_abs": 0.11216248571872711,
+        "reference_rms": 0.16018212003584759,
+        "rel_l2": 0.1036888749877855
+      },
+      "diagnostic": {
+        "max_abs": 0.11201593279838562,
+        "reference_rms": 0.1472178719578396,
+        "rel_l2": 0.1155505639736158
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 8192,
+        "mean_square_sha256": "11495a22e1493071df78ec973a8118b8a14db0d8d38c0089edaa47aec0ac6177",
+        "normalized_max": 81.97611999511719,
+        "normalized_mean": 0.9999999999933493,
+        "normalized_min": 0.007252172101289034,
+        "normalized_weight_sha256": "28c48cf1f1147dda6bd65dbab4930b01d996ace691d94287b6de0b0dad718fe9",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "2b9f4df9f1786b812aef50edb7bb69c101a22f779f3fab3411fa3838c1a5b7b8",
+      "role": "down",
+      "rotation": "unrotated",
+      "shape": [
+        1024,
+        8192
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.051025390625,
+        "reference_rms": 0.02016607925082694,
+        "rel_l2": 0.15765307415665666
+      }
+    },
+    {
+      "activation_stats": {
+        "rotated_calibration": {
+          "max_abs": 0.4443854093551636,
+          "rms": 0.07193348879674022,
+          "rows": 80,
+          "width": 8192
+        },
+        "rotated_diagnostic": {
+          "max_abs": 0.5084646940231323,
+          "rms": 0.06589987662833564,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_calibration": {
+          "max_abs": 3.928659677505493,
+          "rms": 0.07193348879115403,
+          "rows": 80,
+          "width": 8192
+        },
+        "unrotated_diagnostic": {
+          "max_abs": 6.084320545196533,
+          "rms": 0.06589987662335604,
+          "rows": 80,
+          "width": 8192
+        }
+      },
+      "calibration": {
+        "max_abs": 0.11744507495313883,
+        "reference_rms": 0.16018212003584759,
+        "rel_l2": 0.11683679317087282
+      },
+      "diagnostic": {
+        "max_abs": 0.15474829077720642,
+        "reference_rms": 0.1472178719578396,
+        "rel_l2": 0.12136914106757515
+      },
+      "format": "Q3_K",
+      "imatrix": {
+        "channels": 8192,
+        "mean_square_sha256": "858c30887222632f37035c223c819ea13e78b9db2fd79cac8a0940f82c326648",
+        "normalized_max": 4.220952987670898,
+        "normalized_mean": 0.9999999998208295,
+        "normalized_min": 0.1213700994849205,
+        "normalized_weight_sha256": "4c222b583cd8845632cb4074b24272db2b36565b986321fca2285d4274ab9ad4",
+        "samples": 80,
+        "statistic": "float64 mean of squared calibration activations per input channel"
+      },
+      "packed_bytes": 3604480,
+      "packed_sha256": "ec57a6248e8f972a6b958bbe0f13746d53ba4a2ed91940641e98d6ea591c7ac0",
+      "role": "down",
+      "rotation": "hadamard",
+      "shape": [
+        1024,
+        8192
+      ],
+      "weight_basis_projection": {
+        "max_abs": 0.026446208357810974,
+        "reference_rms": 0.020166079251333995,
+        "rel_l2": 0.14585973026705723
+      }
+    }
+  ],
+  "objective": "fixed plain normalized Walsh-Hadamard projection screen on layer 5 depth FFN",
+  "packed_bytes": {
+    "rotation_preserves_size_within_format": true,
+    "sizes_by_format_and_role_rotation": {
+      "IQ2_S": {
+        "down:hadamard": 2686976,
+        "down:unrotated": 2686976,
+        "gate:hadamard": 2686976,
+        "gate:unrotated": 2686976,
+        "up:hadamard": 2686976,
+        "up:unrotated": 2686976
+      },
+      "Q3_K": {
+        "down:hadamard": 3604480,
+        "down:unrotated": 3604480,
+        "gate:hadamard": 3604480,
+        "gate:unrotated": 3604480,
+        "up:hadamard": 3604480,
+        "up:unrotated": 3604480
+      }
+    }
+  },
+  "provenance": {
+    "captures": [
+      {
+        "activations_sha256": "ac8f27347675af1516c34f323ffe05474ea81e9d96732effbaea03bc9d302800",
+        "blob_bytes": 39362560,
+        "frames": [
+          0,
+          7,
+          15,
+          31,
+          63
+        ],
+        "id": "cal-en-long-123",
+        "metadata_sha256": "ffe392981f193b490b718c7fc06f7322b54eaf754a3443536cc414b05ae9fc44",
+        "path": "/tmp/breeze-capture-expanded-results.ho6vQz/cal-en-long-123/capture",
+        "split": "calibration_imatrix",
+        "tensor_records": 2705
+      },
+      {
+        "activations_sha256": "be71a264123b22d32857a261e60a97727a0dfcf35d2b631243cb0a83f63404b0",
+        "blob_bytes": 39362560,
+        "frames": [
+          0,
+          7,
+          15,
+          31,
+          63
+        ],
+        "id": "cal-zh-long-123",
+        "metadata_sha256": "10ada3d1ef71f40faa6985dca226692898cd3adb328db2f74ebfdc1eac235ae1",
+        "path": "/tmp/breeze-capture-expanded-results.ho6vQz/cal-zh-long-123/capture",
+        "split": "diagnostic_evaluation",
+        "tensor_records": 2705
+      }
+    ],
+    "master_tensors": [
+      {
+        "changed_values": 1596,
+        "master_name": "depth_decoder.model.layers.5.mlp.gate_proj.weight",
+        "master_region_sha256": "89c4498c5858d3da9406ae66e08119a21904e3aca48f8526c83a076389b87b49",
+        "max_abs": 2.9802322387695312e-08,
+        "relative_mse": 1.792475321374263e-16,
+        "role": "gate",
+        "shape": [
+          8192,
+          1024
+        ]
+      },
+      {
+        "changed_values": 1839,
+        "master_name": "depth_decoder.model.layers.5.mlp.up_proj.weight",
+        "master_region_sha256": "3e102617a4f68ae17955907f42f9b68dd5fe6c110212c19fcd2fe3b5c276a153",
+        "max_abs": 2.9802322387695312e-08,
+        "relative_mse": 3.317645900830224e-16,
+        "role": "up",
+        "shape": [
+          8192,
+          1024
+        ]
+      },
+      {
+        "changed_values": 1788,
+        "master_name": "depth_decoder.model.layers.5.mlp.down_proj.weight",
+        "master_region_sha256": "9a16fb6f118db22f34022c87bb787a743227c95666c9e3abf76fafa2ffa728f8",
+        "max_abs": 2.9802322387695312e-08,
+        "relative_mse": 2.9708798319146215e-16,
+        "role": "down",
+        "shape": [
+          1024,
+          8192
+        ]
+      }
+    ],
+    "sources": {
+      "capture_receipt": {
+        "path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/benchmarks/depth-corpus/capture-expanded.json",
+        "sha256": "093cad7f4f6441987518bfacf45c9021213a670d7fbdc74f81fff86b3b5417e7"
+      },
+      "master_cache": {
+        "bytes": 868560896,
+        "path": "/Users/fraser/.cache/breeze-models/depth-master/depth-range.bin",
+        "sha256": "6d69058ab262ea751881d263379afaf76161c10d3c2bf9465bca82dda4fdc40a"
+      },
+      "master_manifest": {
+        "path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/benchmarks/depth-corpus/master-manifest.json",
+        "sha256": "36bac4deb3149bb7d592b5b4e8b86ea96fe751162ac499eeac6102ff4f807460"
+      },
+      "q4_model": {
+        "bytes": 2538909376,
+        "path": "/Users/fraser/.cache/breeze-models/depth-quant-controls/breeze-depth-blocks-q4_k.gguf",
+        "sha256": "49e4531863ccee2e4362fb06f86995f88659fb60bee37db45bfc662d5e9d497d"
+      },
+      "quantizer": {
+        "bytes": 772680,
+        "path": "/Users/fraser/workspace/github.com/fraserhum/Breeze-TTS-2.cpp/build-ffn-bench/third_party/ggml/src/libggml-base.0.22.0.dylib",
+        "sha256": "b0325d04408694030540b81a3af187b0f59983b667aa80c6ac9e7f43e311d2c4"
+      },
+      "script_sha256": "7f3802a36c379b41e82f64e5bca5b8c01795a6395fedc3211ded72b49a92186d"
+    }
+  },
+  "q4_unrotated_reference": [
+    {
+      "calibration": {
+        "max_abs": 0.31216955184936523,
+        "reference_rms": 0.6407239886853365,
+        "rel_l2": 0.039663076181329436
+      },
+      "diagnostic": {
+        "max_abs": 0.3395099639892578,
+        "reference_rms": 0.5508652019839406,
+        "rel_l2": 0.0455017922444427
+      },
+      "format": "Q4_K existing depth control",
+      "role": "gate"
+    },
+    {
+      "calibration": {
+        "max_abs": 0.12955625355243683,
+        "reference_rms": 0.35114901549778565,
+        "rel_l2": 0.05837307541873821
+      },
+      "diagnostic": {
+        "max_abs": 0.12720507383346558,
+        "reference_rms": 0.3158508897868281,
+        "rel_l2": 0.06358730524835482
+      },
+      "format": "Q4_K existing depth control",
+      "role": "up"
+    },
+    {
+      "calibration": {
+        "max_abs": 0.05888505280017853,
+        "reference_rms": 0.16018212003584759,
+        "rel_l2": 0.060021927988623984
+      },
+      "diagnostic": {
+        "max_abs": 0.06267019920051098,
+        "reference_rms": 0.1472178719578396,
+        "rel_l2": 0.059271705388308386
+      },
+      "format": "Q4_K existing depth control",
+      "role": "down"
+    }
+  ],
+  "schema": "breeze-rotation-screen/v1",
+  "scope": {
+    "calibration_fixture": "cal-en-long-123",
+    "diagnostic_fixture": "cal-zh-long-123",
+    "diagnostic_is_not_final_heldout": true,
+    "formats": [
+      "IQ2_S",
+      "Q3_K"
+    ],
+    "layer": 5,
+    "native_quantizations": 12,
+    "roles": [
+      "gate",
+      "up",
+      "down"
+    ],
+    "rotation": "X' = X H and W' = W H, with H the plain normalized Walsh-Hadamard matrix",
+    "source_pipeline": "BF16 master -> F16 -> F32"
+  },
+  "status": "diagnostic_complete"
+}

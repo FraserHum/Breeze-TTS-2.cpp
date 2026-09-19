@@ -68,10 +68,50 @@
     "audio_divergence": "BOTH levers change generated audio at seed 42 (sampling/continuation changes). This is a model-behavior change, not a free flag flip. Quality gate (test-set eval) must pass before adoption.",
     "context": "0.7917 peak was a host-state artifact (proven bit-exact in dd9-rtf-07917-verification-receipt.json). The combined lever reaches 0.791-0.797 under load 1-1.5 — below the historical peak, structurally."
   },
+  "n2_probe": {
+    "artifact": { "path": "/tmp/breeze-dd9-n2-q4_k.gguf (breezetts-dev)", "md5": "a4b1a73e801dedb54a5edea0dd130473" },
+    "voice": "calliope-331f8daa",
+    "baseline_fused0_flash0": {
+      "loadavg": "0.57 -> 0.94",
+      "rtf_all": [0.823, 0.816],
+      "depth_ms_frame": [39.00, 39.04],
+      "backbone_ms_frame": [17.94, 17.85],
+      "vocoder_ms_frame": [8.05, 7.86],
+      "frames": 230,
+      "audio_s": 18.40,
+      "audio_md5": "6230396608b7889645ea3387014cfafc"
+    },
+    "combined_fused1_flash1": {
+      "loadavg": "0.94 -> 1.40",
+      "rtf_all": [0.800, 0.791],
+      "depth_ms_frame": [36.93, 37.02],
+      "backbone_ms_frame": [17.88, 17.68],
+      "vocoder_ms_frame": [8.27, 8.06],
+      "frames": 208,
+      "audio_s": 16.64,
+      "audio_md5": "131e1d2af8878be93fccc2a3b240fabd"
+    },
+    "delta": "-2.1 ms/frame depth, -0.023 RTF: the lever delta transfers to the N=2 serving candidate"
+  },
+  "clean_combined_rerun_single_voice": {
+    "loadavg": "1.40 -> 1.02 (recorded per run; ~1.0 stable band)",
+    "rtf_all": [0.802, 0.790, 0.793],
+    "warm_wall_rtf": [0.790, 0.793],
+    "depth_ms_frame": [37.05, 37.14, 37.07],
+    "backbone_ms_frame": [17.97, 17.62, 17.65],
+    "vocoder_ms_frame": [8.25, 7.94, 8.19],
+    "frames": 219,
+    "audio_s": 17.52,
+    "audio_md5": "8b50147daf7171b40c87f6f40c5c22be",
+    "note": "confirms the first combined probe (0.791-0.797) under comparable load; earlier probe's load rise 0.98->1.55 superseded"
+  },
+  "deterministic_greedy_parity": {
+    "receipt": "benchmarks/depth-corpus/dd9-fused-greedy-parity-receipt.json",
+    "summary": "non-fused BREEZE_DEPTH_TOP_K=1 vs fused BREEZE_DD_FUSED_GUMBEL=0: 240/240 frames, all 3840 codes bit-identical. Fused in-graph argmax == host argmax; the 196-frame stochastic continuation is RNG-stream trajectory divergence (dedicated fused_rng), not a sampling bug."
+  },
   "open": [
-    "audio quality evaluation (deferred N=2 test-set eval applies; fused changes sampling from host to in-graph gumbel-max)",
-    "N=2 multi-voice artifact (a4b1a73e...) needs the same 4-cell probe — only the 9-block single-voice student was probed",
-    "production pod (binary 607db056..., pre-step-1) may not contain both levers; confirm flag support before any prod claim",
-    "host load rose to 1.55 during the combined probe; a clean re-run at recorded load is the next step before any gate decision"
+    "audio A/B ear gate on FUSED vs non-FUSED calliope + steward clips (mandatory before FUSED adoption; test-set KL/CE eval ruled unnecessary for the sampling change)",
+    "production pod 4-cell probe at controlled load (knobs confirmed present in binary 607db056... via in-pod strings scan) to re-anchor the queenbee gate (c) to ~0.79-0.80",
+    "production-pod measurement of the prod artifact (57a846aa...) on breezetts-dev at controlled load to isolate model delta from load delta (carried from 07917 receipt)"
   ]
 }

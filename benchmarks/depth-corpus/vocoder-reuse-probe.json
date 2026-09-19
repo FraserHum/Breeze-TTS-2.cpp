@@ -1,0 +1,153 @@
+{
+  "date": "2026-09-15",
+  "source_head": "1b04645",
+  "device": "AMD Radeon 780M, RADV PHOENIX",
+  "model_sha256": "31a8cc1fc2717fd623a6b7ff053dfdbfc36664159a8bce8db79e14f3cb124a56",
+  "input": "/tmp/fixed-chunks/fixed12-tags-1.wav, encoded once into fixed codes",
+  "chunk_frames": 12,
+  "context_frames": 88,
+  "repeats": 3,
+  "discard_first": true,
+  "flags": {
+    "GGML_VK_ALLOW_GRAPHICS_QUEUE": "1",
+    "BREEZE_PACK_WEIGHTS": "1",
+    "BREEZE_VOC_TRIM": "1",
+    "BREEZE_VOC_CONVT_MATMUL": "1",
+    "BREEZE_VOC_STATEFUL": "0"
+  },
+  "limitations": "Separate prefix and full graphs include allocation and readback; timings are not additive. Fixed execution order, one input, no end-to-end speedup or audio-quality conclusion.",
+  "rows": [
+    {
+      "start": 0,
+      "window_begin": 0,
+      "window_frames": 12,
+      "prefix_ms": 2.463,
+      "full_ms": 87.641,
+      "overlap_values": 0,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 12,
+      "window_begin": 0,
+      "window_frames": 24,
+      "prefix_ms": 2.523,
+      "full_ms": 150.529,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 24,
+      "window_begin": 0,
+      "window_frames": 36,
+      "prefix_ms": 3.676,
+      "full_ms": 160.583,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 36,
+      "window_begin": 0,
+      "window_frames": 48,
+      "prefix_ms": 3.871,
+      "full_ms": 150.117,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 48,
+      "window_begin": 0,
+      "window_frames": 60,
+      "prefix_ms": 4.268,
+      "full_ms": 153.983,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 60,
+      "window_begin": 0,
+      "window_frames": 72,
+      "prefix_ms": 6.434,
+      "full_ms": 155.774,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 72,
+      "window_begin": 0,
+      "window_frames": 84,
+      "prefix_ms": 6.493,
+      "full_ms": 155.393,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 84,
+      "window_begin": 0,
+      "window_frames": 96,
+      "prefix_ms": 6.812,
+      "full_ms": 151.622,
+      "overlap_values": 11264,
+      "different": 0,
+      "max_diff": 0,
+      "relative_rms": 0
+    },
+    {
+      "start": 96,
+      "window_begin": 8,
+      "window_frames": 100,
+      "prefix_ms": 7.078,
+      "full_ms": 154.382,
+      "overlap_values": 11264,
+      "different": 11183,
+      "max_diff": 0.00309753325,
+      "relative_rms": 0.0400623419
+    },
+    {
+      "start": 108,
+      "window_begin": 20,
+      "window_frames": 100,
+      "prefix_ms": 7.003,
+      "full_ms": 154.523,
+      "overlap_values": 11264,
+      "different": 11172,
+      "max_diff": 0.00224304199,
+      "relative_rms": 0.0324606477
+    },
+    {
+      "start": 120,
+      "window_begin": 32,
+      "window_frames": 100,
+      "prefix_ms": 7.039,
+      "full_ms": 155.152,
+      "overlap_values": 11264,
+      "different": 11157,
+      "max_diff": 0.00256347656,
+      "relative_rms": 0.0314716071
+    },
+    {
+      "start": 132,
+      "window_begin": 44,
+      "window_frames": 100,
+      "prefix_ms": 7.119,
+      "full_ms": 154.918,
+      "overlap_values": 11264,
+      "different": 11178,
+      "max_diff": 0.00221252441,
+      "relative_rms": 0.0312749982
+    }
+  ]
+}

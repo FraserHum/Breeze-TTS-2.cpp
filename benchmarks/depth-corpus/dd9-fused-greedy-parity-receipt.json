@@ -1,0 +1,33 @@
+{
+  "title": "Deterministic greedy parity: FUSED in-graph vs non-fused host depth sampling",
+  "date": "2026-09-19",
+  "question": "Is the 196-frame FUSED continuation (vs 220 baseline) a sampling bug in the fused graph, or RNG-stream trajectory divergence?",
+  "method": "Both paths forced to pure greedy argmax (no stochasticity): non-fused BREEZE_DEPTH_TOP_K=1 (host argmax; depth steps draw no rng) vs fused BREEZE_DD_FUSED_GUMBEL=0 (in-graph argmax, gumbel noise leaves zeroed). BREEZE_DEBUG_DEPTH_CODES=1 dumps machine-comparable DEPTH_CODES lines (frame, cb0, cb1..cb15). diff over the full continuations.",
+  "artifact": {
+    "path": "/models/breeze-tts-2-dd9-q4_k-8c359295.gguf (breezetts-dev)",
+    "md5": "73d118b6effd199e72a96a819b0f1916",
+    "sha256": "8c359295c9f7490596a3e2ca36b168747c44708cd4b2fc124e7c45e24cff2062"
+  },
+  "binary": { "md5": "ef6e93de013754a21ec9b3686ca3f14e", "source_commit": "d968a2f" },
+  "voice": "calliope-331f8daa",
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "outputs": {
+    "non_fused_greedy": "/tmp/parity-greedy-nf.wav",
+    "fused_greedy": "/tmp/parity-greedy-f.wav",
+    "codes_on_pod": "/tmp/ncodes.txt (240 lines), /tmp/fcodes.txt (240 lines)"
+  },
+  "result": {
+    "frames_non_fused": 240,
+    "frames_fused": 240,
+    "diff": "EMPTY — all 240 frames, all 16 codes per frame (3840 tokens) bit-identical between the two paths",
+    "first_frame_codes": "frame=0 404 547 887 2018 445 179 1188 1664 736 661 1000 620 652 722 39 1293 (identical on both paths)"
+  },
+  "verdict": {
+    "fused_sampling_correctness": "PASS — in-graph greedy argmax is exactly equivalent to host greedy argmax. No sampling bug in the fused graph.",
+    "frame_count_gap_explained": "YES. Mechanism: non-fused stochastic path advances the shared mt19937 by 16 draws/frame (1 cb0 + 15 depth), fused path draws from a dedicated fused_rng so the backbone's trajectory diverges by frame 10. The 196-vs-220 stochastic gap is RNG-stream trajectory variance, consistent with the dab99db multi-seed sweep (194–253 frames at identical build/weights).",
+    "implication_for_gate": "FUSED=1 changes the stochastic continuation (audible A/B needed before adoption per ear-gate) but is mathematically and empirically the same sampler. No test-set KL/CE eval required for the sampling change itself."
+  },
+  "host_load": "not recorded (parity run, no performance claim)"
+}
