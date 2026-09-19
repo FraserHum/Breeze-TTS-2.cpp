@@ -1,0 +1,36 @@
+{
+  "title": "Ear-gate A/B set: levers baseline vs shipping candidate, N=2 serving artifact",
+  "date": "2026-09-19",
+  "purpose": "Fraser's listening session to ratify the depth-decoder levers (BREEZE_DD_FUSED=1 + BREEZE_DD_FLASH_ATTN=1) before deployment. Per collaborator decision: A/B is baseline (FUSED=0 FLASH=0) vs shipping candidate (FUSED=1 FLASH=1), both voices, with a fused-only diagnostic.",
+  "artifact": {
+    "path": "/tmp/breeze-dd9-n2-q4_k.gguf (breezetts-dev)",
+    "md5": "a4b1a73e801dedb54a5edea0dd130473"
+  },
+  "binary": { "md5": "ef6e93de013754a21ec9b3686ca3f14e", "source_commit": "d968a2f" },
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "repeat": 1,
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "env_base": "BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_V_CACHE_TRANSPOSED=0",
+  "clips": [
+    { "file": "ear-gate/eg-calliope-baseline.wav", "voice": "calliope-331f8daa", "fused": 0, "flash": 0, "md5": "6230396608b7889645ea3387014cfafc", "loadavg_at_run": 0.79 },
+    { "file": "ear-gate/eg-calliope-candidate.wav", "voice": "calliope-331f8daa", "fused": 1, "flash": 1, "md5": "131e1d2af8878be93fccc2a3b240fabd", "loadavg_at_run": 1.05 },
+    { "file": "ear-gate/eg-calliope-fused-only.wav", "voice": "calliope-331f8daa", "fused": 1, "flash": 0, "md5": "fa19d647007ca322f5a5da8243391d24", "loadavg_at_run": 1.10, "note": "diagnostic insurance only" },
+    { "file": "ear-gate/eg-steward-baseline.wav", "voice": "steward", "fused": 0, "flash": 0, "md5": "6139b4570e6a322e82d55a18ccc3cc27", "loadavg_at_run": 0.93 },
+    { "file": "ear-gate/eg-steward-candidate.wav", "voice": "steward", "fused": 1, "flash": 1, "md5": "019517e54ad7f1de20c29dbb118343b2", "loadavg_at_run": 0.95 }
+  ],
+  "provenance_checks": [
+    "calliope-baseline md5 == N=2 baseline probe wav (dd9-depth-lever-probe.json n2_probe.baseline): bit-identical across a 30-minute gap — deterministic audio confirmed at seed 42 on the N=2 artifact",
+    "calliope-candidate md5 == N=2 combined probe wav: same"
+  ],
+  "expected_lengths": {
+    "calliope_baseline": "18.40 s (230 frames)",
+    "calliope_candidate": "16.64 s (208 frames)",
+    "steward_pair": "voice-dependent; sizes 898.6 KB vs 887.1 KB (~18.7 s vs ~18.5 s)"
+  },
+  "gate_rule": "Both candidate clips (calliope + steward) must sound natural and free of artifacts vs their baselines. If a candidate clip fails, the fused-only diagnostic isolates whether the fused sampling path (vs the flash kernel) is the cause; FLASH=1 alone remains the fallback configuration (dd9-depth-lever-probe.json).",
+  "related": [
+    "benchmarks/depth-corpus/dd9-depth-lever-probe.json",
+    "benchmarks/depth-corpus/dd9-fused-greedy-parity-receipt.json"
+  ]
+}
