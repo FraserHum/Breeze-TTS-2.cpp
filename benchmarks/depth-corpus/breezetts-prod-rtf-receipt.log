@@ -1,0 +1,102 @@
+=== provenance ===
+607db056a5fe5e62f76cc3c0a3537a00  /usr/local/bin/breeze-cli
+57a846aa01c3828b0ed5831fd71e5391  /models/breeze-tts-2-q3-ffn-head-f16-31a8cc1f.gguf
+2a52f366c7664d02de3674b352f2b06e  /voices/calliope.breeze
+c48a428473786cc3debef4cd9c2f5729  /voices/steward.breeze
+3.35 2.35 1.69 1/4358 123
+ 06:26:01 up 5 days, 22:42,  0 users,  load average: 3.35, 2.35, 1.69
+=== run (1 process, --repeat 4, calliope) ===
+rc=0
+depth decoder: 15 static graphs, compute buffer 213284 bytes
+loading /models/breeze-tts-2-q3-ffn-head-f16-31a8cc1f.gguf ...
+backend: Vulkan0, sample rate: 24000
+  flush 1 ready_ms=2859.5 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5595.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8336.8 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=11056.2 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13780.3 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14541.9 delivered_audio_s=16.80
+generated 16.80 sdepth decoder: 15 static graphs, compute buffer 213284 bytes
+
+generation wall     14543.5 ms (wall RTF 0.866)
+time to first audio 2859 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          76.1 ms
+  backbone prefill     113.8 ms
+  first vocoder        275.6 ms  (40 frames)
+  backbone decode     3742.1 ms  (17.82 ms/frame)
+  depth decode        8822.5 ms  (42.01 ms/frame)
+  vocoder             1759.3 ms  (8.38 ms/frame)
+  210 frames, 16.80 s audio
+wrote /tmp/acc-prod/r.wav (16.80 s)
+  flush 1 ready_ms=2682.4 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5316.0 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8003.7 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=10764.1 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13503.3 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14255.7 delivered_audio_s=16.80
+generated 16.80 sdepth decoder: 15 static graphs, compute buffer 213284 bytes
+
+generation wall     14256.4 ms (wall RTF 0.849)
+time to first audio 2682 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          34.8 ms
+  backbone prefill      70.7 ms
+  first vocoder        255.7 ms  (40 frames)
+  backbone decode     3682.1 ms  (17.53 ms/frame)
+  depth decode        8771.8 ms  (41.77 ms/frame)
+  vocoder             1680.1 ms  (8.00 ms/frame)
+  210 frames, 16.80 s audio
+wrote /tmp/acc-prod/r.repeat-2.wav (16.80 s)
+  flush 1 ready_ms=2723.9 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5399.6 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=8054.5 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=10728.5 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13462.3 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14219.9 delivered_audio_s=16.80
+generated 16.80 sdepth decoder: 15 static graphs, compute buffer 213284 bytes
+
+generation wall     14220.7 ms (wall RTF 0.846)
+time to first audio 2724 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          34.0 ms
+  backbone prefill      65.6 ms
+  first vocoder        254.0 ms  (40 frames)
+  backbone decode     3668.5 ms  (17.47 ms/frame)
+  depth decode        8756.1 ms  (41.70 ms/frame)
+  vocoder             1679.7 ms  (8.00 ms/frame)
+  210 frames, 16.80 s audio
+wrote /tmp/acc-prod/r.repeat-3.wav (16.80 s)
+  flush 1 ready_ms=2641.6 delivered_audio_s=3.20
+generated 3.20 s  flush 2 ready_ms=5290.9 delivered_audio_s=6.40
+generated 6.40 s  flush 3 ready_ms=7951.5 delivered_audio_s=9.60
+generated 9.60 s  flush 4 ready_ms=10714.0 delivered_audio_s=12.80
+generated 12.80 s  flush 5 ready_ms=13423.5 delivered_audio_s=16.00
+generated 16.00 s  flush 6 ready_ms=14179.3 delivered_audio_s=16.80
+generated 16.80 s
+generation wall     14179.9 ms (wall RTF 0.844)
+time to first audio 2642 ms over 6 flushes
+  reference encode       0.0 ms
+  prompt build          33.8 ms
+  backbone prefill      67.1 ms
+  first vocoder        251.0 ms  (40 frames)
+  backbone decode     3649.0 ms  (17.38 ms/frame)
+  depth decode        8657.6 ms  (41.23 ms/frame)
+  vocoder             1756.1 ms  (8.36 ms/frame)
+  210 frames, 16.80 s audio
+wrote /tmp/acc-prod/r.repeat-4.wav (16.80 s)
+=== outputs ===
+d710b97f501d527d0500cd03b95154bb  /tmp/acc-prod/r.wav
+total 3164
+drwxr-sr-x 2 breezetts breezetts   4096 Sep 19 06:27 .
+drwxrwsrwx 3 root      breezetts   4096 Sep 19 06:25 ..
+-rw-r--r-- 1 breezetts breezetts 806444 Sep 19 06:26 r.repeat-2.wav
+-rw-r--r-- 1 breezetts breezetts 806444 Sep 19 06:26 r.repeat-3.wav
+-rw-r--r-- 1 breezetts breezetts 806444 Sep 19 06:27 r.repeat-4.wav
+-rw-r--r-- 1 breezetts breezetts 806444 Sep 19 06:26 r.wav
+-rw-r--r-- 1 breezetts breezetts   3994 Sep 19 06:27 run.log
+=== DONE ===
+d710b97f501d527d0500cd03b95154bb  /tmp/acc-prod/r.repeat-2.wav
+d710b97f501d527d0500cd03b95154bb  /tmp/acc-prod/r.repeat-3.wav
+d710b97f501d527d0500cd03b95154bb  /tmp/acc-prod/r.repeat-4.wav
+d710b97f501d527d0500cd03b95154bb  /tmp/acc-prod/r.wav

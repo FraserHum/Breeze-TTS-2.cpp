@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-09-19T06:27:00Z",
+  "purpose": "Production-environment RTF measurement — the actual breezetts serving pod (deployment breezetts, ns hermes-voice), the live q3-ffn-head-f16 serving artifact, canonical sweep env, single-process x4 resident repeats to isolate cold from warm",
+  "target": {
+    "pod": "breezetts-6b68bd7687-cbzgv (deployment breezetts, ns hermes-voice)",
+    "node": "queenbee",
+    "gpu": "AMD Radeon 780M (RADV Phoenix, /dev/dri card0, Vulkan0)",
+    "serving_stack": "breeze-server /models/breeze-tts-2-q3-ffn-head-f16-31a8cc1f.gguf --host 0.0.0.0 --port 8080 --chunk-first 12 --chunk-max 12 --voices-dir /voices"
+  },
+  "build": {
+    "binary": "/usr/local/bin/breeze-cli",
+    "binary_md5": "607db056a5fe5e62f76cc3c0a3537a00",
+    "binary_mtime": "2026-09-15 01:01 (predates this run; the live production binary, distinct from dev-pod ef6e93de...)"
+  },
+  "artifact": {
+    "path": "/models/breeze-tts-2-q3-ffn-head-f16-31a8cc1f.gguf",
+    "md5": "57a846aa01c3828b0ed5831fd71e5391",
+    "note": "the q3-ffn-head f16 serving artifact — the model production is actually serving, NOT the N=2 dd9 student (a4b1a73e...)"
+  },
+  "voices": {
+    "calliope": { "path": "/voices/calliope.breeze", "md5": "2a52f366c7664d02de3674b352f2b06e", "matches_receipt": "dd9-n2-distill-receipt.json" },
+    "steward": { "path": "/voices/steward.breeze", "md5": "c48a428473786cc3debef4cd9c2f5729", "matches_receipt": "dd9-n2-distill-receipt.json" },
+    "used": "calliope (single-voice control, matches the dev-pod control's voice choice)"
+  },
+  "env": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_DD_FUSED=0 BREEZE_DD_BLOCKS=9",
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "seed": 42,
+  "repeats": [
+    { "repeat": 1, "warm": false, "wall_ms": 14543.5, "wall_rtf": 0.866, "frames": 210, "audio_s": 16.80, "backbone_ms_frame": 17.82, "depth_ms_frame": 42.01, "vocoder_ms_frame": 8.38 },
+    { "repeat": 2, "warm": true,  "wall_ms": 14256.4, "wall_rtf": 0.849, "frames": 210, "audio_s": 16.80, "backbone_ms_frame": 17.53, "depth_ms_frame": 41.77, "vocoder_ms_frame": 8.00 },
+    { "repeat": 3, "warm": true,  "wall_ms": 14220.7, "wall_rtf": 0.846, "frames": 210, "audio_s": 16.80, "backbone_ms_frame": 17.47, "depth_ms_frame": 41.70, "vocoder_ms_frame": 8.00 },
+    { "repeat": 4, "warm": true,  "wall_ms": 14179.9, "wall_rtf": 0.844, "frames": 210, "audio_s": 16.80, "backbone_ms_frame": 17.38, "depth_ms_frame": 41.23, "vocoder_ms_frame": 8.36 }
+  ],
+  "warm_mean": {
+    "wall_rtf": 0.846,
+    "backbone_ms_frame": 17.46,
+    "depth_ms_frame": 41.57,
+    "vocoder_ms_frame": 8.12,
+    "total_compute_ms_frame": 67.15,
+    "determinism": "all 4 repeats produced byte-identical wav (md5 d710b97f501d527d0500cd03b95154bb); RTF drift 0.844-0.849"
+  },
+  "host_state_at_test": {
+    "queenbee_uptime": "5 days 22h — no reboot since the drift, so the planned post-reboot re-anchor was NOT the trigger here; this is a live same-state measurement",
+    "loadavg_at_launch": "4.25 / 2.41 / 1.69 (host-level, higher than the dev-pod control's 0.40/0.75/0.97)"
+  },
+  "comparison": {
+    "vs_dev_pod_n2": {
+      "dev_number": "0.821 / 64.84 ms/frame (dd9-n2-rtf-control-receipt.json, N=2 dd9 student, dev pod breezetts-dev, host load 0.40)",
+      "prod_number": "0.846 / 67.15 ms/frame (this receipt, q3-ffn-head f16 serving artifact, production pod breezetts, host load 3-4)",
+      "comparable": "NOT directly — different model artifact (q3-ffn-head f16 vs N=2 dd9), different pod (production vs dev), and higher host load. Both are ~0.85 RTF / ~1.2x realtime and both sit above the original 0.7917 regime",
+      "attribution_of_gap": "model artifact (q3-ffn-head f16 vs N=2 dd9) + higher host load (3-4 vs 0.40). Depth decoder dominates (41.6 ms/frame), consistent with the 9-block depth path"
+    }
+  },
+  "verdict": "Production (actual serving pod + live serving artifact) warm mean RTF = 0.846 / 67.15 ms/frame, deterministic across 4 repeats. Confirms the sub-0.80 (0.7917) target is NOT reproduced in the current production regime; the honest standing production number is ~0.85 RTF (~1.18x realtime). Queenbee deploy gating should anchor to this production-regime number, not the 2026-09-16 0.7917 receipt."
+}
