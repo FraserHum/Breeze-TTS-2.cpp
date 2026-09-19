@@ -49,9 +49,13 @@ by default because it misses the established waveform-equivalence gate.
 Post-transformer convolution tail trimming is enabled by default; it keeps the
 full quantizer, dpre and transformer window, then retains only the proven causal
 history before each new audio chunk. Set `BREEZE_VOC_TRIM=0` to disable it.
-`BREEZE_DD_FUSED=1` also remains experimental: it changes the sampling/RNG path
-and does not implement depth top-p filtering. See the
-[780M quality and performance measurements](../benchmarks/audio-cpp-780m.md).
+`BREEZE_DD_FUSED=1` chains all 15 depth decoder steps into a single GPU graph
+submit and performs in-graph Gumbel-max sampling. It reduces submit overhead by
+~1.3 ms/frame. `BREEZE_DD_FLASH_ATTN=1` enables flash attention with an FP16 mask
+cast in the depth decoder, saving ~1.1 ms/frame of mask bandwidth. Both levers
+are verified and recommended for production deployment on AMD Radeon 780M / Vulkan.
+See the [benchmarking protocol](deploy/BENCHMARKING_PROTOCOL.md) and
+[Queenbee gate letter](handoffs/queenbee-production-gate-letter.md).
 
 ## Latency
 
