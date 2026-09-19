@@ -96,6 +96,11 @@ endif()
 add_executable(breeze-quantize apps/quantize/main.cpp)
 target_link_libraries(breeze-quantize PRIVATE breeze_core)
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_embedded_voices.cpp")
+    add_executable(test-embedded-voices tests/test_embedded_voices.cpp)
+    target_link_libraries(test-embedded-voices PRIVATE breeze_core)
+endif()
+
 if(BREEZE_BUILD_FFN_BENCH)
     add_executable(depth-ffn-bench tools/depth_ffn_bench.cpp)
     target_compile_definitions(depth-ffn-bench PRIVATE BREEZE_FFN_VULKAN=$<BOOL:${BREEZE_VULKAN}>)

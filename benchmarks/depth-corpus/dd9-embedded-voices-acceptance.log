@@ -1,0 +1,43 @@
+=== binary md5 ===
+9513fee77a8c04c5685ba46cb763db8a  /mnt/media/breeze-teacher/build/breeze-cli
+=== artifact md5 ===
+a622cf8d9a1885053edb0c96a3aeb10e  /mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-q4_k.gguf
+=== list-voices (no --voices-dir) ===
+rc=0
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon RX 7900 XTX (RADV NAVI31) (radv) | uma: 0 | fp16: dot2 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+loading /mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+embedded in /mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-q4_k.gguf:
+calliope                  12.88 s  Not even the fires of Hell are a match for my flame. With this I'll start a fire they can never put out. Somebody's dreams just went up in flames. Better break out the fire extinguisher.
+steward                    9.92 s  Good evening. The household is in order, and I have the week's list ready whenever you wish. There is no hurry at all; we have plenty of time.  (default)
+in /nonexistent:
+  (none)
+=== embedded default (no --voice, no --voices-dir) ===
+emb-default rc=0
+=== embedded --voice steward ===
+emb-steward rc=0
+=== embedded --voice calliope ===
+emb-calliope rc=0
+=== loose dir --voice steward (control) ===
+dir-steward rc=0
+=== loose dir --voice calliope (control) ===
+dir-calliope rc=0
+=== error path: unknown voice ===
+bogus rc=1 (expect 1)
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon RX 7900 XTX (RADV NAVI31) (radv) | uma: 0 | fp16: dot2 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+no voice called bogus (not in /nonexistent, not embedded)
+loading /mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-q4_k.gguf ...
+backend: Vulkan0, sample rate: 24000
+=== frame diff (wav md5) ===
+631f51998c368698566caeb3468182bf  /mnt/media/breeze-teacher/acc-embedded/emb-default.wav
+631f51998c368698566caeb3468182bf  /mnt/media/breeze-teacher/acc-embedded/dir-steward.wav
+631f51998c368698566caeb3468182bf  /mnt/media/breeze-teacher/acc-embedded/emb-steward.wav
+77e9a2a5c8884f297077e003c39bd1fd  /mnt/media/breeze-teacher/acc-embedded/emb-calliope.wav
+77e9a2a5c8884f297077e003c39bd1fd  /mnt/media/breeze-teacher/acc-embedded/dir-calliope.wav
+/mnt/media/breeze-teacher/acc-embedded/emb-default.wav 38444B
+/mnt/media/breeze-teacher/acc-embedded/dir-steward.wav 38444B
+/mnt/media/breeze-teacher/acc-embedded/emb-steward.wav 38444B
+/mnt/media/breeze-teacher/acc-embedded/emb-calliope.wav 34604B
+/mnt/media/breeze-teacher/acc-embedded/dir-calliope.wav 34604B

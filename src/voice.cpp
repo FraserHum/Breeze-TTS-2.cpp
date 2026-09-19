@@ -13,6 +13,23 @@ static const uint32_t VERSION = 1;
 static bool put32(FILE * f, uint32_t v) { return fwrite(&v, 4, 1, f) == 1; }
 static bool get32(FILE * f, uint32_t & v) { return fread(&v, 4, 1, f) == 1; }
 
+bool valid_voice_name(const std::string & name) {
+    if (name.empty() || name.size() > 64) return false;
+    for (char c : name) {
+        const bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+                        (c >= '0' && c <= '9') || c == '_' || c == '-';
+        if (!ok) return false;
+    }
+    return true;
+}
+
+static bool get32_buf(const uint8_t * & p, const uint8_t * end, uint32_t & v) {
+    if (end - p < 4) return false;
+    memcpy(&v, p, 4);
+    p += 4;
+    return true;
+}
+
 bool save_voice(const std::string & path, const Voice & v) {
     if (v.frames <= 0 || v.n_codebooks <= 0 ||
         v.codes.size() != (size_t) v.frames * v.n_codebooks) return false;
@@ -81,14 +98,54 @@ std::vector<Voice> load_voice_dir(const std::string & dir) {
     return out;
 }
 
-bool valid_voice_name(const std::string & name) {
-    if (name.empty() || name.size() > 64) return false;
-    for (char c : name) {
-        const bool ok = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                        (c >= '0' && c <= '9') || c == '_' || c == '-';
-        if (!ok) return false;
+bool parse_voice_bytes(const uint8_t * data, size_t size, const std::string & name, Voice & v) {
+    if (size < 28 || memcmp(data, MAGIC, 4) != 0) return false;
+    const uint8_t * p = data + 4, * end = data + size;
+    uint32_t version = 0, sr = 0, ncb = 0, frames = 0, text_len = 0;
+    if (!get32_buf(p, end, version) || version != VERSION) return false;
+    if (!get32_buf(p, end, sr) || !get32_buf(p, end, ncb) || !get32_buf(p, end, frames) ||
+        !get32_buf(p, end, text_len)) return false;
+
+    // same bounds as load_voice so corrupt headers cannot turn into giant allocations
+    if (ncb == 0 || ncb > 64 || frames == 0 || frames > 100000 || text_len > (1u << 20)) return false;
+    if ((size_t) (end - p) < (size_t) text_len) return false;
+
+    v.text.assign((const char *) p, text_len);
+    p += text_len;
+    v.codes.resize((size_t) frames * ncb);
+    for (size_t i = 0; i < v.codes.size(); i++) {
+        uint32_t c = 0;
+        if (!get32_buf(p, end, c)) return false;
+        v.codes[i] = (int) (int32_t) c;
     }
+    if (p != end) return false; // trailing garbage is not a BRZV file
+
+    v.name = name;
+    v.sample_rate = (int) sr;
+    v.n_codebooks = (int) ncb;
+    v.frames = (int) frames;
     return true;
+}
+
+std::vector<Voice> load_embedded_voices(const GGUFModel & gg, std::string * default_name) {
+    std::vector<Voice> out;
+    if (default_name) *default_name = gg.kv_str("breeze.embedded_voice.default", "");
+    const std::vector<std::string> names = gg.kv_str_array("breeze.embedded_voice_names");
+    for (const std::string & name : names) {
+        if (!valid_voice_name(name)) {
+            fprintf(stderr, "skipping embedded voice %s, invalid name\n", name.c_str());
+            continue;
+        }
+        const std::string key = "breeze.embedded_voice." + name;
+        const std::vector<uint8_t> raw = gg.kv_bytes(key.c_str());
+        Voice v;
+        if (!parse_voice_bytes(raw.data(), raw.size(), name, v)) {
+            fprintf(stderr, "skipping embedded voice %s, unreadable\n", name.c_str());
+            continue;
+        }
+        out.push_back(std::move(v));
+    }
+    return out;
 }
 
 } // namespace breeze

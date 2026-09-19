@@ -283,4 +283,15 @@ std::vector<std::string> GGUFModel::kv_str_array(const char * key) const {
     return out;
 }
 
+std::vector<uint8_t> GGUFModel::kv_bytes(const char * key) const {
+    std::vector<uint8_t> out;
+    const int64_t id = gguf_find_key(gguf, key);
+    if (id < 0 || gguf_get_kv_type(gguf, id) != GGUF_TYPE_ARRAY) return out;
+    if (gguf_get_arr_type(gguf, id) != GGUF_TYPE_UINT8) return out;
+    const size_t n = gguf_get_arr_n(gguf, id);
+    const auto * data = (const uint8_t *) gguf_get_arr_data(gguf, id);
+    out.assign(data, data + n);
+    return out;
+}
+
 }

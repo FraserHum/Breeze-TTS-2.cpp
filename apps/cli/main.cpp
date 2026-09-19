@@ -45,9 +45,11 @@ static void usage() {
            "  --instruction <s>   voice description or direction\n"
            "  --ref-audio <wav>   reference audio for voice clone/direction\n"
            "  --ref-text <s>      exact transcript of the reference audio\n"
-           "  --voice <name>      use a saved voice instead of --ref-audio\n"
+           "  --voice <name>      use a saved voice (voices dir first, then model-embedded)\n"
+           "                      with no --voice and no --ref-audio, the model's default\n"
+           "                      embedded voice is used if one is set\n"
            "  --save-voice <name> encode --ref-audio and save it as a reusable voice, then exit\n"
-           "  --list-voices       print the saved voices and exit\n"
+           "  --list-voices       print the voices (model-embedded and saved) and exit\n"
            "  --voices-dir <path> where saved voices live (default voices)\n"
            "  --cfg-scale <f>     classifier free guidance scale (default 1.0)\n"
            "  --seed <n>          random seed (default 42)\n"
@@ -114,28 +116,20 @@ int main(int argc, char ** argv) {
         else { fprintf(stderr, "unknown arg: %s\n", a.c_str()); return 1; }
     }
 
-    if (list_voices) {
-        const std::vector<Voice> found = load_voice_dir(voices_dir);
-        if (found.empty()) { printf("no voices in %s\n", voices_dir.c_str()); return 0; }
-        for (const Voice & v : found)
-            printf("%-24s %6.2f s  %s\n", v.name.c_str(),
-                   (double) v.frames * 1920 / v.sample_rate, v.text.c_str());
-        return 0;
-    }
-
     Voice loaded;
-    if (!voice_name.empty()) {
-        if (!load_voice(voices_dir + "/" + voice_name + ".breeze", loaded)) {
-            fprintf(stderr, "no voice called %s in %s\n", voice_name.c_str(), voices_dir.c_str());
-            return 1;
+    if (!list_voices) {
+        if (!voice_name.empty() && load_voice(voices_dir + "/" + voice_name + ".breeze", loaded)) {
+            req.ref_codes = loaded.codes;
+            req.ref_frames = loaded.frames;
+            if (req.ref_text.empty()) req.ref_text = loaded.text;
+            req.voice = voice_name;
         }
-        req.ref_codes = loaded.codes;
-        req.ref_frames = loaded.frames;
-        if (req.ref_text.empty()) req.ref_text = loaded.text;
-        req.voice = voice_name;
+        // voice_name stays set when the dir lookup missed; the embedded fallback after model
+        // load decides whether the model carries that voice
     }
 
-    if (req.text.empty() && save_voice_name.empty()) { fprintf(stderr, "--text is required\n"); return 1; }
+    // --list-voices needs neither --text nor a model voice
+    if (!list_voices && req.text.empty() && save_voice_name.empty()) { fprintf(stderr, "--text is required\n"); return 1; }
     if (!save_voice_name.empty()) {
         if (!valid_voice_name(save_voice_name)) {
             fprintf(stderr, "voice names can only use letters, digits, dash and underscore\n");
@@ -151,6 +145,55 @@ int main(int argc, char ** argv) {
     printf("loading %s ...\n", model_path.c_str());
     if (!model.load(model_path, use_gpu)) { fprintf(stderr, "failed to load model\n"); return 1; }
     printf("backend: %s, sample rate: %d\n", model.backend.name(), model.cfg.sample_rate);
+
+    // voices may also live inside the model's GGUF metadata (breeze.embedded_voice.*), which a
+    // dir lookup above cannot see. the dir result still wins; the model only fills the gaps
+    std::vector<Voice> embedded;
+    std::string embedded_default;
+    if (!model.gg.kv_str_array("breeze.embedded_voice_names").empty()) {
+        embedded = load_embedded_voices(model.gg, &embedded_default);
+        if (embedded_default.empty() && !embedded.empty())
+            embedded_default = embedded[0].name; // no explicit default, first embedded wins
+    }
+    if (list_voices) {
+        if (!embedded.empty()) {
+            printf("embedded in %s:\n", model_path.c_str());
+            for (const Voice & v : embedded)
+                printf("%-24s %6.2f s  %s%s\n", v.name.c_str(),
+                       (double) v.frames * model.cfg.samples_per_frame / v.sample_rate, v.text.c_str(),
+                       v.name == embedded_default ? "  (default)" : "");
+        }
+        printf("in %s:\n", voices_dir.c_str());
+        const std::vector<Voice> found = load_voice_dir(voices_dir);
+        if (found.empty()) printf("  (none)\n");
+        for (const Voice & v : found)
+            printf("%-24s %6.2f s  %s\n", v.name.c_str(),
+                   (double) v.frames * model.cfg.samples_per_frame / v.sample_rate, v.text.c_str());
+        return 0;
+    }
+    const Voice * embedded_hit = nullptr;
+    if (!voice_name.empty() && req.ref_codes.empty()) {
+        // the dir lookup missed, so a voice name may still be embedded in the model
+        for (const Voice & v : embedded)
+            if (v.name == voice_name) { embedded_hit = &v; break; }
+        if (!embedded_hit) {
+            fprintf(stderr, "no voice called %s (not in %s, not embedded)\n",
+                    voice_name.c_str(), voices_dir.c_str());
+            return 1;
+        }
+    } else if (voice_name.empty() && ref_audio_path.empty() && !embedded_default.empty()) {
+        // no --voice and no --ref-audio: fall back to the model's default embedded voice
+        for (const Voice & v : embedded)
+            if (v.name == embedded_default) { embedded_hit = &v; break; }
+        if (embedded_hit)
+            fprintf(stderr, "using embedded default voice %s\n", embedded_default.c_str());
+    }
+    if (embedded_hit) {
+        req.ref_codes = embedded_hit->codes;
+        req.ref_frames = embedded_hit->frames;
+        if (req.ref_text.empty()) req.ref_text = embedded_hit->text;
+        req.voice = embedded_hit->name;
+    }
 
     if (!ref_audio_path.empty()) {
         if (!read_wav(ref_audio_path, model.cfg.sample_rate, req.ref_audio)) {
@@ -179,8 +222,8 @@ int main(int argc, char ** argv) {
 
     // a saved voice is fixed for this process, so build its prefix here with the exact op sequence
     // begin() runs per generate; begin() then restores it and the utterance pays only its own tail
-    if (!voice_name.empty())
-        build_voice_prefix(model, voice_name, req.ref_codes, req.ref_text, req.ref_frames);
+    if (!req.voice.empty())
+        build_voice_prefix(model, req.voice, req.ref_codes, req.ref_text, req.ref_frames);
 
     for (int run = 0; run < repeat; run++) {
         std::vector<float> audio;

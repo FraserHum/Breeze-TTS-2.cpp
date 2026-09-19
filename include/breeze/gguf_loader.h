@@ -38,6 +38,7 @@ struct GGUFModel {
     std::string kv_str(const char * key, const std::string & def = "") const;
     std::vector<int> kv_i32_array(const char * key) const;
     std::vector<std::string> kv_str_array(const char * key) const;
+    std::vector<uint8_t> kv_bytes(const char * key) const;
 };
 
 }

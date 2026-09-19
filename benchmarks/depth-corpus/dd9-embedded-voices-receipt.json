@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-09-19T17:30:00Z",
+  "purpose": "Step 1 acceptance — single-artifact GGUF with embedded voices (breeze.embedded_voice.* metadata schema); embedded-voice generation frame-identical to loose .breeze generation, no --voices-dir required",
+  "schema": {
+    "breeze.embedded_voice_names": "STRING_ARRAY, embedded voice names in order",
+    "breeze.embedded_voice.<name>": "UINT8_ARRAY, raw .breeze (BRZV v1) file bytes",
+    "breeze.embedded_voice.default": "STRING, default voice name (steward here)"
+  },
+  "artifact": {
+    "path": "/mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-q4_k.gguf",
+    "size_bytes": 2429004256,
+    "md5": "a622cf8d9a1885053edb0c96a3aeb10e",
+    "f16_intermediate": {
+      "path": "/mnt/media/breeze-teacher/models/breeze-dd9-n2-embedded-f16.gguf",
+      "md5_note": "written by the same run; superseded by the quantized artifact"
+    },
+    "quantizer": "/mnt/media/breeze-teacher/build/breeze-quantize"
+  },
+  "model_provenance": {
+    "base_teacher": { "path": "/mnt/media/breeze-teacher/models/teacher-f16.gguf", "md5": "1a3ff32f1344e64aff1ba094d6b54d5c", "matches_receipt": "dd9-n2-distill-receipt.json" },
+    "checkpoint": { "path": "/mnt/media/breeze-teacher/depth-checkpoints-n2/best_student_9block.pt", "md5": "5256963c27fdbbda33c72dfb3a666a3a", "matches_receipt": "dd9-n2-distill-receipt.json" },
+    "weights_identical_to": "breeze-dd9-n2-q4_k.gguf (md5 a4b1a73e801dedb54a5edea0dd130473) plus embedded voice KVs; re-exported from the same checkpoint, no weight changes"
+  },
+  "embedded_voices": {
+    "calliope": { "source_md5": "2a52f366c7664d02de3674b352f2b06e", "kv_bytes": 10514, "kv_md5_post_quant": "2a52f366c7664d02de3674b352f2b06e", "byte_identical_to_source": true },
+    "steward": { "source_md5": "c48a428473786cc3debef4cd9c2f5729", "kv_bytes": 8102, "kv_md5_post_quant": "c48a428473786cc3debef4cd9c2f5729", "byte_identical_to_source": true },
+    "default": "steward",
+    "kv_survival": "probe-verified pre-bake (kv-quant-probe.py PASS, list-of-int path; kv-bytes-probe.py PASS, bytes path) and confirmed post-quant on this artifact"
+  },
+  "acceptance": {
+    "host": "sunset (AMD Radeon RX 7900 XTX, ROCm/Vulkan)",
+    "binary_md5": "9513fee77a8c04c5685ba46cb763db8a",
+    "env": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_DD_FUSED=0 BREEZE_DD_BLOCKS=9",
+    "text": "Hello",
+    "seed": 42,
+    "list_voices": "rc=0 with no --text and no --voices-dir; both voices listed, steward marked (default)",
+    "frame_diff": {
+      "steward": { "emb_default_wav_md5": "631f51998c368698566caeb3468182bf", "emb_voice_steward_wav_md5": "631f51998c368698566caeb3468182bf", "dir_voice_steward_wav_md5": "631f51998c368698566caeb3468182bf", "wav_bytes": 38444, "identical": true },
+      "calliope": { "emb_voice_wav_md5": "77e9a2a5c8884f297077e003c39bd1fd", "dir_voice_wav_md5": "77e9a2a5c8884f297077e003c39bd1fd", "wav_bytes": 34604, "identical": true },
+      "default_fallback": "no --voice and no --ref-audio resolves to embedded default (steward) and matches the explicit --voice steward output byte-for-byte"
+    },
+    "error_path": "unknown voice name exits rc=1 with 'no voice called bogus (not in <dir>, not embedded)'",
+    "log": "dd9-embedded-voices-acceptance.log (full transcript)"
+  },
+  "c_side_verification": {
+    "unit_test": "tests/test_embedded_voices.cpp (test-embedded-voices): 26/26 PASS — synthetic GGUF via gguf C API, real GGUFModel::load + kv_bytes + parse_voice_bytes + load_embedded_voices; byte-identical KV payloads, field-exact Voice round-trip for both canonical voices; guard rails reject empty/truncated/bad-magic buffers",
+    "cli_semantics": "dir lookup wins; on miss the embedded lookup runs; no --voice and no --ref-audio falls back to the embedded default (warns); no-embed GGUFs behave exactly as before",
+    "writer_path": "export_depth_gguf.py --embed-voice (repeatable) + --default-voice; add_key_value with forced GGUFValueType.ARRAY/UINT8 element type; KVs written before quantization (probe-verified survival)"
+  },
+  "verdict": "PASS — step 1 (single-artifact GGUF with embedded voices) is complete and verified end-to-end on a real q4_k N=2 artifact"
+}

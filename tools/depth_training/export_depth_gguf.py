@@ -42,12 +42,55 @@ def copy_metadata(reader: gguf.GGUFReader, writer: gguf.GGUFWriter, n_blocks: in
                 writer.add_array(k, f_arr)
 
 
+def valid_voice_name(name: str) -> bool:
+    # must match the C++ loader's guard (valid_voice_name in src/voice.cpp):
+    # letters/digits/dash/underscore, 1..64 chars
+    if not name or len(name) > 64:
+        return False
+    return all(c.isascii() and (c.isalnum() or c in "_-") for c in name)
+
+
+def embed_voices(writer: gguf.GGUFWriter, voice_specs, default_voice: str = None):
+    """Embed raw .breeze (BRZV v1) byte payloads into GGUF metadata.
+
+    voice_specs: list of (name, file_path). Written with an explicit UINT8 element type
+    (add_key_value with forced type) because add_array would infer the element type.
+    Must run BEFORE quantization — the probe (kv-quant-probe.py) verified these KVs survive
+    breeze-quantize q4_k.
+    """
+    if not voice_specs:
+        return
+    names = [name for name, _ in voice_specs]
+    if len(set(names)) != len(names):
+        raise ValueError("duplicate embedded voice name: " + str(names))
+    if default_voice is not None and default_voice not in names:
+        raise ValueError(f"default voice {default_voice!r} is not among embedded voices {names}")
+
+    for name, path in voice_specs:
+        if not valid_voice_name(name):
+            raise ValueError(f"invalid embedded voice name: {name!r}")
+        raw = Path(path).read_bytes()
+        if len(raw) < 28 or raw[:4] != b"BRZV":
+            raise ValueError(f"{path} is not a readable .breeze (BRZV) file")
+        writer.add_key_value(
+            f"breeze.embedded_voice.{name}", raw,
+            gguf.GGUFValueType.ARRAY, gguf.GGUFValueType.UINT8,
+        )
+        print(f"  embedded voice {name!r} from {path} ({len(raw)} bytes)")
+
+    writer.add_array("breeze.embedded_voice_names", names)
+    if default_voice is not None:
+        writer.add_string("breeze.embedded_voice.default", default_voice)
+
+
 def export_gguf(
     base_gguf: str,
     checkpoint_pt: str,
     out_f16_gguf: str,
     out_q4k_gguf: str = None,
     breeze_quantize_bin: str = "/mnt/media/breeze-teacher/build/breeze-quantize",
+    voice_specs=None,
+    default_voice: str = None,
 ):
     print(f"Reading base model from {base_gguf}...")
     reader = gguf.GGUFReader(base_gguf)
@@ -64,6 +107,11 @@ def export_gguf(
 
     # 1. Copy metadata with block count = 9
     copy_metadata(reader, writer, n_blocks=n_blocks)
+
+    # 1b. Embed voices (before quantization; probe-verified the KVs survive q4_k)
+    if voice_specs:
+        print(f"Embedding {len(voice_specs)} voice(s), default={default_voice!r} ...")
+        embed_voices(writer, voice_specs, default_voice=default_voice)
 
     # 2. Build tensor mapping from PyTorch state dict to GGUF tensor names
     # PyTorch names -> GGUF names
@@ -140,6 +188,10 @@ def main():
     parser.add_argument("--out-f16", default="/mnt/media/breeze-teacher/models/breeze-dd9-f16.gguf")
     parser.add_argument("--out-q4k", default="/mnt/media/breeze-teacher/models/breeze-dd9-q4_k.gguf")
     parser.add_argument("--breeze-quantize", default="/mnt/media/breeze-teacher/build/breeze-quantize")
+    parser.add_argument("--embed-voice", nargs=2, action="append", metavar=("NAME", "FILE"),
+                        help="embed a .breeze voice file into the GGUF metadata; repeatable")
+    parser.add_argument("--default-voice", default=None,
+                        help="which embedded voice is the fallback when no --voice/--ref-audio is given")
     args = parser.parse_args()
 
     export_gguf(
@@ -148,6 +200,8 @@ def main():
         out_f16_gguf=args.out_f16,
         out_q4k_gguf=args.out_q4k,
         breeze_quantize_bin=args.breeze_quantize,
+        voice_specs=args.embed_voice,
+        default_voice=args.default_voice,
     )
 
 
