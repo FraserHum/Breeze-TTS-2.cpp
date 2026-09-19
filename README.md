@@ -38,6 +38,7 @@ https://github.com/user-attachments/assets/b63e4664-497f-4bac-b9e2-50bf571df30a
 <a href="docs/websocket.md"><img src="https://img.shields.io/badge/WebSocket-2b3137?style=for-the-badge" alt="WebSocket"></a>
 <br>
 <a href="docs/voices.md"><img src="https://img.shields.io/badge/Saved_Voices-2b3137?style=for-the-badge" alt="Voices"></a>
+<a href="docs/distill.md"><img src="https://img.shields.io/badge/Voice_Foundry_(Distill)-00599C?style=for-the-badge" alt="breeze-distill"></a>
 <a href="docs/voice-conversion.md"><img src="https://img.shields.io/badge/Voice_Conversion-6e2b3a?style=for-the-badge" alt="Voice conversion"></a>
 <a href="docs/c-api.md"><img src="https://img.shields.io/badge/C_API-2b3137?style=for-the-badge" alt="C API"></a>
 <a href="docs/ctypes.md"><img src="https://img.shields.io/badge/Python-2b3137?style=for-the-badge" alt="Python"></a>
