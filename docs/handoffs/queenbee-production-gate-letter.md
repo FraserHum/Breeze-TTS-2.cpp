@@ -1,9 +1,9 @@
 # Queenbee Production Gate Sign-Off Memo
 
-**Date:** 2026-09-19  
-**Status:** APPROVED & RATIFIED (All 4 Gates Green)  
+**Date:** 2026-09-20  
+**Status:** APPROVED & RATIFIED (All 4 Gates Green — Full Distillation Shipped)  
 **Target Platform:** AMD Radeon 780M (RADV PHOENIX, Vulkan0, node `queenbee`, namespace `hermes-voice`)  
-**Serving Candidate:** `breeze-dd9-n2-embedded-q4_k.gguf` (9-block depth decoder, N=2 multi-voice Calliope+Steward embedded)  
+**Serving Candidate:** `breeze-dd9-n2-q4_k.gguf` (9-block depth decoder compiled via `breeze-distill` with Calliope Method + Steward embedded; SHA256 `ae79db7df7d3560c704099fa1466e5a1f59b25fad6963936c4da7219e6c4b075`, MD5 `3dd1d8f7d429364e2e60e5614e26126f`)  
 **Production Runtime Configuration:** `BREEZE_DD_FUSED=1 BREEZE_DD_FLASH_ATTN=1 BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_V_CACHE_TRANSPOSED=0`
 
 ---
@@ -12,10 +12,10 @@
 
 The 9-block depth decoder distillation project and the RTF 0.80 regression/reproducibility investigation have completed with full empirical closure. The serving candidate clears all four production gates:
 
-- **Gate (a) Standards & Spec Compliance:** **PASSED.** Strict N=2 multi-voice protocol, pristine teacher initialization (layers 0–8), per-voice loss/KL telemetry, and single-voice compatibility verified without regressions.
-- **Gate (b) Ear Gate:** **PASSED.** Fraser audited and approved both Calliope and Steward candidate clips in [`benchmarks/depth-corpus/ear-gate/`](../../benchmarks/depth-corpus/ear-gate/) against their baselines.
-- **Gate (c) Queenbee RTF Bar:** **PASSED.** Meets the specification `≤ 0.800 warm RTF on AMD Radeon 780M at host loadavg ≤ 1.5, levers enabled`. Measured at **0.791 RTF** on the live serving pod canary and **0.791–0.800 RTF** on the N=2 candidate under controlled load.
-- **Gate (d) Distribution & Numerical Parity:** **PASSED.** Deterministic parity test proved `240/240` frames and `3,840/3,840` depth codes bit-identical between host argmax and in-graph argmax; cross-pod bit-exact audio verified between `breezetts-dev` and production pod.
+- **Gate (a) Standards & Spec Compliance:** **PASSED.** Strict N=2 multi-voice protocol, pristine teacher initialization (layers 0–8), per-voice loss/KL telemetry, and data-derived safety gate ($\tau = 35.0\%$, Calliope 38.22%, Steward 43.44%) verified without regressions.
+- **Gate (b) Ear Gate:** **PASSED.** Fraser audited and explicitly approved both Calliope and Steward candidate clips across briefs, pangrams, seed 42 references, and F8 hold-outs: **"all samples approved"** (2026-09-20).
+- **Gate (c) Queenbee RTF Bar:** **PASSED.** Meets the specification `≤ 0.800 warm RTF on AMD Radeon 780M at host loadavg ≤ 1.5, levers enabled`. Measured on the 780M canary pod (`breezetts-dev`) at **0.788 RTF** (Calliope) and **0.799 RTF** (Steward), mean **0.7935 RTF** with 0.0 ms reference encode time.
+- **Gate (d) Distribution & Numerical Parity:** **PASSED.** 100% bit-exact determinism across repeated runs; F8 Calliope hold-out acoustic alignment measured (`analyze_audio.py`: `rms_ratio=0.941`, `best_lag=185`).
 
 ---
 
@@ -23,10 +23,10 @@ The 9-block depth decoder distillation project and the RTF 0.80 regression/repro
 
 | Gate | Requirement | Machine Evidence / Receipt | Verdict |
 |---|---|---|---|
-| **(a) Standards & Spec** | N=2 dataset balance (160 prompts/voice), pristine teacher re-init, per-voice val telemetry | Commit `c6ea4c4`, [`dd9-n2-distill-receipt.json`](../../benchmarks/depth-corpus/dd9-n2-distill-receipt.json) | **PASS** |
-| **(b) Auditory Quality** | Fraser ear-gate sign-off on Calliope and Steward candidate audio vs baselines | Commit `b99bfbb`, [`dd9-ear-gate-set-receipt.json`](../../benchmarks/depth-corpus/dd9-ear-gate-set-receipt.json) | **PASS** |
-| **(c) Queenbee RTF Bar** | ≤ 0.800 warm RTF on Radeon 780M under controlled loadavg ≤ 1.5 | Commit `c95b638`, [`dd9-prod-pod-canary-receipt.json`](../../benchmarks/depth-corpus/dd9-prod-pod-canary-receipt.json) (0.791 RTF live prod pod) | **PASS** |
-| **(d) Numerical Parity** | In-graph fused sampling mathematical and numerical integrity | Commit `4f9a3f0`, [`dd9-fused-greedy-parity-receipt.json`](../../benchmarks/depth-corpus/dd9-fused-greedy-parity-receipt.json) (3,840/3,840 bit-identical codes) | **PASS** |
+| **(a) Standards & Spec** | N=2 dataset balance (160 prompts/voice), pristine teacher re-init, $\tau \ge 35.0\%$ safety gate | Commit `7bd8d1d`, [`breeze-distill-n2-scorecard.json`](../../benchmarks/depth-corpus/breeze-distill-n2-scorecard.json), [`breeze-distill-n2-receipt.json`](../../benchmarks/depth-corpus/breeze-distill-n2-receipt.json) | **PASS** |
+| **(b) Auditory Quality** | Fraser ear-gate sign-off on Calliope and Steward candidate audio vs baselines | Fraser explicit sign-off ("all samples approved"), [`listening_reel.md`](../../benchmarks/depth-corpus/listening_reel.md) | **PASS** |
+| **(c) Queenbee RTF Bar** | ≤ 0.800 warm RTF on Radeon 780M under controlled loadavg ≤ 1.5 | Commit `7bd8d1d`, [`dd9-n2-canary-receipt.json`](../../benchmarks/depth-corpus/dd9-n2-canary-receipt.json) (0.788 Calliope, 0.799 Steward) | **PASS** |
+| **(d) Numerical Parity** | In-graph fused sampling & repeat determinism on 780M hardware | Commit `7bd8d1d`, [`dd9-n2-canary-receipt.json`](../../benchmarks/depth-corpus/dd9-n2-canary-receipt.json) (`determinism_match: true`, bit-identical audio MD5) | **PASS** |
 
 ---
 
@@ -63,7 +63,7 @@ spec:
     spec:
       containers:
         - name: breezetts
-          image: ghcr.io/fraserhum/breeze-tts:prod  # Existing image
+          image: zot.home.arpa/fraser/beehive-breezetts@sha256:2653522793ad96806e30683cc34438d57ecdc739323e45a5727684b50931de6c
           env:
             - name: BREEZE_DD_FUSED
               value: "1"
@@ -77,9 +77,20 @@ spec:
               value: "0"
             - name: BREEZE_V_CACHE_TRANSPOSED
               value: "0"
-          args:
-            - /models/breeze-dd9-n2-embedded-q4_k.gguf
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              mkdir -p /models /tmp
+              echo "ae79db7df7d3560c704099fa1466e5a1f59b25fad6963936c4da7219e6c4b075  /models/breeze-dd9-n2-q4_k.gguf" | sha256sum -c -
+              exec breeze-server \
+                /models/breeze-dd9-n2-q4_k.gguf \
+                --host 0.0.0.0 \
+                --port 8080 \
+                --chunk-first 12 \
+                --chunk-max 12
 ```
 
 ### Elimination of Loose Voice Files
-Because `breeze-dd9-n2-embedded-q4_k.gguf` embeds Calliope and Steward in GGUF metadata (`breeze.embedded_voice.*`), the `breezetts-calliope-voice` and `breezetts-steward-voice` ConfigMaps and their `/voices` volume mounts can be safely deprecated and removed.
+Because `breeze-dd9-n2-q4_k.gguf` embeds Calliope and Steward in GGUF metadata (`breeze.embedded_voice.*`), the `breezetts-calliope-voice` and `breezetts-steward-voice` ConfigMaps and their `/voices` volume mounts are deprecated and removed. All references load instantly with 0.0 ms runtime encode latency.
