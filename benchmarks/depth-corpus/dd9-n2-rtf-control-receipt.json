@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-09-19T04:25:00Z",
+  "purpose": "4-repeat RTF control of the N=2 (calliope+steward) 9-block distilled student on the 780M pod, with a same-build single-voice control re-run in the same session to isolate N=2 weight effect from environmental drift",
+  "target": "breezetts-dev (AMD Radeon 780M, RADV Phoenix, Vulkan0; pod created 2026-09-14T10:26:29Z, image 7986aa217)",
+  "build": {
+    "binary_md5": "ef6e93de013754a21ec9b3686ca3f14e",
+    "binary_md5_note": "live md5sum of /src/build/breeze-cli verified this session (identical to the original dd9 receipt build)",
+    "source_commit": "d968a2f (breezetts-dev /src)",
+    "binary_mtime": "2026-09-15 21:44:06 UTC (predates both the original dd9 receipt and this run)"
+  },
+  "env": "GGML_VK_ALLOW_GRAPHICS_QUEUE=1 BREEZE_VOC_TRIM=1 BREEZE_VOC_CONVT_MATMUL=1 BREEZE_VOC_STATEFUL=0 BREEZE_DD_FUSED=0 BREEZE_DD_BLOCKS=9",
+  "prompt": "The quick brown fox jumps over the lazy dog. We are benchmarking the Breeze TTS two model on the Radeon 780 M graphics card, measuring the real time factor of the full generation pipeline from the text encoder through the backbone and depth decoder.",
+  "seed": 42,
+  "cfg_scale": 1.0,
+  "artifacts": {
+    "n2_gguf": {
+      "path_pod": "/tmp/breeze-dd9-n2-q4_k.gguf",
+      "path_sunset": "/mnt/media/breeze-teacher/models/breeze-dd9-n2-q4_k.gguf",
+      "size_bytes": 2428985376,
+      "md5": "a4b1a73e801dedb54a5edea0dd130473",
+      "voice": "calliope from /tmp/voices (10,514 B)"
+    },
+    "single_voice_gguf": {
+      "path_pod": "/models/breeze-tts-2-dd9-q4_k-8c359295.gguf",
+      "md5_note": "identical size to N=2 q4_k; md5 not re-recorded (pre-existing artifact)"
+    }
+  },
+  "n2_repeats": [
+    { "repeat": 1, "warm": false, "wall_ms": 15133.3, "wall_rtf": 0.822, "frames": 230, "audio_s": 18.40, "backbone_ms_frame": 17.87, "depth_ms_frame": 38.66, "vocoder_ms_frame": 8.39 },
+    { "repeat": 2, "warm": true,  "wall_ms": 15093.1, "wall_rtf": 0.820, "frames": 230, "audio_s": 18.40, "backbone_ms_frame": 17.87, "depth_ms_frame": 38.73, "vocoder_ms_frame": 8.19 },
+    { "repeat": 3, "warm": true,  "wall_ms": 15066.1, "wall_rtf": 0.819, "frames": 230, "audio_s": 18.40, "backbone_ms_frame": 17.97, "depth_ms_frame": 38.55, "vocoder_ms_frame": 8.16 },
+    { "repeat": 4, "warm": true,  "wall_ms": 15153.1, "wall_rtf": 0.824, "frames": 230, "audio_s": 18.40, "backbone_ms_frame": 17.90, "depth_ms_frame": 38.86, "vocoder_ms_frame": 8.30 }
+  ],
+  "n2_warm_mean": {
+    "wall_rtf": 0.821,
+    "backbone_ms_frame": 17.91,
+    "depth_ms_frame": 38.71,
+    "vocoder_ms_frame": 8.22,
+    "total_compute_ms_frame": 64.84
+  },
+  "single_voice_control_repeats": [
+    { "repeat": 1, "warm": false, "wall_ms": 14324.0, "wall_rtf": 0.814, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.70, "depth_ms_frame": 38.37, "vocoder_ms_frame": 8.17 },
+    { "repeat": 2, "warm": true,  "wall_ms": 14476.9, "wall_rtf": 0.823, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.80, "depth_ms_frame": 38.77, "vocoder_ms_frame": 8.31 },
+    { "repeat": 3, "warm": true,  "wall_ms": 14457.6, "wall_rtf": 0.821, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.78, "depth_ms_frame": 38.60, "vocoder_ms_frame": 8.49 },
+    { "repeat": 4, "warm": true,  "wall_ms": 14385.6, "wall_rtf": 0.817, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.78, "depth_ms_frame": 38.35, "vocoder_ms_frame": 8.39 },
+    { "repeat": 5, "warm": true,  "wall_ms": 14544.8, "wall_rtf": 0.826, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.97, "depth_ms_frame": 39.00, "vocoder_ms_frame": 8.29 },
+    { "repeat": 6, "warm": true,  "wall_ms": 14461.4, "wall_rtf": 0.822, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.73, "depth_ms_frame": 38.70, "vocoder_ms_frame": 8.38 },
+    { "repeat": 7, "warm": true,  "wall_ms": 14394.8, "wall_rtf": 0.818, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.82, "depth_ms_frame": 38.37, "vocoder_ms_frame": 8.38 },
+    { "repeat": 8, "warm": true,  "wall_ms": 14403.9, "wall_rtf": 0.818, "frames": 220, "audio_s": 17.60, "backbone_ms_frame": 17.77, "depth_ms_frame": 38.24, "vocoder_ms_frame": 8.57 }
+  ],
+  "single_voice_warm_mean": {
+    "wall_rtf": 0.820,
+    "backbone_ms_frame": 17.80,
+    "depth_ms_frame": 38.53,
+    "vocoder_ms_frame": 8.35,
+    "total_compute_ms_frame": 64.68
+  },
+  "n2_vs_single_voice": {
+    "total_compute_ms_frame_delta": 0.16,
+    "wall_rtf_delta": 0.001,
+    "frame_count_note": "N=2 generates 230f vs 220f at seed 42 (sampling drift, expected; identical seed+model does not occur across different weights)",
+    "verdict": "PASS: N=2 weights add no measurable per-frame cost (0.16 ms/frame delta vs 64.68 baseline is within repeat-to-repeat noise of ~0.4 ms/frame)"
+  },
+  "environmental_drift": {
+    "observation": "Original dd9-distill-receipt.json (2026-09-16) recorded single-voice warm mean 0.7917 / 62.73 ms/frame on this same binary+pod+env. Re-running the identical single-voice command 8 times this session gives 0.820 / 64.68 ms/frame — a stable +3.0% / +1.95 ms/frame shift, not transient (4 consecutive repeats at 0.818-0.826).",
+    "host_state": "queenbee load average 0.40/0.75/0.97 at test time, GPU busy 0% idle, thermal zone 20.0 C (SoC), kernel 7.0.0-31-generic, pod up since 2026-09-14, no pod restart, no binary change",
+    "attribution": "UNRESOLVED. Same binary (mtime 2026-09-15), same pod, same env, same seed, same 220 frames. Suspected GPU power/thermal state or driver scheduling drift on the shared queenbee SoC. No rocm-smi in pod, driver version not readable from container. Recommended verification: after a queenbee reboot, re-run the 4-repeat single-voice control. If it lands near 0.79 the drift is host-state; if it holds at ~0.82, the sub-0.80 claim for this build must be re-anchored to the current regime.",
+    "impact_on_claims": "The sub-0.80 RTF target is NOT currently reproduced on this pod for either model. However the N=2-vs-single-voice DELTA is clean and is the load-bearing number for step 1 (embedding voices does not change this either, since embedding is metadata-only). Queenbee production gating (step 3) should use post-reboot re-anchored numbers."
+  }
+}

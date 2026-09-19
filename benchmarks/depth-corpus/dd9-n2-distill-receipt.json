@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-09-16T16:49:00Z",
+  "purpose": "N=2 (calliope+steward) 9-block depth decoder distillation — training metrics and artifact provenance",
+  "trainer": "sunset (AMD Radeon RX 7900 XTX 24GB, ROCm/PyTorch, torch 2.11.0+rocm7.2, TF32 off)",
+  "protocol": {
+    "init": "pristine truncate-to-9 from teacher-f16 (layers 0..8 copied, audio_embd frozen)",
+    "loss": "0.8 * KL(T=1.0) + 0.2 * CE",
+    "epochs": 15,
+    "lr": "1e-4 -> 1e-5 cosine",
+    "trainable_params": "283.71M",
+    "per_epoch_s": "~73.1 (15 epochs ~= 18 min total)",
+    "capture_record_bytes": 131316
+  },
+  "corpus": {
+    "prompt_sets": "160 prompts per voice, identical prompt ID sets verified across voices (128 train / 16 val / 16 test per split, byte-identical ID sets)",
+    "calliope": {
+      "train": 17807, "validation": 2147, "test": 2046,
+      "train_bin_md5": "73440b0f0dcff40d5a2b860604187ef0",
+      "provenance": "NOT a fresh capture. depth-corpus/calliope/*.bin are byte-identical copies of the legacy flat corpus (depth-corpus/train.bin md5 73440b0f... matches; mtime 2026-09-16 11:42-12:00 predates the steward capture run 16:00-16:21; no capture-calliope.log). Legacy corpus was captured by an earlier breeze-cli build whose md5 is unrecorded. Acceptable for the N=2 run because prompt-ID parity with steward is verified; a fresh calliope recapture with the recorded binary (631f6f84...) remains the cleanest fix before final publication."
+    },
+    "steward": {
+      "train": 19503, "validation": 2358, "test": 2174,
+      "train_bin_md5": "7b669c127913e97727565316461222c2",
+      "provenance": "fresh capture 2026-09-16 16:00-16:21 (capture-steward.log), binary /mnt/media/breeze-teacher/build/breeze-cli md5 631f6f8460c60b8c2764e9e47c82487c"
+    },
+    "record_count_parity": "17807 vs 19503 train records is EXPECTED: identical 128 prompts, but record count is audio-length-dependent per voice. distill.py WARNING 'per-voice train record counts differ' fires by design and is not an error."
+  },
+  "teacher": {
+    "path": "/mnt/media/breeze-teacher/models/teacher-f16.gguf",
+    "size_bytes": 6279630784,
+    "md5": "1a3ff32f1344e64aff1ba094d6b54d5c"
+  },
+  "distillation_metrics": {
+    "untrained_baseline": {
+      "calliope": { "loss": 1.9266, "kl": 1.1243, "ce": 5.1361, "top1_codes": 10.51, "top1_teacher": 19.88 },
+      "steward":  { "loss": 1.8906, "kl": 1.1049, "ce": 5.0331, "top1_codes": 9.44,   "top1_teacher": 19.99 },
+      "combined": { "loss": 1.9078, "kl": 1.1141, "ce": 5.0822, "top1_codes": 9.95,   "top1_teacher": 19.94 }
+    },
+    "best_epoch_15": {
+      "combined": { "val_loss": 1.0157, "kl": 0.2978, "ce": 3.8872, "top1_codes": 17.77, "top1_teacher": 49.43 },
+      "calliope": { "val_loss": 1.0519, "kl": 0.3230, "ce": 3.9675, "top1_codes": 17.38, "top1_teacher": 46.95 },
+      "steward":  { "val_loss": 0.9828, "kl": 0.2750, "ce": 3.8142, "top1_codes": 18.13, "top1_teacher": 51.69 }
+    },
+    "test_set_metrics": "not recorded in distill-n2.log (distill.py evaluates val only; test-set eval for the N=2 checkpoint is a follow-up if load-bearing)"
+  },
+  "artifacts": {
+    "checkpoint": {
+      "path": "/mnt/media/breeze-teacher/depth-checkpoints-n2/best_student_9block.pt",
+      "size_bytes": 1403682792,
+      "md5": "5256963c27fdbbda33c72dfb3a666a3a"
+    },
+    "gguf_f16": {
+      "path": "/mnt/media/breeze-teacher/models/breeze-dd9-n2-f16.gguf",
+      "size_bytes": 6049874208,
+      "md5": "575a8134d266cbd6afc66e8fb083458c"
+    },
+    "gguf_q4_k": {
+      "path": "/mnt/media/breeze-teacher/models/breeze-dd9-n2-q4_k.gguf",
+      "size_bytes": 2428985376,
+      "md5": "a4b1a73e801dedb54a5edea0dd130473",
+      "quantizer": "/mnt/media/breeze-teacher/build/breeze-quantize"
+    }
+  },
+  "log": "distill-n2.log (sunset, 15 epochs)",
+  "claims": {
+    "steward_timbre_restored": "PARTIAL — metric-level only (KL 0.2750 / 51.69% teacher match, best of the two voices). Perceptual confirmation requires Fraser's 4-way listening gate case (c): N=2 student -> Steward vs 12-block Steward anchor. Unseen-voice generalization already passed Fraser's gate on test17s (N=2 closer to teacher than calliope-only student).",
+    "calliope_parity": "METRIC-LEVEL — calliope val KL 0.3230 vs single-voice dd9 receipt KL 0.3176 (within noise). RTF: N=2 adds no per-frame cost (dd9-n2-rtf-control-receipt.json, delta 0.16 ms/frame).",
+    "rtf": "See dd9-n2-rtf-control-receipt.json: warm 0.821 (N=2) / 0.820 (single-voice re-run) on 2026-09-19; original 0.7917 NOT currently reproduced on the pod — environmental drift, post-reboot re-anchor required before step-3 queenbee deploy."
+  }
+}
