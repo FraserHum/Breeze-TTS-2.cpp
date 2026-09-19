@@ -75,6 +75,7 @@ def read_pcm_wav(path: str) -> List[int]:
 
 
 def write_pcm_wav(path, samples: List[int]):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
     with wave.open(str(path), "wb") as wf:
         wf.setnchannels(1)
         wf.setsampwidth(2)
